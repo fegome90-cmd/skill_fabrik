@@ -56,12 +56,22 @@
 
 ### Integración con Sistemas Existentes
 
-| Sistema     | Integración CLOOP               | Beneficio                |
+<<<<<<< HEAD
+| Sistema | Integración CLOOP | Beneficio |
 | ----------- | ------------------------------- | ------------------------ |
-| **BMCC**    | CLOOP guía el proceso BMCC      | Metodología unificada    |
-| **ADRs**    | CLOOP estructura las decisiones | Decisiones fundamentadas |
-| **MemTech** | CLOOP optimiza la memoria       | Memoria inteligente      |
-| **CLI**     | CLOOP estructura los comandos   | Comandos consistentes    |
+| **BMCC** | CLOOP guía el proceso BMCC | Metodología unificada |
+| **ADRs** | CLOOP estructura las decisiones | Decisiones fundamentadas |
+| **MemTech** | CLOOP optimiza la memoria | Memoria inteligente |
+| **CLI** | CLOOP estructura los comandos | Comandos consistentes |
+=======
+| Sistema | Integración CLOOP | Beneficio |
+|---------|-------------------|-----------|
+| **BMCC** | CLOOP guía el proceso BMCC | Metodología unificada |
+| **ADRs** | CLOOP estructura las decisiones | Decisiones fundamentadas |
+| **MemTech** | CLOOP optimiza la memoria | Memoria inteligente |
+| **CLI** | CLOOP estructura los comandos | Comandos consistentes |
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 ---
 
@@ -72,6 +82,11 @@
 **Objetivo**: Definir claramente el objetivo, hipótesis y criterios de éxito.
 
 **Actividades**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Identificar el problema a resolver
 - Definir hipótesis claras
@@ -80,6 +95,11 @@
 - Validar entendimiento con stakeholders
 
 **Artefactos**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Objetivo claro y medible
 - Hipótesis documentada
@@ -87,6 +107,11 @@
 - Contexto recopilado
 
 **Criterios de Éxito**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Objetivo SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
 - Hipótesis clara y testeable
@@ -98,6 +123,11 @@
 **Objetivo**: Crear un plan mínimo ejecutable (MVP) basado en el entendimiento del problema.
 
 **Actividades**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Diseñar arquitectura de solución
 - Definir interfaces y contratos
@@ -106,6 +136,11 @@
 - Crear plan de implementación
 
 **Artefactos**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Arquitectura de solución
 - Contratos de interfaz
@@ -114,6 +149,11 @@
 - Plan de implementación
 
 **Criterios de Éxito**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Arquitectura clara y documentada
 - Contratos de interfaz definidos
@@ -126,6 +166,11 @@
 **Objetivo**: Ejecutar el plan implementando la solución de manera iterativa.
 
 **Actividades**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Implementar la solución
 - Ejecutar tests continuamente
@@ -134,6 +179,11 @@
 - Documentar decisiones tomadas
 
 **Artefactos**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Código implementado
 - Tests ejecutados
@@ -142,6 +192,11 @@
 - Feedback procesado
 
 **Criterios de Éxito**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Implementación completa
 - Tests pasando (100%)
@@ -154,6 +209,11 @@
 **Objetivo**: Recolectar métricas y evidencia para evaluar el éxito de la implementación.
 
 **Actividades**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Ejecutar tests de performance
 - Recolectar métricas de calidad
@@ -162,6 +222,11 @@
 - Documentar hallazgos
 
 **Artefactos**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Métricas de performance
 - Métricas de calidad
@@ -170,6 +235,11 @@
 - Hallazgos documentados
 
 **Criterios de Éxito**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Métricas recolectadas completamente
 - Performance dentro de targets
@@ -182,6 +252,11 @@
 **Objetivo**: Analizar los resultados, identificar lecciones aprendidas y ajustar para futuras iteraciones.
 
 **Actividades**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Analizar resultados vs objetivos
 - Identificar lecciones aprendidas
@@ -190,6 +265,11 @@
 - Planificar próximas iteraciones
 
 **Artefactos**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Análisis de resultados
 - Lecciones aprendidas
@@ -198,6 +278,11 @@
 - Plan de próximas iteraciones
 
 **Criterios de Éxito**:
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - Análisis completo de resultados
 - Lecciones aprendidas identificadas
@@ -213,17 +298,35 @@
 
 #### 1. Sprint Template
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Archivo**: `templates/cloop/sprint-template.md`
 - **Uso**: Para todos los sprints del proyecto
 - **Contenido**: Estructura completa de sprint con fases CLOOP
 
 #### 2. ADR Template
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Archivo**: `templates/cloop/adr-template.md`
 - **Uso**: Para todas las decisiones arquitectónicas
 - **Contenido**: Estructura de ADR con fases CLOOP
 
 #### 3. Feature Template
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Archivo**: `templates/cloop/feature-template.md`
 - **Uso**: Para todas las nuevas funcionalidades
@@ -233,17 +336,35 @@
 
 #### 1. CLI Orgánica
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Comando**: `sprint` - Gestión de sprints
 - **Comando**: `prompt` - Gestión de prompts
 - **Comando**: `mem` - Gestión de memoria
 
 #### 2. Validación Automática
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Script**: `scripts/validate-cloop.sh`
 - **Uso**: Validar que se siguen las fases CLOOP
 - **Output**: Reporte de cumplimiento
 
 #### 3. Métricas CLOOP
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Archivo**: `metrics/cloop-metrics.json`
 - **Contenido**: Métricas de seguimiento por fase
@@ -257,11 +378,23 @@
 
 #### Clarify
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Objetivos claros**: 100% de sprints
 - **Hipótesis documentadas**: 100% de features
 - **Criterios de éxito**: 100% medibles
 
 #### Layout
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Arquitectura documentada**: 100% de decisiones
 - **Contratos definidos**: 100% de interfaces
@@ -269,17 +402,35 @@
 
 #### Operate
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Implementación completa**: 100% de features
 - **Tests pasando**: 100% de cobertura
 - **Métricas en target**: 95%+ de casos
 
 #### Observe
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Métricas recolectadas**: 100% de sprints
 - **Performance en target**: 95%+ de casos
 - **Calidad en estándares**: 100% de código
 
 #### Reflect
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Análisis completado**: 100% de sprints
 - **Lecciones identificadas**: 5+ por sprint
@@ -300,6 +451,12 @@
 
 #### Fase 1: Entendimiento (1 semana)
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 1. Leer esta guía completa
 2. Revisar templates CLOOP
 3. Entender validación científica
@@ -307,12 +464,24 @@
 
 #### Fase 2: Implementación (2 semanas)
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 1. Usar templates en todos los sprints
 2. Seguir fases CLOOP estrictamente
 3. Documentar lecciones aprendidas
 4. Ajustar proceso según contexto
 
 #### Fase 3: Optimización (1 mes)
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 1. Analizar métricas de adopción
 2. Identificar patrones exitosos
@@ -323,6 +492,12 @@
 
 #### Migración Gradual
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 1. **Identificar** procesos actuales
 2. **Mapear** a fases CLOOP
 3. **Adaptar** herramientas existentes
@@ -330,6 +505,12 @@
 5. **Validar** mejoras
 
 #### Herramientas de Migración
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Script**: `scripts/migrate-to-cloop.sh`
 - **Uso**: Migrar proyectos existentes
@@ -343,12 +524,24 @@
 
 #### Gate 1: Clarify
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - [ ] Objetivo SMART definido
 - [ ] Hipótesis clara y testeable
 - [ ] Criterios de éxito cuantificables
 - [ ] Contexto completo recopilado
 
 #### Gate 2: Layout
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - [ ] Arquitectura clara y documentada
 - [ ] Contratos de interfaz definidos
@@ -357,6 +550,12 @@
 
 #### Gate 3: Operate
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - [ ] Implementación completa
 - [ ] Tests pasando (100%)
 - [ ] Métricas dentro de targets
@@ -364,12 +563,24 @@
 
 #### Gate 4: Observe
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - [ ] Métricas recolectadas completamente
 - [ ] Performance dentro de targets
 - [ ] Calidad dentro de estándares
 - [ ] Hallazgos documentados
 
 #### Gate 5: Reflect
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - [ ] Análisis completo de resultados
 - [ ] Lecciones aprendidas identificadas
@@ -395,6 +606,12 @@
 
 ### Documentación Científica
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Reflexion** (NeurIPS 2023): Arquitectura base
 - **Self-Reflection Effects** (2024): Performance
 - **Think Twice** (2025): Metodología
@@ -403,12 +620,24 @@
 
 ### Documentación del Proyecto
 
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
+
 - **Templates**: `templates/cloop/`
 - **Scripts**: `scripts/cloop/`
 - **Métricas**: `metrics/cloop-metrics.json`
 - **Tests**: `tests/cloop/`
 
 ### Herramientas Externas
+
+<<<<<<< HEAD
+
+=======
+
+> > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **CLI Orgánica**: `tools/cli.py`
 - **MemTech**: `core/memtech-agent/`
