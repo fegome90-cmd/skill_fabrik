@@ -1,0 +1,19 @@
+# This file defines code owners for the repository.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# By default, require reviews from maintainers for all files.
+* @fegome90-cmd
+
+# Require reviews from maintainers for critical files.
+# These patterns override the rule above.
+/.github/workflows/ @fegome90-cmd
+/.github/dependabot.yml @fegome90-cmd
+/.github/CODEOWNERS @fegome90-cmd
+/package.json @fegome90-cmd
+/pnpm-lock.yaml @fegome90-cmd
+/SECURITY.md @fegome90-cmd
+/LICENSE @fegome90-cmd
+
+# Package-level files require review
+/packages/*/package.json @fegome90-cmd
+

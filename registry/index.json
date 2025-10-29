@@ -1,37 +1,95 @@
 {
-  "$schema": "../configs/skill-rules.schema.json",
-  "version": "0.1.0",
-  "generatedAt": "2025-01-27T00:00:00.000Z",
   "skills": [
     {
-      "id": "backend-dev-guidelines",
-      "type": "guideline",
-      "summary": "Patrones backend en capas y pruebas.",
-      "tags": ["backend", "controller", "service", "repository", "errors", "tests"]
+      "name": "database-verification",
+      "description": "Bloquea mutaciones masivas sin filtro y operaciones destructivas inseguras.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "bloquea",
+          "mutaciones",
+          "masivas",
+          "filtro",
+          "operaciones",
+          "destructivas",
+          "inseguras."
+        ]
+      }
     },
     {
-      "id": "frontend-dev-guidelines",
-      "type": "guideline",
-      "summary": "Patrones UI, fetching, routing, consistencia.",
-      "tags": ["frontend", "components", "routing", "fetching", "ux"]
+      "name": "secrets-and-config",
+      "description": "Sin secretos embebidos; validar config en arranque y mantener .env.example.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "secretos",
+          "embebidos;",
+          "validar",
+          "config",
+          "arranque",
+          "mantener",
+          ".env.example."
+        ]
+      }
     },
     {
-      "id": "project-catalog-developer",
-      "type": "guideline",
-      "summary": "DataGrid grande: layout, filtros y rendimiento.",
-      "tags": ["catalog", "datagrid", "performance"]
+      "name": "backend-dev-guidelines",
+      "description": "Patrones backend (rutas→controladores→servicios→repositorios), manejo de errores y pruebas.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "patrones",
+          "backend",
+          "(rutas→controladores→servicios→repositorios),",
+          "manejo",
+          "errores",
+          "pruebas."
+        ]
+      }
     },
     {
-      "id": "database-verification",
-      "type": "guardrail",
-      "summary": "Bloquea operaciones peligrosas en BD.",
-      "tags": ["db", "guardrail", "safety"]
+      "name": "frontend-dev-guidelines",
+      "description": "Patrones UI: componentes puros, fetching con cache, routing file-based y consistencia.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "patrones",
+          "componentes",
+          "puros,",
+          "fetching",
+          "cache,",
+          "routing",
+          "file-based",
+          "consistencia."
+        ]
+      }
     },
     {
-      "id": "secrets-and-config",
-      "type": "guardrail",
-      "summary": "Sin secretos en código; validar config.",
-      "tags": ["security", "config", "env"]
+      "name": "project-catalog-developer",
+      "description": "Catálogo (DataGrid): columnas tipadas, filtros con URL, virtualización y rendimiento.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "catálogo",
+          "(datagrid):",
+          "columnas",
+          "tipadas,",
+          "filtros",
+          "url,",
+          "virtualización",
+          "rendimiento."
+        ]
+      }
+    },
+    {
+      "name": "test-skill",
+      "description": "This is a test skill to verify the indexing functionality works correctly",
+      "severity": "medium",
+      "triggers": {
+        "keywords": ["test", "verify", "indexing", "functionality", "works", "correctly"]
+      }
     }
-  ]
+  ],
+  "version": "1.0.0",
+  "generatedAt": "2025-10-29T16:05:16.228Z"
 }

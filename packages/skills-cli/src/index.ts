@@ -8,6 +8,7 @@ import { guardrailCommand } from './commands/guardrail.js';
 import { buildCommand } from './commands/build.js';
 import { ciCommand } from './commands/ci.js';
 import { devDocsCommand } from './commands/dev-docs.js';
+import { planCommand } from './commands/plan.js';
 import { pm2Command } from './commands/pm2.js';
 
 const program = new Command();
@@ -25,6 +26,7 @@ guardrailCommand(program);
 buildCommand(program);
 ciCommand(program);
 devDocsCommand(program);
+planCommand(program);
 pm2Command(program);
 
 program.parse();

@@ -104,53 +104,61 @@ export function hooksCommand(program: Command) {
 
 async function installUserPromptSubmitHook(
   hooksDir: string,
-  config: { enabled: boolean; skillRulesPath?: string; [key: string]: unknown }
+  _config: { enabled: boolean; skillRulesPath?: string; [key: string]: unknown }
 ): Promise<void> {
   const hookScript = `#!/usr/bin/env node
 /**
  * UserPromptSubmit Hook
- * Auto-activates skills based on user prompt intent
+ * Auto-activates skills based on user prompt intent using router package
  */
 
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { userPromptSubmitHook } from '../../packages/router/dist/index.js';
+import { resolve } from 'path';
 
 async function main() {
   const prompt = process.argv[2] || '';
+  const openFilesArg = process.argv[3] || '[]';
   
   if (!prompt) {
-    console.error('No prompt provided');
-    process.exit(1);
+    // No prompt provided, exit silently (hook is optional)
+    process.exit(0);
   }
   
   try {
-    // Load skill registry
-    const registryPath = join(process.cwd(), '${config.skillRulesPath || 'registry/index.json'}');
-    const registry = JSON.parse(await readFile(registryPath, 'utf-8'));
+    const openFiles = JSON.parse(openFilesArg);
     
-    // Find matching skills (simplified matching - can be enhanced)
-    const matches = registry.skills
-      .filter((skill: { triggers?: { keywords?: string[] } }) => {
-        const keywords = skill.triggers?.keywords || [];
-        return keywords.some((keyword: string) => 
-          prompt.toLowerCase().includes(keyword.toLowerCase())
-        );
-      })
-      .map((skill: { name: string; severity?: string }) => ({
-        skill: skill.name,
-        severity: skill.severity || 'medium',
-      }));
-    
-    // Output matches as JSON for Cursor to process
-    if (matches.length > 0) {
-      console.log(JSON.stringify({
-        matches,
-        activated: matches.filter((m: { severity: string }) => m.severity === 'critical' || m.severity === 'high'),
-      }));
+    // Get active file content if available (max 2KB)
+    let activeFileContent = '';
+    if (openFiles.length > 0) {
+      try {
+        const { readFile } = await import('fs/promises');
+        const firstFile = resolve(process.cwd(), openFiles[0]);
+        const content = await readFile(firstFile, { encoding: 'utf-8' });
+        activeFileContent = content.substring(0, 2048); // Limit to 2KB
+      } catch {
+        // Ignore errors reading file
+      }
     }
+    
+    // Call router hook
+    const result = await userPromptSubmitHook({
+      prompt,
+      openFiles: Array.isArray(openFiles) ? openFiles : [],
+      activeFileContent,
+      cwd: process.cwd(),
+    });
+    
+    // Output injected note if skills activated
+    if (result.injectedNote) {
+      console.log(result.injectedNote);
+    }
+    
+    // Exit with success
+    process.exit(0);
   } catch (error) {
-    console.error('Error in UserPromptSubmit hook:', error);
-    process.exit(1);
+    // Silently fail - hooks should not break editor workflow
+    console.error('Hook error:', error);
+    process.exit(0);
   }
 }
 
@@ -168,7 +176,7 @@ main();
 
 async function installStopHook(
   hooksDir: string,
-  config: {
+  _config: {
     enabled: boolean;
     buildCheck?: boolean;
     prettier?: boolean;
@@ -179,84 +187,98 @@ async function installStopHook(
   const hookScript = `#!/usr/bin/env node
 /**
  * Stop Hook
- * Executes post-response checks: build, prettier, KPI emission
+ * Executes post-response checks using router package: guardrails, prettier, typecheck, KPI
  */
 
+import { stopHook } from '../../packages/router/dist/index.js';
 import { execSync } from 'child_process';
-import { appendFile, ensureDir } from 'fs/promises';
-import { join } from 'path';
+import { readFile } from 'fs/promises';
+
+async function getEditLog(): Promise<Array<{ file: string; repo: string; ts: number }>> {
+  try {
+    // Try to get git diff to track edited files
+    const { execSync: execSyncSync } = await import('child_process');
+    const output = execSyncSync('git diff --name-only', { encoding: 'utf-8', stdio: 'pipe' }).trim();
+    
+    const files = output.split('\\n').filter(Boolean);
+    const reposChanged = new Set<string>();
+    
+    const editLog = files.map(file => {
+      // Detect repo from file path
+      const parts = file.split('/');
+      const packagesIndex = parts.indexOf('packages');
+      const repo = packagesIndex !== -1 && parts.length > packagesIndex + 1
+        ? parts[packagesIndex + 1]
+        : 'root';
+      
+      reposChanged.add(repo);
+      
+      return {
+        file,
+        repo,
+        ts: Date.now(),
+      };
+    });
+    
+    return editLog;
+  } catch {
+    // If git command fails, return empty log
+    return [];
+  }
+}
 
 async function main() {
-  const errors: string[] = [];
-  
   try {
-    // Build check
-    ${
-      config.buildCheck !== false
-        ? `
-    try {
-      console.log('Running build check...');
-      execSync('pnpm -w run build', { stdio: 'inherit', cwd: process.cwd() });
-      console.log('✓ Build check passed');
-    } catch (error) {
-      errors.push('Build check failed');
-      console.error('✗ Build check failed');
-    }`
-        : ''
-    }
+    // Get edit log from git
+    const editLog = await getEditLog();
+    const reposChanged = new Set(editLog.map(e => e.repo));
     
-    // Prettier check
-    ${
-      config.prettier !== false
-        ? `
-    try {
-      console.log('Running prettier check...');
-      execSync('pnpm -w prettier --check .', { stdio: 'inherit', cwd: process.cwd() });
-      console.log('✓ Prettier check passed');
-    } catch (error) {
-      errors.push('Prettier check failed');
-      console.error('✗ Prettier check failed');
-    }`
-        : ''
-    }
-    
-    // Emit KPI
-    ${
-      config.kpiEmit !== false
-        ? `
-    try {
-      const kpiDir = join(process.cwd(), 'obs', 'kpi');
-      const kpiFile = join(kpiDir, 'events.jsonl');
-      await ensureDir(kpiDir);
-      
-      const event = {
-        timestamp: new Date().toISOString(),
-        type: 'stop-hook-executed',
-        data: {
-          buildCheck: ${config.buildCheck !== false ? 'true' : 'false'},
-          prettier: ${config.prettier !== false ? 'true' : 'false'},
-          success: errors.length === 0,
-        },
-      };
-      
-      await appendFile(kpiFile, JSON.stringify(event) + '\\n');
-      console.log('✓ KPI emitted');
-    } catch (error) {
-      console.warn('Warning: Failed to emit KPI:', error);
-    }`
-        : ''
-    }
-    
-    if (errors.length > 0) {
-      console.error('\\nStop hook completed with errors:', errors.join(', '));
-      process.exit(1);
-    } else {
-      console.log('\\n✓ Stop hook completed successfully');
+    if (editLog.length === 0) {
+      // No edits, exit silently
       process.exit(0);
     }
+    
+    // Call router stop hook
+    const result = await stopHook({
+      editLog,
+      reposChanged,
+      cwd: process.cwd(),
+    });
+    
+    // Display hints if available
+    if (result.hints && result.hints.length > 0) {
+      console.log('\\n' + result.hints.join('\\n'));
+    }
+    
+    // Check if blocked by guardrails
+    const blocked = result.typecheck.some(tc => tc.errors < 0) || result.hints?.some(h => h.includes('🚫'));
+    
+    if (blocked) {
+      console.error('\\n⚠️  Blocked by guardrails or errors detected');
+      process.exit(1);
+    }
+    
+    // Success
+    if (result.formatted.length > 0) {
+      console.log(\`\\n✓ Formatted \${result.formatted.length} file(s)\`);
+    }
+    
+    if (result.typecheck.length > 0) {
+      const totalErrors = result.typecheck.reduce((sum, tc) => sum + Math.max(0, tc.errors), 0);
+      if (totalErrors === 0) {
+        console.log('✓ All type checks passed');
+      } else {
+        console.error(\`✗ \${totalErrors} TypeScript error(s) found\`);
+      }
+    }
+    
+    // Notificaciones ya manejadas por stopHook, no es necesario duplicar aquí
+    
+    process.exit(0);
   } catch (error) {
-    console.error('Error in Stop hook:', error);
-    process.exit(2);
+    // Silently fail - hooks should not break editor workflow
+    console.error('Hook error:', error);
+    process.exit(0);
   }
 }
 

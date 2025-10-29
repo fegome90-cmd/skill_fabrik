@@ -11,14 +11,30 @@ import type { SkillRules, SkillRule, PreHookInput, PreHookOutput } from './types
  * Carga skill-rules.json desde configs/
  */
 export async function loadRules(cwd: string = process.cwd()): Promise<SkillRules> {
-  const rulesPath = resolve(cwd, 'configs/skill-rules.json');
-  try {
-    const content = await readFile(rulesPath, 'utf-8');
-    return JSON.parse(content) as SkillRules;
-  } catch (error) {
-    console.warn(`No se encontró skill-rules.json en ${rulesPath}, usando reglas vacías`);
-    return {};
+  // Intentar múltiples ubicaciones posibles
+  const possiblePaths = [
+    resolve(cwd, 'configs/skill-rules.json'), // Raíz del proyecto
+    resolve(cwd, '../configs/skill-rules.json'), // Si estamos en packages/*
+    resolve(cwd, '../../configs/skill-rules.json'), // Si estamos en packages/router/*
+  ];
+
+  for (const rulesPath of possiblePaths) {
+    try {
+      const content = await readFile(rulesPath, 'utf-8');
+      const rules = JSON.parse(content) as SkillRules;
+      if (Object.keys(rules).length > 0) {
+        return rules;
+      }
+    } catch {
+      // Continuar al siguiente path
+      continue;
+    }
   }
+
+  console.warn(
+    `No se encontró skill-rules.json en ninguna ubicación esperada, usando reglas vacías`
+  );
+  return {};
 }
 
 /**

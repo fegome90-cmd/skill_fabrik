@@ -34,7 +34,8 @@ async function validateSkill(
 ): Promise<{ valid: boolean; errors: string[]; warnings: string[] }> {
   const errors: string[] = [];
   const warnings: string[] = [];
-  const fs = await import('fs-extra');
+  const fsModule = await import('fs-extra');
+  const fs = fsModule.default || fsModule;
   const { pathExists } = fs;
   const { join } = await import('path');
 
@@ -111,7 +112,8 @@ export function skillsCommand(program: Command) {
         const outputPath = options.out || './registry/index.json';
 
         const { parseSkillMD } = await import('../utils/skill-parser.js');
-        const fs = await import('fs-extra');
+        const fsModule = await import('fs-extra');
+        const fs = fsModule.default || fsModule;
         const { pathExists, ensureDir, writeJson, readdir } = fs;
         const { join, resolve: resolvePath } = await import('path');
 
@@ -217,7 +219,8 @@ export function skillsCommand(program: Command) {
 
       try {
         const { parseSkillMD } = await import('../utils/skill-parser.js');
-        const fs = await import('fs-extra');
+        const fsModule = await import('fs-extra');
+        const fs = fsModule.default || fsModule;
         const { readdir, pathExists } = fs;
 
         // Buscar todos los SKILL.md en subdirectorios
@@ -231,6 +234,13 @@ export function skillsCommand(program: Command) {
 
           for (const skillDir of skillDirs) {
             if (!skillDir.isDirectory()) continue;
+
+            // Ignorar directorios comunes (resources, scripts, etc.)
+            if (
+              ['resources', 'scripts', 'examples', 'tests', '__tests__'].includes(skillDir.name)
+            ) {
+              continue;
+            }
 
             const skillMD = join(categoryPath, skillDir.name, 'SKILL.md');
 
@@ -301,14 +311,235 @@ export function skillsCommand(program: Command) {
     });
 
   skillsCmd
+    .command('rules')
+    .description('Generate skill-rules.json from indexed registry')
+    .option('-i, --input <file>', 'Input registry file', './registry/index.json')
+    .option('-o, --output <file>', 'Output rules file', './configs/skill-rules.json')
+    .option('-v, --verbose', 'Verbose output')
+    .action(async (options: { input?: string; output?: string; verbose?: boolean }) => {
+      try {
+        console.log(chalk.blue('Generating skill-rules.json from registry...'));
+
+        const inputPath = resolve(options.input || './registry/index.json');
+        const outputPath = resolve(options.output || './configs/skill-rules.json');
+
+        const fsModule = await import('fs-extra');
+        const fs = fsModule.default || fsModule;
+        const { pathExists, readJson, ensureDir, writeJson } = fs;
+
+        if (!(await pathExists(inputPath))) {
+          console.error(chalk.red(`Registry not found: ${inputPath}. Run "skills index" first.`));
+          process.exit(2);
+        }
+
+        const registry = (await readJson(inputPath)) as SkillRegistry;
+
+        // Convert registry to skill-rules format
+        const rules: Record<
+          string,
+          {
+            type: string;
+            enforcement: string;
+            priority: string;
+            promptTriggers?: { keywords?: string[]; intentPatterns?: string[] };
+            fileTriggers?: { pathPatterns?: string[]; contentPatterns?: string[] };
+            resources?: string[];
+          }
+        > = {};
+
+        for (const skill of registry.skills) {
+          // Determine type and enforcement from skill metadata
+          // Default mapping (can be enhanced with metadata fields)
+          const type = skill.severity === 'critical' ? 'guardrail' : 'guideline';
+          const enforcement =
+            skill.severity === 'critical'
+              ? 'block'
+              : skill.severity === 'high'
+                ? 'require'
+                : 'suggest';
+          const priority = skill.severity || 'normal';
+
+          rules[skill.name] = {
+            type,
+            enforcement,
+            priority,
+            promptTriggers: skill.triggers
+              ? {
+                  keywords: skill.triggers.keywords,
+                  intentPatterns: skill.triggers.intentPatterns,
+                }
+              : undefined,
+            fileTriggers: skill.triggers
+              ? {
+                  pathPatterns: skill.triggers.pathPatterns,
+                  contentPatterns: skill.triggers.contentPatterns,
+                }
+              : undefined,
+          };
+
+          if (options.verbose) {
+            console.log(chalk.green(`✓ Generated rule for: ${skill.name}`));
+          }
+        }
+
+        // Ensure output directory exists
+        await ensureDir(resolve(outputPath, '..'));
+
+        // Write skill-rules.json
+        await writeJson(outputPath, rules, { spaces: 2 });
+
+        console.log(chalk.green(`✅ Generated ${Object.keys(rules).length} skill rule(s)`));
+        console.log(chalk.blue(`Rules written to: ${outputPath}`));
+
+        process.exit(0);
+      } catch (error) {
+        console.error(
+          chalk.red(
+            `Error generating rules: ${error instanceof Error ? error.message : String(error)}`
+          )
+        );
+        process.exit(2);
+      }
+    });
+
+  skillsCmd
     .command('check')
     .description('Check which skills match an intent')
     .argument('<intent>', 'User intent to check')
     .option('-v, --verbose', 'Verbose output')
-    .action(async (intent: string, _options: { verbose?: boolean }) => {
-      console.log(chalk.blue(`Checking intent: "${intent}"`));
-      console.log(chalk.yellow('⚠️  Implementation pending - stub command'));
-      // TODO: Implement skills check functionality using router
-      process.exit(0);
-    });
+    .option('--open-files <files...>', 'Open files to consider for path triggers')
+    .option('--threshold <number>', 'Activation threshold (0-1)', '0.6')
+    .action(
+      async (
+        intent: string,
+        options: { verbose?: boolean; openFiles?: string[]; threshold?: string }
+      ) => {
+        try {
+          console.log(chalk.blue(`Checking intent: "${intent}"`));
+
+          // Load registry and match skills
+          const registryPath = resolve(process.cwd(), 'registry', 'index.json');
+          const fsModule = await import('fs-extra');
+          const fs = fsModule.default || fsModule;
+          const { pathExists, readJson } = fs;
+
+          if (!(await pathExists(registryPath))) {
+            console.error(chalk.red('Registry not found. Run "skills index" first.'));
+            process.exit(2);
+          }
+
+          const registry = (await readJson(registryPath)) as SkillRegistry;
+          const lowerIntent = intent.toLowerCase();
+
+          // Enhanced matching with scoring
+          const matches: Array<{ skill: SkillMetadata; score: number; matchedKeywords: string[] }> =
+            [];
+
+          for (const skill of registry.skills) {
+            const keywords = skill.triggers?.keywords || [];
+            const intentPatterns = skill.triggers?.intentPatterns || [];
+            const pathPatterns = skill.triggers?.pathPatterns || [];
+
+            let score = 0;
+            const matchedKeywords: string[] = [];
+
+            // Keyword matching (basic scoring)
+            const keywordMatches = keywords.filter(keyword =>
+              lowerIntent.includes(keyword.toLowerCase())
+            );
+            if (keywordMatches.length > 0) {
+              score += 0.4;
+              matchedKeywords.push(...keywordMatches);
+            }
+
+            // Intent pattern matching
+            const intentMatches = intentPatterns.filter(pattern => {
+              try {
+                return new RegExp(pattern, 'i').test(intent);
+              } catch {
+                return false;
+              }
+            });
+            if (intentMatches.length > 0) {
+              score += 0.4;
+            }
+
+            // Path pattern matching (if open files provided)
+            if (options.openFiles && pathPatterns.length > 0) {
+              const pathMatches = pathPatterns.filter(pattern =>
+                options.openFiles!.some(file => {
+                  // Simple glob matching
+                  const regex = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]+');
+                  return new RegExp(regex).test(file);
+                })
+              );
+              if (pathMatches.length > 0) {
+                score += 0.2;
+              }
+            }
+
+            if (score > 0) {
+              matches.push({ skill, score, matchedKeywords });
+            }
+          }
+
+          // Filter by threshold
+          const threshold = parseFloat(options.threshold || '0.6');
+          const filteredMatches = matches.filter(m => m.score >= threshold);
+
+          // Sort by score descending
+          filteredMatches.sort((a, b) => b.score - a.score);
+
+          if (filteredMatches.length === 0) {
+            console.log(chalk.yellow('⚠️  No matching skills found'));
+
+            if (options.verbose && matches.length > 0) {
+              console.log(
+                chalk.gray(`\nFound ${matches.length} potential match(es) below threshold:`)
+              );
+              matches.slice(0, 5).forEach(m => {
+                console.log(chalk.gray(`  ${m.skill.name}: ${(m.score * 100).toFixed(1)}%`));
+              });
+            }
+
+            process.exit(0);
+          }
+
+          console.log(chalk.green(`\n✅ Found ${filteredMatches.length} matching skill(s):`));
+
+          filteredMatches.forEach(({ skill, score, matchedKeywords }) => {
+            console.log(chalk.green(`  ✓ ${skill.name} (${(score * 100).toFixed(1)}%)`));
+
+            if (options.verbose) {
+              if (matchedKeywords.length > 0) {
+                console.log(
+                  chalk.gray(`    → Matched keywords: ${matchedKeywords.slice(0, 3).join(', ')}`)
+                );
+              }
+              if (skill.description) {
+                console.log(chalk.gray(`    → ${skill.description.substring(0, 80)}...`));
+              }
+              if (skill.severity) {
+                const severityColor =
+                  skill.severity === 'critical'
+                    ? chalk.red
+                    : skill.severity === 'high'
+                      ? chalk.yellow
+                      : chalk.blue;
+                console.log(severityColor(`    → Severity: ${skill.severity}`));
+              }
+            }
+          });
+
+          process.exit(0);
+        } catch (error) {
+          console.error(
+            chalk.red(
+              `Error checking intent: ${error instanceof Error ? error.message : String(error)}`
+            )
+          );
+          process.exit(2);
+        }
+      }
+    );
 }

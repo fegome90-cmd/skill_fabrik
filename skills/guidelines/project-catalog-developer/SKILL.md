@@ -2,27 +2,49 @@
 id: project-catalog-developer
 version: 0.1.0
 type: guideline
-summary: Desarrollo de la vista catálogo (DataGrid grande): layout, columnas, filtros, virtualización y rendimiento.
+summary: 'Catálogo (DataGrid): columnas tipadas, filtros con URL, virtualización y rendimiento.'
 audience: engineers
-when_to_use: Cambios en componentes de catálogo o su layout/columnas/filtros.
+when_to_use: Cambios en grid, layout, filtros o rendimiento.
 resources:
   - resources/datagrid-layout.md
   - resources/performance.md
 ---
 
-## Procedimiento (resumen)
+## Procedimiento
 
-1. Definir columnas con tipos y formatters.
+1. Columnas con tipos/formatters; keys únicas y estables.
 
-2. Virtualización activada para listas largas.
+2. Filtros controlados, debounced y persistidos en URL.
 
-3. Filtros controlados, debounced, persistentes por URL.
+3. Virtualización para listas largas; no bloquear main thread.
 
-4. Paginación y orden estable; pruebas de rendimiento.
+4. Medición: FPS, long tasks, memoria.
 
-## Checklist esencial
+## Checklist
 
-- [ ] Columnas tipadas y únicas.
-- [ ] Filtros sincronizados con URL.
-- [ ] Virtualización funcionando sin glitches.
-- [ ] No bloquear main thread (>16ms).
+- [ ] Columnas y filtros sincronizados con URL.
+- [ ] Virtualización sin glitches visuales.
+- [ ] No hay renders >16ms críticos.
+
+## Ejemplos
+
+### ✅ Correcto
+
+```typescript
+const columns = useMemo(() => [
+  { key: 'id', header: 'ID', render: (v) => v },
+  { key: 'name', header: 'Nombre', render: (v) => v.toUpperCase() },
+], []);
+
+function CatalogGrid({ data }) {
+  const { filters, setFilters } = useSearchParams();
+  return (
+    <VirtualizedGrid
+      columns={columns}
+      data={data}
+      filters={filters}
+      onFiltersChange={setFilters}
+    />
+  );
+}
+```

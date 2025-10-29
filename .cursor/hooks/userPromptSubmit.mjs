@@ -1,48 +1,56 @@
 #!/usr/bin/env node
 /**
  * UserPromptSubmit Hook
- * Auto-activates skills based on user prompt intent
+ * Auto-activates skills based on user prompt intent using router package
  */
 
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { userPromptSubmitHook } from '../../packages/router/dist/index.js';
+import { resolve } from 'path';
 
 async function main() {
   const prompt = process.argv[2] || '';
+  const openFilesArg = process.argv[3] || '[]';
   
   if (!prompt) {
-    console.error('No prompt provided');
-    process.exit(1);
+    // No prompt provided, exit silently (hook is optional)
+    process.exit(0);
   }
   
   try {
-    // Load skill registry
-    const registryPath = join(process.cwd(), 'registry/index.json');
-    const registry = JSON.parse(await readFile(registryPath, 'utf-8'));
+    const openFiles = JSON.parse(openFilesArg);
     
-    // Find matching skills (simplified matching - can be enhanced)
-    const matches = registry.skills
-      .filter((skill: { triggers?: { keywords?: string[] } }) => {
-        const keywords = skill.triggers?.keywords || [];
-        return keywords.some((keyword: string) => 
-          prompt.toLowerCase().includes(keyword.toLowerCase())
-        );
-      })
-      .map((skill: { name: string; severity?: string }) => ({
-        skill: skill.name,
-        severity: skill.severity || 'medium',
-      }));
-    
-    // Output matches as JSON for Cursor to process
-    if (matches.length > 0) {
-      console.log(JSON.stringify({
-        matches,
-        activated: matches.filter((m: { severity: string }) => m.severity === 'critical' || m.severity === 'high'),
-      }));
+    // Get active file content if available (max 2KB)
+    let activeFileContent = '';
+    if (openFiles.length > 0) {
+      try {
+        const { readFile } = await import('fs/promises');
+        const firstFile = resolve(process.cwd(), openFiles[0]);
+        const content = await readFile(firstFile, { encoding: 'utf-8' });
+        activeFileContent = content.substring(0, 2048); // Limit to 2KB
+      } catch {
+        // Ignore errors reading file
+      }
     }
+    
+    // Call router hook
+    const result = await userPromptSubmitHook({
+      prompt,
+      openFiles: Array.isArray(openFiles) ? openFiles : [],
+      activeFileContent,
+      cwd: process.cwd(),
+    });
+    
+    // Output injected note if skills activated
+    if (result.injectedNote) {
+      console.log(result.injectedNote);
+    }
+    
+    // Exit with success
+    process.exit(0);
   } catch (error) {
-    console.error('Error in UserPromptSubmit hook:', error);
-    process.exit(1);
+    // Silently fail - hooks should not break editor workflow
+    console.error('Hook error:', error);
+    process.exit(0);
   }
 }
 

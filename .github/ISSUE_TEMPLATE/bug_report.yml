@@ -1,0 +1,82 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: '[BUG] '
+labels:
+  - bug
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Please Read Before Submitting
+
+        ### Have you searched for related issues?
+        Some other users might have the same issue as yours.
+
+        ### Are you familiar with GitHub Markdown Syntax?
+        Please use [GitHub Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) syntax to format your input.
+        Pay attention to code blocks. Use "\`\`\`" blocks for code and output.
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Please provide as much information as possible. Use Markdown to format your text.
+      value: |
+        **Describe the bug**
+        A clear and concise description of what the bug is.
+
+        **To Reproduce**
+        Steps to reproduce the behavior. Please include code and outputs such as stacktrace.
+
+        1. Go to '...'
+        2. Run '...'
+        3. See error
+
+        **Expected behavior**
+        A clear and concise description of what you expected to happen.
+
+        **Screenshots**
+        If applicable, add screenshots to help explain your problem.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Which package/component?
+      description: Select the package or component where the bug was found
+      multiple: true
+      options:
+        - skills-cli
+        - router
+        - guards/guardrails
+        - workflows
+        - documentation
+        - other
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Node.js version
+      description: What version of Node.js are you using?
+      placeholder: 'e.g., 18.17.0'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: pnpm version
+      description: What version of pnpm are you using?
+      placeholder: 'e.g., 8.10.0'
+  - type: dropdown
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Windows
+        - Linux (Ubuntu)
+        - Linux (Other)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+      placeholder: Any additional information that might be helpful...

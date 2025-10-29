@@ -7,3 +7,4 @@ investigaciones/
 .cursor/
 mcp/servers/memtech/gateway/*.js
 packages/skills-cli/dist
+scripts/test-auth-route.js
