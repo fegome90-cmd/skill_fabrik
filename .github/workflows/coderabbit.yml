@@ -26,6 +26,8 @@ jobs:
           review_simple_changes: true
           review_comment_lgtm: false
           review_comment_lgtm_message: 'This PR looks good to me! ✅'
+          # Habilitar reviews para PRs de bots (Dependabot, etc.)
+          review_bot_prs: true
 
           # Configuración de reviews
           path_filters: |

@@ -1,0 +1,9 @@
+# Configuración de CoderRabbit
+# Este archivo permite configurar el comportamiento de CoderRabbit en el repositorio
+
+# Habilitar reviews para PRs creados por bots (Dependabot, renovate, etc.)
+review_bot_prs: true
+
+# Deshabilitar mensaje de "Review skipped"
+reviews:
+  review_status: false
