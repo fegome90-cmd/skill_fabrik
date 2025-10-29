@@ -56,20 +56,18 @@
 
 ### Integración con Sistemas Existentes
 
-<<<<<<< HEAD
-| Sistema | Integración CLOOP | Beneficio |
+| Sistema     | Integración CLOOP               | Beneficio                |
 | ----------- | ------------------------------- | ------------------------ |
-| **BMCC** | CLOOP guía el proceso BMCC | Metodología unificada |
-| **ADRs** | CLOOP estructura las decisiones | Decisiones fundamentadas |
-| **MemTech** | CLOOP optimiza la memoria | Memoria inteligente |
-| **CLI** | CLOOP estructura los comandos | Comandos consistentes |
-=======
-| Sistema | Integración CLOOP | Beneficio |
-|---------|-------------------|-----------|
-| **BMCC** | CLOOP guía el proceso BMCC | Metodología unificada |
-| **ADRs** | CLOOP estructura las decisiones | Decisiones fundamentadas |
-| **MemTech** | CLOOP optimiza la memoria | Memoria inteligente |
-| **CLI** | CLOOP estructura los comandos | Comandos consistentes |
+| **BMCC**    | CLOOP guía el proceso BMCC      | Metodología unificada    |
+| **ADRs**    | CLOOP estructura las decisiones | Decisiones fundamentadas |
+| **MemTech** | CLOOP optimiza la memoria       | Memoria inteligente      |
+| **CLI**     | CLOOP estructura los comandos   | Comandos consistentes    |
+| Sistema     | Integración CLOOP               | Beneficio                |
+| ---------   | -------------------             | -----------              |
+| **BMCC**    | CLOOP guía el proceso BMCC      | Metodología unificada    |
+| **ADRs**    | CLOOP estructura las decisiones | Decisiones fundamentadas |
+| **MemTech** | CLOOP optimiza la memoria       | Memoria inteligente      |
+| **CLI**     | CLOOP estructura los comandos   | Comandos consistentes    |
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -82,9 +80,6 @@
 **Objetivo**: Definir claramente el objetivo, hipótesis y criterios de éxito.
 
 **Actividades**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -95,9 +90,6 @@
 - Validar entendimiento con stakeholders
 
 **Artefactos**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -107,9 +99,6 @@
 - Contexto recopilado
 
 **Criterios de Éxito**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -123,9 +112,6 @@
 **Objetivo**: Crear un plan mínimo ejecutable (MVP) basado en el entendimiento del problema.
 
 **Actividades**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -136,9 +122,6 @@
 - Crear plan de implementación
 
 **Artefactos**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -149,9 +132,6 @@
 - Plan de implementación
 
 **Criterios de Éxito**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -166,9 +146,6 @@
 **Objetivo**: Ejecutar el plan implementando la solución de manera iterativa.
 
 **Actividades**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -179,9 +156,6 @@
 - Documentar decisiones tomadas
 
 **Artefactos**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -192,9 +166,6 @@
 - Feedback procesado
 
 **Criterios de Éxito**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -209,9 +180,6 @@
 **Objetivo**: Recolectar métricas y evidencia para evaluar el éxito de la implementación.
 
 **Actividades**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -222,9 +190,6 @@
 - Documentar hallazgos
 
 **Artefactos**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -235,9 +200,6 @@
 - Hallazgos documentados
 
 **Criterios de Éxito**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -252,9 +214,6 @@
 **Objetivo**: Analizar los resultados, identificar lecciones aprendidas y ajustar para futuras iteraciones.
 
 **Actividades**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -265,9 +224,6 @@
 - Planificar próximas iteraciones
 
 **Artefactos**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -278,9 +234,6 @@
 - Plan de próximas iteraciones
 
 **Criterios de Éxito**:
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -298,10 +251,6 @@
 
 #### 1. Sprint Template
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Archivo**: `templates/cloop/sprint-template.md`
@@ -310,10 +259,6 @@
 
 #### 2. ADR Template
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Archivo**: `templates/cloop/adr-template.md`
@@ -321,10 +266,6 @@
 - **Contenido**: Estructura de ADR con fases CLOOP
 
 #### 3. Feature Template
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -336,10 +277,6 @@
 
 #### 1. CLI Orgánica
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Comando**: `sprint` - Gestión de sprints
@@ -348,10 +285,6 @@
 
 #### 2. Validación Automática
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Script**: `scripts/validate-cloop.sh`
@@ -359,10 +292,6 @@
 - **Output**: Reporte de cumplimiento
 
 #### 3. Métricas CLOOP
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -378,10 +307,6 @@
 
 #### Clarify
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Objetivos claros**: 100% de sprints
@@ -389,10 +314,6 @@
 - **Criterios de éxito**: 100% medibles
 
 #### Layout
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -402,10 +323,6 @@
 
 #### Operate
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Implementación completa**: 100% de features
@@ -414,10 +331,6 @@
 
 #### Observe
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Métricas recolectadas**: 100% de sprints
@@ -425,10 +338,6 @@
 - **Calidad en estándares**: 100% de código
 
 #### Reflect
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -451,10 +360,6 @@
 
 #### Fase 1: Entendimiento (1 semana)
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 1. Leer esta guía completa
@@ -464,10 +369,6 @@
 
 #### Fase 2: Implementación (2 semanas)
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 1. Usar templates en todos los sprints
@@ -476,10 +377,6 @@
 4. Ajustar proceso según contexto
 
 #### Fase 3: Optimización (1 mes)
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -492,10 +389,6 @@
 
 #### Migración Gradual
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 1. **Identificar** procesos actuales
@@ -505,10 +398,6 @@
 5. **Validar** mejoras
 
 #### Herramientas de Migración
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -524,10 +413,6 @@
 
 #### Gate 1: Clarify
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - [ ] Objetivo SMART definido
@@ -536,10 +421,6 @@
 - [ ] Contexto completo recopilado
 
 #### Gate 2: Layout
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -550,10 +431,6 @@
 
 #### Gate 3: Operate
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - [ ] Implementación completa
@@ -563,10 +440,6 @@
 
 #### Gate 4: Observe
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - [ ] Métricas recolectadas completamente
@@ -575,10 +448,6 @@
 - [ ] Hallazgos documentados
 
 #### Gate 5: Reflect
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
@@ -606,10 +475,6 @@
 
 ### Documentación Científica
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Reflexion** (NeurIPS 2023): Arquitectura base
@@ -620,10 +485,6 @@
 
 ### Documentación del Proyecto
 
-<<<<<<< HEAD
-
-=======
-
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
 - **Templates**: `templates/cloop/`
@@ -632,10 +493,6 @@
 - **Tests**: `tests/cloop/`
 
 ### Herramientas Externas
-
-<<<<<<< HEAD
-
-=======
 
 > > > > > > > 606848862154a86d2bf7e0e5d9ad9f33ee222533
 
