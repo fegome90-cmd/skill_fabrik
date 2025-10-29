@@ -1,0 +1,12 @@
+gates:
+  skills-lint:
+    name: skills-lint
+    command: 'node packages/skills-cli/dist/index.js skills index ./skills --out ./registry/index.json'
+    required: true
+    description: 'Validate skills structure'
+
+  no-mess-left-behind:
+    name: no-mess-left-behind
+    command: 'node packages/skills-cli/dist/index.js build --all'
+    required: true
+    description: 'Ensure no errors left behind'

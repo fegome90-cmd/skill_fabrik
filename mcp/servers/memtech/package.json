@@ -1,0 +1,75 @@
+{
+  "name": "memtech-mcp",
+  "version": "1.0.0",
+  "description": "MemTech MCP - Memory Technology Model Context Protocol Server",
+  "type": "module",
+  "main": "scripts/memtech/mcp-server.mjs",
+  "scripts": {
+    "start": "node scripts/memtech/mcp-server.mjs",
+    "dev": "node --watch scripts/memtech/mcp-server.mjs",
+    "test": "node scripts/test/test-runner.mjs",
+    "test:smoke": "node scripts/test/smoke-tests.mjs",
+    "test:quick": "node scripts/test/quick-test.mjs",
+    "test:basic": "node scripts/test/basic-test.mjs",
+    "pre:memtech": "node scripts/audit/memtech-go-nogo.mjs",
+    "test:go-nogo": "node scripts/audit/memtech-go-nogo.mjs",
+    "test:memtech-command": "node scripts/test-memtech-command.mjs",
+    "verify:setup": "node scripts/verify-memtech-setup.mjs",
+    "fix:warnings": "node scripts/audit/fix-warnings.mjs",
+    "acceptance:criteria": "node scripts/audit/acceptance-criteria.mjs",
+    "heartbeat:vm": "node scripts/heartbeat-vm.mjs",
+    "test:bulletproof": "node scripts/test/bulletproof-suite.mjs",
+    "test:robustness": "node scripts/test/robustness-tests.mjs",
+    "generate:evidence": "node scripts/generate-evidence.mjs",
+    "test:mcp-call": "node scripts/test-mcp-call.mjs",
+    "setup:supabase": "node scripts/setup-supabase.mjs",
+    "migrate:data": "node scripts/migrate-data-to-supabase.mjs",
+    "test:supabase": "node scripts/test-supabase-connection.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [
+    "memtech",
+    "mcp",
+    "memory-technology",
+    "model-context-protocol",
+    "memory-system",
+    "checkpoints",
+    "snapshots"
+  ],
+  "author": "MemTech Agent",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "dotenv": "^16.3.1",
+    "ioredis": "^5.3.2",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "pg": "^8.11.3",
+    "redis": "^5.8.3",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^20.10.4",
+    "@types/uuid": "^9.0.7",
+    "eslint": "^8.55.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/startkit-main/packages/memtech-mcp"
+  }
+}

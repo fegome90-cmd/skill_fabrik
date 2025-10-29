@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SkillRules",
+  "type": "object",
+  "patternProperties": {
+    "^[a-z0-9-]+$": {
+      "type": "object",
+      "required": ["type", "enforcement", "priority"],
+      "properties": {
+        "type": {
+          "enum": ["guideline", "guardrail", "workflow", "analyst", "generator"]
+        },
+        "enforcement": {
+          "enum": ["suggest", "require", "block"]
+        },
+        "priority": {
+          "enum": ["critical", "high", "normal", "low"]
+        },
+        "promptTriggers": {
+          "type": "object",
+          "properties": {
+            "keywords": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Palabras clave que activan el skill"
+            },
+            "intentPatterns": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "regex"
+              },
+              "description": "Expresiones regulares para detectar intención"
+            }
+          },
+          "additionalProperties": false
+        },
+        "fileTriggers": {
+          "type": "object",
+          "properties": {
+            "pathPatterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Patrones glob para rutas de archivos"
+            },
+            "contentPatterns": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "regex"
+              },
+              "description": "Expresiones regulares para buscar en contenido"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Rutas a recursos adicionales (carga on-demand)"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

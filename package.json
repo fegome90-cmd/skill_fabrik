@@ -1,0 +1,34 @@
+{
+  "name": "skills-fabrik",
+  "version": "0.1.0",
+  "description": "Skills Fabric - Sistema de gestión de Skills con CLOOP methodology",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter @skills-fabrik/skills-cli build",
+    "dev": "pnpm --filter @skills-fabrik/skills-cli dev",
+    "test": "pnpm --filter @skills-fabrik/skills-cli test",
+    "lint": "prettier --check . && eslint .",
+    "lint:fix": "prettier --write . && eslint --fix .",
+    "format": "prettier --write .",
+    "gates": "bash scripts/devops/gates-runner.sh",
+    "prepare": "husky install",
+    "pr": "bash scripts/devops/create-pr.sh",
+    "gh-setup": "bash scripts/devops/gh-setup.sh"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.10.0"
+}

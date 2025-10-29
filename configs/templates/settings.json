@@ -1,0 +1,24 @@
+{
+  "projectName": "skill-fabric",
+  "version": "0.1.0",
+  "monorepo": {
+    "manager": "pnpm",
+    "packages": ["packages/*"]
+  },
+  "cloop": {
+    "enabled": true,
+    "phasesPath": "cloop/phases",
+    "metricsPath": "metrics/cloop-metrics.json"
+  },
+  "skills": {
+    "defaultPath": "./skills",
+    "registryPath": "./registry/index.json"
+  },
+  "hooks": {
+    "path": ".cursor/hooks",
+    "enabledHooks": ["userPromptSubmit", "stop"]
+  },
+  "kpi": {
+    "eventsPath": "obs/kpi/events.jsonl"
+  }
+}

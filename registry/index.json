@@ -1,0 +1,37 @@
+{
+  "$schema": "../configs/skill-rules.schema.json",
+  "version": "0.1.0",
+  "generatedAt": "2025-01-27T00:00:00.000Z",
+  "skills": [
+    {
+      "id": "backend-dev-guidelines",
+      "type": "guideline",
+      "summary": "Patrones backend en capas y pruebas.",
+      "tags": ["backend", "controller", "service", "repository", "errors", "tests"]
+    },
+    {
+      "id": "frontend-dev-guidelines",
+      "type": "guideline",
+      "summary": "Patrones UI, fetching, routing, consistencia.",
+      "tags": ["frontend", "components", "routing", "fetching", "ux"]
+    },
+    {
+      "id": "project-catalog-developer",
+      "type": "guideline",
+      "summary": "DataGrid grande: layout, filtros y rendimiento.",
+      "tags": ["catalog", "datagrid", "performance"]
+    },
+    {
+      "id": "database-verification",
+      "type": "guardrail",
+      "summary": "Bloquea operaciones peligrosas en BD.",
+      "tags": ["db", "guardrail", "safety"]
+    },
+    {
+      "id": "secrets-and-config",
+      "type": "guardrail",
+      "summary": "Sin secretos en código; validar config.",
+      "tags": ["security", "config", "env"]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+# MemTech Queries Enhanced Policy
+# Configuración completa con budgets, circuit breaker y hard gates
+
+defaults:
+  hard_block_if_memory_offline: true
+  checkpoint_on_start: true
+  circuit_breaker:
+    max_failures: 3
+    reset_timeout_ms: 60000
+  budgets:
+    ram_warn_mb: 1024
+    ram_kill_mb: 2048
+    cpu_warn_pct: 85
+  lock_ttl_ms: 30000
+  skipL4: false # Set to true if Qdrant not available
+
+intents:
+  analyze.grafana:
+    match: ['grafana', 'dashboard', 'panel', 'no data', 'métricas', 'monitoring', 'grafana no data']
+    priority: 1
+    steps:
+      - call: memtech.checkpoint.create
+        with: { name: 'grafana_analysis', meta: { intent: 'analyze.grafana' } }
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - hard_gate: '${result.router.pack?.data?.hot?.length > 0}'
+      - call: memtech.search
+        with: { query: '${input}', tags: ['grafana', 'dashboard'], limit: 10 }
+      - hard_gate: '${result.search?.hits > 0}'
+      - call: memtech.grafana.listDash
+      - call: memtech.grafana.smoke
+        with: { title: '${result.listDash?.dashboards?.[0]?.title}' }
+        if: '${result.listDash?.dashboards?.length > 0}'
+      - call: memtech.report.suggestFix
+        with: { scope: 'grafana' }
+    expected_artifacts:
+      - timeline_log
+      - session_report
+      - checkpoint
+
+  analyze.postgresql:
+    match:
+      [
+        'postgresql',
+        'postgres',
+        'base de datos',
+        'actividad',
+        'transacciones',
+        'heartbeat',
+        'postgresql activo',
+      ]
+    priority: 1
+    steps:
+      - call: memtech.checkpoint.create
+        with: { name: 'postgresql_analysis', meta: { intent: 'analyze.postgresql' } }
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['postgresql', 'database', 'activity'], limit: 10 }
+      - call: memtech.pg.health
+      - hard_gate: "${result.pg.health?.status === 'online'}"
+      - call: memtech.report.status
+        with: { mode: 'postgresql_detail' }
+    expected_artifacts:
+      - timeline_log
+      - session_report
+      - checkpoint
+
+  analyze.memtech:
+    match: ['memoria', 'l0', 'l1', 'l2', 'l3', 'cache', 'estado', 'memtech', 'jerarquía']
+    priority: 1
+    steps:
+      - call: memtech.checkpoint.create
+        with: { name: 'memtech_analysis', meta: { intent: 'analyze.memtech' } }
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['memory', 'memtech', 'hierarchy'], limit: 10 }
+      - call: memtech.health.check_all
+      - hard_gate: "${result.health?.redis === 'online' && result.health?.postgres === 'online'}"
+      - call: memtech.report.status
+        with: { mode: 'memory_hierarchy' }
+    expected_artifacts:
+      - timeline_log
+      - session_report
+      - checkpoint
+
+  analyze.general:
+    match: ['analizar', 'solucionar', 'revisar', 'problema', 'diagnosticar', 'investigar']
+    priority: 2
+    steps:
+      - call: memtech.checkpoint.create
+        with: { name: 'general_analysis', meta: { intent: 'analyze.general' } }
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['general', 'analysis'], limit: 10 }
+      - call: memtech.classify.intent
+        with:
+          {
+            input: '${input}',
+            intents: ['analyze.grafana', 'analyze.postgresql', 'analyze.memtech'],
+          }
+      - call: memtech.report.suggestFix
+        with: { scope: 'general' }
+    expected_artifacts:
+      - timeline_log
+      - session_report
+      - checkpoint
+
+  dedupe.existence_check:
+    match: ['ya existe', 'duplicado', 'repetido', 'ya está', 'crear', 'nuevo']
+    priority: 0 # Highest priority
+    steps:
+      - call: memtech.checkpoint.create
+        with: { name: 'existence_check', meta: { intent: 'dedupe.existence_check' } }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['duplicate', 'existence'], limit: 5 }
+      - hard_gate: '${result.search?.hits === 0}'
+      - call: memtech.report.duplicate
+        with: { existing: '${result.search?.results}', requested: '${input}' }
+    expected_artifacts:
+      - timeline_log
+      - session_report
+      - checkpoint
+      - duplicate_report
+
+  memory.health:
+    match: ['memoria', 'health', 'estado', 'redis', 'qdrant', 'postgres', 'conectividad']
+    priority: 1
+    steps:
+      - call: memtech.checkpoint.create
+        with: { name: 'memory_health', meta: { intent: 'memory.health' } }
+      - call: memtech.health.check_all
+      - hard_gate: "${result.health?.redis === 'online'}"
+      - call: memtech.vector.retryStatus
+        if: '${!defaults.skipL4}'
+      - call: memtech.report.status
+        with: { mode: 'memory_health' }
+    expected_artifacts:
+      - timeline_log
+      - session_report
+      - checkpoint
+
+# Hard gates globales
+hard_gates:
+  memory_online:
+    condition: "${result.health?.redis === 'online' && result.health?.postgres === 'online'}"
+    message: 'Memoria offline - no se puede proceder'
+
+  budget_respected:
+    condition: '${result.budget?.ram_mb < defaults.budgets.ram_kill_mb}'
+    message: 'Presupuesto de RAM excedido'
+
+  circuit_breaker_closed:
+    condition: "${result.circuit_breaker?.state === 'CLOSED'}"
+    message: 'Circuit breaker abierto - demasiados fallos'
+
+# Configuración de evidencia
+evidence:
+  required_artifacts:
+    - timeline_log
+    - session_report
+    - checkpoint
+
+  optional_artifacts:
+    - duplicate_report
+    - snapshot_manifest
+
+  retention_days: 30
+
+  compression: true

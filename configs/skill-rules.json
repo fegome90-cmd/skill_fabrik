@@ -1,0 +1,61 @@
+{
+  "backend-dev-guidelines": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": ["backend", "controller", "service", "API", "endpoint"],
+      "intentPatterns": [
+        "(create|add|fix).*?(route|endpoint|controller)",
+        "(how to|best practice|refactor).*?(backend|API)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["backend/src/**/*.ts", "services/**/src/**/*.ts"],
+      "contentPatterns": ["router\\.", "export\\s+.*Controller", "class\\s+.*Service"]
+    }
+  },
+  "frontend-dev-guidelines": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": ["frontend", "component", "hook", "UI", "view", "layout"],
+      "intentPatterns": ["(create|add|fix).*?(component|hook|view)", "(routing|navigation|loader)"]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["frontend/src/**/*.{ts,tsx}"],
+      "contentPatterns": ["function\\s+.*\\(", "use[A-Z]\\w+\\(", "createFileRoute\\("]
+    }
+  },
+  "project-catalog-developer": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "normal",
+    "promptTriggers": {
+      "keywords": ["catalog", "datagrid", "table", "columns", "filters"]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["frontend/src/**/catalog/**/*.{ts,tsx}"],
+      "contentPatterns": ["columns:\\s*\\[", "virtualiz"]
+    }
+  },
+  "database-verification": {
+    "type": "guardrail",
+    "enforcement": "block",
+    "priority": "critical",
+    "fileTriggers": {
+      "pathPatterns": ["**/src/**/repository/**/*.{ts,js}", "**/migrations/**/*"],
+      "contentPatterns": ["deleteMany\\(", "updateMany\\(", "TRUNCATE\\s+TABLE", "DROP\\s+TABLE"]
+    }
+  },
+  "secrets-and-config": {
+    "type": "guardrail",
+    "enforcement": "require",
+    "priority": "high",
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{ts,tsx,js,json,yml,yaml}"],
+      "contentPatterns": ["SECRET|API_KEY|TOKEN|PASSWORD"]
+    }
+  }
+}

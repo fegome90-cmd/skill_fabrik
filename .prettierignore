@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+coverage
+.nyc_output
+*.log
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+.DS_Store
+*.min.js
+*.min.css

@@ -1,0 +1,94 @@
+version: 1
+defaults:
+  mcp_timeout_ms: 3500
+  max_steps: 12
+  hard_block_if_memory_offline: true
+  checkpoint_on_start: true
+  circuit_breaker:
+    max_failures: 3
+    reset_timeout_ms: 60000
+
+intents:
+  analyze.grafana:
+    match: ['grafana', 'dashboard', 'panel', 'no data', 'métricas', 'monitoring']
+    steps:
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['grafana', 'dashboard'], limit: 10 }
+      - hard_gate: '${result.search?.hits > 0}'
+      - call: memtech.grafana.listDash
+      - call: memtech.grafana.smoke
+        with: { title: '${result.listDash?.dashboards?.[0]?.title}' }
+        if: '${result.listDash?.dashboards?.length > 0}'
+      - call: memtech.report.suggestFix
+        with: { scope: 'grafana' }
+
+  analyze.postgresql:
+    match: ['postgresql', 'postgres', 'base de datos', 'actividad', 'transacciones', 'heartbeat']
+    steps:
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['postgresql', 'database', 'activity'], limit: 10 }
+      - call: memtech.pg.health
+      - call: memtech.vm.query
+        with: { query: 'memtech_postgresql_status', range: '5m' }
+      - call: memtech.report.suggestFix
+        with: { scope: 'postgresql' }
+
+  analyze.memtech:
+    match: ['memtech', 'memoria jerárquica', 'L0', 'L1', 'L2', 'L3', 'memory', 'hit ratio']
+    steps:
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['memtech', 'memory', 'hierarchy'], limit: 10 }
+      - call: memtech.diag.health
+      - call: memtech.vm.query
+        with: { query: 'memtech_hit_ratio', range: '1h' }
+      - call: memtech.checkpoint.create
+        with: { name: 'memtech-analysis-${runId}', tags: ['analysis', 'memtech'] }
+      - call: memtech.report.suggestFix
+        with: { scope: 'memtech' }
+
+  dedupe.existence_check:
+    match: ['ya existe', 'duplicado', 'repetido', 'ya está', 'crear.*adr']
+    steps:
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 3000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['adr', 'spec', 'handoff'], threshold: 0.85 }
+      - hard_gate: '${result.search?.hits === 0}'
+      - call: memtech.report.duplicate
+        with: { existing: '${result.search.results}', requested: '${input}' }
+
+  memory.health:
+    match: ['memoria', 'redis', 'qdrant', 'postgres', 'health', 'conexión', 'estado']
+    steps:
+      - call: memtech.health.check_all
+      - branch:
+          when: "${result.check_all?.qdrant === 'offline'}"
+          then:
+            - call: memtech.vector.retryStatus
+            - call: memtech.report.incident
+              with: { severity: 'HIGH', topic: 'qdrant-offline' }
+          else:
+            - call: memtech.report.status
+              with: { mode: 'summary' }
+
+  analyze.general:
+    match: ['analizar', 'diagnosticar', 'revisar', 'verificar', 'solucionar']
+    steps:
+      - call: memtech.router.pack
+        with: { goal: '${input}', budgetTokens: 4000 }
+      - call: memtech.search
+        with: { query: '${input}', tags: ['analysis', 'context'], limit: 15 }
+      - call: memtech.classify.intent
+        with:
+          {
+            input: '${input}',
+            intents: ['analyze.grafana', 'analyze.postgresql', 'analyze.memtech'],
+          }
+      - call: memtech.report.suggestFix
+        with: { scope: 'general', context: '${result.search.results}' }

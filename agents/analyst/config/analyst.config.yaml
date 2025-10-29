@@ -1,0 +1,26 @@
+# Analyst Agent configuration (stub)
+
+agent:
+  name: 'snickers-analyst'
+  version: '0.1.0'
+  description: 'Agente Analista para orquestar pipelines y persistencia de contexto'
+
+pipelines:
+  default:
+    mode: 'tidy_strict'
+    data_dir: './pdfs'
+    tidy_dir: './outputs/latest/data'
+    run_command: 'python tools/run_all.py --data-dir .'
+
+memtech:
+  backend_api: 'http://127.0.0.1:8077/api/memtech'
+  default_tags:
+    - 'snickers'
+    - 'labs'
+    - 'analysis'
+
+feedback:
+  enable_human_loop: true
+  pending_endpoint: 'http://127.0.0.1:8077/api/feedback/pending'
+  submit_endpoint: 'http://127.0.0.1:8077/api/feedback/submit'
+# TODO: completar con thresholds, budgets, política de paralelización y rutas personalizadas

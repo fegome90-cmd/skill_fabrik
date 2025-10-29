@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+coverage
+*.config.js
+investigaciones/
+.cursor/
+mcp/servers/memtech/gateway/*.js
+packages/skills-cli/dist

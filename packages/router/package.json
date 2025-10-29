@@ -1,0 +1,33 @@
+{
+  "name": "@skills-fabrik/router",
+  "version": "0.1.0",
+  "description": "Router de activación de skills con hooks pre-invoke y stop",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "skills",
+    "router",
+    "hooks",
+    "pre-invoke",
+    "stop-hook"
+  ],
+  "author": "Skills Fabrik Team",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^10.3.10",
+    "yaml": "^2.4.1",
+    "execa": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

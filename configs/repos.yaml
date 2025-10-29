@@ -1,0 +1,39 @@
+# Configuración de repositorios a minar para extraer patrones y ADRs
+# Usado por: skills mine
+
+repos:
+  # Ejemplo: repositorio propio
+  - name: 'skills-fabrik'
+    path: '.'
+    adr_path: 'docs/adrs'
+    patterns:
+      - '**/*controller*.ts'
+      - '**/*service*.ts'
+      - '**/routes/**/*.ts'
+
+  # Ejemplo: repositorios externos (si tienes acceso)
+  # - name: "external-api-service"
+  #   path: "../external-api-service"
+  #   adr_path: "docs/decisions"
+  #   patterns:
+  #     - "src/**/*.ts"
+
+mining:
+  # Patrones de código a extraer
+  code_patterns:
+    - pattern: 'export class.*Controller'
+      description: 'Controllers'
+
+    - pattern: 'export.*Service'
+      description: 'Services'
+
+    - pattern: "router\\.(get|post|put|delete)"
+      description: 'Route definitions'
+
+  # Tipos de ADRs a extraer
+  adr_patterns:
+    - '*.md'
+
+  # Formato de salida
+  output_format: 'json' # json | markdown
+
