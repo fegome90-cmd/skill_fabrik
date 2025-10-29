@@ -21,7 +21,7 @@
     "e2e": "pnpm router:build && node --loader ts-node/esm packages/router/e2e/simulate.ts || (echo '⚠️  ts-node not found. Install: pnpm add -D ts-node typescript' && exit 1)"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.4",
+    "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^18.4.4",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.0",
