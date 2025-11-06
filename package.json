@@ -117,7 +117,7 @@
     "activate:select": "node scripts/metrics/activate-select.mjs"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.4",
+    "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^18.4.4",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
