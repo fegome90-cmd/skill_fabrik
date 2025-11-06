@@ -31,7 +31,7 @@ Se realizó un análisis exhaustivo del Pull Request masivo que contiene **1,932
 
 **Credencial Comprometida**:
 ```bash
-PG_PASSWORD_DEV=staging_surprise_password_2025
+PG_PASSWORD_DEV=[REDACTED]
 ```
 
 **Acceso Expuesto**:
@@ -344,7 +344,7 @@ glob@7.2.3: deprecated (usar glob@10+)
 
 ### Semana 1: SEGURIDAD Y BASE
 - **Día 1-2**: PR #1 (Seguridad) - **CRÍTICO**
-  - Rotar credencial `staging_surprise_password_2025`
+  - Rotar credencial `[REDACTED]`
   - Merge urgente
 - **Día 3**: Auditoría de accesos
 - **Día 4-5**: PR #2 (ESLint)
@@ -444,7 +444,7 @@ Los cambios ya están implementados en `review/repo-cleanup-and-documentation`:
   - `1124496` - Limpieza de seguridad
   - `554a7aa` - Migración ESLint
 - **Informe de Seguridad**: Ver `SECURITY-AUDIT-REPORT.md` en rama review
-- **ESLint Migration Guide**: https://eslint.org/docs/latest/use/configure/migration-guide
+- **ESLint Migration Guide**: <https://eslint.org/docs/latest/use/configure/migration-guide>
 
 ---
 
