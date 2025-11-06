@@ -113,7 +113,7 @@ jobs:
       run: npm run test:security:comprehensive
 
     - name: Upload security reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: security-reports
@@ -161,7 +161,7 @@ jobs:
       run: npm run test:load:memory
 
     - name: Upload performance reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: performance-reports
@@ -203,7 +203,7 @@ jobs:
       run: npm run test:boundary
 
     - name: Upload boundary test reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: boundary-reports
@@ -244,7 +244,7 @@ jobs:
       run: npm run test:chaos
 
     - name: Upload chaos reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: chaos-reports
@@ -288,7 +288,7 @@ jobs:
       run: npm run test:e2e:advanced
 
     - name: Upload E2E reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: e2e-reports
@@ -404,7 +404,7 @@ jobs:
       run: npm run test:visual
 
     - name: Upload visual reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: visual-reports
@@ -480,7 +480,7 @@ jobs:
         echo "Generated comprehensive test summary"
 
     - name: Upload test summary
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: test-summary
         path: test-summary.md
