@@ -1,0 +1,45 @@
+{
+  "id": "TP001",
+  "name": "Backend API Development",
+  "task": "Implement user authentication API with JWT tokens",
+  "skillId": "backend-dev-guidelines",
+  "description": "Crear API REST para autenticación de usuarios con endpoints de login, registro y refresh token. Implementar middleware de autorización y manejo de errores. Usar arquitectura hexagonal con DDD patterns.",
+  "phases": [
+    {
+      "name": "Clarify",
+      "description": "Definir requerimientos de autenticación y endpoints"
+    },
+    {
+      "name": "Layout",
+      "description": "Diseñar estructura de API y esquemas de datos"
+    },
+    {
+      "name": "Operate",
+      "description": "Implementar controladores y servicios"
+    },
+    {
+      "name": "Observe",
+      "description": "Validar funcionamiento con tests"
+    },
+    {
+      "name": "Reflect",
+      "description": "Optimizar y documentar la API"
+    }
+  ],
+  "expectedDuration": "6-8 horas",
+  "complexity": "high",
+  "keywords": [
+    "backend",
+    "api",
+    "authentication",
+    "jwt",
+    "middleware"
+  ],
+  "metadata": {
+    "version": "2.0.0",
+    "created": "2025-11-03T16:23:50.442Z",
+    "skillId": "backend-dev-guidelines",
+    "category": "backend",
+    "testType": "pbv2_activation"
+  }
+}

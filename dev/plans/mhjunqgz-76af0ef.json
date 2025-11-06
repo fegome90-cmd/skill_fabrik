@@ -1,0 +1,189 @@
+{
+  "id": "mhjunqgz-76af0ef",
+  "task": "Analizar el CLI actual de Skills Fabrik comparándolo con las especificaciones detalladas en CLI-IA-Local-Documentacion.md",
+  "status": "DRAFT",
+  "phases": [
+    {
+      "name": "Análisis Comparativo Actual",
+      "steps": [
+        "✅ Leer documentación CLI-IA-Local-Documentacion.md (completa)",
+        "✅ Analizar estructura CLI actual (Commander.js, 8 comandos hardcodeados)",
+        "✅ Evaluar sistema IPC actual (HTTP/REST en puertos 7727, 3000, 8877)",
+        "✅ Revisar modelo de seguridad actual (guardrails estáticos)",
+        "✅ Documentar brechas críticas identificadas",
+        "✅ Evaluar framework CLI (Commander.js + Chalk vs oclif + Ink)"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "Fase 1: Quick Wins (1 mes)",
+      "steps": [
+        "Migrar configuración .env → ~/.config/agent/settings.toml",
+        "Implementar TUI enriquecida con Ink (spinners, progress bars)",
+        "Agregar variables de plantilla básicas {{target_path}}, {{target_content}}",
+        "Mejorar UX con syntax highlighting y layouts",
+        "Documentar cambios realizados"
+      ],
+      "dependencies": [
+        "Análisis Comparativo Actual"
+      ]
+    },
+    {
+      "name": "Fase 2: Refactor Core (2-3 meses)",
+      "steps": [
+        "Implementar sistema de comandos TOML (.agent/commands/*.toml)",
+        "Crear parser para definiciones TOML (args, flags, templates)",
+        "Implementar seguridad zero-trust:",
+        "  - Confirmaciones interactivas obligatorias",
+        "  - CWD Jail (aislamiento de directorio)",
+        "  - Allow-list de comandos seguros",
+        "  - Modo --dry-run por defecto",
+        "Migrar framework CLI de Commander.js → oclif",
+        "Integrar autocompletado nativo",
+        "Testing exhaustivo del nuevo sistema"
+      ],
+      "dependencies": [
+        "Fase 1: Quick Wins (1 mes)"
+      ]
+    },
+    {
+      "name": "Fase 3: Arquitectura Avanzada (3-4 meses)",
+      "steps": [
+        "Migrar IPC: HTTP/REST → JSON-RPC 2.0 sobre stdio",
+        "Eliminar dependencias de puertos (7727, 3000, 8877)",
+        "Implementar arquitectura de plugins multi-lenguaje:",
+        "  - Plugin Host (detección automática de lenguaje)",
+        "  - Plugins TypeScript, Python, Java",
+        "  - Comunicación JSON-RPC stdio",
+        "Integración completa con MemTech como agente backend",
+        "Documentación completa de arquitectura",
+        "Migración y validación de comandos existentes"
+      ],
+      "dependencies": [
+        "Fase 2: Refactor Core (2-3 meses)"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "name": "Fragmentación ecosistema agentes locales",
+      "probability": "Alta",
+      "impact": "Medio",
+      "mitigation": "Contrato IPC simple (JSON-RPC), bien documentado. Agente de referencia para desarrollo."
+    },
+    {
+      "name": "Bajo rendimiento en hardware modesto",
+      "probability": "Media",
+      "impact": "Alto",
+      "mitigation": "Timeouts configurables. Límites de recursos. Promover modelos cuantizados."
+    },
+    {
+      "name": "Complejidad dependencias multi-lenguaje",
+      "probability": "Media",
+      "impact": "Medio",
+      "mitigation": "Usar pipx y npm -g para aislar deps. Documentar runtimes requeridos."
+    },
+    {
+      "name": "Adopción lenta desarrolladores",
+      "probability": "Media",
+      "impact": "Alto",
+      "mitigation": "Priorizar DX: instalación fácil, autocompletado robusto, docs claras."
+    }
+  ],
+  "metrics": {
+    "fase_1": {
+      "config_migration": "1-2 semanas",
+      "tui_enhancement": "2-3 semanas",
+      "template_variables": "1 semana",
+      "total_effort": "1 mes"
+    },
+    "fase_2": {
+      "toml_commands": "6-8 semanas",
+      "security_model": "4-6 semanas",
+      "framework_migration": "4-6 semanas",
+      "total_effort": "2-3 meses"
+    },
+    "fase_3": {
+      "ipc_migration": "8-10 semanas",
+      "plugin_architecture": "6-8 semanas",
+      "memtech_integration": "4-6 semanas",
+      "total_effort": "3-4 meses"
+    },
+    "total_project": {
+      "estimated_time": "6-9 meses",
+      "phases": 3,
+      "critical_improvements": 3,
+      "high_priority": 3
+    }
+  },
+  "improvements": [
+    {
+      "area": "Sistema de Comandos TOML",
+      "priority": "CRÍTICO",
+      "impact": "⭐⭐⭐⭐⭐",
+      "effort": "Medio",
+      "time": "2-3 meses",
+      "description": "Migrar de hardcodeado TS → .agent/commands/*.toml con variables de plantilla"
+    },
+    {
+      "area": "Modelo de Seguridad Zero-Trust",
+      "priority": "CRÍTICO",
+      "impact": "⭐⭐⭐⭐⭐",
+      "effort": "Medio",
+      "time": "1-2 meses",
+      "description": "Confirmaciones interactivas + CWD jail + Allow-list"
+    },
+    {
+      "area": "Migración IPC",
+      "priority": "CRÍTICO",
+      "impact": "⭐⭐⭐⭐⭐",
+      "effort": "Alto",
+      "time": "3-4 meses",
+      "description": "HTTP/REST → JSON-RPC stdio (eliminar conflictos de puertos)"
+    },
+    {
+      "area": "Framework CLI",
+      "priority": "ALTO",
+      "impact": "⭐⭐⭐⭐",
+      "effort": "Medio",
+      "time": "2 meses",
+      "description": "Commander.js + Chalk → oclif + Ink (autocompletado + TUI)"
+    },
+    {
+      "area": "TUI Enriquecida",
+      "priority": "MEDIO",
+      "impact": "⭐⭐⭐",
+      "effort": "Bajo",
+      "time": "2-3 semanas",
+      "description": "Ink para spinners, progress bars, layouts React-like"
+    },
+    {
+      "area": "Configuración TOML",
+      "priority": "MEDIO",
+      "impact": "⭐⭐⭐",
+      "effort": "Bajo",
+      "time": "1-2 semanas",
+      "description": ".env dispersos → ~/.config/agent/settings.toml centralizado"
+    }
+  ],
+  "current_state": {
+    "framework": "Commander.js + Chalk",
+    "commands": "8 hardcodeados en TypeScript",
+    "ipc": "HTTP/REST (puertos 7727, 3000, 8877)",
+    "security": "Guardrails estáticos",
+    "config": ".env files dispersos",
+    "tui": "Colores básicos con Chalk",
+    "plugins": "Solo TypeScript"
+  },
+  "target_state": {
+    "framework": "oclif + Ink",
+    "commands": "TOML declarativo con plantillas",
+    "ipc": "JSON-RPC stdio",
+    "security": "Zero-trust con confirmaciones",
+    "config": "TOML centralizado",
+    "tui": "React-like declarative UI",
+    "plugins": "Multi-lenguaje (TS, Python, Java)"
+  },
+  "created": "2025-11-04T00:47:43.044Z",
+  "updated": "2025-11-04T00:47:43.044Z"
+}

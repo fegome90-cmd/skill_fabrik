@@ -1,0 +1,86 @@
+{
+  "id": "post-estudio-operacional-20251029",
+  "task": "Plan post-estudio operacional: operacionalizar patrones y templates aprendidos del análisis extenso, integrar PAE + Auditoría 4D como gates, activar skills de workflows/guardrails/guidelines, y generar tríada dev-docs completa",
+  "status": "APPROVED",
+  "approvedBy": "user",
+  "approvedAt": "2025-11-03T19:11:58.081Z",
+  "phases": [
+    {
+      "name": "CLARIFY - Definir Alcance",
+      "steps": [
+        "Leer documentos base completos (SINTESIS-GLOBAL-LECCIONES, METRICAS-VALIDACION-GLOBAL, ESTADO-ANALISIS-COMPLETO)",
+        "Definir alcance operacional (IN/OUT explícito)",
+        "Identificar skills críticos a activar (workflows, guardrails, guidelines)"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "LAYOUT - Diseñar Estructura",
+      "steps": [
+        "Aplicar Template v1.1.0 (8/8 componentes: Frontmatter YAML, ROL, CONTEXTO, OBJETIVOS SMART, TAREAS, VALIDACIÓN, ENTREGABLES, ANTI-DRIFT)",
+        "Integrar PAE como gate obligatorio antes de auditoría (G1-G5: existencia, schema, tests, critical gates, checksum)",
+        "Configurar Auditoría 4D (Completitud 30%, Calidad 30%, Impacto 25%, Sostenibilidad 15%) con threshold ≥7.0/10"
+      ],
+      "dependencies": [
+        "CLARIFY - Definir Alcance"
+      ]
+    },
+    {
+      "name": "OPERATE - Ejecutar Plan",
+      "steps": [
+        "Crear plan usando skills-cli",
+        "Aprobar y guardar plan con --approve para activar workflow",
+        "Verificar activación de skills (plan-save-workflow, database-verification, secrets-and-config)",
+        "Validar MemTech L1 snapshot generado automáticamente en Redis",
+        "Aplicar Template v1.1.0 a 1 prompt crítico (Restantes 2 en próximas iteraciones)"
+      ],
+      "dependencies": [
+        "LAYOUT - Diseñar Estructura"
+      ]
+    },
+    {
+      "name": "OBSERVE - Monitorear y Validar",
+      "steps": [
+        "Ejecutar validación PAE (Gate A: validate-pae-template.sh)",
+        "Ejecutar Auditoría 4D (Gate B: Score ≥7.0/10)",
+        "Validar 8/8 componentes (Gate C: Templates v1.1.0)",
+        "Verificar activación de skills (Gate D: ≥4 skills activados)",
+        "Emitir KPIs consolidados (Gate E: policy_decision en events.jsonl)"
+      ],
+      "dependencies": [
+        "OPERATE - Ejecutar Plan"
+      ]
+    },
+    {
+      "name": "REFLECT - Auditoría y Lecciones",
+      "steps": [
+        "Generar Auditoría 4D completa (Score consolidado con justificación)",
+        "Documentar lecciones aprendidas (Aplicación práctica de patrones)",
+        "Generar Handoff v2.0-PAE (Transferencia completa para próxima fase)"
+      ],
+      "dependencies": [
+        "OBSERVE - Monitorear y Validar"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "description": "Patrones y templates no operacionalizados pueden quedar solo como documentación",
+      "mitigation": "Aplicar Batch Creation (CAL-1.0-1) para operacionalizar múltiples patrones en paralelo, usar Checklist Pre-Creación (CAL-1.0-2) para validar 8/8 componentes antes de considerar completo"
+    },
+    {
+      "description": "Skills no activados si el prompt no cumple con la heurística multi-señal",
+      "mitigation": "Usar prompt-builder para generar prompts con score ≥0.6, verificar keywords (20%), intent patterns (30%), path patterns (30%), content patterns (20%)"
+    },
+    {
+      "description": "PAE + Auditoría 4D pueden ser bloqueantes si no se configuran correctamente",
+      "mitigation": "Configurar gates PAE (G1-G5) con fallback graceful, definir thresholds de Auditoría 4D ≥7.0/10 con justificación documentada"
+    }
+  ],
+  "metrics": {
+    "expected_tokens": 15000,
+    "estimated_latency_s": 180
+  },
+  "created": "2025-10-29T00:00:00.000Z",
+  "updated": "2025-11-03T19:11:58.085Z"
+}

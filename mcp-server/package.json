@@ -1,0 +1,32 @@
+{
+  "name": "@skills-fabrik/mcp-server",
+  "version": "1.0.0",
+  "description": "Servidor MCP (Model Context Protocol) para Skills Fabric",
+  "type": "module",
+  "main": "index.mjs",
+  "bin": {
+    "skills-fabric-mcp": "./index.mjs"
+  },
+  "scripts": {
+    "start": "node index.mjs",
+    "start:stdio": "MCP_TRANSPORT=stdio node index.mjs",
+    "start:websocket": "MCP_TRANSPORT=websocket node index.mjs",
+    "test": "node ../mcp-local/mcp-local-test.sh"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "skills-fabric",
+    "cli",
+    "automation"
+  ],
+  "author": "Skills Fabrik Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@skills-fabrik/mcp-adapters": "workspace:*"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,1 @@
+{"mcpServers": {"prompt-builder": {"command": "node", "args": ["/Users/felipe/Developer/skills-fabrik/mcp-prompt-builder/dist/index.mjs"], "env": {"SKILLS_PB_CACHE_TTL": "1800000", "SKILLS_PB_MAX_WORKERS": "4", "SKILLS_PB_ENABLE_PARALLEL": "true", "DEBUG": "skills-cli:prompt-builder"}}}}

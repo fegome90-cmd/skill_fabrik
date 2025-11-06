@@ -1,0 +1,48 @@
+name: skills-fabrik-f1
+on: [push, pull_request]
+jobs:
+  gate-f1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install
+        run: pnpm install
+      - run: pnpm clean
+      - name: Build
+        run: pnpm -w build
+      - run: node scripts/guard-stale-dist.mjs
+      - name: Start daemon
+        run: node packages/daemon/dist/index.js & sleep 2
+      - name: Bench activate
+        run: pnpm bench:activate
+      - name: Parity test
+        run: pnpm test:parity
+      - name: Generate snapshot
+        run: pnpm snapshot:activate
+      - name: Schema test
+        run: pnpm test:schema
+      - name: Snapshot test
+        run: pnpm test:snapshot
+      - name: Generate execute snapshot (dry-run)
+        run: pnpm snapshot:execute
+      - name: Execute snapshot test
+        run: pnpm test:snapshot:execute
+      - run: pnpm test:pack
+      - run: pnpm test:verify
+      - run: pnpm test:install
+      - run: pnpm test:pack:det
+      - run: pnpm test:manifest:schema
+      - run: pnpm test:confirm:inline
+      - run: pnpm test:metrics
+      - run: pnpm test:policy:s1
+      - run: pnpm test:policy:s2
+      - run: pnpm test:policy:net
+      - run: pnpm test:confirm:s1:challenge
+      - run: pnpm test:confirm:s1:badtoken
+      - run: pnpm test:confirm:s1:ok
+      - name: Anti-drift grep
+        run: |
+          ! grep -R --line-number -E 'fs\.(write|append|rm)|child_process.*(curl|wget)|https?\.request' packages | grep -vE 'packages/daemon/src/(index|tools|skills|policy|needs)\.ts'

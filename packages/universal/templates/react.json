@@ -1,0 +1,119 @@
+{
+  "type": "react",
+  "language": "TypeScript",
+  "framework": "React",
+  "description": "React/Next.js project with TypeScript and modern tooling",
+  "skills": [
+    "react-patterns",
+    "component-testing",
+    "hooks-optimization",
+    "state-management",
+    "performance-optimization",
+    "accessibility-testing"
+  ],
+  "config": {
+    "strict": true,
+    "dashboard": true,
+    "typescript": true,
+    "testing": ["jest", "testing-library", "cypress"],
+    "bundler": "vite",
+    "styling": ["css-modules", "styled-components"],
+    "features": {
+      "component-analysis": true,
+      "prop-validation": true,
+      "hook-optimization": true,
+      "accessibility-checks": true
+    }
+  },
+  "qualityGates": {
+    "build": {
+      "enabled": true,
+      "command": "npm run build",
+      "action": "block"
+    },
+    "typecheck": {
+      "enabled": true,
+      "command": "npx tsc --noEmit",
+      "action": "block"
+    },
+    "lint": {
+      "enabled": true,
+      "command": "npm run lint",
+      "action": "warn"
+    },
+    "test": {
+      "enabled": true,
+      "command": "npm run test",
+      "action": "warn",
+      "coverage": true
+    }
+  },
+  "skills": {
+    "autoIndex": true,
+    "activationThreshold": 0.3,
+    "maxSkillsPerRequest": 5,
+    "fuzzyMatching": true,
+    "contextualBoost": true,
+    "recommendedSkills": [
+      {
+        "id": "react-patterns",
+        "name": "React Best Practices",
+        "description": "Hooks, component patterns, and performance optimization",
+        "keywords": ["react", "component", "hook", "useState", "useEffect"],
+        "priority": 1
+      },
+      {
+        "id": "component-testing",
+        "name": "Component Testing",
+        "description": "Testing Library patterns and component testing strategies",
+        "keywords": ["test", "testing", "jest", "testing-library", "spec"],
+        "priority": 1
+      },
+      {
+        "id": "state-management",
+        "name": "State Management",
+        "description": "Redux, Zustand, Context API patterns",
+        "keywords": ["state", "redux", "zustand", "context", "store"],
+        "priority": 2
+      }
+    ]
+  },
+  "services": {
+    "daemon": {
+      "enabled": true,
+      "autoStart": true,
+      "environment": {
+        "NODE_ENV": "development",
+        "REACT_APP_MODE": "development"
+      }
+    },
+    "router": {
+      "enabled": true,
+      "autoStart": true,
+      "environment": {
+        "REACT_ROUTER": "true"
+      }
+    },
+    "discovery": {
+      "enabled": true,
+      "autoStart": true
+    },
+    "dashboard": {
+      "enabled": true,
+      "autoStart": false,
+      "features": ["component-analysis", "performance-metrics"]
+    }
+  },
+  "hooks": {
+    "preInvoke": true,
+    "postInvoke": true,
+    "planDetection": true,
+    "ideIntegration": true,
+    "supportedIDEs": ["cursor", "vscode", "webstorm"]
+  },
+  "filePatterns": {
+    "include": ["src/**/*.{ts,tsx,js,jsx}", "components/**/*", "pages/**/*"],
+    "exclude": ["node_modules/**", "dist/**", "build/**", ".next/**"],
+    "watch": ["src/**/*.{ts,tsx}", "**/*.stories.{ts,tsx}"]
+  }
+}

@@ -1,0 +1,454 @@
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join } from 'path';
+import { createHash } from 'crypto';
+import { colors, format, createBox, createSimpleBox } from '../utils/colors';
+import { Spinner } from '../utils/progress';
+
+/**
+ * Secrets and Config Security Management
+ * Applied with secrets-and-config skill - Template v1.1.0
+ */
+export interface SecretReference {
+  name: string;
+  source: 'env' | 'file' | 'vault' | 'aws' | 'azure' | 'gcp';
+  path?: string;
+  required: boolean;
+  description?: string;
+}
+
+export interface SecurityConfig {
+  encryptionEnabled: boolean;
+  secretValidation: boolean;
+  auditLogging: boolean;
+  maxSecretAge: number; // days
+  allowedSecretSources: string[];
+}
+
+export interface CliConfig {
+  memory: {
+    defaultBackend: 'inmemory' | 'qdrant' | 'pinecone';
+    embeddingModel: string;
+    defaultNamespace: string;
+  };
+  navigation: {
+    mode: 'safe' | 'normal' | 'advanced';
+    enableFallbacks: boolean;
+    enableAutoRecovery: boolean;
+    maxIntegrations: number;
+  };
+  safe: {
+    componentTimeoutMs: number;
+    maxFileSize: number;
+    maxFilesToIndex: number;
+  };
+  paths: {
+    projectRoot: string;
+    configDir: string;
+    stateDir: string;
+    templatesDir: string;
+  };
+  security: SecurityConfig;
+  secrets: {
+    references: SecretReference[];
+    encryptedValues: Record<string, string>; // encrypted secret values
+  };
+}
+
+export class ConfigManager {
+  private configPath: string;
+  private config: CliConfig;
+
+  constructor(configPath?: string) {
+    this.configPath = configPath || join(process.cwd(), '.codemachine', 'config.json');
+    this.config = this.loadConfig();
+  }
+
+  private loadConfig(): CliConfig {
+    if (existsSync(this.configPath)) {
+      try {
+        const data = readFileSync(this.configPath, 'utf8');
+        return { ...this.getDefaultConfig(), ...JSON.parse(data) };
+      } catch (error) {
+        console.warn('⚠️ Error loading config, using defaults');
+        return this.getDefaultConfig();
+      }
+    }
+    return this.getDefaultConfig();
+  }
+
+  private getDefaultConfig(): CliConfig {
+    const projectRoot = this.detectProjectRoot();
+    return {
+      memory: {
+        defaultBackend: 'inmemory',
+        embeddingModel: 'S-embed-v1',
+        defaultNamespace: '${project}/${sprint}'
+      },
+      navigation: {
+        mode: 'safe',
+        enableFallbacks: true,
+        enableAutoRecovery: true,
+        maxIntegrations: 2
+      },
+      safe: {
+        componentTimeoutMs: 3000,
+        maxFileSize: 10 * 1024 * 1024,
+        maxFilesToIndex: 1000
+      },
+      paths: {
+        projectRoot,
+        configDir: join(projectRoot, 'config'),
+        stateDir: join(projectRoot, '.codemachine', 'state'),
+        templatesDir: join(projectRoot, 'templates')
+      },
+      security: {
+        encryptionEnabled: true,
+        secretValidation: true,
+        auditLogging: true,
+        maxSecretAge: 90, // 90 days
+        allowedSecretSources: ['env', 'file']
+      },
+      secrets: {
+        references: [],
+        encryptedValues: {}
+      }
+    };
+  }
+
+  private detectProjectRoot(): string {
+    let current = process.cwd();
+    const maxDepth = 10;
+    let depth = 0;
+
+    while (depth < maxDepth) {
+      if (existsSync(join(current, 'package.json')) || 
+          existsSync(join(current, '.codemachine'))) {
+        return current;
+      }
+      const parent = join(current, '..');
+      if (parent === current) break;
+      current = parent;
+      depth++;
+    }
+
+    return process.cwd();
+  }
+
+  public get<K extends keyof CliConfig>(key: K): CliConfig[K] {
+    return this.config[key];
+  }
+
+  public set<K extends keyof CliConfig>(key: K, value: CliConfig[K]): void {
+    this.config[key] = value;
+    this.saveConfig();
+  }
+
+  public update<K extends keyof CliConfig>(key: K, updates: Partial<CliConfig[K]>): void {
+    this.config[key] = { ...this.config[key], ...updates };
+    this.saveConfig();
+  }
+
+  private saveConfig(): void {
+    try {
+      const configDir = join(this.configPath, '..');
+      if (!existsSync(configDir)) {
+        require('fs').mkdirSync(configDir, { recursive: true });
+      }
+      writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
+    } catch (error) {
+      console.error('❌ Error saving config:', error);
+    }
+  }
+
+  public getConfigPath(): string {
+    return this.configPath;
+  }
+
+  public getAllConfig(): CliConfig {
+    return { ...this.config };
+  }
+
+  public reset(): void {
+    this.config = this.getDefaultConfig();
+    this.saveConfig();
+  }
+
+  public validatePaths(): { valid: boolean; missing: string[] } {
+    const missing: string[] = [];
+    const paths = this.config.paths;
+
+    if (!existsSync(paths.configDir)) {
+      missing.push('configDir');
+    }
+
+    if (!existsSync(paths.stateDir)) {
+      missing.push('stateDir');
+    }
+
+    if (paths.templatesDir && !existsSync(paths.templatesDir)) {
+      missing.push('templatesDir');
+    }
+
+    return {
+      valid: missing.length === 0,
+      missing
+    };
+  }
+
+  /**
+   * Secrets and Config Security Management Methods
+   * Applied with secrets-and-config skill - Template v1.1.0
+   */
+
+  /**
+   * Add secret reference without embedding the secret
+   */
+  public addSecretReference(reference: SecretReference): void {
+    // Validate secret source
+    if (!this.config.security.allowedSecretSources.includes(reference.source)) {
+      throw new Error(`Secret source '${reference.source}' is not allowed`);
+    }
+
+    // Check for duplicates
+    const existing = this.config.secrets.references.find(r => r.name === reference.name);
+    if (existing) {
+      throw new Error(`Secret reference '${reference.name}' already exists`);
+    }
+
+    this.config.secrets.references.push(reference);
+    this.saveConfig();
+
+    if (this.config.security.auditLogging) {
+      this.logSecurityEvent('SECRET_REFERENCE_ADDED', { name: reference.name, source: reference.source });
+    }
+
+    console.log(colors.success(`Secret reference '${reference.name}' added successfully`));
+  }
+
+  /**
+   * Get secret value from secure source
+   */
+  public async getSecretValue(name: string): Promise<string | null> {
+    const reference = this.config.secrets.references.find(r => r.name === name);
+    if (!reference) {
+      throw new Error(`Secret reference '${name}' not found`);
+    }
+
+    try {
+      let value: string | null = null;
+
+      switch (reference.source) {
+        case 'env':
+          value = process.env[reference.path || name] || null;
+          break;
+        case 'file':
+          value = await this.readSecretFromFile(reference.path || name);
+          break;
+        default:
+          throw new Error(`Secret source '${reference.source}' not implemented`);
+      }
+
+      if (!value && reference.required) {
+        throw new Error(`Required secret '${name}' is not available`);
+      }
+
+      if (value && this.config.security.encryptionEnabled) {
+        // Cache encrypted value
+        const encrypted = this.encryptSecret(value);
+        this.config.secrets.encryptedValues[name] = encrypted;
+        this.saveConfig();
+      }
+
+      if (this.config.security.auditLogging) {
+        this.logSecurityEvent('SECRET_ACCESSED', { name, source: reference.source });
+      }
+
+      return value;
+    } catch (error) {
+      console.error(colors.error(`Failed to retrieve secret '${name}': ${error}`));
+      return null;
+    }
+  }
+
+  /**
+   * Validate all secret references
+   */
+  public async validateSecrets(): Promise<{
+    valid: boolean;
+    missing: string[];
+    invalid: string[];
+  }> {
+    const missing: string[] = [];
+    const invalid: string[] = [];
+
+    for (const reference of this.config.secrets.references) {
+      try {
+        const value = await this.getSecretValue(reference.name);
+        if (!value && reference.required) {
+          missing.push(reference.name);
+        }
+      } catch (error) {
+        invalid.push(reference.name);
+      }
+    }
+
+    return {
+      valid: missing.length === 0 && invalid.length === 0,
+      missing,
+      invalid
+    };
+  }
+
+  /**
+   * Remove secret reference
+   */
+  public removeSecretReference(name: string): void {
+    const index = this.config.secrets.references.findIndex(r => r.name === name);
+    if (index === -1) {
+      throw new Error(`Secret reference '${name}' not found`);
+    }
+
+    this.config.secrets.references.splice(index, 1);
+    delete this.config.secrets.encryptedValues[name];
+    this.saveConfig();
+
+    if (this.config.security.auditLogging) {
+      this.logSecurityEvent('SECRET_REFERENCE_REMOVED', { name });
+    }
+
+    console.log(colors.success(`Secret reference '${name}' removed successfully`));
+  }
+
+  /**
+   * Show security dashboard
+   */
+  public showSecurityDashboard(): void {
+    const stats = {
+      totalSecrets: this.config.secrets.references.length,
+      encryptedValues: Object.keys(this.config.secrets.encryptedValues).length,
+      encryptionEnabled: this.config.security.encryptionEnabled,
+      validationEnabled: this.config.security.secretValidation,
+      auditLogging: this.config.security.auditLogging
+    };
+
+    console.log(
+      createSimpleBox(
+        format.header('🔐 Secrets & Security Dashboard') + '\n\n' +
+
+        format.section('Security Configuration') +
+        format.bullet('Encryption', stats.encryptionEnabled ? colors.success('Enabled') : colors.error('Disabled')) +
+        format.bullet('Validation', stats.validationEnabled ? colors.success('Enabled') : colors.error('Disabled')) +
+        format.bullet('Audit Logging', stats.auditLogging ? colors.success('Enabled') : colors.error('Disabled')) +
+        format.bullet('Max Secret Age', colors.text(`${this.config.security.maxSecretAge} days`)) + '\n' +
+
+        format.section('Secrets Status') +
+        format.bullet('Total References', colors.info(`${stats.totalSecrets}`)) +
+        format.bullet('Encrypted Values', colors.info(`${stats.encryptedValues}`)) +
+        format.bullet('Allowed Sources', colors.text(this.config.security.allowedSecretSources.join(', '))) + '\n' +
+
+        format.section('Secret References') +
+        this.config.secrets.references.map(ref =>
+          format.bullet(ref.name, colors.text(`${ref.source}${ref.required ? ' (required)' : ' (optional)'}`))
+        ).join('') + '\n' +
+
+        format.section('Security Actions') +
+        format.command('config.add-secret - Add new secret reference') + '\n' +
+        format.command('config.validate-secrets - Validate all secrets') + '\n' +
+        format.command('config.remove-secret - Remove secret reference') + '\n' +
+        format.command('config.security-audit - Run security audit') + '\n',
+        colors.error
+      )
+    );
+  }
+
+  /**
+   * Run security audit
+   */
+  public async runSecurityAudit(): Promise<{
+    valid: boolean;
+    issues: string[];
+    recommendations: string[];
+  }> {
+    const issues: string[] = [];
+    const recommendations: string[] = [];
+
+    // Check for embedded secrets in config
+    const configStr = JSON.stringify(this.config);
+    const secretPatterns = [
+      /password/i,
+      /secret/i,
+      /key/i,
+      /token/i,
+      /credential/i
+    ];
+
+    for (const pattern of secretPatterns) {
+      if (pattern.test(configStr) && !configStr.includes('references')) {
+        issues.push('Potential embedded secrets detected in configuration');
+        break;
+      }
+    }
+
+    // Check secret validation
+    const secretValidation = await this.validateSecrets();
+    if (!secretValidation.valid) {
+      issues.push(`Secret validation failed: ${secretValidation.missing.join(', ')} missing, ${secretValidation.invalid.join(', ')} invalid`);
+    }
+
+    // Check security settings
+    if (!this.config.security.encryptionEnabled) {
+      recommendations.push('Enable encryption for better security');
+    }
+
+    if (!this.config.security.auditLogging) {
+      recommendations.push('Enable audit logging for security monitoring');
+    }
+
+    if (this.config.security.maxSecretAge > 365) {
+      recommendations.push('Consider reducing max secret age for better security');
+    }
+
+    return {
+      valid: issues.length === 0,
+      issues,
+      recommendations
+    };
+  }
+
+  /**
+   * Private helper methods
+   */
+  private async readSecretFromFile(filePath: string): Promise<string> {
+    try {
+      const fullPath = join(this.config.paths.projectRoot, filePath);
+      const content = readFileSync(fullPath, 'utf-8');
+      return content.trim();
+    } catch (error) {
+      throw new Error(`Failed to read secret from file: ${error}`);
+    }
+  }
+
+  private encryptSecret(value: string): string {
+    // Simple encryption for demo - in production, use proper encryption
+    const hash = createHash('sha256');
+    hash.update(value + Date.now().toString());
+    return hash.digest('hex');
+  }
+
+  private logSecurityEvent(event: string, data: any): void {
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      event,
+      data,
+      user: process.env.USER || 'unknown'
+    };
+
+    const logPath = join(this.config.paths.stateDir, 'security-audit.log');
+    try {
+      mkdirSync(this.config.paths.stateDir, { recursive: true });
+      require('fs').appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
+    } catch (error) {
+      console.warn(colors.warning(`Failed to write security audit log: ${error}`));
+    }
+  }
+}

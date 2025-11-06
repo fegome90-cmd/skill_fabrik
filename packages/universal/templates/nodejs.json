@@ -1,0 +1,145 @@
+{
+  "type": "nodejs",
+  "language": "TypeScript",
+  "framework": "Node.js",
+  "description": "Node.js/Express backend with TypeScript and modern tooling",
+  "skills": [
+    "api-design",
+    "express-patterns",
+    "database-design",
+    "authentication",
+    "security-testing",
+    "performance-optimization"
+  ],
+  "config": {
+    "strict": true,
+    "dashboard": true,
+    "typescript": true,
+    "testing": ["jest", "supertest", "mongodb-memory-server"],
+    "runtime": "node",
+    "framework": "express",
+    "database": "postgresql",
+    "features": {
+      "middleware": true,
+      "auth": true,
+      "api": true,
+      "database": true
+    }
+  },
+  "qualityGates": {
+    "build": {
+      "enabled": true,
+      "command": "npm run build",
+      "action": "block"
+    },
+    "typecheck": {
+      "enabled": true,
+      "command": "npx tsc --noEmit",
+      "action": "block"
+    },
+    "lint": {
+      "enabled": true,
+      "command": "npm run lint",
+      "action": "warn"
+    },
+    "test": {
+      "enabled": true,
+      "command": "npm run test",
+      "action": "warn",
+      "coverage": true
+    },
+    "api-test": {
+      "enabled": true,
+      "command": "npm run test:api",
+      "action": "warn"
+    }
+  },
+  "skills": {
+    "autoIndex": true,
+    "activationThreshold": 0.35,
+    "maxSkillsPerRequest": 6,
+    "fuzzyMatching": true,
+    "contextualBoost": true,
+    "recommendedSkills": [
+      {
+        "id": "api-design",
+        "name": "API Design Patterns",
+        "description": "REST API design, OpenAPI specs, endpoint patterns",
+        "keywords": ["api", "endpoint", "route", "rest", "openapi"],
+        "priority": 1
+      },
+      {
+        "id": "express-patterns",
+        "name": "Express.js Patterns",
+        "description": "Middleware, routing, error handling patterns",
+        "keywords": ["express", "middleware", "route", "app.use", "router"],
+        "priority": 1
+      },
+      {
+        "id": "database-design",
+        "name": "Database Design",
+        "description": "SQL patterns, migrations, database optimization",
+        "keywords": ["database", "sql", "migration", "schema", "orm"],
+        "priority": 2
+      },
+      {
+        "id": "authentication",
+        "name": "Authentication & Authorization",
+        "description": "JWT, OAuth, session management, security patterns",
+        "keywords": ["auth", "jwt", "oauth", "login", "session", "security"],
+        "priority": 0
+      }
+    ]
+  },
+  "services": {
+    "daemon": {
+      "enabled": true,
+      "autoStart": true,
+      "environment": {
+        "NODE_ENV": "development",
+        "API_MODE": "development"
+      }
+    },
+    "router": {
+      "enabled": true,
+      "autoStart": true,
+      "environment": {
+        "API_ROUTING": "true"
+      }
+    },
+    "discovery": {
+      "enabled": true,
+      "autoStart": true
+    },
+    "dashboard": {
+      "enabled": true,
+      "autoStart": false,
+      "features": ["api-monitoring", "database-metrics", "performance-tracing"]
+    }
+  },
+  "hooks": {
+    "preInvoke": true,
+    "postInvoke": true,
+    "planDetection": true,
+    "ideIntegration": true,
+    "supportedIDEs": ["cursor", "vscode", "intellij"]
+  },
+  "filePatterns": {
+    "include": ["src/**/*.{ts,js}", "routes/**/*", "controllers/**/*", "models/**/*", "middleware/**/*"],
+    "exclude": ["node_modules/**", "dist/**", "coverage/**", "*.log"],
+    "watch": ["src/**/*.{ts,js}", "routes/**/*", "controllers/**/*"]
+  },
+  "database": {
+    "type": "postgresql",
+    "orm": "prisma",
+    "migrations": "prisma/migrations",
+    "schema": "prisma/schema.prisma"
+  },
+  "api": {
+    "versioning": true,
+    "documentation": "openapi",
+    "validation": "joi",
+    "rateLimiting": true,
+    "cors": true
+  }
+}

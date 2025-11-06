@@ -1,0 +1,27 @@
+{
+  "original_pdf": {
+    "total_lines": 12200,
+    "first30_lines": 1634,
+    "first30_coverage_lines_pct": 13.39,
+    "pages_total": 247,
+    "pages_covered": 247,
+    "pages_coverage_pct": 100.0,
+    "mid_31_120_lines": 4416,
+    "covered_lines": 12203,
+    "covered_lines_pct": 100.02,
+    "mid_121_200_lines": 3869,
+    "end_201_247_lines": 2284
+  },
+  "copy_pdf": {
+    "total_lines": 13401,
+    "last_section_lines": 970,
+    "coverage_lines_pct": 7.24
+  },
+  "counts": {
+    "definiciones": 0,
+    "requisitos": 2,
+    "figuras": 0,
+    "tablas": 4,
+    "decisiones": 66
+  }
+}

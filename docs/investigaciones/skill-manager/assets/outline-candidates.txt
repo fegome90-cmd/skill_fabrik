@@ -1,0 +1,161 @@
+688:1.   Estudiar sistema de hooks de Claude Code
+691:2.   Crear estructura de directorios para hooks personalizados
+694:3.   Implementar hook básico UserPromptSubmit
+697:4.   Implementar hook básico Stop Event
+700:5.   Probar pipeline de hooks con ejemplos simples
+701:6.   Documentar API de hooks en CLAUDE.md
+725:1.   Diseñar estructura de skill-rules.json
+728:2.   Implementar keyword matching en UserPromptSubmit
+731:3.   Implementar intent pattern matching (regex)
+734:4.   Implementar file path pattern matching
+737:5.   Implementar content pattern matching
+740:6.   Crear sistema de prioridades para skills
+743:7.   Diseñar formato de mensaje de activación
+746:8.   Implementar inyección de recordatorio en prompt
+749:9.   Testing con skills existentes
+750:10.   Refinar reglas basado en resultados
+775:1.   Auditar skills existentes (tamaño, estructura)
+778:2.   Identificar skills > 500 líneas
+781:3.   Dividir frontend-dev-guidelines (1500 líneas → 398 líneas + recursos)
+784:4.   Dividir backend-dev-guidelines (1200 líneas → 304 líneas + recursos)
+787:5.   Crear estructura de /resources para cada skill
+790:6.   Migrar contenido detallado a archivos de recursos
+793:7.   Actualizar skill-rules.json con nuevas rutas
+796:8.   Probar eficiencia de tokens
+797:9.   Actualizar documentación de skills
+819:1.   Diseñar estructura de 3 archivos (plan, context, tasks)
+822:2.   Crear plantillas para cada tipo de archivo
+825:3.   Implementar comando slash /create-dev-docs
+828:4.   Implementar comando slash /update-dev-docs
+831:5.   Integrar con planning mode workflow
+834:6.   Crear agente strategic-plan-architect
+837:7.   Probar workflow completo con tarea real
+838:8.   Documentar proceso en CLAUDE.md
+863:1.   Instalar y configurar PM2
+866:2.   Crear ecosystem.config.js para 7 microservicios
+869:3.   Configurar logging por servicio
+872:4.   Crear script pnpm pm2:start
+875:5.   Crear script pnpm pm2:stop
+878:6.   Crear script pnpm pm2:restart
+879:7.   Probar acceso de Claude a logs
+903:1.   Implementar File Edit Tracker hook
+906:2.   Implementar Build Checker hook
+909:3.   Implementar Prettier Formatter hook
+912:4.   Implementar Error Handling Reminder hook
+915:5.   Integrar con skill-rules para detectar código riesgoso
+918:6.   Configurar prettier configs por repo
+921:7.   Crear formato de output para errores
+924:8.   Implementar lógica de threshold (< 5 errores vs >= 5)
+925:9.   Testing del pipeline completo
+999:1.   Crear /dev-docs (planning comprehensivo)
+1002:2.   Crear /create-dev-docs (generación de archivos)
+1005:3.   Crear /update-dev-docs (actualización pre-compactación)
+1008:4.   Crear /code-review (revisión arquitectural)
+1011:5.   Crear /build-and-fix (build y corrección)
+1014:6.   Crear /route-research-for-testing
+1017:7.   Crear /test-route
+1020:8.   Desarrollar test-auth-route.js script
+1023:9.   Desarrollar script de generación de mock data
+1024:10.   Adjuntar scripts a skills relevantes
+1048:1.   Auditar CLAUDE.md y BEST_PRACTICES.md existentes
+1051:2.   Migrar best practices a skills
+1054:3.   Reducir CLAUDE.md a info específica del proyecto
+1057:4.   Crear estructura de claude.md por repo
+1060:5.   Crear PROJECT_KNOWLEDGE.md
+1063:6.   Crear TROUBLESHOOTING.md
+1066:7.   Organizar 850+ archivos de documentación
+1067:8.   Crear índice navegable
+1091:1.   Configurar SuperWhisper para voice-to-text
+1094:2.   Configurar Memory MCP
+1097:3.   Configurar BetterTouchTool
+1100:4.   Crear gesture: copiar ruta desde VSCode
+1103:5.   Crear gesture: doble-CMD para focus Claude
+1106:6.   Crear gesture: doble-OPT para focus Browser
+1107:7.   Documentar setup de herramientas
+1130:1.   Testing de sistema con tareas reales
+1133:2.   Identificar y arreglar bugs
+1136:3.   Optimizar reglas de skill activation
+1139:4.   Refinar prompts de agentes
+1142:5.   Mejorar formato de outputs
+1145:6.   Ajustar thresholds y parámetros
+1148:7.   Recopilar métricas de efectividad
+1149:8.   Iterar basado en experiencia
+1326:1. Empezar con skills pequeños desde el inicio
+1327:2. Implementar PM2 más temprano
+1328:3. Crear más ejemplos de workflows
+1329:4. Documentar decisiones mientras se toman
+1330:5. Hacer más testing con proyectos pequeños primero
+1590:1. Quick Start Commands
+1591:1. Service-Specific Configuration
+1592:1. Dev Docs Workflow (cómo usar el sistema)
+1593:1. Testing Authenticated Routes
+1595:1. Referencias a skills y documentation
+1789:1. Reglas en skill-rules.json incorrectas
+1790:1. Keywords no coinciden con prompt
+1791:1. Hook UserPromptSubmit no ejecutándose
+1793:1. Verificar logs del hook
+1794:1. Revisar keywords en skill-rules.json
+1795:1. Probar con keywords explícitos
+1796:1. Verificar priority del skill
+1803:1. Build checker hook no ejecutándose
+1804:1. Path de repo no identificado correctamente
+1805:1. Build command incorrecto
+1807:1. Verificar file-edit-tracker log
+1808:1. Revisar build-checker configuración
+1809:1. Ejecutar build manualmente para verificar
+1816:1. Servicio no corriendo bajo PM2
+1817:1. Path de logs incorrecto
+1818:1. Permisos de archivo
+1820:1. Verificar `pm2 list`
+1821:1. Revisar ecosystem.config.js paths
+1822:1. Verificar permisos de directorio logs
+1829:1. Edición manual de archivos
+1830:1. Múltiples tareas en paralelo
+1832:1. Siempre ejecutar /update-dev-docs pre-compactación
+1833:1. Dejar que comandos slash gestionen archivos
+1834:1. Una tarea a la vez en dev/active
+4112:1. Validar skills periódicamente
+4113:2. Identificar skills que necesitan refactoring
+4114:3. Sugerir mejoras a triggers
+4115:4. Detectar skills obsoletos
+4116:5. Mantener documentación de skills
+4125:1. Ejecutar skill:validate all
+4126:2. Revisar métricas y errores
+4127:3. Sugerir acciones específicas
+4129:5. Reportar resultados
+4435:1. Crear skill nuevo
+4437:1. Agregar contenido iterativamente
+4439:1. Validar periódicamente
+4441:1. Cuando excede 500 líneas → Auto-refactor
+4443:1. Sistema actualiza skill-rules.json automáticamente
+4445:1. Hooks usan skill actualizado inmediatamente
+4447:1. Analytics rastrean efectividad
+4449:1. Ciclo de mejora continua
+5878:   1. Edit /skills/quality/testing-guidelines/SKILL.md
+5879:   2. Add content and examples
+5880:   3. Run: npm run skill:validate testing-guidelines
+6169:  1. MAIN_FILE_TOO_LARGE
+6594:  1. Refactor workflow-developer (auto-fix available)
+6595:  2. Fix broken references in api-documentation (auto-fix available)
+6596:  3. Review database-verification for relevance
+6597:  4. Optimize triggers for api-documentation
+6670:   1. Review trigger configuration for api-documentation
+6671:   2. Consider archiving database-verification (low usage)
+6691:1. frontend-dev-guidelines
+6706:2. backend-dev-guidelines
+6720:3. testing-guidelines
+6738:1. HIGH PRIORITY: Add "react" keyword to frontend-dev-guidelines
+6743:2. MEDIUM PRIORITY: Split backend-dev-guidelines
+6751:3. LOW PRIORITY: Archive legacy-patterns
+6755:4. LOW PRIORITY: Review triggers for mobile-guidelines
+6770:1. Adding keyword "react" to frontend-dev-guidelines
+6776:2. Analyzing backend-dev-guidelines for split...
+6785:3. Archiving legacy-patterns...
+6790:4. Generating trigger suggestions for mobile-guidelines...
+6943:1. Update triggers (Priority: high, Effort: low, Automatable:   ✅)
+6944:1. Review content for relevance
+6945:1. Monitor accuracy after changes
+9436:1. Documents the patterns actually used in this project
+9437:2. Provides clear, copy-pasteable examples
+9438:3. Includes checklists for common tasks
+9439:4. Follows best practices

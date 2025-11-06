@@ -1,0 +1,12 @@
+{
+  "day": "2025-10-31",
+  "total": 14,
+  "bySkill": {
+    "repo-auditor": 4,
+    "": 6,
+    "lint-fast": 1,
+    "n/a": 3
+  },
+  "errors_ts_sum": 0,
+  "zero_ok_rate": 0.42857142857142855
+}

@@ -1,0 +1,8 @@
+{
+  "type": "RELIABILITY",
+  "severity": "CRITICAL",
+  "message": "Success rate low: 0% (threshold: 90%)",
+  "timestamp": "2025-11-02T16:21:18.753Z",
+  "value": 0,
+  "threshold": 90
+}

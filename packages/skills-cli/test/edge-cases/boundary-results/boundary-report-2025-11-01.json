@@ -1,0 +1,850 @@
+{
+  "summary": {
+    "totalDuration": 53049,
+    "testsExecuted": 10,
+    "testsPassed": 5,
+    "testsFailed": 5,
+    "totalEdgeCases": 10,
+    "totalViolations": 89,
+    "highSeverityViolations": 12,
+    "timestamp": "2025-11-01T02:04:32.143Z"
+  },
+  "testResults": [
+    {
+      "test": "String Boundary Testing",
+      "success": false,
+      "duration": 1948,
+      "details": {
+        "totalEdgeCases": 0,
+        "totalViolations": 10,
+        "highSeverityViolations": 1
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "empty_string",
+          "type": "error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "long_string",
+          "type": "timeout_or_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "special_chars_0",
+          "type": "special_char_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"🚀🔒💻📊✅❌🚀🔒💻📊✅❌🚀🔒💻📊✅❌🚀🔒💻📊✅❌🚀🔒💻📊✅❌...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "special_chars_1",
+          "type": "special_char_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"!@#$%^&*()_+-=[]{}|;:,.<>?!@#$%^&*()_+-=[]{}|;:,.<...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "special_chars_2",
+          "type": "special_char_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "special_chars_3",
+          "type": "special_char_error",
+          "message": "The argument 'command' must be a string without null bytes. Received 'node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x...",
+          "severity": "medium"
+        },
+        {
+          "test": "boundary_string_0",
+          "type": "boundary_error",
+          "length": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "boundary_string_1",
+          "type": "boundary_error",
+          "length": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"a...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "boundary_string_2",
+          "type": "boundary_error",
+          "length": 1000,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"                                                  ...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "boundary_string_3",
+          "type": "boundary_error",
+          "length": 100000,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        }
+      ],
+      "timestamp": 1761962621045
+    },
+    {
+      "test": "Number Boundary Testing",
+      "success": true,
+      "duration": 3145,
+      "details": {
+        "thresholdsTested": 10,
+        "largeNumbersTested": 4,
+        "totalEdgeCases": 0,
+        "totalViolations": 14
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "threshold_0",
+          "type": "threshold_error",
+          "threshold": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 0\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_0.1",
+          "type": "threshold_error",
+          "threshold": 0.1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 0.1\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_0.5",
+          "type": "threshold_error",
+          "threshold": 0.5,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 0.5\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_0.9",
+          "type": "threshold_error",
+          "threshold": 0.9,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 0.9\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_1",
+          "type": "threshold_error",
+          "threshold": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 1\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_-1",
+          "type": "threshold_error",
+          "threshold": -1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold -1\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_1.5",
+          "type": "threshold_error",
+          "threshold": 1.5,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 1.5\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "threshold_NaN",
+          "type": "threshold_error",
+          "threshold": null,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold NaN\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "threshold_Infinity",
+          "type": "threshold_error",
+          "threshold": null,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold Infinity\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "threshold_-Infinity",
+          "type": "threshold_error",
+          "threshold": null,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold -Infinity\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "large_number_9007199254",
+          "type": "large_number_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 9007199254740991\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "large_number_-900719925",
+          "type": "large_number_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold -9007199254740991\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "large_number_1.79769313",
+          "type": "large_number_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 1.7976931348623157e+308\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "large_number_5e-324",
+          "type": "large_number_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test\" --threshold 5e-324\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        }
+      ],
+      "timestamp": 1761962624191
+    },
+    {
+      "test": "Array Boundary Testing",
+      "success": false,
+      "duration": 900,
+      "details": {
+        "arraySizesTested": 4,
+        "totalEdgeCases": 0,
+        "totalViolations": 4
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "empty_array",
+          "type": "array_processing_error",
+          "size": "unknown",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/empty-array.json\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "single_element",
+          "type": "array_processing_error",
+          "size": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/single-array.json\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "large_array",
+          "type": "array_processing_error",
+          "size": 10000,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/large-array.json\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "nested_array",
+          "type": "array_processing_error",
+          "size": 3,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/nested-array.json\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        }
+      ],
+      "timestamp": 1761962625092
+    },
+    {
+      "test": "File System Boundaries",
+      "success": false,
+      "duration": 5651,
+      "details": {
+        "fileSizesTested": 6,
+        "maxDepthTested": 20,
+        "totalEdgeCases": 0,
+        "totalViolations": 26
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "file_size_0",
+          "type": "file_size_error",
+          "size": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/test-file-0.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "file_size_1",
+          "type": "file_size_error",
+          "size": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/test-file-1.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "file_size_1024",
+          "type": "file_size_error",
+          "size": 1024,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/test-file-1024.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "file_size_10240",
+          "type": "file_size_error",
+          "size": 10240,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/test-file-10240.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "file_size_102400",
+          "type": "file_size_error",
+          "size": 102400,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/test-file-102400.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "file_size_1048576",
+          "type": "file_size_error",
+          "size": 1048576,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/test-file-1048576.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "directory_depth_0",
+          "type": "directory_depth_error",
+          "depth": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_1",
+          "type": "directory_depth_error",
+          "depth": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_2",
+          "type": "directory_depth_error",
+          "depth": 2,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_3",
+          "type": "directory_depth_error",
+          "depth": 3,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_4",
+          "type": "directory_depth_error",
+          "depth": 4,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_5",
+          "type": "directory_depth_error",
+          "depth": 5,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_6",
+          "type": "directory_depth_error",
+          "depth": 6,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_7",
+          "type": "directory_depth_error",
+          "depth": 7,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_8",
+          "type": "directory_depth_error",
+          "depth": 8,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_9",
+          "type": "directory_depth_error",
+          "depth": 9,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_10",
+          "type": "directory_depth_error",
+          "depth": 10,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_11",
+          "type": "directory_depth_error",
+          "depth": 11,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_12",
+          "type": "directory_depth_error",
+          "depth": 12,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_13",
+          "type": "directory_depth_error",
+          "depth": 13,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_14",
+          "type": "directory_depth_error",
+          "depth": 14,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/level14/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_15",
+          "type": "directory_depth_error",
+          "depth": 15,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/level14/level15/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "directory_depth_16",
+          "type": "directory_depth_error",
+          "depth": 16,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/level14/level15/level16/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "directory_depth_17",
+          "type": "directory_depth_error",
+          "depth": 17,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/level14/level15/level16/level17/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "directory_depth_18",
+          "type": "directory_depth_error",
+          "depth": 18,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/level14/level15/level16/level17/level18/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "directory_depth_19",
+          "type": "directory_depth_error",
+          "depth": 19,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills lint \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/deep/level0/level1/level2/level3/level4/level5/level6/level7/level8/level9/level10/level11/level12/level13/level14/level15/level16/level17/level18/level19/test.md\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        }
+      ],
+      "timestamp": 1761962630745
+    },
+    {
+      "test": "Memory Boundary Testing",
+      "success": true,
+      "duration": 2676,
+      "details": {
+        "memoryTestsRun": 3,
+        "totalEdgeCases": 1,
+        "totalViolations": 2,
+        "maxMemoryUsed": -1063120
+      },
+      "edgeCases": [
+        {
+          "test": "concurrent_operations",
+          "success": true,
+          "memoryUsed": -1063120,
+          "memoryBefore": 10268904,
+          "memoryAfter": 9205784
+        }
+      ],
+      "boundaryViolations": [
+        {
+          "test": "large_skill_index",
+          "type": "memory_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills index \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/large-skills.json\" --out /dev/null\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "large_kpi_data",
+          "type": "memory_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" kpi --days 1 --input \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/test/edge-cases/boundary-data/large-kpi.jsonl\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        }
+      ],
+      "timestamp": 1761962633422
+    },
+    {
+      "test": "Time Boundary Testing",
+      "success": true,
+      "duration": 597,
+      "details": {
+        "timeoutTestsRun": 3,
+        "totalEdgeCases": 0,
+        "totalViolations": 3,
+        "maxDuration": null
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "quick_operation",
+          "type": "operation_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test with moderate complexity\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "medium_operation",
+          "type": "operation_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test with moderate complexity\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "slow_operation",
+          "type": "operation_error",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"test with moderate complexity\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        }
+      ],
+      "timestamp": 1761962634020
+    },
+    {
+      "test": "Network Boundary Testing",
+      "success": true,
+      "duration": 2212,
+      "details": {
+        "invalidUrlsTested": 5,
+        "totalEdgeCases": 6,
+        "totalViolations": 1
+      },
+      "edgeCases": [
+        {
+          "test": "invalid_url_http://nonexistent-d",
+          "success": true,
+          "url": "http://nonexistent-domain-12345.com",
+          "handledGracefully": true
+        },
+        {
+          "test": "invalid_url_ftp://invalid-protoc",
+          "success": true,
+          "url": "ftp://invalid-protocol.com",
+          "handledGracefully": true
+        },
+        {
+          "test": "invalid_url_http://localhost:999",
+          "success": true,
+          "url": "http://localhost:99999",
+          "handledGracefully": true
+        },
+        {
+          "test": "invalid_url_not-a-url-at-all",
+          "success": true,
+          "url": "not-a-url-at-all",
+          "handledGracefully": true
+        },
+        {
+          "test": "invalid_url_http://[invalid-ipv6",
+          "success": true,
+          "url": "http://[invalid-ipv6",
+          "handledGracefully": true
+        },
+        {
+          "test": "concurrent_network_requests",
+          "success": false,
+          "concurrentRequests": 5,
+          "successful": 0,
+          "failed": 5
+        }
+      ],
+      "boundaryViolations": [
+        {
+          "test": "concurrent_network_requests",
+          "type": "high_failure_rate",
+          "failureRate": 1,
+          "message": "5/5 concurrent requests failed",
+          "severity": "medium"
+        }
+      ],
+      "timestamp": 1761962636232
+    },
+    {
+      "test": "CLI Argument Boundaries",
+      "success": false,
+      "duration": 5977,
+      "details": {
+        "argumentCountsTested": 5,
+        "argumentLengthsTested": 5,
+        "specialArgsTested": 12,
+        "totalEdgeCases": 0,
+        "totalViolations": 22
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "argument_count_0",
+          "type": "argument_count_error",
+          "argumentCount": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" \nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "argument_count_1",
+          "type": "argument_count_error",
+          "argumentCount": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" test\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "argument_count_5",
+          "type": "argument_count_error",
+          "argumentCount": 5,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" test test test test test\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "argument_count_10",
+          "type": "argument_count_error",
+          "argumentCount": 10,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" test test test test test test test test test test\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "argument_count_20",
+          "type": "argument_count_error",
+          "argumentCount": 20,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" test test test test test test test test test test test test test test test test test test test test\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "argument_length_0",
+          "type": "argument_length_error",
+          "length": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "argument_length_1",
+          "type": "argument_length_error",
+          "length": 1,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"a\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "argument_length_2",
+          "type": "argument_length_error",
+          "length": 100,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "argument_length_3",
+          "type": "argument_length_error",
+          "length": 1000,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "argument_length_4",
+          "type": "argument_length_error",
+          "length": 10000,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "high"
+        },
+        {
+          "test": "special_arg_path_with_slashes",
+          "type": "special_argument_error",
+          "argument": "path/with/slashes",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"path/with/slashes\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_path_with_backslashes",
+          "type": "special_argument_error",
+          "argument": "path\\with\\backslashes",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"path\\with\\backslashes\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_dashes",
+          "type": "special_argument_error",
+          "argument": "arg-with-dashes",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg-with-dashes\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_underscores",
+          "type": "special_argument_error",
+          "argument": "arg_with_underscores",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg_with_underscores\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_dots",
+          "type": "special_argument_error",
+          "argument": "arg.with.dots",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg.with.dots\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_spaces",
+          "type": "special_argument_error",
+          "argument": "arg with spaces",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg with spaces\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_quotes",
+          "type": "special_argument_error",
+          "argument": "arg\"with\"quotes",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg\"with\"quotes\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_apostrophes",
+          "type": "special_argument_error",
+          "argument": "arg'with'apostrophes",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg'with'apostrophes\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_special_chars",
+          "type": "special_argument_error",
+          "argument": "arg$with$special&chars",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg$with$special&chars\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_semicolons",
+          "type": "special_argument_error",
+          "argument": "arg;with;semicolons",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg;with;semicolons\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_pipes",
+          "type": "special_argument_error",
+          "argument": "arg|with|pipes",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg|with|pipes\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        },
+        {
+          "test": "special_arg_arg_with_brackets",
+          "type": "special_argument_error",
+          "argument": "arg<with>brackets",
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"arg<with>brackets\"\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "low"
+        }
+      ],
+      "timestamp": 1761962642209
+    },
+    {
+      "test": "Edge Case Matrix",
+      "success": true,
+      "duration": 1005,
+      "details": {
+        "edgeCaseCombinations": 4,
+        "totalEdgeCases": 0,
+        "totalViolations": 4
+      },
+      "edgeCases": [],
+      "boundaryViolations": [
+        {
+          "test": "empty_input_long_timeout",
+          "type": "edge_case_combination_error",
+          "inputLength": 0,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"...\" \nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "long_input_short_timeout",
+          "type": "edge_case_combination_error",
+          "inputLength": 1000,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...\" \nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/state-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "unicode_with_special_flags",
+          "type": "edge_case_combination_error",
+          "inputLength": 600,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒💻🚀🔒...\" --verbose --debug\nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        },
+        {
+          "test": "deep_nested_structure",
+          "type": "edge_case_combination_error",
+          "inputLength": 50,
+          "message": "Command failed: node \"/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js\" skills check \"{\"level1\":{\"level2\":{\"level3\":{\"level4\":\"deep\"}}}}...\" \nnode:internal/modules/esm/resolve:255\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors' imported from /Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/core/config-manager.js\n    at finalizeResolution (node:internal/modules/esm/resolve:255:11)\n    at moduleResolve (node:internal/modules/esm/resolve:908:10)\n    at defaultResolve (node:internal/modules/esm/resolve:1121:11)\n    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:396:12)\n    at ModuleLoader.resolve (node:internal/modules/esm/loader:365:25)\n    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:240:38)\n    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:85:39)\n    at link (node:internal/modules/esm/module_job:84:36) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/utils/colors'\n}\n\nNode.js v20.10.0\n",
+          "severity": "medium"
+        }
+      ],
+      "timestamp": 1761962643215
+    },
+    {
+      "test": "Stress Boundaries",
+      "success": false,
+      "duration": 28921,
+      "details": {
+        "stressTestsRun": 3,
+        "totalEdgeCases": 3,
+        "totalViolations": 3
+      },
+      "edgeCases": [
+        {
+          "test": "rapid_successive_operations",
+          "success": false,
+          "totalOperations": 50,
+          "successful": 0,
+          "failed": 50,
+          "successRate": 0,
+          "totalDuration": 16397,
+          "averageDuration": 226.66
+        },
+        {
+          "test": "high_concurrency",
+          "success": false,
+          "totalOperations": 20,
+          "successful": 0,
+          "failed": 20,
+          "successRate": 0,
+          "totalDuration": 5587,
+          "averageDuration": 279.35
+        },
+        {
+          "test": "memory_pressure",
+          "success": false,
+          "totalOperations": 10,
+          "successful": 0,
+          "failed": 10,
+          "successRate": 0,
+          "totalDuration": 6937,
+          "averageDuration": 693.6
+        }
+      ],
+      "boundaryViolations": [
+        {
+          "test": "rapid_successive_operations",
+          "type": "high_failure_rate_under_stress",
+          "failureRate": 1,
+          "message": "50/50 operations failed under stress",
+          "severity": "high"
+        },
+        {
+          "test": "high_concurrency",
+          "type": "high_failure_rate_under_stress",
+          "failureRate": 1,
+          "message": "20/20 operations failed under stress",
+          "severity": "high"
+        },
+        {
+          "test": "memory_pressure",
+          "type": "high_failure_rate_under_stress",
+          "failureRate": 1,
+          "message": "10/10 operations failed under stress",
+          "severity": "high"
+        }
+      ],
+      "timestamp": 1761962672138
+    }
+  ],
+  "recommendations": [
+    "Implement file size validation and streaming for large files",
+    "Add input length validation for CLI arguments",
+    "Improve system resilience under stress conditions"
+  ]
+}

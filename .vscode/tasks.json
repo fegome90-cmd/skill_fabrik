@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SF: Daemon",
+      "type": "shell",
+      "command": "node packages/skills-cli/dist/index.js daemon start",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "SF: F1 Gate",
+      "type": "shell",
+      "command": "pnpm triada:update",
+      "isBackground": false,
+      "problemMatcher": []
+    },
+    {
+      "label": "SF: Clean & Build",
+      "type": "shell",
+      "command": "pnpm build:all",
+      "problemMatcher": []
+    },
+    {
+      "label": "SF: Guard Dist",
+      "type": "shell",
+      "command": "node scripts/guard-stale-dist.mjs",
+      "problemMatcher": []
+    }
+  ]
+}

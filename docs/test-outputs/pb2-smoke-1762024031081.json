@@ -1,0 +1,102 @@
+{
+  "timestamp": "2025-11-01T19:07:11.070Z",
+  "passRate": "8/8",
+  "results": [
+    {
+      "skillId": "backend-dev-guidelines",
+      "desc": "Crear endpoint /auth/login en Express con validación y controlador",
+      "expectedScore": 1,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 1,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "backend-dev-guidelines",
+      "desc": "Refactor controlador de usuarios y añadir ruta /users/profile",
+      "expectedScore": 1,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 1,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "frontend-dev-guidelines",
+      "desc": "Crear componente Dashboard con hook de datos y vista responsive",
+      "expectedScore": 0.73,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 2,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "frontend-dev-guidelines",
+      "desc": "Añadir hook useUserProfile y componente ProfileCard",
+      "expectedScore": 0.72,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 2,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "database-verification",
+      "desc": "Revisar findMany sin filtros en repositorio de usuarios",
+      "expectedScore": 0.72,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 1,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "database-verification",
+      "desc": "Auditar updateMany masivo y aplicar where correcto",
+      "expectedScore": 0.72,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 1,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "secrets-and-config",
+      "desc": "Verificar API_KEY y SECRET en archivos de configuración",
+      "expectedScore": 0.82,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 2,
+        "content": 0
+      }
+    },
+    {
+      "skillId": "secrets-and-config",
+      "desc": "Auditar .env y variables TOKEN antes de despliegue",
+      "expectedScore": 0.82,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 2,
+        "content": 0
+      }
+    }
+  ]
+}

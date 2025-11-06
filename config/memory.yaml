@@ -1,0 +1,3 @@
+backend: "inmemory"
+embeddingModel: "S-embed-v1"
+namespace: "${project}/${sprint}"

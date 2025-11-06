@@ -1,0 +1,262 @@
+{
+  "skills": [
+    {
+      "name": "plan-architect",
+      "description": "Genera planes estructurados siguiendo metodología CLOOP (Clarify → Layout → Operate → Observe → Reflect) para tareas de desarrollo.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "genera",
+          "planes",
+          "estructurados",
+          "siguiendo",
+          "metodología",
+          "cloop",
+          "(clarify",
+          "layout",
+          "operate",
+          "observe"
+        ]
+      }
+    },
+    {
+      "name": "database-verification",
+      "description": "Aplica bloqueo de mutaciones masivas sin filtro y previene operaciones destructivas inseguras.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "aplica",
+          "bloqueo",
+          "mutaciones",
+          "masivas",
+          "filtro",
+          "previene",
+          "operaciones",
+          "destructivas",
+          "inseguras."
+        ]
+      }
+    },
+    {
+      "name": "secrets-and-config",
+      "description": "Sin secretos embebidos; validar config en arranque y mantener .env.example.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "secretos",
+          "embebidos;",
+          "validar",
+          "config",
+          "arranque",
+          "mantener",
+          ".env.example."
+        ]
+      }
+    },
+    {
+      "name": "backend-dev-guidelines",
+      "description": "Patrones backend para crear endpoints, APIs y servicios. Guía de rutas→controladores→servicios→repositorios, manejo de errores y pruebas.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "patrones",
+          "backend",
+          "para",
+          "crear",
+          "endpoints,",
+          "apis",
+          "servicios.",
+          "guía",
+          "rutas→controladores→servicios→repositorios,",
+          "manejo"
+        ]
+      }
+    },
+    {
+      "name": "cli-compilation-fixes",
+      "description": "Repara errores de compilación del CLI relacionados con colors/chalk y Spinner API changes.",
+      "severity": "critical",
+      "triggers": {
+        "keywords": [
+          "repara",
+          "errores",
+          "compilación",
+          "relacionados",
+          "colors/chalk",
+          "spinner",
+          "changes."
+        ]
+      }
+    },
+    {
+      "name": "error-pattern-standardization",
+      "description": "Estandariza patrones de error y códigos de salida consistentes en todos los comandos del CLI para mejorar experiencia de usuario y debugging.",
+      "severity": "high",
+      "triggers": {
+        "keywords": [
+          "estandariza",
+          "patrones",
+          "error",
+          "códigos",
+          "salida",
+          "consistentes",
+          "todos",
+          "comandos",
+          "para",
+          "mejorar"
+        ]
+      }
+    },
+    {
+      "name": "frontend-dev-guidelines",
+      "description": "Patrones frontend para crear componentes React, UI e interfaces. Guía de componentes puros, fetching con cache, routing file-based y consistencia.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "patrones",
+          "frontend",
+          "para",
+          "crear",
+          "componentes",
+          "react,",
+          "interfaces.",
+          "guía",
+          "puros,",
+          "fetching"
+        ]
+      }
+    },
+    {
+      "name": "project-catalog-developer",
+      "description": "Define catálogo (DataGrid) con columnas tipadas, implementa filtros con URL, configura virtualización y optimiza rendimiento.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "define",
+          "catálogo",
+          "(datagrid)",
+          "columnas",
+          "tipadas,",
+          "implementa",
+          "filtros",
+          "url,",
+          "configura",
+          "virtualización"
+        ]
+      }
+    },
+    {
+      "name": "sample-skill",
+      "description": "Demostración de plantilla SKILL.md para validación de estructura mínima (≤400 líneas).",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "demostración",
+          "plantilla",
+          "skill.md",
+          "para",
+          "validación",
+          "estructura",
+          "mínima",
+          "(≤400",
+          "líneas)."
+        ]
+      }
+    },
+    {
+      "name": "cli-integration-testing",
+      "description": "Implementa tests de integración comprehensivos para el CLI con cobertura de casos críticos y regresión visual.",
+      "severity": "critical",
+      "triggers": {
+        "keywords": [
+          "implementa",
+          "tests",
+          "integración",
+          "comprehensivos",
+          "para",
+          "cobertura",
+          "casos",
+          "críticos",
+          "regresión",
+          "visual."
+        ]
+      }
+    },
+    {
+      "name": "test-skill",
+      "description": "Valida el sistema de indexación verificando que funciona correctamente (solo para pruebas).",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "valida",
+          "sistema",
+          "indexación",
+          "verificando",
+          "funciona",
+          "correctamente",
+          "(solo",
+          "para",
+          "pruebas)."
+        ]
+      }
+    },
+    {
+      "name": "visual-regression-testing",
+      "description": "Implementa visual regression testing para CLI output ensuring consistencia visual y formatos consistentes.",
+      "severity": "high",
+      "triggers": {
+        "keywords": [
+          "implementa",
+          "visual",
+          "regression",
+          "testing",
+          "para",
+          "output",
+          "ensuring",
+          "consistencia",
+          "formatos",
+          "consistentes."
+        ]
+      }
+    },
+    {
+      "name": "plan-save-workflow",
+      "description": "Workflow para guardar plan aprobado: genera tríada dev-docs (plan.md, context.md, tasks.md) y snapshot MemTech L1.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "workflow",
+          "para",
+          "guardar",
+          "plan",
+          "aprobado:",
+          "genera",
+          "tríada",
+          "dev-docs",
+          "(plan.md,",
+          "context.md,"
+        ]
+      }
+    },
+    {
+      "name": "pm2-monitor",
+      "description": "Configura PM2 para gestión de procesos backend con monitoreo, logs y playbooks de troubleshooting.",
+      "severity": "medium",
+      "triggers": {
+        "keywords": [
+          "configura",
+          "para",
+          "gestión",
+          "procesos",
+          "backend",
+          "monitoreo,",
+          "logs",
+          "playbooks",
+          "troubleshooting."
+        ]
+      }
+    }
+  ],
+  "version": "1.0.0",
+  "generatedAt": "2025-11-01T15:46:28.405Z"
+}

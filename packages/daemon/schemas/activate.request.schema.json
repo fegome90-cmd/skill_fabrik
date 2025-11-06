@@ -1,0 +1,70 @@
+{
+  "$id": "activate.request.schema.json",
+  "title": "Skill Activation Request",
+  "description": "Request schema for skill activation",
+  "type": "object",
+  "required": ["intent", "context"],
+  "properties": {
+    "intent": {
+      "type": "string",
+      "description": "The user's intent or request",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "context": {
+      "type": "object",
+      "description": "Context information for the activation",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of files in context"
+        },
+        "workingDirectory": {
+          "type": "string",
+          "description": "Current working directory"
+        },
+        "environment": {
+          "type": "object",
+          "description": "Environment variables"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User identifier"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Session identifier"
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "description": "Additional options for activation",
+      "properties": {
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5,
+          "description": "Minimum confidence threshold"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 5,
+          "description": "Maximum number of results to return"
+        },
+        "includeMetadata": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to include metadata in results"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

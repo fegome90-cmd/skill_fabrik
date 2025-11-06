@@ -1,0 +1,970 @@
+        // Fuzzy match (Levenshtein distance)
+
+        const words = promptLower.split(/\s+/);
+
+        for (const word of words) {
+
+            const distance = this.levenshteinDistance(word, keywordLower);
+
+            const similarity = 1 - (distance / Math.max(word.length, keywordLower.length));
+
+
+
+            if (similarity > 0.8) {
+
+                totalScore += 0.7; // Fuzzy match vale menos
+
+                break;
+
+            }
+
+        }
+
+    }
+
+    return maxPossibleScore > 0 ? totalScore / maxPossibleScore : 0;
+
+}
+
+/**
+
+* Score intent pattern matching con captura de grupos
+
+*/
+
+private scoreIntentMatch(prompt: string, patterns: string[]): number {
+
+    if (!patterns || patterns.length === 0) return 0;
+
+    let matchedPatterns = 0;
+
+    let totalWeight = 0;
+
+    for (const pattern of patterns) {
+
+        try {
+
+            const regex = new RegExp(pattern, 'i');
+
+            const match = prompt.match(regex);
+
+            if (match) {
+                // Dar más peso si el match es más específico
+
+                const matchLength = match[0].length;
+
+                const promptLength = prompt.length;
+
+                const specificity = matchLength / promptLength;
+
+
+
+                matchedPatterns += specificity;
+
+                totalWeight += 1;
+
+            }
+
+        } catch (error) {
+
+            console.error(`Invalid regex pattern: ${pattern}`, error);
+
+        }
+
+    }
+
+    return totalWeight > 0 ? matchedPatterns / totalWeight : 0;
+
+}
+
+/**
+
+* Score file path matching con scoring por profundidad
+
+*/
+
+private scoreFilePathMatch(
+
+    currentFile: string | undefined,
+
+    pathPatterns: string[]
+
+): number {
+
+    if (!currentFile || !pathPatterns || pathPatterns.length === 0) return 0;
+
+    let bestScore = 0;
+
+    for (const pattern of pathPatterns) {
+
+        const score = this.matchGlobPattern(currentFile, pattern);
+
+        bestScore = Math.max(bestScore, score);
+    }
+
+    return bestScore;
+
+}
+
+/**
+
+* Score content matching en archivo actual
+
+*/
+
+private scoreContentMatch(
+
+    fileContent: string | undefined,
+
+    contentPatterns: string[]
+
+): number {
+
+    if (!fileContent || !contentPatterns || contentPatterns.length === 0) return 0;
+
+    let matchCount = 0;
+
+    for (const pattern of contentPatterns) {
+
+        try {
+
+            const regex = new RegExp(pattern, 'gi');
+
+            const matches = fileContent.match(regex);
+
+
+
+            if (matches) {
+
+                // Más matches = mayor relevancia
+
+                matchCount += Math.min(matches.length / 10, 1);
+
+            }
+
+        } catch (error) {
+
+            console.error(`Invalid content pattern: ${pattern}`, error);
+
+        }
+
+    }
+
+    return Math.min(matchCount / contentPatterns.length, 1);
+}
+
+/**
+
+* Score actividad reciente en archivos relacionados
+
+*/
+
+private scoreRecentActivity(
+
+    skillName: string,
+
+    recentFiles: string[]
+
+): number {
+
+    if (!recentFiles || recentFiles.length === 0) return 0;
+
+    // Cargar skills activados recientemente en estos archivos
+
+    const recentActivations = this.getRecentActivations(recentFiles);
+
+
+
+    // Si este skill se activó recientemente en archivos similares, score alto
+
+    const activationCount = recentActivations.filter(a => a.skillName === skillName).length;
+
+
+
+    return Math.min(activationCount / 5, 1); // Cap at 5 recent activations
+
+}
+
+/**
+
+* Score relevancia contextual (archivos abiertos, proyecto actual, etc.)
+
+*/
+
+private scoreContextRelevance(
+
+    prompt: string,
+
+    context: ActivationContext
+
+): number {
+
+    let score = 0;
+
+    let factors = 0;
+// Factor 1: Archivos relacionados abiertos
+
+if (context.openFiles && context.openFiles.length > 0) {
+
+    const relatedFiles = context.openFiles.filter(file =>
+
+     this.isRelatedFile(file, context.currentFile)
+
+    );
+
+    score += relatedFiles.length > 0 ? 0.5 : 0;
+
+    factors++;
+
+}
+
+// Factor 2: Cambios recientes en git
+
+if (context.gitDiff) {
+
+    const hasRelevantChanges = this.hasRelevantChanges(
+
+     context.gitDiff,
+
+     prompt
+
+    );
+
+    score += hasRelevantChanges ? 0.5 : 0;
+
+    factors++;
+
+}
+
+// Factor 3: Contexto del proyecto
+
+if (context.projectType) {
+
+    const isRelevantToProject = this.isRelevantToProjectType(
+
+     prompt,
+
+     context.projectType
+
+    );
+
+    score += isRelevantToProject ? 0.5 : 0;
+
+    factors++;
+
+}
+    return factors > 0 ? score / factors : 0;
+
+}
+
+/**
+
+* Calcular score final ponderado
+
+*/
+
+private calculateWeightedScore(signals: ActivationSignals): number {
+
+    const weights = this.config.weights;
+
+
+
+    return (
+
+      signals.keywordMatch * weights.keyword +
+
+      signals.intentMatch * weights.intent +
+
+      signals.filePathMatch * weights.filePath +
+
+      signals.contentMatch * weights.content +
+
+      signals.recentActivity * weights.recentActivity +
+
+      signals.contextRelevance * weights.context +
+
+      signals.historicalAccuracy * weights.historical
+
+    );
+
+}
+
+/**
+
+* Decidir si activar basándose en score y listas
+
+*/
+
+private shouldActivate(
+
+    skillName: string,
+
+    score: number,
+
+    prompt: string,
+
+    context: ActivationContext
+): boolean {
+
+    // Check deny list
+
+    for (const denyPattern of this.config.denyList) {
+
+        if (new RegExp(denyPattern, 'i').test(prompt)) {
+
+            return false;
+
+        }
+
+    }
+
+    // Check allow list (override threshold)
+
+    for (const allowPattern of this.config.allowList) {
+
+        if (new RegExp(allowPattern, 'i').test(prompt)) {
+
+            return true;
+
+        }
+
+    }
+
+    // Check threshold
+
+    return score >= this.config.threshold;
+
+}
+
+/**
+
+* Calcular confianza en la decisión
+
+*/
+
+private calculateConfidence(
+
+    signals: ActivationSignals,
+
+    historical: SkillHistoricalData | undefined
+
+): number {
+
+    // Confianza basada en:
+
+    // 1. Consistencia de señales (están todas de acuerdo?)
+
+    const signalValues = Object.values(signals);
+    const avgSignal = signalValues.reduce((a, b) => a + b, 0) / signalValues.length;
+
+    const variance = signalValues.reduce((sum, val) =>
+
+      sum + Math.pow(val - avgSignal, 2), 0
+
+    ) / signalValues.length;
+
+    const consistency = 1 - Math.sqrt(variance);
+
+    // 2. Datos históricos suficientes
+
+    const historicalConfidence = historical
+
+      ? Math.min(historical.totalActivations / 100, 1)
+
+      : 0.5;
+
+    // 3. Accuracy histórica
+
+    const accuracyConfidence = historical
+
+      ? historical.accuracy
+
+      : 0.5;
+
+    return (consistency * 0.4 + historicalConfidence * 0.3 + accuracyConfidence * 0.3);
+
+}
+
+/**
+
+* Generar explicación del reasoning
+
+*/
+
+private generateReasoning(
+
+    signals: ActivationSignals,
+
+    finalScore: number,
+
+    shouldActivate: boolean
+
+): string[] {
+
+    const reasoning: string[] = [];
+
+    // Señales fuertes
+
+    const strongSignals = Object.entries(signals)
+         .filter(([_, score]) => score > 0.7)
+
+         .map(([name]) => name);
+
+     if (strongSignals.length > 0) {
+
+         reasoning.push(`Strong signals: ${strongSignals.join(', ')}`);
+
+     }
+
+     // Señales débiles
+
+     const weakSignals = Object.entries(signals)
+
+         .filter(([_, score]) => score < 0.3)
+
+         .map(([name]) => name);
+
+     if (weakSignals.length > 0) {
+
+         reasoning.push(`Weak signals: ${weakSignals.join(', ')}`);
+
+     }
+
+     // Score final
+
+   reasoning.push(`Final score: ${(finalScore * 100).toFixed(1)}% (threshold:
+${(this.config.threshold * 100).toFixed(0)}%)`);
+
+     // Decisión
+
+     reasoning.push(shouldActivate ? '          ✅ ACTIVATE' : '❌ DO NOT ACTIVATE');
+     return reasoning;
+
+ }
+
+ // Utility methods
+
+ private levenshteinDistance(a: string, b: string): number {
+
+     const matrix: number[][] = [];
+
+     for (let i = 0; i <= b.length; i++) {
+
+         matrix[i] = [i];
+
+     }
+
+     for (let j = 0; j <= a.length; j++) {
+
+         matrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= b.length; i++) {
+
+        for (let j = 1; j <= a.length; j++) {
+
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+
+                matrix[i][j] = matrix[i - 1][j - 1];
+
+            } else {
+
+                matrix[i][j] = Math.min(
+
+                 matrix[i - 1][j - 1] + 1,
+
+                 matrix[i][j - 1] + 1,
+
+                 matrix[i - 1][j] + 1
+
+                );
+
+            }
+
+        }
+
+    }
+
+    return matrix[b.length][a.length];
+
+}
+
+private matchGlobPattern(filePath: string, pattern: string): number {
+
+    // Convertir glob a regex y dar score por especificidad
+
+    const regex = this.globToRegex(pattern);
+
+
+
+    if (!regex.test(filePath)) return 0;
+
+    // Más específico el pattern = mayor score
+
+    const patternSpecificity = pattern.split('/').length;
+
+    const filePathDepth = filePath.split('/').length;
+
+
+
+    return Math.min(patternSpecificity / filePathDepth, 1);
+}
+
+private globToRegex(glob: string): RegExp {
+
+    const regexStr = glob
+
+     .replace(/\*\*/g, '.*')
+
+     .replace(/\*/g, '[^/]*')
+
+     .replace(/\?/g, '.')
+
+     .replace(/\./g, '\\.');
+
+
+
+    return new RegExp(`^${regexStr}$`);
+
+}
+
+private isRelatedFile(file1: string, file2: string | undefined): boolean {
+
+    if (!file2) return false;
+
+    // Mismo directorio o subdirectorio
+
+    const dir1 = file1.split('/').slice(0, -1).join('/');
+
+    const dir2 = file2.split('/').slice(0, -1).join('/');
+
+    return dir1.startsWith(dir2) || dir2.startsWith(dir1);
+
+}
+
+private hasRelevantChanges(gitDiff: string, prompt: string): boolean {
+
+    // Simple heuristic: check if prompt mentions changed files/functions
+
+    const promptLower = prompt.toLowerCase();
+
+    const diffLower = gitDiff.toLowerCase();
+
+    // Extract function names from diff
+
+    const functionPattern = /function\s+(\w+)|const\s+(\w+)\s*=/g;
+
+    let match;
+
+
+
+    while ((match = functionPattern.exec(diffLower)) !== null) {
+        const funcName = (match[1] || match[2]).toLowerCase();
+
+        if (promptLower.includes(funcName)) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+private isRelevantToProjectType(prompt: string, projectType: string): boolean {
+
+    const projectKeywords: Record<string, string[]> = {
+
+        'react': ['component', 'hook', 'jsx', 'tsx', 'react'],
+
+        'node': ['express', 'api', 'endpoint', 'server', 'backend'],
+
+        'python': ['django', 'flask', 'fastapi', 'python'],
+
+        'mobile': ['ios', 'android', 'react native', 'flutter']
+
+    };
+
+    const keywords = projectKeywords[projectType.toLowerCase()] || [];
+
+    const promptLower = prompt.toLowerCase();
+
+    return keywords.some(keyword => promptLower.includes(keyword));
+
+}
+
+private getRecentActivations(files: string[]): any[] {
+
+    // Load from activation logs
+
+    // Implementation depends on your logging system
+
+    return [];
+
+}
+
+private async loadSkill(skillName: string): Promise<any> {
+
+    // Implementation
+
+    return {};
+    }
+
+}
+
+/**
+
+* Semi-supervised learning: actualizar triggers basándose en uso real
+
+*/
+
+class TriggerLearner {
+
+    /**
+
+    * Analizar activaciones y sugerir mejoras a triggers
+
+    */
+
+    async learnFromUsage(
+
+        skillName: string,
+
+        period: number = 30 // días
+
+    ): Promise<TriggerSuggestions> {
+
+        const activations = await this.loadActivations(skillName, period);
+
+        // Separar activaciones apropiadas vs inapropiadas
+
+        const appropriate = activations.filter(a => a.appropriate);
+
+        const inappropriate = activations.filter(a => !a.appropriate);
+
+        // Extraer keywords de apropiadas que no están en triggers actuales
+
+        const suggestedKeywords = this.extractMissingKeywords(appropriate, skillName);
+
+        // Encontrar patterns que causan false positives
+
+        const problematicPatterns = this.findProblematicPatterns(inappropriate, skillName);
+
+        // Sugerir nuevos intent patterns
+
+        const suggestedIntents = this.suggestIntentPatterns(appropriate, skillName);
+
+        return {
+
+          addKeywords: suggestedKeywords,
+
+          removePatterns: problematicPatterns,
+        addIntentPatterns: suggestedIntents,
+
+        confidence: this.calculateSuggestionConfidence(activations)
+
+    };
+
+}
+
+/**
+
+* Aplicar sugerencias automáticamente (con confirmación)
+
+*/
+
+async applySuggestions(
+
+    skillName: string,
+
+    suggestions: TriggerSuggestions,
+
+    autoApply: boolean = false
+
+): Promise<void> {
+
+    if (!autoApply) {
+
+        // Show suggestions and ask for confirmation
+
+        console.log('\n 📊 Suggested Trigger Improvements:');
+        console.log('\nAdd keywords:', suggestions.addKeywords);
+
+        console.log('Remove patterns:', suggestions.removePatterns);
+
+        console.log('Add intent patterns:', suggestions.addIntentPatterns);
+
+        console.log(`\nConfidence: ${(suggestions.confidence * 100).toFixed(1)}%`);
+
+        const confirmed = await this.confirmWithUser();
+
+        if (!confirmed) return;
+
+    }
+
+    // Apply changes to skill-rules.json
+
+    await this.updateSkillRules(skillName, suggestions);
+
+    // Create version snapshot
+
+    const versioner = new SkillVersioner();
+     await versioner.createVersion(skillName, {
+
+   changelog: `Auto-learned trigger improvements (confidence:
+${suggestions.confidence.toFixed(2)})`
+
+     });
+
+     console.log('     ✅ Triggers updated successfully');
+ }
+
+ private extractMissingKeywords(
+
+     activations: SkillActivation[],
+
+     skillName: string
+
+ ): string[] {
+
+     // Extract common words from prompts that activated correctly
+
+     const wordFrequency: Map<string, number> = new Map();
+
+     for (const activation of activations) {
+
+         const words = this.tokenizePrompt(activation.prompt);
+
+
+
+         for (const word of words) {
+
+             wordFrequency.set(word, (wordFrequency.get(word) || 0) + 1);
+
+         }
+
+     }
+
+     // Filter out existing keywords and common stop words
+
+     const currentKeywords = this.getCurrentKeywords(skillName);
+
+     const stopWords = new Set(['the', 'a', 'an', 'is', 'to', 'and', 'or', 'in', 'on']);
+
+     const suggestions = Array.from(wordFrequency.entries())
+
+         .filter(([word, count]) =>
+
+             count >= 3 && // Appears at least 3 times
+
+             !currentKeywords.includes(word) &&
+
+             !stopWords.has(word) &&
+            word.length > 2
+
+        )
+
+        .sort((a, b) => b[1] - a[1])
+
+        .slice(0, 5)
+
+        .map(([word]) => word);
+
+    return suggestions;
+
+}
+
+private findProblematicPatterns(
+
+    inappropriateActivations: SkillActivation[],
+
+    skillName: string
+
+): string[] {
+
+    const currentPatterns = this.getCurrentPatterns(skillName);
+
+    const patternMatchCount: Map<string, number> = new Map();
+
+    for (const activation of inappropriateActivations) {
+
+        for (const pattern of currentPatterns) {
+
+            if (new RegExp(pattern, 'i').test(activation.prompt)) {
+
+                patternMatchCount.set(pattern, (patternMatchCount.get(pattern) || 0) + 1);
+
+            }
+
+        }
+
+    }
+
+    // Return patterns that frequently cause false positives
+
+    return Array.from(patternMatchCount.entries())
+
+        .filter(([_, count]) => count >= 3)
+
+        .sort((a, b) => b[1] - a[1])
+
+        .map(([pattern]) => pattern);
+
+}
+private suggestIntentPatterns(
+
+    appropriateActivations: SkillActivation[],
+
+    skillName: string
+
+): string[] {
+
+    // Use Claude API to analyze prompts and suggest patterns
+
+    // For now, simple heuristic approach
+
+
+
+    const commonStructures = this.findCommonStructures(
+
+        appropriateActivations.map(a => a.prompt)
+
+    );
+
+    return commonStructures.slice(0, 3);
+
+}
+
+private findCommonStructures(prompts: string[]): string[] {
+
+    // Find common verb + noun patterns
+
+    const patterns: Map<string, number> = new Map();
+
+    for (const prompt of prompts) {
+
+        // Simple pattern extraction
+
+        const verbNounPattern = prompt.match(/(create|add|implement|build|make)\s+\w+/i);
+
+        if (verbNounPattern) {
+
+            const pattern = verbNounPattern[0].replace(/\s+/g, '\\s+');
+
+            patterns.set(pattern, (patterns.get(pattern) || 0) + 1);
+
+        }
+
+    }
+
+    return Array.from(patterns.entries())
+
+        .filter(([_, count]) => count >= 2)
+
+        .sort((a, b) => b[1] - a[1])
+     .map(([pattern]) => pattern);
+
+}
+
+private calculateSuggestionConfidence(activations: SkillActivation[]): number {
+
+    // Confidence based on sample size and consistency
+
+    const sampleSize = activations.length;
+
+    const appropriate = activations.filter(a => a.appropriate).length;
+
+
+
+    const sampleConfidence = Math.min(sampleSize / 50, 1);
+
+    const accuracyConfidence = appropriate / sampleSize;
+
+    return (sampleConfidence * 0.5 + accuracyConfidence * 0.5);
+
+}
+
+private tokenizePrompt(prompt: string): string[] {
+
+    return prompt
+
+     .toLowerCase()
+
+     .replace(/[^\w\s]/g, '')
+
+     .split(/\s+/)
+
+     .filter(word => word.length > 0);
+
+}
+
+private getCurrentKeywords(skillName: string): string[] {
+
+    // Load from skill-rules.json
+
+    return [];
+
+}
+
+private getCurrentPatterns(skillName: string): string[] {
+
+    // Load from skill-rules.json
+
+    return [];
+
+}
+    private async confirmWithUser(): Promise<boolean> {
+
+        // Interactive confirmation
+
+        return true;
+
+    }
+
+    private async updateSkillRules(
+
+        skillName: string,
+
+        suggestions: TriggerSuggestions
+
+    ): Promise<void> {
+
+        // Update skill-rules.json
+
+    }
+
+    private async loadActivations(
+
+        skillName: string,
+
+        period: number
+
+    ): Promise<SkillActivation[]> {
+
+        // Load from logs
+
+        return [];
+
+    }
+
+}
+
+```
+
+-----
+
+**Continúo con las partes 20-23 que cubren:**
+
+- Métricas rigurosas y A/B testing real (χ², t-test, IC95%)
+
+- JSON Schemas formales y validación estricta
+
+- Interfaz neutral de hooks multi-IDE
+
+- Seguridad, RBAC, secret management
+
+- Refactor safety con dry-run y post-checks
+¿Quieres que continúe con estas implementaciones ahora?​
+

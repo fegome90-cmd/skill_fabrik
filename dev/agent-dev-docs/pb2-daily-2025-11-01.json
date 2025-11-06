@@ -1,0 +1,56 @@
+{
+  "totalRuns": 131,
+  "totalSkillEvals": 614,
+  "reportGeneratedAt": "2025-11-01T20:28:53.837Z",
+  "skills": [
+    {
+      "skillId": "backend-dev-guidelines",
+      "evals": 131,
+      "pass": 1,
+      "passRate": 0.01,
+      "avgScore": 0.21
+    },
+    {
+      "skillId": "error-pattern-standardization",
+      "evals": 31,
+      "pass": 0,
+      "passRate": 0,
+      "avgScore": 0.22
+    },
+    {
+      "skillId": "frontend-dev-guidelines",
+      "evals": 130,
+      "pass": 0,
+      "passRate": 0,
+      "avgScore": 0.2
+    },
+    {
+      "skillId": "secrets-and-config",
+      "evals": 130,
+      "pass": 0,
+      "passRate": 0,
+      "avgScore": 0.06
+    },
+    {
+      "skillId": "database-verification",
+      "evals": 130,
+      "pass": 0,
+      "passRate": 0,
+      "avgScore": 0.04
+    },
+    {
+      "skillId": "project-catalog-developer",
+      "evals": 31,
+      "pass": 0,
+      "passRate": 0,
+      "avgScore": 0.04
+    },
+    {
+      "skillId": "visual-regression-testing",
+      "evals": 31,
+      "pass": 0,
+      "passRate": 0,
+      "avgScore": 0.01
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "detection": {
+    "hash": "70b9b8d784e56ade05c47bfe22fee128bd15624fdc1d7e4e613d71b26b01d33e",
+    "confidence": 0.95,
+    "block": "[Layout] Test fix:\n1. Test function\n2. Test PBv2\n3. Check error"
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 1188,
+    "expectedScore": 0.376,
+    "skillActivation": [
+      {
+        "skillId": "test-driven-development",
+        "score": 0.5,
+        "reasons": [
+          "keywords: test, tdd, test-driven",
+          "intent: 1 pattern(s) matched"
+        ]
+      },
+      {
+        "skillId": "webapp-testing",
+        "score": 0.2,
+        "reasons": [
+          "keywords: test"
+        ]
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T21-31-19-158Z",
+  "version": "2.0.0"
+}

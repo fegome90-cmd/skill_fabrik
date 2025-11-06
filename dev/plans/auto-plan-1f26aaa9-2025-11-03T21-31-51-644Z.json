@@ -1,0 +1,30 @@
+{
+  "detection": {
+    "hash": "1f26aaa9189519524e788fcca5591870de6269927b49143842a8cdd55e79d53c",
+    "confidence": 0.95,
+    "block": "[Layout] Verify system:\n1. Check all functions\n2. Test integration\n3. Confirm working"
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 326,
+    "expectedScore": 0.234,
+    "skillActivation": [
+      {
+        "skillId": "test-driven-development",
+        "score": 0.2,
+        "reasons": [
+          "keywords: test, tdd, test-driven, integration"
+        ]
+      },
+      {
+        "skillId": "webapp-testing",
+        "score": 0.2,
+        "reasons": [
+          "keywords: test"
+        ]
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T21-31-51-644Z",
+  "version": "2.0.0"
+}

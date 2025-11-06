@@ -1,0 +1,18 @@
+{
+  "id": "mhggnso3-a3339a6",
+  "task": "test CLI functionality",
+  "status": "DRAFT",
+  "phases": [
+    {
+      "name": "Fase inicial",
+      "steps": [
+        "Editar este plan y agregar pasos específicos"
+      ],
+      "dependencies": []
+    }
+  ],
+  "risks": [],
+  "metrics": {},
+  "created": "2025-11-01T15:52:32.739Z",
+  "updated": "2025-11-01T15:52:32.739Z"
+}

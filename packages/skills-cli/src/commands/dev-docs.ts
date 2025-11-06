@@ -9,6 +9,7 @@ import {
   generateContextMarkdown,
   generateTasksMarkdown,
 } from '../utils/plan-generator.js';
+import { buildOptimizedPromptV2 } from '../utils/prompt-builder-v2.js';
 
 const { ensureDir, writeFile, readdir, pathExists, readFile, readJson, writeJson } = fs;
 
@@ -35,11 +36,34 @@ export function devDocsCommand(program: Command) {
     .argument('<task-name>', 'Task name')
     .option('--plan <file>', 'Path to approved plan file')
     .option('-v, --verbose', 'Verbose output')
-    .action(async (taskName: string, options: { plan?: string; verbose?: boolean }) => {
+    .option('--v2', 'Use Prompt Builder v2 for enhanced documentation generation')
+    .action(async (taskName: string, options: { plan?: string; verbose?: boolean; v2?: boolean }) => {
       const logger = new Logger(options.verbose);
 
       try {
-        logger.info(`Creating dev docs for: ${taskName}`);
+        logger.info(`Creating dev docs for: ${taskName}${options.v2 ? ' (using Prompt Builder v2)' : ''}`);
+
+        // Enhanced analysis with Prompt Builder v2 if requested
+        if (options.v2) {
+          logger.info('🔍 Enhanced documentation analysis with Prompt Builder v2:');
+
+          try {
+            const optimizedPrompt = await buildOptimizedPromptV2({
+              description: `Generate comprehensive documentation for task: ${taskName}`,
+              skillIds: ['plan-save-workflow'],
+              includeTemplate: true,
+              includeTags: true,
+              complexity: 'medium',
+              cwd: process.cwd(),
+            });
+
+            logger.info(`  📊 Expected score: ${optimizedPrompt.expectedScore.toFixed(1)}`);
+            logger.info(`  🏷️  TAGs coverage: ${((optimizedPrompt.tagsCoverage || 0) * 100).toFixed(0)}%`);
+            logger.info(`  🔗 Template coverage: ${((optimizedPrompt.templateScore || 0) * 100).toFixed(0)}%`);
+          } catch (error) {
+            logger.warning(`  ⚠️  Enhanced analysis failed: ${error instanceof Error ? error.message : String(error)}`);
+          }
+        }
 
         // Dev docs directory structure: dev/active/<task-name>/
         const devDocsBase = path.join(process.cwd(), 'dev', 'active');

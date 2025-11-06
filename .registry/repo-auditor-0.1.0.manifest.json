@@ -1,0 +1,16 @@
+{
+  "id": "repo-auditor",
+  "version": "0.1.0",
+  "name": "Auditor de repositorio (read-only)",
+  "allowed-tools": [
+    "fs.read",
+    "git.status",
+    "git.diff"
+  ],
+  "scripts": {
+    "run": "node scripts/run.js",
+    "dry-run": "node scripts/plan.js"
+  },
+  "hash": "b129197a428f7733537c26bdacb50cede241983cb91ea63789b05fd6a09b4c3b",
+  "createdAt": "2025-10-31T02:51:41.242Z"
+}

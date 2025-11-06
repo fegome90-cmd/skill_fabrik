@@ -10,8 +10,6 @@ export interface ExtendedSkillMetadata extends SkillMetadata {
   summary?: string;
   when_to_use?: string;
   resources?: string[];
-  type?: string;
-  enforcement?: string;
 }
 
 export async function parseSkillMD(filePath: string): Promise<ExtendedSkillMetadata> {

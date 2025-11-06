@@ -1,0 +1,18 @@
+{
+  "id": "mhgmhy8p-dea47e5",
+  "task": "implementar sistema de autenticación JWT",
+  "status": "DRAFT",
+  "phases": [
+    {
+      "name": "Fase inicial",
+      "steps": [
+        "Editar este plan y agregar pasos específicos"
+      ],
+      "dependencies": []
+    }
+  ],
+  "risks": [],
+  "metrics": {},
+  "created": "2025-11-01T18:35:57.721Z",
+  "updated": "2025-11-01T18:35:57.721Z"
+}

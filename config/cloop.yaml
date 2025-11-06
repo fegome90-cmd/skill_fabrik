@@ -1,0 +1,17 @@
+project: QuanNex
+sprint: S14
+mode: "SAFE"
+retriever:
+  topK: 8
+  backend: "inmemory"
+  namespace: "${project}/${sprint}"
+models:
+  clarify: "cursor"
+  plan: "claude"
+  verify: "codex"
+timeouts:
+  step: 120000
+  agent: 300000
+loop:
+  maxIterations: 6
+  skip: ["status-lite"]

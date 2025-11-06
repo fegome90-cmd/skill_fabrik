@@ -1,0 +1,131 @@
+{
+  "snapshotDir": "snapshots",
+  "diffDir": "diffs",
+  "reportDir": "reports",
+  "defaultTolerance": 0.1,
+  "timeout": 30000,
+  "parallel": true,
+  "maxWorkers": 4,
+  "formats": ["stdout", "stderr", "combined"],
+  "environments": ["darwin", "linux", "win32"],
+  "colorSchemes": ["dark", "light", "auto"],
+  "updateStrategy": "interactive",
+  "ciMode": false,
+  "verbose": true,
+  "generateReports": true,
+  "reportFormats": ["markdown", "json", "html"],
+  "ignoreRules": {
+    "patterns": [
+      "\\d{4}-\\d{2}-\\d{2}",
+      "\\d+:\\d+:\\d+",
+      "\\d+ms",
+      "/tmp/[^\\s]+",
+      "process\\.pid",
+      "memory: \\d+MB",
+      "\\[\\d+ms\\]",
+      "took \\d+ms"
+    ],
+    "commands": {
+      "kpi --days 1": {
+        "ignoreNumbers": true,
+        "ignoreTimestamps": true,
+        "tolerance": 0.15
+      },
+      "skills lint": {
+        "ignoreNumbers": false,
+        "ignoreTimestamps": true,
+        "tolerance": 0.05
+      },
+      "skills check": {
+        "ignoreNumbers": false,
+        "ignoreTimestamps": false,
+        "tolerance": 0.1
+      }
+    }
+  },
+  "snapshotConfig": {
+    "tolerance": 0.1,
+    "ignoreColors": false,
+    "ignoreWhitespace": true,
+    "ignoreTimestamps": true,
+    "ignoreNumbers": false,
+    "ignorePaths": true,
+    "ignorePids": true
+  },
+  "validationRules": {
+    "colors": {
+      "primary": "\\x1b\\[94m",
+      "success": "\\x1b\\[92m",
+      "warning": "\\x1b\\[93m",
+      "error": "\\x1b\\[91m",
+      "info": "\\x1b\\[96m",
+      "reset": "\\x1b\\[0m",
+      "bold": "\\x1b\\[1m"
+    },
+    "icons": {
+      "success": "[✓✅]",
+      "error": "[✗❌]",
+      "warning": "[⚠️⚠]",
+      "info": "[ℹℹ]",
+      "arrow": "[→←↑↓]",
+      "bullet": "[•·]",
+      "star": "[★☆]"
+    },
+    "structure": {
+      "headers": "^#{1,6}\\s+.+$",
+      "lists": "^[\\s]*[-*+]\\s+.+$",
+      "tables": "\\|.*\\|",
+      "codeBlocks": "```[\\s\\S]*?```",
+      "progressBars": "\\[[█░]+\\]"
+    },
+    "metadata": {
+      "timestamps": "\\d{4}-\\d{2}-\\d{2}T?\\d{2}:\\d{2}:\\d{2}",
+      "durations": "\\d+ms",
+      "percentages": "\\d+%",
+      "fileSizes": "\\d+(?:\\.\\d+)?\\s*[KMGT]?B",
+      "versionNumbers": "\\d+\\.\\d+\\.\\d+"
+    }
+  },
+  "performance": {
+    "maxTestTime": 30000,
+    "maxSnapshotTime": 5000,
+    "maxComparisonTime": 1000,
+    "parallelThreshold": 5,
+    "cacheEnabled": true,
+    "cacheSize": 100
+  },
+  "reporting": {
+    "includeSnapshots": true,
+    "includeDiffs": true,
+    "includeCoverage": true,
+    "includePerformance": true,
+    "maxDiffLines": 50,
+    "generateScreenshots": false,
+    "template": "default"
+  },
+  "integrations": {
+    "ci": {
+      "enabled": true,
+      "failOnChanges": true,
+      "autoApprove": false,
+      "commentOnPR": true,
+      "uploadArtifacts": true
+    },
+    "git": {
+      "trackSnapshots": true,
+      "ignoreUntracked": true,
+      "diffAgainst": "main"
+    },
+    "slack": {
+      "enabled": false,
+      "webhook": "",
+      "channel": "#visual-testing"
+    }
+  },
+  "debugging": {
+    "verboseLogging": false,
+    "saveIntermediateResults": false,
+    "generateDebugFiles": false,
+    "traceExecutions": false
+  }
+}

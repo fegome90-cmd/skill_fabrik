@@ -1,0 +1,187 @@
+{
+  "version": "1.0.0",
+  "commands": {
+    "build-and-fix": {
+      "name": "build-and-fix",
+      "description": "Auto-build, lint, and fix project issues",
+      "category": "quality",
+      "handler": "BuildAndFixHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "examples": [
+        "/build-and-fix",
+        "/build-and-fix --fix",
+        "/build-and-fix --test",
+        "/build-and-fix --verbose"
+      ],
+      "aliases": [
+        "bf",
+        "build-fix"
+      ]
+    },
+    "code-review": {
+      "name": "code-review",
+      "description": "Perform comprehensive code review and analysis",
+      "category": "quality",
+      "handler": "CodeReviewHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "examples": [
+        "/code-review",
+        "/code-review . --strict",
+        "/code-review src/ --verbose",
+        "/code-review --fix-suggestions"
+      ],
+      "aliases": [
+        "cr",
+        "review"
+      ]
+    },
+    "compact": {
+      "name": "compact",
+      "description": "Optimize workspace by cleaning cache and artifacts",
+      "category": "utilities",
+      "handler": "CompactHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "examples": [
+        "/compact",
+        "/compact --aggressive",
+        "/compact --dry-run",
+        "/compact --backup"
+      ],
+      "aliases": [
+        "clean",
+        "cleanup"
+      ]
+    },
+    "undo": {
+      "name": "undo",
+      "description": "Safely rollback recent changes",
+      "category": "utilities",
+      "handler": "UndoHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "examples": [
+        "/undo",
+        "/undo --last 1",
+        "/undo --list",
+        "/undo --confirm"
+      ],
+      "aliases": [
+        "rollback",
+        "revert"
+      ]
+    },
+    "dev-docs-update": {
+      "name": "dev-docs-update",
+      "description": "Update existing development documentation",
+      "category": "dev-docs",
+      "handler": "DevDocsUpdateHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "permanent",
+      "examples": [
+        "/dev-docs-update test --type status --status completed",
+        "/dev-docs-update phase1 --append",
+        "/dev-docs-update api --type progress --progress 75",
+        "/dev-docs-update research --prepend --urgent"
+      ],
+      "aliases": [
+        "ddu",
+        "docs-update"
+      ]
+    },
+    "route-research-for-testing": {
+      "name": "route-research-for-testing",
+      "description": "Research routes and generate comprehensive testing strategies",
+      "category": "testing",
+      "handler": "RouteResearchForTestingHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "examples": [
+        "/route-research-for-testing api/users",
+        "/route-research-for-testing auth/login --depth 5",
+        "/route-research-for-testing orders --generate-tests",
+        "/route-research-for-testing products --coverage --verbose"
+      ],
+      "aliases": [
+        "rrt",
+        "route-research"
+      ]
+    },
+    "test-route": {
+      "name": "test-route",
+      "description": "Execute comprehensive automated tests on specific routes",
+      "category": "testing",
+      "handler": "TestRouteHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "examples": [
+        "/test-route api/users",
+        "/test-route auth/login --method POST",
+        "/test-route orders --host http://localhost:8080 --coverage",
+        "/test-route products --method POST --data '{\"name\":\"test\"}' --verbose"
+      ],
+      "aliases": [
+        "tr",
+        "route-test"
+      ]
+    },
+    "plugin": {
+      "name": "plugin",
+      "description": "Manage plugin system operations (install, uninstall, configure, activate, deactivate)",
+      "category": "utilities",
+      "handler": "PluginHandler",
+      "requiresAuth": false,
+      "persistenceLevel": "permanent",
+      "examples": [
+        "/plugin install @skills-fabrik/analyzer",
+        "/plugin uninstall @skills-fabrik/analyzer --force",
+        "/plugin activate @skills-fabrik/analyzer",
+        "/plugin configure @skills-fabrik/analyzer --config '{\"enabled\": true}'",
+        "/plugin list",
+        "/plugin status"
+      ],
+      "aliases": [
+        "plug",
+        "plugins"
+      ]
+    }
+  },
+  "categories": {
+    "dev-docs": [
+      "dev-docs-update"
+    ],
+    "quality": [
+      "build-and-fix",
+      "code-review"
+    ],
+    "testing": [
+      "route-research-for-testing",
+      "test-route"
+    ],
+    "utilities": [
+      "compact",
+      "undo",
+      "plugin"
+    ]
+  },
+  "aliases": {
+    "bf": "build-and-fix",
+    "build-fix": "build-and-fix",
+    "cr": "code-review",
+    "review": "code-review",
+    "clean": "compact",
+    "cleanup": "compact",
+    "rollback": "undo",
+    "revert": "undo",
+    "ddu": "dev-docs-update",
+    "docs-update": "dev-docs-update",
+    "rrt": "route-research-for-testing",
+    "route-research": "route-research-for-testing",
+    "tr": "test-route",
+    "route-test": "test-route",
+    "plug": "plugin",
+    "plugins": "plugin"
+  }
+}

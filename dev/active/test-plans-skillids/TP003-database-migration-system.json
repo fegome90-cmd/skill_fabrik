@@ -1,0 +1,45 @@
+{
+  "id": "TP003",
+  "name": "Database Migration System",
+  "task": "Set up Prisma migrations for user and content schemas",
+  "skillId": "database-verification",
+  "description": "Configurar sistema de migraciones con Prisma para esquemas de usuarios y contenido. Implementar seeders, rollback procedures y validaciones de integridad referencial.",
+  "phases": [
+    {
+      "name": "Clarify",
+      "description": "Definir modelos de datos y relaciones"
+    },
+    {
+      "name": "Layout",
+      "description": "Diseñar estructura de migraciones"
+    },
+    {
+      "name": "Operate",
+      "description": "Crear migraciones y seeders"
+    },
+    {
+      "name": "Observe",
+      "description": "Validar integridad y performance"
+    },
+    {
+      "name": "Reflect",
+      "description": "Documentar y optimizar queries"
+    }
+  ],
+  "expectedDuration": "3-4 horas",
+  "complexity": "medium",
+  "keywords": [
+    "database",
+    "prisma",
+    "migration",
+    "schema",
+    "seeding"
+  ],
+  "metadata": {
+    "version": "2.0.0",
+    "created": "2025-11-03T16:23:50.450Z",
+    "skillId": "database-verification",
+    "category": "database",
+    "testType": "pbv2_activation"
+  }
+}

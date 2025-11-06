@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "activate.response.schema.json",
+  "type": "object",
+  "required": ["labels", "candidates", "latency_ms"],
+  "properties": {
+    "labels": { "type": "array", "items": { "type": "string" } },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "score"],
+        "properties": {
+          "id": { "type": "string" },
+          "score": { "type": "number" },
+          "reason": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "latency_ms": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}
+

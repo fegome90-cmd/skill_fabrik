@@ -1,0 +1,22 @@
+{
+  "threshold": 0.6,
+  "cases": [
+    {
+      "skillId": "backend-dev-guidelines",
+      "desc": "Crear endpoint /auth/login en Express con validación y repositorio"
+    },
+    {
+      "skillId": "frontend-dev-guidelines",
+      "desc": "Crear componente Dashboard con hook de datos y vista responsive"
+    },
+    {
+      "skillId": "database-verification",
+      "desc": "Revisar findMany sin filtros en repositorio de usuarios"
+    },
+    {
+      "skillId": "secrets-and-config",
+      "desc": "Verificar API_KEY y SECRET en archivos de configuración"
+    }
+  ]
+}
+

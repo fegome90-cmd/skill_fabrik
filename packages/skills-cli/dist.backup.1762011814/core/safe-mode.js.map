@@ -1,0 +1,1 @@
+{"version":3,"file":"safe-mode.js","sourceRoot":"","sources":["../../src/core/safe-mode.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,gBAAgB,GAAG;IAC9B,kBAAkB,EAAE,IAAI;IACxB,kBAAkB,EAAE,CAAC;IACrB,eAAe,EAAE,CAAC;IAClB,cAAc,EAAE,KAAK;IACrB,iBAAiB,EAAE,CAAC;IACpB,WAAW,EAAE,EAAE,GAAG,IAAI,GAAG,IAAI;IAC7B,eAAe,EAAE,IAAI;CACtB,CAAC"}

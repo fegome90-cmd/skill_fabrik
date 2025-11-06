@@ -7,3 +7,5 @@ review_bot_prs: true
 # Deshabilitar mensaje de "Review skipped"
 reviews:
   review_status: false
+
+

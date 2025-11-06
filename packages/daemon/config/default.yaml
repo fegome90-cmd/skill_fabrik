@@ -1,0 +1,34 @@
+server:
+  host: 0.0.0.0
+  port: 3000
+cors:
+  origins:
+    - http://localhost:5174
+    - http://localhost:5173
+    - http://localhost:3000
+    - http://127.0.0.1:5174
+    - http://127.0.0.1:5173
+    - http://127.0.0.1:3000
+
+# Enhanced configuration for robustness
+cache:
+  maxSize: 1000
+  ttl: 60000
+  cleanupInterval: 30000
+
+fileWatching:
+  paths:
+    - ./skills
+    - ./packages
+    - ./src
+  debounceMs: 1000
+  maxHistorySize: 1000
+
+memory:
+  limitMB: 512
+  checkInterval: 60000
+
+errorHandling:
+  logSilentErrors: false
+  errorMetricsEnabled: true
+

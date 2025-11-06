@@ -2,9 +2,9 @@
 id: backend-dev-guidelines
 version: 0.1.0
 type: guideline
-summary: Patrones backend (rutas→controladores→servicios→repositorios), manejo de errores y pruebas.
+summary: 'Patrones backend para crear endpoints, APIs y servicios. Guía de rutas→controladores→servicios→repositorios, manejo de errores y pruebas.'
 audience: engineers
-when_to_use: Al crear/editar endpoints, controladores, servicios o repositorios.
+when_to_use: 'Al crear/editar endpoints, controladores, servicios o repositorios.'
 resources:
   - resources/controllers.md
   - resources/services.md

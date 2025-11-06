@@ -1,0 +1,20 @@
+{
+  "id": "mhjqdcqf-6ac56a9",
+  "task": "Analizar pipeline de hooks",
+  "status": "APPROVED",
+  "phases": [
+    {
+      "name": "Fase inicial",
+      "steps": [
+        "Editar este plan y agregar pasos específicos"
+      ],
+      "dependencies": []
+    }
+  ],
+  "risks": [],
+  "metrics": {},
+  "created": "2025-11-03T22:47:40.215Z",
+  "updated": "2025-11-03T22:48:34.880Z",
+  "approvedBy": "user",
+  "approvedAt": "2025-11-03T22:48:34.880Z"
+}

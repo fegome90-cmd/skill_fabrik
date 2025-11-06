@@ -1,0 +1,19 @@
+{
+  "id": "782d7000a47d",
+  "timestamp": "2025-11-03T15:08:20.631Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan 🚀:\n1. ✅ Diseñar arquitectura\n2. 🔧 Implementar\n3. 🧪 Testing\n4. 📝 Documentar",
+  "optimizedPrompt": "[Layout] Plan 🚀:\n1. ✅ Diseñar arquitectura\n2. 🔧 Implementar\n3. 🧪 Testing\n4. 📝 Documentar",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "3fe8225b20ef1a89f4ed818ea6416b2c49044ab2ba18cc7eecfcfea2b4fda168",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "TEST_detectRepoInfo is not defined"
+  }
+}

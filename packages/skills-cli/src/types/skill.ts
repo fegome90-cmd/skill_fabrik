@@ -8,6 +8,9 @@ export interface SkillMetadata {
     contentPatterns?: string[];
   };
   severity?: 'critical' | 'high' | 'medium' | 'low';
+  type?: 'guideline' | 'guardrail' | 'workflow' | 'generator' | 'test' | 'policy';
+  enforcement?: 'block' | 'require' | 'warn' | 'suggest';
+  priority?: 'critical' | 'high' | 'medium' | 'low' | 'normal';
 }
 
 export interface SkillMatch {

@@ -1,4 +1,70 @@
 gates:
+  # G1 - Integridad Base (P0)
+  build:
+    name: build
+    command: pnpm -w build
+    required: true
+    description: "Compila router y CLI sin errores (T-003)"
+  
+  skills-lint:
+    name: skills-lint
+    command: node packages/skills-cli/dist/index.js skills lint ./skills --strict
+    required: true
+    description: "Valida skills sin warnings (T-001)"
+  
+  skill-rules-schema:
+    name: skill-rules-schema
+    command: pnpm test:skill-rules-schema
+    required: true
+    description: "Valida skill-rules.json contra schema (T-002)"
+  
+  # G3 - Guardrails Críticos (P0)
+  guardrail-db-block:
+    name: guardrail-db-block
+    command: node packages/skills-cli/dist/index.js guardrail "await prisma.user.deleteMany();" || true
+    required: true
+    description: "Verifica que guardrail bloquea deleteMany sin where (T-007)"
+  
+  guardrail-shell-validator:
+    name: guardrail-shell-validator
+    command: echo "rm -rf /" | python3 scripts/hooks/bash-validator.py 2>&1 | grep -q "🚫\|BLOCKED" || (echo "❌ Validador no bloqueó correctamente" && exit 1)
+    required: true
+    description: "Validador shell bloquea rm -rf / (T-014)"
+  
+  # G2 - Activación (P0)
+  activation-backend:
+    name: activation-backend
+    command: pnpm test:activation-cases
+    required: true
+    description: "Casos de activación mínimos (T-004..T-006)"
+  
+  activation-frontend:
+    name: activation-frontend
+    command: node packages/skills-cli/dist/index.js skills check "crear componente nuevo" --open-files frontend/src/components/UserList.tsx 2>&1 | grep -q "frontend-dev-guidelines" || (echo "❌ No activó frontend guideline" && exit 1)
+    required: true
+    description: "Pre-invoke activa frontend guideline (T-005)"
+  
+  # G5 - Notificaciones (P1)
+  notifications-scripts:
+    name: notifications-scripts
+    command: test -x scripts/hooks/notify.sh && bash scripts/hooks/notify.sh info "Test" > /dev/null 2>&1 || (echo "❌ Scripts de notificación no funcionan" && exit 1)
+    required: false
+    description: "Scripts de notificación ejecutables (T-013)"
+  
+  # G6 - Salud Contenidos (P1)
+  skill-md-length:
+    name: skill-md-length
+    command: find skills -name "SKILL.md" -type f -exec sh -c 'lines=$(wc -l < "$1" | tr -d " "); if [ "$lines" -gt 400 ]; then echo "⚠️ $1 tiene $lines líneas (>400)"; exit 1; fi' _ {} \; || (echo "❌ Algunos SKILL.md > 400 líneas" && exit 1)
+    required: false
+    description: "Todos los SKILL.md ≤ 400 líneas (T-016)"
+  
+  # G8 - Documentación (P2)
+  docs-readme:
+    name: docs-readme
+    command: test -f docs/skills/README.md && test $(wc -l < docs/skills/README.md | tr -d ' ') -gt 50 || (echo "❌ README no encontrado o muy corto" && exit 1)
+    required: false
+    description: "README presente y con contenido (T-020)"
+
   skills-lint:
     name: skills-lint
     command: 'node packages/skills-cli/dist/index.js skills index ./skills --out ./registry/index.json'
@@ -10,3 +76,9 @@ gates:
     command: 'node packages/skills-cli/dist/index.js build --all'
     required: true
     description: 'Ensure no errors left behind'
+
+  kpi-rollup:
+    name: kpi-rollup
+    command: pnpm kpi:rollup && test -f obs/kpi/daily/index.json
+    required: false
+    description: 'Genera rollup diario de KPIs (opcional)'

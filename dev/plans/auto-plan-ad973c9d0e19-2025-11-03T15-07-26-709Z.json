@@ -1,0 +1,19 @@
+{
+  "id": "ad973c9d0e19",
+  "timestamp": "2025-11-03T15:07:26.709Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan:\n2. Task 2",
+  "optimizedPrompt": "[Layout] Plan:\n2. Task 2",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "84996485126be1e29dddfa2e0c37a12341c883fc072a600eb3bd6d8cf166cf63",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "getFastConfig is not defined"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "@skills-fabrik/slash-commands",
+  "version": "0.1.0",
+  "description": "Slash commands system for Skills Fabric with persistent context and automation",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test test/**/*.spec.ts",
+    "test:watch": "node --test --watch test/**/*.spec.ts",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
+  },
+  "keywords": [
+    "slash-commands",
+    "skills-fabric",
+    "context-persistence",
+    "automation",
+    "dev-docs"
+  ],
+  "author": "Skills Fabric Team",
+  "license": "MIT",
+  "dependencies": {
+    "@skills-fabrik/shared": "workspace:*",
+    "@skills-fabrik/router": "workspace:*",
+    "@skills-fabrik/kpi": "workspace:*",
+    "fastify": "^4.24.3",
+    "zod": "^3.22.4",
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.12",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
+    "semver": "^7.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/semver": "^7.5.6",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fegome90-cmd/skills-fabrik.git",
+    "directory": "packages/slash-commands"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

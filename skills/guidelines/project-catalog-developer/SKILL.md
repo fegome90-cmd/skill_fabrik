@@ -2,9 +2,9 @@
 id: project-catalog-developer
 version: 0.1.0
 type: guideline
-summary: 'Catálogo (DataGrid): columnas tipadas, filtros con URL, virtualización y rendimiento.'
+summary: 'Define catálogo (DataGrid) con columnas tipadas, implementa filtros con URL, configura virtualización y optimiza rendimiento.'
 audience: engineers
-when_to_use: Cambios en grid, layout, filtros o rendimiento.
+when_to_use: 'Cambios en grid, layout, filtros o rendimiento.'
 resources:
   - resources/datagrid-layout.md
   - resources/performance.md

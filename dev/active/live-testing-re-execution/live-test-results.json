@@ -1,0 +1,1347 @@
+{
+  "summary": {
+    "totalTests": 10,
+    "successfulTests": 10,
+    "failedTests": 0,
+    "totalLatency": 4113,
+    "averageLatency": 411.3,
+    "minLatency": 370,
+    "maxLatency": 505
+  },
+  "categories": {
+    "backend": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    },
+    "frontend": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    },
+    "database": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    },
+    "security": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    },
+    "performance": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    },
+    "testing": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    },
+    "devops": {
+      "tests": 0,
+      "successes": 0,
+      "avgLatency": 0
+    }
+  },
+  "skillIds": {
+    "backend-dev-guidelines": {
+      "tests": 1,
+      "successes": 1,
+      "successRate": 100,
+      "avgLatency": 505
+    },
+    "frontend-dev-guidelines": {
+      "tests": 2,
+      "successes": 2,
+      "successRate": 100,
+      "avgLatency": 412.5
+    },
+    "database-verification": {
+      "tests": 1,
+      "successes": 1,
+      "successRate": 100,
+      "avgLatency": 375
+    },
+    "security-testing-guide": {
+      "tests": 1,
+      "successes": 1,
+      "successRate": 100,
+      "avgLatency": 401
+    },
+    "performance-optimization": {
+      "tests": 1,
+      "successes": 1,
+      "successRate": 100,
+      "avgLatency": 378
+    },
+    "test-driven-development": {
+      "tests": 1,
+      "successes": 1,
+      "successRate": 100,
+      "avgLatency": 370
+    },
+    "ci-cd-pipelines": {
+      "tests": 1,
+      "successes": 1,
+      "successRate": 100,
+      "avgLatency": 372
+    },
+    "backend-architecture-patterns": {
+      "tests": 2,
+      "successes": 2,
+      "successRate": 100,
+      "avgLatency": 443.5
+    }
+  },
+  "quality": {
+    "scores": [
+      0.5800000000000001,
+      0.5780000000000001,
+      0.266,
+      0.562,
+      0.56,
+      0.552,
+      0.554,
+      0.556,
+      0.252,
+      0.256
+    ],
+    "coherencia": 10,
+    "completitud": 10,
+    "claridad": 4.716,
+    "overall": 8.238666666666667
+  },
+  "individualResults": [
+    {
+      "plan": {
+        "id": "TP001",
+        "name": "Backend API Development",
+        "task": "Implement user authentication API with JWT tokens",
+        "skillId": "backend-dev-guidelines",
+        "description": "Crear API REST para autenticación de usuarios con endpoints de login, registro y refresh token. Implementar middleware de autorización y manejo de errores. Usar arquitectura hexagonal con DDD patterns.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Definir requerimientos de autenticación y endpoints"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar estructura de API y esquemas de datos"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar controladores y servicios"
+          },
+          {
+            "name": "Observe",
+            "description": "Validar funcionamiento con tests"
+          },
+          {
+            "name": "Reflect",
+            "description": "Optimizar y documentar la API"
+          }
+        ],
+        "expectedDuration": "6-8 horas",
+        "complexity": "high",
+        "keywords": [
+          "backend",
+          "api",
+          "authentication",
+          "jwt",
+          "middleware"
+        ]
+      },
+      "success": true,
+      "latency": 505,
+      "error": null,
+      "score": 0.5800000000000001,
+      "skillActivation": [
+        {
+          "skillId": "backend-dev-guidelines",
+          "score": 0.5,
+          "reasons": [
+            "keywords: backend, api, endpoint, arquitectura, middleware, autenticación, login, registro",
+            "intent: 2 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 320,
+        "prompt": "backend: Crear API REST para autenticación de usuarios con endpoints de login, registro y refresh token. Implementar middleware de autorización y manejo de errores. Usar arquitectura hexagonal con DDD patterns.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (2 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:BACKEND-ARCHITECTURE]\n  [C:API-DEVELOPMENT]\n\n⚠️ TAGs coverage: 20% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: backend: Crear API REST para autenticación de usuarios con endpoints de login, registro y refresh token. Implementar middleware de autorización y manejo de errores...",
+        "expectedScore": 0.5800000000000001,
+        "skillActivation": [
+          {
+            "skillId": "backend-dev-guidelines",
+            "score": 0.5,
+            "reasons": [
+              "keywords: backend, api, endpoint, arquitectura, middleware, autenticación, login, registro",
+              "intent: 2 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "backend",
+            "api",
+            "endpoint"
+          ],
+          "intent": [
+            "(crear|agregar|añadir|implementar|fix|refactor|desarrollar).*?(endpoint|ruta|route|controller|controlador|service|servicio|api|backend|middleware)",
+            "(autenticaci[oó]n|auth|login|registro|signup|usuarios).*(ruta|endpoint|controller|servicio|middleware)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [
+            "[K:BACKEND-ARCHITECTURE]",
+            "[C:API-DEVELOPMENT]"
+          ],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0.2,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "backend-dev-guidelines"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:09.005Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:09.006Z"
+    },
+    {
+      "plan": {
+        "id": "TP002",
+        "name": "React Dashboard Component",
+        "task": "Create user dashboard with data tables and filters",
+        "skillId": "frontend-dev-guidelines",
+        "description": "Desarrollar componente React para dashboard de usuarios con tablas de datos virtualizadas, filtros avanzados, paginación y acciones en lote. Implementar usando hooks personalizados y context API.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Especificar estructura de datos y UI requirements"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar arquitectura de componentes y hooks"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar componentes y lógica de estado"
+          },
+          {
+            "name": "Observe",
+            "description": "Testing visual y de interacción"
+          },
+          {
+            "name": "Reflect",
+            "description": "Optimizar performance y accesibilidad"
+          }
+        ],
+        "expectedDuration": "4-6 horas",
+        "complexity": "medium",
+        "keywords": [
+          "react",
+          "component",
+          "dashboard",
+          "hooks",
+          "virtualization"
+        ]
+      },
+      "success": true,
+      "latency": 387,
+      "error": null,
+      "score": 0.5780000000000001,
+      "skillActivation": [
+        {
+          "skillId": "frontend-dev-guidelines",
+          "score": 0.5,
+          "reasons": [
+            "keywords: patrones, frontend, para",
+            "intent: 2 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 189,
+        "prompt": "patrones, frontend: Desarrollar componente React para dashboard de usuarios con tablas de datos virtualizadas, filtros avanzados, paginación y acciones en lote. Implementar usando hooks personalizados y context API.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: patrones, frontend: Desarrollar componente React para dashboard de usuarios con tablas de datos virtualizadas, filtros avanzados, paginación y acciones en lote. Implementar usando hooks personalizados y context API.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.5780000000000001,
+        "skillActivation": [
+          {
+            "skillId": "frontend-dev-guidelines",
+            "score": 0.5,
+            "reasons": [
+              "keywords: patrones, frontend, para",
+              "intent: 2 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "patrones",
+            "frontend",
+            "para"
+          ],
+          "intent": [
+            "(crear|agregar|añadir|implementar|fix|refactor).*?(componente|component|hook|vista|view|ui)",
+            "(dashboard|lista|tabla|card|formulario).*(react|componente|hook)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "frontend-dev-guidelines"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:09.393Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:09.394Z"
+    },
+    {
+      "plan": {
+        "id": "TP003",
+        "name": "Database Migration System",
+        "task": "Set up Prisma migrations for user and content schemas",
+        "skillId": "database-verification",
+        "description": "Configurar sistema de migraciones con Prisma para esquemas de usuarios y contenido. Implementar seeders, rollback procedures y validaciones de integridad referencial.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Definir modelos de datos y relaciones"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar estructura de migraciones"
+          },
+          {
+            "name": "Operate",
+            "description": "Crear migraciones y seeders"
+          },
+          {
+            "name": "Observe",
+            "description": "Validar integridad y performance"
+          },
+          {
+            "name": "Reflect",
+            "description": "Documentar y optimizar queries"
+          }
+        ],
+        "expectedDuration": "3-4 horas",
+        "complexity": "medium",
+        "keywords": [
+          "database",
+          "prisma",
+          "migration",
+          "schema",
+          "seeding"
+        ]
+      },
+      "success": true,
+      "latency": 375,
+      "error": null,
+      "score": 0.266,
+      "skillActivation": [
+        {
+          "skillId": "database-verification",
+          "score": 0.2,
+          "reasons": [
+            "keywords: aplica, bloqueo, mutaciones"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 197,
+        "prompt": "aplica, bloqueo, mutaciones: query Configurar sistema de migraciones con Prisma para esquemas de usuarios y contenido. Implementar seeders, rollback procedures y validaciones de integridad referencial.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (2 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:DATABASE-OPERATIONS]\n  [C:DATABASE-CONTEXT]\n\n⚠️ TAGs coverage: 20% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: aplica, bloqueo, mutaciones: query Configurar sistema de migraciones con Prisma para esquemas de usuarios y contenido. Implementar seeders, rollback procedures y validaciones de integridad referencial.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (2 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:DATABASE-OPERATIONS]\n  [C:DATABASE-CONTEXT]\n\n⚠️ TAGs coverage: 20% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.266,
+        "skillActivation": [
+          {
+            "skillId": "database-verification",
+            "score": 0.2,
+            "reasons": [
+              "keywords: aplica, bloqueo, mutaciones"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "aplica",
+            "bloqueo",
+            "mutaciones"
+          ],
+          "intent": [
+            "(query|consulta|operaci[oó]n|mutaci[oó]n|update|delete|insert).*(masiv[oa]|bulk|riesgo|peligros[ao]|sin\\s+where)",
+            "(revisar|auditar).*(findMany|updateMany|deleteMany)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [
+            "[K:DATABASE-OPERATIONS]",
+            "[C:DATABASE-CONTEXT]"
+          ],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0.2,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "database-verification"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:09.769Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:09.769Z"
+    },
+    {
+      "plan": {
+        "id": "TP004",
+        "name": "Security Implementation Guide",
+        "task": "Implement security scanning and OWASP compliance",
+        "skillId": "security-testing-guide",
+        "description": "Configurar pipeline de security testing incluyendo SAST, DAST y OWASP compliance checks. Implementar detección de vulnerabilidades XSS, CSRF, SQL injection.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Identificar riesgos de seguridad críticos"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar estrategia de security testing"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar guards y validaciones"
+          },
+          {
+            "name": "Observe",
+            "description": "Ejecutar penetration testing"
+          },
+          {
+            "name": "Reflect",
+            "description": "Documentar findings y remediations"
+          }
+        ],
+        "expectedDuration": "5-7 horas",
+        "complexity": "high",
+        "keywords": [
+          "security",
+          "owasp",
+          "vulnerability",
+          "sast",
+          "dast"
+        ]
+      },
+      "success": true,
+      "latency": 401,
+      "error": null,
+      "score": 0.562,
+      "skillActivation": [
+        {
+          "skillId": "security-testing-guide",
+          "score": 0.5,
+          "reasons": [
+            "keywords: security, testing, penetration, owasp, sast, dast, xss, sql, injection, csrf, security, vulnerabilidad",
+            "intent: 2 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 177,
+        "prompt": "penetration: Configurar pipeline de security testing incluyendo SAST, DAST y OWASP compliance checks. Implementar detección de vulnerabilidades XSS, CSRF, SQL injection.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: penetration: Configurar pipeline de security testing incluyendo SAST, DAST y OWASP compliance checks. Implementar detección de vulnerabilidades XSS, CSRF, SQL injection.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.562,
+        "skillActivation": [
+          {
+            "skillId": "security-testing-guide",
+            "score": 0.5,
+            "reasons": [
+              "keywords: security, testing, penetration, owasp, sast, dast, xss, sql, injection, csrf, security, vulnerabilidad",
+              "intent: 2 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "security",
+            "testing",
+            "penetration"
+          ],
+          "intent": [
+            "(implementar|realizar|realizar).*(security|penetration|vulnerability|seguridad).*(testing|test|scan|audit)",
+            "(crear|diseñar|planificar).*(security|owasp|penetration|seguridad).*(test|strategy|plan|estrategia)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "security-testing-guide"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:10.170Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:10.171Z"
+    },
+    {
+      "plan": {
+        "id": "TP005",
+        "name": "Performance Optimization",
+        "task": "Optimize database queries and API response times",
+        "skillId": "performance-optimization",
+        "description": "Analizar y optimizar queries de base de datos, implementar caching strategies, lazy loading y compresión. Optimizar API response times y bundle sizes.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Identificar bottlenecks de performance"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar estrategias de optimización"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar caching y optimizaciones"
+          },
+          {
+            "name": "Observe",
+            "description": "Medir mejoras con benchmarks"
+          },
+          {
+            "name": "Reflect",
+            "description": "Documentar optimizaciones aplicadas"
+          }
+        ],
+        "expectedDuration": "4-6 horas",
+        "complexity": "medium",
+        "keywords": [
+          "performance",
+          "optimization",
+          "cache",
+          "benchmark",
+          "latency"
+        ]
+      },
+      "success": true,
+      "latency": 378,
+      "error": null,
+      "score": 0.56,
+      "skillActivation": [
+        {
+          "skillId": "performance-optimization",
+          "score": 0.5,
+          "reasons": [
+            "keywords: performance, optimization, optimización, optimizar, lazy, loading, bundle, size, time, load",
+            "intent: 2 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 202,
+        "prompt": "performance, optimization, optimización: Analizar y optimizar queries de base de datos, implementar caching strategies, lazy loading y compresión. Optimizar API response times y bundle sizes.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: performance, optimization, optimización: Analizar y optimizar queries de base de datos, implementar caching strategies, lazy loading y compresión. Optimizar API response times y bundle sizes.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.56,
+        "skillActivation": [
+          {
+            "skillId": "performance-optimization",
+            "score": 0.5,
+            "reasons": [
+              "keywords: performance, optimization, optimización, optimizar, lazy, loading, bundle, size, time, load",
+              "intent: 2 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "performance",
+            "optimization",
+            "optimización"
+          ],
+          "intent": [
+            "(optimizar|optimize|mejorar|mejora|acelerar).*(performance|rendimiento|velocidad|speed|carga)",
+            "(implementar|crear|configurar).*(cache|caching|lazy|loading|profiling|benchmark|memo)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "performance-optimization"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:10.549Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:10.549Z"
+    },
+    {
+      "plan": {
+        "id": "TP006",
+        "name": "Testing Strategy Implementation",
+        "task": "Create comprehensive testing suite with TDD approach",
+        "skillId": "test-driven-development",
+        "description": "Implementar estrategia completa de testing incluyendo unit tests, integration tests, e2e tests con Jest, Testing Library y Cypress.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Definir test coverage y casos críticos"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar estructura de test suite"
+          },
+          {
+            "name": "Operate",
+            "description": "Crear tests siguiendo TDD"
+          },
+          {
+            "name": "Observe",
+            "description": "Ejecutar test suite completo"
+          },
+          {
+            "name": "Reflect",
+            "description": "Analizar coverage y ajustar tests"
+          }
+        ],
+        "expectedDuration": "6-8 horas",
+        "complexity": "high",
+        "keywords": [
+          "testing",
+          "tdd",
+          "unit",
+          "integration",
+          "e2e"
+        ]
+      },
+      "success": true,
+      "latency": 370,
+      "error": null,
+      "score": 0.552,
+      "skillActivation": [
+        {
+          "skillId": "test-driven-development",
+          "score": 0.5,
+          "reasons": [
+            "keywords: test, tdd, test-driven, tests, unit, integration",
+            "intent: 1 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 187,
+        "prompt": "tdd, test-driven: Implementar estrategia completa de testing incluyendo unit tests, integration tests, e2e tests con Jest, Testing Library y Cypress.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: tdd, test-driven: Implementar estrategia completa de testing incluyendo unit tests, integration tests, e2e tests con Jest, Testing Library y Cypress.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.552,
+        "skillActivation": [
+          {
+            "skillId": "test-driven-development",
+            "score": 0.5,
+            "reasons": [
+              "keywords: test, tdd, test-driven, tests, unit, integration",
+              "intent: 1 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "test",
+            "tdd",
+            "test-driven"
+          ],
+          "intent": [
+            "(implement|write|crear).*(test|tests)",
+            "(tdd|test-driven).*(development|desarrollo)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "test-driven-development"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:10.919Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:10.919Z"
+    },
+    {
+      "plan": {
+        "id": "TP007",
+        "name": "DevOps Pipeline Setup",
+        "task": "Configure CI/CD pipeline with GitHub Actions",
+        "skillId": "ci-cd-pipelines",
+        "description": "Configurar pipeline de CI/CD con GitHub Actions incluyendo build, test, security scan y deployment automático a staging y production.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Definir workflow y environments"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar pipeline stages y triggers"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar GitHub Actions workflows"
+          },
+          {
+            "name": "Observe",
+            "description": "Probar deployment pipeline"
+          },
+          {
+            "name": "Reflect",
+            "description": "Optimizar tiempos y costos"
+          }
+        ],
+        "expectedDuration": "4-5 horas",
+        "complexity": "medium",
+        "keywords": [
+          "ci/cd",
+          "github actions",
+          "pipeline",
+          "deployment",
+          "automation"
+        ]
+      },
+      "success": true,
+      "latency": 372,
+      "error": null,
+      "score": 0.554,
+      "skillActivation": [
+        {
+          "skillId": "ci-cd-pipelines",
+          "score": 0.5,
+          "reasons": [
+            "keywords: pipeline, ci, cd, deploy, github, actions, ci, deployment, build",
+            "intent: 2 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 174,
+        "prompt": "Configurar pipeline de CI/CD con GitHub Actions incluyendo build, test, security scan y deployment automático a staging y production.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 5.85/10\nTags: REVIEW\nSummary: Configurar pipeline de CI/CD con GitHub Actions incluyendo build, test, security scan y deployment automático a staging y production.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.554,
+        "skillActivation": [
+          {
+            "skillId": "ci-cd-pipelines",
+            "score": 0.5,
+            "reasons": [
+              "keywords: pipeline, ci, cd, deploy, github, actions, ci, deployment, build",
+              "intent: 2 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "pipeline",
+            "ci",
+            "cd"
+          ],
+          "intent": [
+            "(implementar|crear|configurar|pipeline|ci|cd|deploy|deployment).*(github|gitlab|jenkins|workflow)",
+            "(automatizar|automate).*(build|test|deploy|testing|workflow)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "ci-cd-pipelines"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:11.291Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:11.292Z"
+    },
+    {
+      "plan": {
+        "id": "TP008",
+        "name": "Microservices Architecture",
+        "task": "Design and implement microservice for user management",
+        "skillId": "backend-architecture-patterns",
+        "description": "Diseñar e implementar microservicio de gestión de usuarios con API Gateway, service discovery, circuit breaker pattern y database per service.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Definir bounded contexts y responsabilidades"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar arquitectura de microservicios"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar servicios y patrones"
+          },
+          {
+            "name": "Observe",
+            "description": "Validar comunicación entre servicios"
+          },
+          {
+            "name": "Reflect",
+            "description": "Optimizar patterns y monitoring"
+          }
+        ],
+        "expectedDuration": "8-10 horas",
+        "complexity": "very-high",
+        "keywords": [
+          "microservices",
+          "api gateway",
+          "circuit breaker",
+          "ddd",
+          "bounded context"
+        ]
+      },
+      "success": true,
+      "latency": 456,
+      "error": null,
+      "score": 0.556,
+      "skillActivation": [
+        {
+          "skillId": "backend-architecture-patterns",
+          "score": 0.5,
+          "reasons": [
+            "keywords: arquitectura, backend, ddd",
+            "intent: 1 pattern(s) matched"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 175,
+        "prompt": "arquitectura, backend, ddd: Diseñar e implementar microservicio de gestión de usuarios con API Gateway, service discovery, circuit breaker pattern y database per service.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (4 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:BACKEND-ARCHITECTURE]\n  [C:API-DEVELOPMENT]\n  [K:DATABASE-CONNECTION]\n  [C:INFRASTRUCTURE-SETUP]\n\n⚠️ TAGs coverage: 40% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: arquitectura, backend, ddd: Diseñar e implementar microservicio de gestión de usuarios con API Gateway, service discovery, circuit breaker pattern y database per service.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (4 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:BACKEND-ARCHITECTURE]\n  [C:API-DEVELOPMENT]\n  [K:DATABASE-CONNECTION]\n  [C:INFRASTRUCTURE-SETUP]\n\n⚠️ TAGs coverage: 40% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.556,
+        "skillActivation": [
+          {
+            "skillId": "backend-architecture-patterns",
+            "score": 0.5,
+            "reasons": [
+              "keywords: arquitectura, backend, ddd",
+              "intent: 1 pattern(s) matched"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "arquitectura",
+            "backend",
+            "ddd"
+          ],
+          "intent": [
+            "(implementar|crear|design|disenar|arquitectura|pattern|patron).*(ddd|domain|aggregate|cqrs|hexagonal|clean)",
+            "(estructurar|organizar|refactor).*(backend|servicio|service|domain|domain-driven)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [
+            "[K:BACKEND-ARCHITECTURE]",
+            "[C:API-DEVELOPMENT]",
+            "[K:DATABASE-CONNECTION]",
+            "[C:INFRASTRUCTURE-SETUP]"
+          ],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0.4,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "backend-architecture-patterns"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:11.748Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:11.748Z"
+    },
+    {
+      "plan": {
+        "id": "TP009",
+        "name": "Mobile App Development",
+        "task": "Create React Native app for task management",
+        "skillId": "frontend-dev-guidelines",
+        "description": "Desarrollar aplicación React Native para gestión de tareas con navegación, state management, offline support y sync con backend.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Especificar features y user flows"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar navegación y arquitectura"
+          },
+          {
+            "name": "Operate",
+            "description": "Implementar screens y funcionalidades"
+          },
+          {
+            "name": "Observe",
+            "description": "Testing en dispositivos físicos"
+          },
+          {
+            "name": "Reflect",
+            "description": "Optimizar UX y performance móvil"
+          }
+        ],
+        "expectedDuration": "10-12 horas",
+        "complexity": "high",
+        "keywords": [
+          "react native",
+          "mobile",
+          "navigation",
+          "state management",
+          "offline"
+        ]
+      },
+      "success": true,
+      "latency": 438,
+      "error": null,
+      "score": 0.252,
+      "skillActivation": [
+        {
+          "skillId": "frontend-dev-guidelines",
+          "score": 0.2,
+          "reasons": [
+            "keywords: patrones, frontend, para, crear"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 211,
+        "prompt": "patrones, frontend: crear Desarrollar aplicación React Native para gestión de tareas con navegación, state management, offline support y sync con backend.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: patrones, frontend: crear Desarrollar aplicación React Native para gestión de tareas con navegación, state management, offline support y sync con backend.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (0 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n⚠️ TAGs coverage: 0% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.252,
+        "skillActivation": [
+          {
+            "skillId": "frontend-dev-guidelines",
+            "score": 0.2,
+            "reasons": [
+              "keywords: patrones, frontend, para, crear"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "patrones",
+            "frontend",
+            "para"
+          ],
+          "intent": [
+            "(crear|agregar|añadir|implementar|fix|refactor).*?(componente|component|hook|vista|view|ui)",
+            "(dashboard|lista|tabla|card|formulario).*(react|componente|hook)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "frontend-dev-guidelines"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:12.186Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:12.187Z"
+    },
+    {
+      "plan": {
+        "id": "TP010",
+        "name": "Legacy Code Modernization",
+        "task": "Refactor monolithic app to modern architecture",
+        "skillId": "backend-architecture-patterns",
+        "description": "Modernizar aplicación monolítica heredada migrando a arquitectura modular, implementando tests, documentación y estableciendo CI/CD pipeline.",
+        "phases": [
+          {
+            "name": "Clarify",
+            "description": "Auditar código legacy y dependencias"
+          },
+          {
+            "name": "Layout",
+            "description": "Diseñar estrategia de refactoring gradual"
+          },
+          {
+            "name": "Operate",
+            "description": "Refactor módulos críticos"
+          },
+          {
+            "name": "Observe",
+            "description": "Validar funcionamiento y tests"
+          },
+          {
+            "name": "Reflect",
+            "description": "Documentar lecciones y next steps"
+          }
+        ],
+        "expectedDuration": "12-16 horas",
+        "complexity": "very-high",
+        "keywords": [
+          "legacy",
+          "refactoring",
+          "monolith",
+          "modernization",
+          "technical debt"
+        ]
+      },
+      "success": true,
+      "latency": 431,
+      "error": null,
+      "score": 0.256,
+      "skillActivation": [
+        {
+          "skillId": "backend-architecture-patterns",
+          "score": 0.2,
+          "reasons": [
+            "keywords: arquitectura, backend, ddd"
+          ]
+        }
+      ],
+      "pbv2Result": {
+        "success": true,
+        "latency_ms": 227,
+        "prompt": "backend, ddd: implementar Modernizar aplicación monolítica heredada migrando a arquitectura modular, implementando tests, documentación y estableciendo CI/CD pipeline.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (2 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:BACKEND-ARCHITECTURE]\n  [C:API-DEVELOPMENT]\n\n⚠️ TAGs coverage: 20% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h\n\n---\nAudit 4D: 6.9/10\nTags: REVIEW\nSummary: backend, ddd: implementar Modernizar aplicación monolítica heredada migrando a arquitectura modular, implementando tests, documentación y estableciendo CI/CD pipeline.\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (2 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:BACKEND-ARCHITECTURE]\n  [C:API-DEVELOPMENT]\n\n⚠️ TAGs coverage: 20% (recomendado: ≥60%)\n\n📊 Complejidad: low — cobertura 70%, duración 6h...",
+        "expectedScore": 0.256,
+        "skillActivation": [
+          {
+            "skillId": "backend-architecture-patterns",
+            "score": 0.2,
+            "reasons": [
+              "keywords: arquitectura, backend, ddd"
+            ]
+          }
+        ],
+        "signals": {
+          "keywords": [
+            "arquitectura",
+            "backend",
+            "ddd"
+          ],
+          "intent": [
+            "(implementar|crear|design|disenar|arquitectura|pattern|patron).*(ddd|domain|aggregate|cqrs|hexagonal|clean)",
+            "(estructurar|organizar|refactor).*(backend|servicio|service|domain|domain-driven)"
+          ],
+          "paths": [],
+          "content": [],
+          "tags": [
+            "[K:BACKEND-ARCHITECTURE]",
+            "[C:API-DEVELOPMENT]"
+          ],
+          "templateComponents": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8"
+          ]
+        },
+        "tagsCoverage": 0.2,
+        "templateScore": 1,
+        "recommendations": [],
+        "metadata": {
+          "skillIdsUsed": [
+            "backend-architecture-patterns"
+          ],
+          "complexityUsed": "low",
+          "repoSize": "large",
+          "repoFiles": null,
+          "isMonorepo": true,
+          "timestamp": "2025-11-03T16:25:12.618Z",
+          "version": "2.0.0"
+        },
+        "planContext": {
+          "planId": null,
+          "taskName": null,
+          "phases": []
+        },
+        "config": {
+          "includeFiles": false,
+          "includeTags": true,
+          "includeTemplate": true,
+          "complexity": "low",
+          "cwd": "/Users/felipe/Developer/skills-fabrik",
+          "timeout": 5000
+        }
+      },
+      "timestamp": "2025-11-03T16:25:12.619Z"
+    }
+  ],
+  "timestamp": "2025-11-03T16:25:08.452Z"
+}

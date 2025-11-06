@@ -1,0 +1,30 @@
+{
+  "detection": {
+    "hash": "672e8955b6203d753f0c8e02f70f150911d5baa0fd1491f067a24309a875248f",
+    "confidence": 0.95,
+    "block": "[Layout] Verify getFastConfig:\n1. Check function exists\n2. Test activation\n3. Confirm working"
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 320,
+    "expectedScore": 0.23800000000000002,
+    "skillActivation": [
+      {
+        "skillId": "test-driven-development",
+        "score": 0.2,
+        "reasons": [
+          "keywords: test, tdd, test-driven"
+        ]
+      },
+      {
+        "skillId": "webapp-testing",
+        "score": 0.2,
+        "reasons": [
+          "keywords: test"
+        ]
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T22-27-11-248Z",
+  "version": "2.0.0"
+}

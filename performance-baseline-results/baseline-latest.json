@@ -1,0 +1,51 @@
+{
+  "testType": "test",
+  "totalTests": 2,
+  "timestamp": "2025-11-02T16:21:30.000Z",
+  "scenarios": {
+    "single-ts-file": {
+      "totalRuns": 1,
+      "successRate": 100,
+      "latency": {
+        "min": 2100,
+        "max": 2100,
+        "avg": 2100,
+        "p95": 2100,
+        "p99": 2100
+      },
+      "memory": {
+        "avgHeapUsed": 15,
+        "avgHeapTotal": 30,
+        "avgExternal": 4
+      },
+      "features": {
+        "autoResolverUsed": false,
+        "avgFormatted": 1,
+        "avgTypecheck": 1,
+        "avgCacheHits": 0
+      }
+    },
+    "multiple-ts-files": {
+      "totalRuns": 1,
+      "successRate": 100,
+      "latency": {
+        "min": 2400,
+        "max": 2400,
+        "avg": 2400,
+        "p95": 2400,
+        "p99": 2400
+      },
+      "memory": {
+        "avgHeapUsed": 16,
+        "avgHeapTotal": 32,
+        "avgExternal": 4
+      },
+      "features": {
+        "autoResolverUsed": false,
+        "avgFormatted": 2,
+        "avgTypecheck": 1,
+        "avgCacheHits": 5
+      }
+    }
+  }
+}

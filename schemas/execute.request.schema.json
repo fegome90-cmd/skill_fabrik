@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "execute.request.schema.json",
+  "type": "object",
+  "required": ["skill_id"],
+  "properties": {
+    "skill_id": { "type": "string", "minLength": 1 },
+    "args": { "type": "object" },
+    "dry_run": { "type": "boolean" },
+    "cwd": { "type": "string" },
+    "allowed_tools": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "needs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "challenge_id": { "type": "string" },
+    "confirm_token": { "type": "string" }
+  },
+  "additionalProperties": false
+}

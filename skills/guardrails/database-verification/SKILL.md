@@ -3,9 +3,9 @@ id: database-verification
 version: 0.1.0
 type: guardrail
 enforcement: block
-summary: Bloquea mutaciones masivas sin filtro y operaciones destructivas inseguras.
+summary: 'Aplica bloqueo de mutaciones masivas sin filtro y previene operaciones destructivas inseguras.'
 audience: engineers
-when_to_use: Cualquier cambio en repositorios/queries/migraciones.
+when_to_use: 'Cualquier cambio en repositorios/queries/migraciones.'
 resources:
   - resources/patterns.md
   - resources/migration-checklist.md

@@ -1,0 +1,104 @@
+{
+  "$id": "activate.response.schema.json",
+  "title": "Skill Activation Response",
+  "description": "Response schema for skill activation",
+  "type": "object",
+  "required": ["success", "timestamp"],
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Whether the activation was successful"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Response timestamp"
+    },
+    "results": {
+      "type": "array",
+      "description": "List of activation results",
+      "items": {
+        "type": "object",
+        "required": ["skillId", "confidence", "reason"],
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "description": "Identifier of the skill"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Confidence score for the match"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason for the match"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata about the skill",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Display name of the skill"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of what the skill does"
+              },
+              "category": {
+                "type": "string",
+                "description": "Category of the skill"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Tags associated with the skill"
+              }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "description": "Error information if activation failed",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Error code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message"
+        },
+        "details": {
+          "type": "object",
+          "description": "Additional error details"
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Performance metrics",
+      "properties": {
+        "processingTime": {
+          "type": "number",
+          "description": "Processing time in milliseconds"
+        },
+        "cacheHit": {
+          "type": "boolean",
+          "description": "Whether the result was served from cache"
+        },
+        "candidatesEvaluated": {
+          "type": "integer",
+          "description": "Number of candidates evaluated"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

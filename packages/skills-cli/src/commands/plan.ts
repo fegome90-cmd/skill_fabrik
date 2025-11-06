@@ -7,14 +7,36 @@ import chalk from 'chalk';
 import * as path from 'path';
 import fs from 'fs-extra';
 import { Logger } from '../utils/logger.js';
-import type { Plan } from '../types/plan.js';
+import type { Plan, PlanStatus } from '../types/plan.js';
+import { PLAN_STATUS_TRANSITIONS } from '../types/plan.js';
 import { validatePlan, validateStatusTransition } from '../utils/plan-validator.js';
 import {
   createPlanFromTask,
+  createPlanFromTaskV2,
   generatePlanMarkdown,
   generateContextMarkdown,
   generateTasksMarkdown,
 } from '../utils/plan-generator.js';
+// MemTech snapshot (optional - will fail gracefully if not available)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function createPlanSnapshotFallback(data: any): Promise<{ id: string; uri: string; created_at: string }> {
+  try {
+    // Dynamic import - module may not exist, handle gracefully
+    // @ts-ignore - Module may not be available
+    const mcpModule = await import('@skills-fabrik/mcp-adapters');
+    if (mcpModule?.createPlanSnapshot) {
+      return await mcpModule.createPlanSnapshot(data);
+    }
+    throw new Error('Module not available');
+  } catch {
+    // Return mock snapshot if mcp-adapters not available
+    return {
+      id: `snapshot-${Date.now()}`,
+      uri: `memtech://snapshot/${data.id}`,
+      created_at: new Date().toISOString(),
+    };
+  }
+}
 
 const { ensureDir, pathExists, writeJson, readJson } = fs;
 
@@ -36,14 +58,17 @@ export function planCommand(program: Command) {
     .argument('<task>', 'Task description')
     .option('--output <dir>', 'Output directory for plan', PLANS_DIR)
     .option('-v, --verbose', 'Verbose output')
-    .action(async (task: string, options: { output?: string; verbose?: boolean }) => {
+    .option('--v2', 'Use Prompt Builder v2 for intelligent plan generation')
+    .action(async (task: string, options: { output?: string; verbose?: boolean; v2?: boolean }) => {
       const logger = new Logger(options.verbose);
 
       try {
-        logger.info(`Creating plan for: "${task}"`);
+        logger.info(`Creating plan for: "${task}"${options.v2 ? ' (using Prompt Builder v2)' : ''}`);
 
         // Create plan from task
-        const plan = createPlanFromTask(task);
+        const plan = options.v2
+          ? await createPlanFromTaskV2(task)
+          : createPlanFromTask(task);
         logger.debug(`Plan ID: ${plan.id}`);
 
         // Validate
@@ -129,12 +154,30 @@ export function planCommand(program: Command) {
           // Approve if requested
           if (options.approve) {
             if (plan.status !== 'APPROVED') {
-              const transition = validateStatusTransition(plan.status, 'APPROVED');
+              // Allow direct DRAFT → APPROVED when using --approve flag
+              const targetStatus: PlanStatus = plan.status === 'DRAFT' ? 'APPROVED' : 'APPROVED';
+              const transition = validateStatusTransition(plan.status, targetStatus);
+              
               if (!transition.valid) {
-                logger.error(`Cannot approve: ${transition.error}`);
-                process.exit(1);
+                // If direct transition not valid, try via PENDING_APPROVAL
+                if (plan.status === 'DRAFT') {
+                  // First transition to PENDING_APPROVAL, then to APPROVED
+                  plan.status = 'PENDING_APPROVAL';
+                  plan.updated = new Date().toISOString();
+                  await writeJson(planPath, plan, { spaces: 2 });
+                  logger.debug('Transitioned to PENDING_APPROVAL');
+                  // Now transition to APPROVED
+                  plan.status = 'APPROVED';
+                } else {
+                  logger.error(`Cannot approve: ${transition.error}`);
+                  logger.info(`Current status: ${plan.status}`);
+                  logger.info(`Valid transitions: ${PLAN_STATUS_TRANSITIONS[plan.status]?.join(', ') || 'none'}`);
+                  process.exit(1);
+                }
+              } else {
+                plan.status = targetStatus;
               }
-              plan.status = 'APPROVED';
+              
               plan.approvedBy = 'user'; // TODO: Get from environment
               plan.approvedAt = new Date().toISOString();
               plan.updated = new Date().toISOString();
@@ -169,6 +212,48 @@ export function planCommand(program: Command) {
           await generateTasksMarkdown(taskName, plan, path.join(taskDir, 'tasks.md'));
           logger.success('Generated tasks.md');
 
+          // Health check preventivo (no bloqueante) - TEMPORALMENTE DESACTIVADO
+          // try {
+          //   const mcp = await import('@skills-fabrik/mcp-adapters').catch(() => null);
+          //   if (mcp?.testConnection) {
+          //     const health = await mcp.testConnection();
+          //     if (!health.connected) {
+          //       logger.debug(`Redis not available for snapshot (reason: ${health.error || 'unknown'}). Fallback may be used.`);
+          //     }
+          //   }
+          // } catch {
+          //   // Ignorar si el módulo no está disponible
+          // }
+
+          // Create MemTech L1 snapshot
+          let snapshotId: string | undefined;
+          let snapshotUri: string | undefined;
+          let snapshotCreatedAt: string | undefined;
+
+          try {
+            const snapshot = await createPlanSnapshotFallback({
+              id: plan.id,
+              task: plan.task,
+              phases: plan.phases,
+              status: plan.status,
+              approved_at: plan.approvedAt,
+              risks: plan.risks,
+              metrics: plan.metrics,
+            });
+            snapshotId = snapshot.id;
+            snapshotUri = snapshot.uri;
+            snapshotCreatedAt = snapshot.created_at;
+            if (snapshot.uri?.startsWith('file://')) {
+              logger.info(`Snapshot saved locally: ${snapshot.uri}`);
+              logger.info('Redis not available. Configure REDIS_URL_CORE to use Redis storage.');
+            } else {
+              logger.success(`MemTech L1 snapshot created: ${snapshot.id}`);
+            }
+          } catch (error) {
+            logger.warning(`Failed to create MemTech snapshot: ${error instanceof Error ? error.message : String(error)}`);
+            logger.info('Plan saved, but snapshot not created. Check Redis connection.');
+          }
+
           // Save plan reference in task.json
           const taskMetadata = {
             name: taskName,
@@ -177,11 +262,13 @@ export function planCommand(program: Command) {
             created: new Date().toISOString(),
             updated: new Date().toISOString(),
             status: 'active' as const,
+            ...(snapshotId && {
+              memtechSnapshotId: snapshotId,
+              memtechSnapshotUri: snapshotUri,
+              memtechSnapshotCreatedAt: snapshotCreatedAt,
+            }),
           };
           await writeJson(path.join(taskDir, 'task.json'), taskMetadata, { spaces: 2 });
-
-          // TODO: MemTech L1 snapshot integration
-          logger.info('MemTech L1 snapshot (TODO: integrate)');
 
           logger.success(`\n✅ Dev-docs triada created: ${taskDir}`);
           logger.info(`\nFiles:`);

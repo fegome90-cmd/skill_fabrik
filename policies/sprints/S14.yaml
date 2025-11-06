@@ -1,0 +1,16 @@
+write:
+  backend-agent:
+    - ".codemachine/memory/QuanNex/S14/backend-agent/**"
+    - "services/**"
+  frontend-agent:
+    - ".codemachine/memory/QuanNex/S14/frontend-agent/**"
+    - "ui/**"
+merge:
+  require:
+    - "diff-guard:pass"
+    - "coverage-gate:>=0.80"
+    - "metrics-gate:pass"
+    - "adr-writer:present"
+retriever:
+  read_scope: "snapshots-only"
+  forbid_views: ["sandbox/*"]

@@ -1,0 +1,22 @@
+{
+  "totalSkillIds": 10,
+  "skillIdDistribution": {
+    "backend-dev-guidelines": 1,
+    "frontend-dev-guidelines": 2,
+    "database-verification": 1,
+    "security-testing-guide": 1,
+    "performance-optimization": 1,
+    "test-driven-development": 1,
+    "ci-cd-pipelines": 1,
+    "backend-architecture-patterns": 2
+  },
+  "categories": {
+    "backend-architecture-patterns": 3,
+    "frontend-dev-guidelines": 2,
+    "database-verification": 1,
+    "security-testing-guide": 1,
+    "performance-optimization": 1,
+    "test-driven-development": 1,
+    "ci-cd-pipelines": 1
+  }
+}

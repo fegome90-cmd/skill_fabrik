@@ -1,0 +1,1 @@
+{"version":3,"file":"write-barrier.d.ts","sourceRoot":"","sources":["../../src/core/write-barrier.ts"],"names":[],"mappings":"AAIA,qBAAa,YAAY;IACvB,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAe;IACtC,OAAO,CAAC,YAAY,CAAgB;IAEpC,MAAM,CAAC,WAAW,IAAI,YAAY;;IAgB5B,SAAS,CAAC,QAAQ,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,GAAG,MAAM,GAAG,OAAO,CAAC,IAAI,CAAC;CAkB3E"}

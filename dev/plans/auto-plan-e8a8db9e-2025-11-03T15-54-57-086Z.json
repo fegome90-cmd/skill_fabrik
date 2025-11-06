@@ -1,0 +1,13 @@
+{
+  "detection": {
+    "hash": "e8a8db9ed00bff3647e37077fca89b0b593173fe39ebf7a3a9cf4cf53205c850",
+    "confidence": 0.95,
+    "block": "[Layout] Plan de desarrollo:\n\n1. Configurar el entorno de desarrollo\n2. Instalar dependencias necesarias\n3. Crear estructura de carpetas\n4. Implementar la lógica principal\n\nEste es un plan básico para comenzar."
+  },
+  "pbv2Result": {
+    "success": false,
+    "latency_ms": 125
+  },
+  "timestamp": "2025-11-03T15-54-57-086Z",
+  "version": "2.0.0"
+}

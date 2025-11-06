@@ -65,3 +65,38 @@ const stopResult = await stopHook({
   cwd: process.cwd(),
 });
 ```
+
+## Servidor HTTP
+
+El router puede ejecutarse como servidor HTTP independiente.
+
+### Iniciar servidor
+
+```bash
+# Desde el directorio del proyecto
+node packages/router/dist/cli/start-router-server.js
+
+# O via PM2
+pm2 start scripts/pm2/ecosystem.config.cjs --only router-service --env development
+```
+
+### Endpoints disponibles
+
+- `GET /health` - Health check con estado de dependencias
+- `POST /pre-invoke` - Hook pre-invocación
+- `POST /stop` - Hook post-respuesta
+- `GET /rules` - Obtener reglas de activación
+- `POST /match-rules` - Matching de reglas
+- `POST /guardrails` - Verificación de guardrails
+
+### Configuración
+
+Variables de entorno:
+
+- `PORT`: Puerto del servidor (default: 3000)
+- `HOST`: Host del servidor (default: 127.0.0.1)
+- `DAEMON_URL`: URL del daemon (default: http://127.0.0.1:7727)
+
+### Integración con PM2
+
+El servidor envía `process.send('ready')` cuando está listo, compatible con `wait_ready: true` en PM2.

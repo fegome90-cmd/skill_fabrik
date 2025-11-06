@@ -1,0 +1,40 @@
+{
+  "id": "621f2407c968",
+  "timestamp": "2025-11-03T13:47:28.930Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend con Node.js\n2. Implementar API REST con autenticación\n3. Configurar base de datos PostgreSQL\n4. Testing de endpoints y validaciones",
+  "optimizedPrompt": "ddd: [Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend con Node.js\n2. Implementar API REST con autenticación\n3. Configurar base de datos PostgreSQL\n4. Testing de endpoints y validaciones\n\nTemplate v1.1.0 aplicado (8/8 componentes):\n  • C1: CSE_Completo ✅\n  • C2: TAGs_Cobertura ✅ (6 tags)\n  • C3: Boundary_Markers ✅\n  • C4: Frontmatter_YAML ✅\n  • C5: Anti_Drift ✅\n  • C6: Objetivos_SMART ✅\n  • C7: Tests_Ejecutables ✅\n  • C8: Separacion_EVIDENCIA_PROPUESTA ✅\n\n🏷️ TAGs aplicados:\n  [K:BACKEND-ARCHITECTURE]\n  [C:API-DEVELOPMENT]\n  [K:DATABASE-CONNECTION]\n  [C:INFRASTRUCTURE-SETUP]\n  [U:PLANNING-WORKFLOW]\n  [C:CLOOP-INTEGRATION]\n  [K:DATABASE-OPERATIONS]\n  [C:DATABASE-CONTEXT]\n\n📊 Complejidad: medium — cobertura 80%, duración 8h\n\n---\nAudit 4D: 6.45/10\nTags: REVIEW\nSummary: ddd: [Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend con Node.js\n2...",
+  "skillsSuggested": [
+    {
+      "id": "backend-architecture-patterns",
+      "confidence": 0.2
+    },
+    {
+      "id": "frontend-dev-guidelines",
+      "confidence": 0
+    },
+    {
+      "id": "api-design-and-testing",
+      "confidence": 0.5
+    },
+    {
+      "id": "database-verification",
+      "confidence": 0
+    },
+    {
+      "id": "ci-cd-pipelines",
+      "confidence": 0.2
+    }
+  ],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "097f04404f8c4b42f156355953252331c5caf5d5d70523221000bb2c89bf50a1",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "expectedScore": 0.256,
+    "templateApplied": true,
+    "tagsGenerated": 8,
+    "latency_ms": 25,
+    "success": true
+  }
+}

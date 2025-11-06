@@ -1,0 +1,8 @@
+{
+  "type": "CACHE",
+  "severity": "CRITICAL",
+  "message": "Cache hit rate critically low: 0% (threshold: 30%)",
+  "timestamp": "2025-11-02T16:18:42.789Z",
+  "value": 0,
+  "threshold": 30
+}

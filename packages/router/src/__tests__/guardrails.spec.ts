@@ -3,7 +3,7 @@
  * Verifica bloqueo de operaciones peligrosas
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { writeFile, unlink, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { checkGuardrails } from '../guardrails.js';

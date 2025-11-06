@@ -1,0 +1,35 @@
+{
+  "detection": {
+    "hash": "8d39cda43865bac81e135373a5359735a6336b9119eeebb0ced09a874c214a38",
+    "confidence": 0.95,
+    "block": "[Layout] Confirm fix:\n1. getFastConfig error fixed\n2. PBv2 working\n3. System operational"
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 304,
+    "expectedScore": 0.16933333333333334,
+    "skillActivation": [
+      {
+        "skillId": "backend-dev-guidelines",
+        "score": 0.2,
+        "reasons": [
+          "keywords: backend, api, endpoint"
+        ]
+      },
+      {
+        "skillId": "frontend-dev-guidelines",
+        "score": 0.2,
+        "reasons": [
+          "keywords: crear"
+        ]
+      },
+      {
+        "skillId": "database-verification",
+        "score": 0,
+        "reasons": []
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T21-32-30-751Z",
+  "version": "2.0.0"
+}

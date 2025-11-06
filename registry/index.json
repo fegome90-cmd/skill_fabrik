@@ -1,18 +1,314 @@
 {
   "skills": [
     {
-      "name": "database-verification",
-      "description": "Bloquea mutaciones masivas sin filtro y operaciones destructivas inseguras.",
+      "name": "database-management",
+      "description": "Guía completa de database management que abarca: schema design, migrations, optimization, backup/recovery, y maintenance. Implementa robust database architecture y operations para production environments.",
       "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
       "triggers": {
         "keywords": [
-          "bloquea",
+          "guía",
+          "completa",
+          "database",
+          "management",
+          "que",
+          "abarca:",
+          "schema",
+          "design,",
+          "migrations,",
+          "optimization,",
+          "backup/recovery,",
+          "maintenance."
+        ],
+        "intentPatterns": [
+          "(crear|diseñar|implementar|configurar).*(database|schema|migration|backup|recovery|tabla|modelo)",
+          "(optimizar|optimize|mejorar).*(query|query|database|performance|index|índice)",
+          "(configurar|setup|instalar).*(postgres|mysql|mongodb|prisma|typeorm|redis|orm)",
+          "(backup|backups|disaster|recovery).*(database|db|datos)",
+          "(migración|migration| migrar).*(database|schema|table|tabla|datos)",
+          "(crear|agregar).*(relación|fk|foreign|key|clave)"
+        ],
+        "pathPatterns": [
+          "**/{migrations,schema}/**/*.{sql,ts,js}",
+          "**/prisma/schema.prisma",
+          "**/typeorm/**",
+          "**/{models,repositories}/**/*.{ts,js}",
+          "**/database/**/*.{ts,js}"
+        ],
+        "contentPatterns": [
+          "CREATE TABLE|ALTER TABLE|DROP TABLE",
+          "CREATE INDEX|CREATE UNIQUE INDEX",
+          "migrations?|schema.prisma|typeorm|entity",
+          "pg_dump|pg_restore|mongodump|mysqldump",
+          "backup|recovery|disaster"
+        ]
+      }
+    },
+    {
+      "name": "api-design-and-testing",
+      "description": "Diseño y testing de APIs REST, GraphQL y gRPC. Implementa APIs RESTful, diseña schemas GraphQL, configura gRPC, y crea suites de testing comprehensivas.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "diseño",
+          "testing",
+          "apis",
+          "rest,",
+          "graphql",
+          "grpc.",
+          "implementa",
+          "restful,",
+          "diseña",
+          "schemas",
+          "graphql,",
+          "configura"
+        ],
+        "intentPatterns": [
+          "(crear|diseñar|implementar|design|desarrollar).*(api|rest|graphql|grpc|restful)",
+          "(crear|implementar|agregar).*(endpoint|route|controller|verbo)",
+          "(testing|test|testear).*(api|rest|graphql|grpc|endpoint|post|get)",
+          "(documentar|documentacion|especificar).*(openapi|swagger|schema|api)",
+          "(configurar|setup).*(swagger|openapi|schema|validation)"
+        ],
+        "pathPatterns": [
+          "**/{routes,routers,controllers}/**/*.{ts,js}",
+          "**/api/**/*.{ts,js}",
+          "**/{graphql,resolvers,types}/**/*.{ts,js}",
+          "**/{proto,grpc}/**/*.{ts,js}"
+        ],
+        "contentPatterns": [
+          "router\\.(get|post|put|patch|delete)\\(",
+          "app\\.(get|post|put|patch|delete)\\(",
+          "export\\s+(class|const)\\s+\\w+Controller",
+          "export\\s+(type|interface)\\s+\\w+(Input|Type|Query|Mutation)",
+          "type\\s+Query\\s*=",
+          "service\\s+\\w+Service\\s*{"
+        ]
+      }
+    },
+    {
+      "name": "backend-architecture-patterns",
+      "description": "Patrones arquitectónicos empresariales para backend: DDD, CQRS, Event Sourcing, Hexagonal Architecture. Implementa arquitecturas escalables, mantenibles y testeables.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "patrones",
+          "arquitectónicos",
+          "empresariales",
+          "para",
+          "backend:",
+          "ddd,",
+          "cqrs,",
+          "event",
+          "sourcing,",
+          "hexagonal",
+          "architecture.",
+          "implementa"
+        ],
+        "intentPatterns": [
+          "(implementar|crear|design|disenar|arquitectura|pattern|patron).*(ddd|domain|aggregate|cqrs|hexagonal|clean)",
+          "(estructurar|organizar|refactor).*(backend|servicio|service|domain|domain-driven)"
+        ],
+        "pathPatterns": [
+          "**/{domain,application,infrastructure,interfaces}/**/*.{ts,js}",
+          "**/{core,adapters}/{ports,entities,use-cases}/**/*.{ts,js}"
+        ],
+        "contentPatterns": [
+          "export\\s+(class|interface)\\s+\\w+(Aggregate|Entity|ValueObject|Repository)",
+          "class\\s+\\w+(Aggregate|Service|Handler)",
+          "interface\\s+\\w+(Repository|Service|Port)"
+        ]
+      }
+    },
+    {
+      "name": "ci-cd-pipelines",
+      "description": "Implementa pipelines de CI/CD con GitHub Actions, GitLab CI y Jenkins. Automatiza builds, tests, deployments y monitoring para workflows de desarrollo eficientes.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "implementa",
+          "pipelines",
+          "ci/cd",
+          "con",
+          "github",
+          "actions,",
+          "gitlab",
+          "jenkins.",
+          "automatiza",
+          "builds,",
+          "tests,",
+          "deployments"
+        ],
+        "intentPatterns": [
+          "(implementar|crear|configurar|pipeline|ci|cd|deploy|deployment).*(github|gitlab|jenkins|workflow)",
+          "(automatizar|automate).*(build|test|deploy|testing|workflow)",
+          "(setup|configurar).*(ci/cd|pipeline|github-actions|gitlab-ci)"
+        ],
+        "pathPatterns": [
+          "**/.github/workflows/**/*",
+          "**/.gitlab-ci.yml",
+          "**/Jenkinsfile",
+          "**/jenkins/**/*"
+        ],
+        "contentPatterns": [
+          "name:\\s+(pipeline|workflow|ci|cd)",
+          "on:\\s+(push|pull_request|workflow)",
+          "jobs:",
+          "stages:",
+          "script:",
+          "pipeline\\s*{",
+          "steps:",
+          "actions/checkout",
+          "uses:\\s+actions/"
+        ]
+      }
+    },
+    {
+      "name": "plan-architect",
+      "description": "Genera planes estructurados siguiendo metodología CLOOP (Clarify → Layout → Operate → Observe → Reflect) para tareas de desarrollo.",
+      "severity": "medium",
+      "type": "generator",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "genera",
+          "planes",
+          "estructurados",
+          "siguiendo",
+          "metodología",
+          "cloop",
+          "(clarify",
+          "layout",
+          "operate",
+          "observe",
+          "reflect)",
+          "para"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "skill-creator",
+      "description": "Genera nuevos skills siguiendo el estándar Skills Fabric. Crea estructura completa: SKILL.md + recursos + documentación + tests siguiendo patrones establecidos.",
+      "severity": "medium",
+      "type": "generator",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "genera",
+          "nuevos",
+          "skills",
+          "siguiendo",
+          "estándar",
+          "fabric.",
+          "crea",
+          "estructura",
+          "completa:",
+          "skill.md",
+          "recursos",
+          "documentación"
+        ],
+        "intentPatterns": [
+          "(crear|generate|make).*(skill|habilidad)",
+          "(nueva|nuevo).*(skill|habilidad|feature)"
+        ],
+        "pathPatterns": [
+          "skills/**/*"
+        ],
+        "contentPatterns": [
+          "SKILL\\.md|# Skill|## Description"
+        ]
+      }
+    },
+    {
+      "name": "template-skill",
+      "description": "Genera templates para nuevos skills siguiendo el estándar Skills Fabric. Crea estructuras pre-configuradas con metadatos, recursos y validación automática.",
+      "severity": "medium",
+      "type": "generator",
+      "enforcement": "suggest",
+      "priority": "low",
+      "triggers": {
+        "keywords": [
+          "genera",
+          "templates",
+          "para",
+          "nuevos",
+          "skills",
+          "siguiendo",
+          "estándar",
+          "fabric.",
+          "crea",
+          "estructuras",
+          "pre-configuradas",
+          "con"
+        ],
+        "intentPatterns": [
+          "(crear|generate).*(template|plantilla)",
+          "(usar|use).*(skeleton|boilerplate|starter)"
+        ],
+        "pathPatterns": [
+          "skills/**/*"
+        ],
+        "contentPatterns": [
+          "SKILL\\.md|# Skill"
+        ]
+      }
+    },
+    {
+      "name": "database-verification",
+      "description": "Aplica bloqueo de mutaciones masivas sin filtro y previene operaciones destructivas inseguras.",
+      "severity": "medium",
+      "type": "guardrail",
+      "enforcement": "block",
+      "priority": "critical",
+      "triggers": {
+        "keywords": [
+          "aplica",
+          "bloqueo",
           "mutaciones",
           "masivas",
+          "sin",
           "filtro",
+          "previene",
           "operaciones",
           "destructivas",
-          "inseguras."
+          "inseguras.",
+          "guardrail",
+          "cualquier"
+        ],
+        "intentPatterns": [
+          "(query|consulta|operaci[oó]n|mutaci[oó]n|update|delete|insert).*(masiv[oa]|bulk|riesgo|peligros[ao]|sin\\s+where)",
+          "(revisar|auditar).*(findMany|updateMany|deleteMany)"
+        ],
+        "pathPatterns": [
+          "**/{repositories,repos,db,prisma,migrations}/**/*.{ts,js,sql}"
+        ],
+        "contentPatterns": [
+          "deleteMany\\([^)]*\\)(?!.*where)",
+          "updateMany\\([^)]*\\)(?!.*where)",
+          "findMany\\(\\)(?!.*where|\\s+limit\\s*\\d+)",
+          "prisma\\.(user|post|comment|profile|account)\\.deleteMany\\(\\)",
+          "prisma\\.(user|post|comment|profile|account)\\.updateMany\\(\\)",
+          "\\.(delete|update)Many\\(\\{\\s*\\})",
+          "db\\.(delete|update)Many\\(\\)",
+          "pool\\.query.*deleteMany|client\\.query.*updateMany",
+          "DELETE\\s+FROM\\s+\\w+\\s*(?!.*WHERE)",
+          "UPDATE\\s+\\w+\\s+SET\\s*(?!.*WHERE)"
         ]
       }
     },
@@ -20,76 +316,865 @@
       "name": "secrets-and-config",
       "description": "Sin secretos embebidos; validar config en arranque y mantener .env.example.",
       "severity": "medium",
+      "type": "guardrail",
+      "enforcement": "require",
+      "priority": "critical",
       "triggers": {
         "keywords": [
+          "sin",
           "secretos",
           "embebidos;",
           "validar",
           "config",
           "arranque",
           "mantener",
-          ".env.example."
+          ".env.example.",
+          "guardrail",
+          "revisar",
+          "código",
+          "configuraciones"
+        ],
+        "intentPatterns": [
+          "(secreto|secret|credencial|credential|token|api\\s*key|config|\\.env|variable\\s+de\\s+entorno)",
+          "revisar.*(PASSWORD|SECRET|API[_-]?KEY|TOKEN)"
+        ],
+        "pathPatterns": [
+          "**/.env*",
+          "**/config/**",
+          "**/*config*.{ts,js,json}"
+        ],
+        "contentPatterns": [
+          "API_KEY\\s*=\\s*['\"][^'\"]{10,}['\"]",
+          "SECRET_KEY\\s*=\\s*['\"][^'\"]{10,}['\"]",
+          "PASSWORD\\s*=\\s*['\"][^'\"]{8,}['\"]",
+          "TOKEN\\s*=\\s*['\"][^'\"]{10,}['\"]",
+          "AKIA[0-9A-Z]{16}",
+          "sk-[a-zA-Z0-9]{24,}",
+          "ghp_[a-zA-Z0-9]{36}",
+          "xoxb-[0-9]{10,}-[0-9]{10,}-[a-zA-Z0-9]{24}",
+          "postgresql://[^:]+:[^@]+@",
+          "mongodb://[^:]+:[^@]+@",
+          "mysql://[^:]+:[^@]+@",
+          "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\s*:\\s*[^\\s]{8,}",
+          "\"password\"\\s*:\\s*\"[^\"]{8,}\"",
+          "(PASSWORD|SECRET|API[_-]?KEY|TOKEN|AUTH[_-]?TOKEN)"
         ]
       }
     },
     {
       "name": "backend-dev-guidelines",
-      "description": "Patrones backend (rutas→controladores→servicios→repositorios), manejo de errores y pruebas.",
+      "description": "Patrones backend para crear endpoints, APIs y servicios. Guía de rutas→controladores→servicios→repositorios, manejo de errores y pruebas.",
       "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
       "triggers": {
         "keywords": [
           "patrones",
           "backend",
-          "(rutas→controladores→servicios→repositorios),",
+          "para",
+          "crear",
+          "endpoints,",
+          "apis",
+          "servicios.",
+          "guía",
+          "rutas→controladores→servicios→repositorios,",
           "manejo",
           "errores",
           "pruebas."
+        ],
+        "intentPatterns": [
+          "(crear|agregar|añadir|implementar|fix|refactor|desarrollar).*?(endpoint|ruta|route|controller|controlador|service|servicio|api|backend|middleware)",
+          "(autenticaci[oó]n|auth|login|registro|signup|usuarios).*(ruta|endpoint|controller|servicio|middleware)",
+          "(estructurar|organizar|arquitectura).*?(backend|service|capa|dto|repository)"
+        ],
+        "pathPatterns": [
+          "**/{controllers,routes,services}/**/*.{ts,js,tsx}",
+          "backend/src/**/*",
+          "packages/**/{controllers,routes,services}/**/*.{ts,js}"
+        ],
+        "contentPatterns": [
+          "router\\.(get|post|put|delete)\\(",
+          "export\\s+(class|const)\\s+\\w+Controller",
+          "express\\.(Router|router)\\("
         ]
       }
     },
     {
-      "name": "frontend-dev-guidelines",
-      "description": "Patrones UI: componentes puros, fetching con cache, routing file-based y consistencia.",
+      "name": "cli-compilation-fixes",
+      "description": "Guía para reparar errores de compilación del CLI. Implementa fixes para problemas con colors/chalk y Spinner API changes. Proporciona solutions para resolved compilation errors rápidamente.",
       "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "guía",
+          "para",
+          "reparar",
+          "errores",
+          "compilación",
+          "del",
+          "cli.",
+          "implementa",
+          "fixes",
+          "problemas",
+          "con",
+          "colors/chalk"
+        ],
+        "intentPatterns": [
+          "(fix|arreglar|resolver).*(compile|compilation|build|typescript)",
+          "(problema|issue|error).*(typescript|compile|build)"
+        ],
+        "pathPatterns": [
+          "**/*.ts",
+          "**/*.tsx",
+          "tsconfig.json",
+          "package.json"
+        ],
+        "contentPatterns": [
+          "import.*from|export|interface|type.*=|class.*{"
+        ]
+      }
+    },
+    {
+      "name": "error-pattern-standardization",
+      "description": "Estandariza patrones de error y códigos de salida consistentes en todos los comandos del CLI para mejorar experiencia de usuario y debugging.",
+      "severity": "high",
+      "type": "guideline",
+      "enforcement": "require",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "estandariza",
+          "patrones",
+          "error",
+          "códigos",
+          "salida",
+          "consistentes",
+          "todos",
+          "los",
+          "comandos",
+          "del",
+          "cli",
+          "para"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "frontend-dev-guidelines",
+      "description": "Patrones frontend para crear componentes React, UI e interfaces. Guía de componentes puros, fetching con cache, routing file-based y consistencia.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
       "triggers": {
         "keywords": [
           "patrones",
+          "frontend",
+          "para",
+          "crear",
           "componentes",
+          "react,",
+          "interfaces.",
+          "guía",
           "puros,",
           "fetching",
-          "cache,",
-          "routing",
-          "file-based",
-          "consistencia."
+          "con",
+          "cache,"
+        ],
+        "intentPatterns": [
+          "(crear|agregar|añadir|implementar|fix|refactor).*?(componente|component|hook|vista|view|ui)",
+          "(dashboard|lista|tabla|card|formulario).*(react|componente|hook)"
+        ],
+        "pathPatterns": [
+          "**/components/**/*.{ts,tsx}",
+          "frontend/src/**/*.{ts,tsx}",
+          "packages/**/src/**/components/**/*.{ts,tsx}"
+        ],
+        "contentPatterns": [
+          "function\\s+[A-Z]\\w+\\(",
+          "use[A-Z]\\w+\\(",
+          "export\\s+default\\s+function\\s+[A-Z]\\w+"
         ]
       }
     },
     {
       "name": "project-catalog-developer",
-      "description": "Catálogo (DataGrid): columnas tipadas, filtros con URL, virtualización y rendimiento.",
+      "description": "Define catálogo (DataGrid) con columnas tipadas, implementa filtros con URL, configura virtualización y optimiza rendimiento.",
       "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
       "triggers": {
         "keywords": [
+          "define",
           "catálogo",
-          "(datagrid):",
+          "(datagrid)",
+          "con",
           "columnas",
           "tipadas,",
+          "implementa",
           "filtros",
           "url,",
+          "configura",
           "virtualización",
-          "rendimiento."
+          "optimiza"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "root-cause-tracing",
+      "description": "Metodología para trazar hacia atrás por el call-stack y flujo de ejecución. Implementa técnicas para encontrar el disparador original de problemas. Aplica análisis de stack traces y flujos asíncronos para debugging efectivo.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "metodología",
+          "para",
+          "trazar",
+          "hacia",
+          "atrás",
+          "por",
+          "call-stack",
+          "flujo",
+          "ejecución.",
+          "implementa",
+          "técnicas",
+          "encontrar"
+        ],
+        "intentPatterns": [
+          "(find|hallar|descubrir).*(root.*cause|causa.*raiz)",
+          "(debug|trace|rastrear).*(problem|issue|error)"
+        ],
+        "pathPatterns": [
+          "**/*.{ts,js,py,java}"
+        ],
+        "contentPatterns": [
+          "console\\.log|print|logger|debug"
         ]
       }
     },
     {
-      "name": "test-skill",
-      "description": "This is a test skill to verify the indexing functionality works correctly",
+      "name": "sample-skill",
+      "description": "Demostración de plantilla SKILL.md para validación de estructura mínima (≤400 líneas).",
       "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
       "triggers": {
-        "keywords": ["test", "verify", "indexing", "functionality", "works", "correctly"]
+        "keywords": [
+          "demostración",
+          "plantilla",
+          "skill.md",
+          "para",
+          "validación",
+          "estructura",
+          "mínima",
+          "(≤400",
+          "líneas).",
+          "guideline",
+          "usar",
+          "como"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "systematic-debugging",
+      "description": "Marco en 4 fases para encontrar/validar la causa raíz de problemas: Observar → Formular Hipótesis → Experimentar → Validar.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "marco",
+          "fases",
+          "para",
+          "encontrar/validar",
+          "causa",
+          "raíz",
+          "problemas:",
+          "observar",
+          "formular",
+          "hipótesis",
+          "experimentar",
+          "validar."
+        ],
+        "intentPatterns": [
+          "(debug|debugging).*(systematic|sistematico)",
+          "(pasos|steps).*(debug|reproduce|reproducir)"
+        ],
+        "pathPatterns": [
+          "**/*.{ts,js,py,java}"
+        ],
+        "contentPatterns": [
+          "console\\.log|print|debugger"
+        ]
+      }
+    },
+    {
+      "name": "test-driven-development",
+      "description": "Ciclo RED-GREEN-REFACTOR para desarrollo guiado por pruebas. Crear pruebas que fallen primero, luego hacerlas pasar, luego refactorizar.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "ciclo",
+          "red-green-refactor",
+          "para",
+          "desarrollo",
+          "guiado",
+          "por",
+          "pruebas.",
+          "crear",
+          "pruebas",
+          "que",
+          "fallen",
+          "primero,"
+        ],
+        "intentPatterns": [
+          "(implement|write|crear).*(test|tests)",
+          "(tdd|test-driven).*(development|desarrollo)"
+        ],
+        "pathPatterns": [
+          "**/*.{test,spec}.{ts,js,py,java}",
+          "test/**/*",
+          "tests/**/*"
+        ],
+        "contentPatterns": [
+          "describe\\(|it\\(|test\\(|assert|expect"
+        ]
+      }
+    },
+    {
+      "name": "using-git-worktrees",
+      "description": "Guía para implementar git worktrees en desarrollo paralelo. Aplica técnicas para trabajar en múltiples branches simultáneamente. Utiliza workspace aislado para comparar ramas y manejar múltiples contextos sin conflictos.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "low",
+      "triggers": {
+        "keywords": [
+          "guía",
+          "para",
+          "implementar",
+          "git",
+          "worktrees",
+          "desarrollo",
+          "paralelo.",
+          "aplica",
+          "técnicas",
+          "trabajar",
+          "múltiples",
+          "branches"
+        ],
+        "intentPatterns": [
+          "(git|worktree).*(branch|checkout)",
+          "(manejar|manage).*(multiple|múltiples).*(branch|branches)"
+        ],
+        "pathPatterns": [
+          ".git/**/*"
+        ],
+        "contentPatterns": [
+          ".git/worktrees|git branch"
+        ]
+      }
+    },
+    {
+      "name": "performance-optimization",
+      "description": "Guía completa de performance optimization: profiling, caching strategies, database optimization, frontend performance, y monitoring. Mejora velocidad, escalabilidad y user experience.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "guía",
+          "completa",
+          "performance",
+          "optimization:",
+          "profiling,",
+          "caching",
+          "strategies,",
+          "database",
+          "optimization,",
+          "frontend",
+          "performance,",
+          "monitoring."
+        ],
+        "intentPatterns": [
+          "(optimizar|optimize|mejorar|mejora|acelerar).*(performance|rendimiento|velocidad|speed|carga)",
+          "(implementar|crear|configurar).*(cache|caching|lazy|loading|profiling|benchmark|memo)",
+          "(reduci|reducir|minimize|disminuir).*(bundle|time|latency|size|memory|tamaño)",
+          "(medir|measure|monitor|analizar).*(performance|rendimiento|lcp|fid|cls|web|vitals|speed)",
+          "(detectar|identificar).*(bottleneck|problema|rendimiento|lentitud)",
+          "(optimizar|mejorar).*(query|base|datos|database)"
+        ],
+        "pathPatterns": [
+          "**/{performance,optimization}/**/*.{ts,js,tsx}",
+          "**/next.config.*",
+          "**/webpack.config.*",
+          "**/vite.config.*",
+          "**/{src,lib,utils}/**/*.{ts,tsx}"
+        ],
+        "contentPatterns": [
+          "useMemo|useCallback|memo\\(",
+          "cache|cacheFirst|cacheOnly",
+          "lazy|Suspense",
+          "optimization|performance|lighthouse",
+          "compression|gzip|brotli"
+        ]
+      }
+    },
+    {
+      "name": "Policy NET Example",
+      "description": "Política de ejemplo para solicitudes de red con permisos controlados.",
+      "severity": "high",
+      "type": "guardrail",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "política",
+          "ejemplo",
+          "para",
+          "solicitudes",
+          "red",
+          "con",
+          "permisos",
+          "controlados.",
+          "guardrail",
+          "cuando",
+          "necesita",
+          "validar"
+        ],
+        "intentPatterns": [
+          "(policy|politica).*(net|network|red)",
+          "(example|ejemplo).*(policy|politica|security|seguridad)"
+        ],
+        "pathPatterns": [
+          "**/*.cs",
+          "**/*.config"
+        ],
+        "contentPatterns": [
+          "Security|X509|permission"
+        ]
+      }
+    },
+    {
+      "name": "Policy S1 Example",
+      "description": "Política de ejemplo para operaciones de escritura seguras con validación.",
+      "severity": "high",
+      "type": "guardrail",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "política",
+          "ejemplo",
+          "para",
+          "operaciones",
+          "escritura",
+          "seguras",
+          "con",
+          "validación.",
+          "guardrail",
+          "cuando",
+          "necesita",
+          "validar"
+        ],
+        "intentPatterns": [
+          "(policy|politica).*(s1|security|seguridad)",
+          "(nivel1|level1).*(security|seguridad)"
+        ],
+        "pathPatterns": [
+          "**/*.yaml",
+          "**/*.yml",
+          "**/*.json"
+        ],
+        "contentPatterns": [
+          "security|permission|auth"
+        ]
+      }
+    },
+    {
+      "name": "Policy S2 Example",
+      "description": "Política de ejemplo para operaciones destructivas con validación estricta.",
+      "severity": "critical",
+      "type": "guardrail",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "política",
+          "ejemplo",
+          "para",
+          "operaciones",
+          "destructivas",
+          "con",
+          "validación",
+          "estricta.",
+          "guardrail",
+          "cuando",
+          "necesita",
+          "validar"
+        ],
+        "intentPatterns": [
+          "(policy|politica).*(s2|security|seguridad)",
+          "(nivel2|level2).*(security|seguridad)"
+        ],
+        "pathPatterns": [
+          "**/*.yaml",
+          "**/*.yml",
+          "**/*.json"
+        ],
+        "contentPatterns": [
+          "security|permission|auth"
+        ]
+      }
+    },
+    {
+      "name": "code-review-checklist",
+      "description": "Implementa proceso estructurado para code reviews efectivos. Aplica checklist completo, establece flujo de revisión, configura automation, y define criterios de calidad. Mejora calidad del código y collaboration en equipo de forma sistemática.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "implementa",
+          "proceso",
+          "estructurado",
+          "para",
+          "code",
+          "reviews",
+          "efectivos.",
+          "aplica",
+          "checklist",
+          "completo,",
+          "establece",
+          "flujo"
+        ],
+        "intentPatterns": [
+          "(crear|implementar|realizar).*(code|peer|código).*(review|revisión|checklist)",
+          "(review|revisar|analizar).*(pull|merge|request|código|codigo|code)",
+          "(establecer|definir).*(proceso|checklist|estándar|standard).*(review|quality)",
+          "(mejora|mejorar|optimizar).*(código|code|performance|security|readability)"
+        ],
+        "pathPatterns": [
+          "**/pull_request_template.md",
+          "**/.github/PULL_REQUEST_TEMPLATE.md",
+          "**/CODE_REVIEW.md",
+          "**/{review,reviews}/**/*.{md,ts,js}",
+          "**/.gitlab/**/*"
+        ],
+        "contentPatterns": [
+          "PR|Pull Request|Code Review|peer review",
+          "checklist|Quality Assurance",
+          "best practices|best practices|code style",
+          "security|performance|testing",
+          "README.*review|review process"
+        ]
+      }
+    },
+    {
+      "name": "Auditor de repositorio (read-only)",
+      "description": "Auditor de repositorio de solo lectura para inspeccionar estructura y estado sin modificaciones.",
+      "severity": "low",
+      "type": "guideline",
+      "enforcement": "require",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "auditor",
+          "repositorio",
+          "solo",
+          "lectura",
+          "para",
+          "inspeccionar",
+          "estructura",
+          "estado",
+          "sin",
+          "modificaciones.",
+          "guideline",
+          "cuando"
+        ],
+        "intentPatterns": [
+          "(audit|auditor|revisar).*(repositorio|repository)",
+          "(review|revisar).*(code|código|repo)"
+        ],
+        "pathPatterns": [
+          "**/*.{ts,js,py,java,md}"
+        ],
+        "contentPatterns": [
+          "TODO|FIXME|BUG|HACK"
+        ]
+      }
+    },
+    {
+      "name": "Auditor sin permisos",
+      "description": "Auditor sin permisos para probar política deny-by-default.",
+      "severity": "low",
+      "type": "guideline",
+      "enforcement": "require",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "auditor",
+          "sin",
+          "permisos",
+          "para",
+          "probar",
+          "política",
+          "deny-by-default.",
+          "guideline",
+          "cuando",
+          "necesita",
+          "denegación",
+          "por"
+        ],
+        "intentPatterns": [
+          "(audit|auditor).*(permissions|permisos|access|acceso)",
+          "(verificar|check).*(access|acceso|permission|permiso)"
+        ],
+        "pathPatterns": [
+          "**/*.{ts,js,py}"
+        ],
+        "contentPatterns": [
+          "chmod|chown|permission|access"
+        ]
+      }
+    },
+    {
+      "name": "security-testing-guide",
+      "description": "Guía completa de security testing: SAST, DAST, penetration testing, OWASP Top 10, herramientas, y metodologías. Implementa security testing integral para aplicaciones.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "guía",
+          "completa",
+          "security",
+          "testing:",
+          "sast,",
+          "dast,",
+          "penetration",
+          "testing,",
+          "owasp",
+          "top",
+          "10,",
+          "herramientas,"
+        ],
+        "intentPatterns": [
+          "(implementar|realizar|realizar).*(security|penetration|vulnerability|seguridad).*(testing|test|scan|audit)",
+          "(crear|diseñar|planificar).*(security|owasp|penetration|seguridad).*(test|strategy|plan|estrategia)",
+          "(auditar|scan|scanear|revisar).*(security|owasp|vulnerab|seguridad|vulnerabilidad)",
+          "(testear|testing|probar).*(xss|csrf|sql|injection|authentication|authorization|auth|jwt)",
+          "(configurar|setup).*(security|auth|oauth|jwt|encryption)"
+        ],
+        "pathPatterns": [
+          "**/{security,tests}/**/*.{ts,js,py}",
+          "**/cypress/**/*",
+          "**/playwright/**/*",
+          "**/{__tests__,test}/**/*security*.{ts,js}"
+        ],
+        "contentPatterns": [
+          "describe\\('.*security|'security|'penetration|'vulnerability",
+          "it\\('.*(xss|csrf|sql|auth|injection)",
+          "test\\('.*(security|vulnerability|owasp)",
+          "security|penetration|vulnerability|owasp|sast|dast",
+          "supertest|cypress|playwright"
+        ]
+      }
+    },
+    {
+      "name": "cli-integration-testing",
+      "description": "Implementa tests de integración comprehensivos para el CLI con cobertura de casos críticos y regresión visual.",
+      "severity": "critical",
+      "type": "workflow",
+      "enforcement": "block",
+      "priority": "critical",
+      "triggers": {
+        "keywords": [
+          "implementa",
+          "tests",
+          "integración",
+          "comprehensivos",
+          "para",
+          "cli",
+          "con",
+          "cobertura",
+          "casos",
+          "críticos",
+          "regresión",
+          "visual."
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "test-skill",
+      "description": "Valida el sistema de indexación verificando que funciona correctamente (solo para pruebas).",
+      "severity": "low",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "valida",
+          "sistema",
+          "indexación",
+          "verificando",
+          "que",
+          "funciona",
+          "correctamente",
+          "(solo",
+          "para",
+          "pruebas).",
+          "guideline",
+          "solo"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "visual-regression-testing",
+      "description": "Implementa visual regression testing para CLI output ensuring consistencia visual y formatos consistentes.",
+      "severity": "high",
+      "type": "workflow",
+      "enforcement": "require",
+      "priority": "high",
+      "triggers": {
+        "keywords": [
+          "implementa",
+          "visual",
+          "regression",
+          "testing",
+          "para",
+          "cli",
+          "output",
+          "ensuring",
+          "consistencia",
+          "formatos",
+          "consistentes.",
+          "workflow"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "webapp-testing",
+      "description": "Testing automatizado de aplicaciones web con Playwright y Cypress. Crea suites E2E, integration y unit tests para validar funcionalidad completa.",
+      "severity": "medium",
+      "type": "guideline",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "testing",
+          "automatizado",
+          "aplicaciones",
+          "web",
+          "con",
+          "playwright",
+          "cypress.",
+          "crea",
+          "suites",
+          "e2e,",
+          "integration",
+          "unit"
+        ],
+        "intentPatterns": [
+          "(test|testing).*(webapp|web|frontend)",
+          "(e2e|end-to-end).*(test|prueba)"
+        ],
+        "pathPatterns": [
+          "**/*.{test,spec}.{ts,js}",
+          "cypress/**/*",
+          "e2e/**/*"
+        ],
+        "contentPatterns": [
+          "describe\\(|it\\(|cy\\.|visit|get|find"
+        ]
+      }
+    },
+    {
+      "name": "plan-save-workflow",
+      "description": "Workflow para guardar plan aprobado: genera tríada dev-docs (plan.md, context.md, tasks.md) y snapshot MemTech L1.",
+      "severity": "medium",
+      "type": "workflow",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "workflow",
+          "para",
+          "guardar",
+          "plan",
+          "aprobado:",
+          "genera",
+          "tríada",
+          "dev-docs",
+          "(plan.md,",
+          "context.md,",
+          "tasks.md)",
+          "snapshot"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
+      }
+    },
+    {
+      "name": "pm2-monitor",
+      "description": "Configura PM2 para gestión de procesos backend con monitoreo, logs y playbooks de troubleshooting.",
+      "severity": "medium",
+      "type": "workflow",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "triggers": {
+        "keywords": [
+          "configura",
+          "pm2",
+          "para",
+          "gestión",
+          "procesos",
+          "backend",
+          "con",
+          "monitoreo,",
+          "logs",
+          "playbooks",
+          "troubleshooting.",
+          "workflow"
+        ],
+        "intentPatterns": [],
+        "pathPatterns": [],
+        "contentPatterns": []
       }
     }
   ],
   "version": "1.0.0",
-  "generatedAt": "2025-10-29T16:05:16.228Z"
+  "generatedAt": "2025-11-03T15:22:01.418Z"
 }

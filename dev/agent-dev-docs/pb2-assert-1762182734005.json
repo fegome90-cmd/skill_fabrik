@@ -1,0 +1,56 @@
+{
+  "ts": "2025-11-03T15:12:13.999Z",
+  "threshold": 0.6,
+  "pass": 3,
+  "total": 4,
+  "results": [
+    {
+      "skillId": "backend-dev-guidelines",
+      "desc": "Crear endpoint /auth/login en Express con validación y repositorio",
+      "expectedScore": 1,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 3,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "frontend-dev-guidelines",
+      "desc": "Crear componente Dashboard con hook de datos y vista responsive",
+      "expectedScore": 0.73,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 0,
+        "content": 1
+      }
+    },
+    {
+      "skillId": "database-verification",
+      "desc": "Revisar findMany sin filtros en repositorio de usuarios",
+      "expectedScore": 0.52,
+      "pass": false,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 3,
+        "content": 0
+      }
+    },
+    {
+      "skillId": "secrets-and-config",
+      "desc": "Verificar API_KEY y SECRET en archivos de configuración",
+      "expectedScore": 0.82,
+      "pass": true,
+      "signals": {
+        "keywords": 3,
+        "intent": 2,
+        "paths": 3,
+        "content": 0
+      }
+    }
+  ]
+}

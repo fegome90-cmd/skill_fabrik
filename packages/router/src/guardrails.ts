@@ -1,25 +1,58 @@
 /**
  * Guardrails: Verificación de patterns peligrosos en archivos editados
+ * Soporta multi-nivel: SUGGEST → WARN → BLOCK
  */
 
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 import type { EditLogEntry, GuardrailViolation } from './types.js';
 
+export interface GuardrailResult {
+  blocked: boolean;
+  warnings: GuardrailViolation[];
+  suggestions: GuardrailViolation[];
+  violations: GuardrailViolation[]; // Deprecated: mantener para compatibilidad
+}
+
 /**
- * Carga patterns de bloqueo desde skill-rules.json
+ * Carga patterns de guardrails desde skill-rules.json por nivel de enforcement
  */
-async function loadBlockingPatterns(cwd: string): Promise<Map<string, string[]>> {
+async function loadGuardrailPatterns(cwd: string): Promise<{
+  block: Map<string, string[]>;
+  warn: Map<string, string[]>;
+  suggest: Map<string, string[]>;
+}> {
   const { loadRules } = await import('./detectors.js');
   const rules = await loadRules(cwd);
-  const patterns = new Map<string, string[]>();
+  const patterns = {
+    block: new Map<string, string[]>(),
+    warn: new Map<string, string[]>(),
+    suggest: new Map<string, string[]>(),
+  };
 
   for (const [skillId, rule] of Object.entries(rules)) {
-    if (rule.type === 'guardrail' && rule.enforcement === 'block') {
-      // Extraer contentPatterns que son peligrosos
-      const blockingPatterns = rule.fileTriggers?.contentPatterns || [];
-      if (blockingPatterns.length > 0) {
-        patterns.set(skillId, blockingPatterns);
+    if (rule.type === 'guardrail' && rule.enforcement) {
+      const contentPatterns = rule.fileTriggers?.contentPatterns || [];
+      if (contentPatterns.length > 0) {
+        // contentPatterns es string[], asegurar que todos sean strings
+        const patternsArray: string[] = contentPatterns.filter((p): p is string => typeof p === 'string');
+        
+        if (patternsArray.length > 0) {
+          const enforcement = rule.enforcement;
+          // Usar switch para evitar problemas de inferencia de tipos
+          switch (enforcement) {
+            case 'block':
+            case 'require':
+              patterns.block.set(skillId, patternsArray);
+              break;
+            case 'warn':
+              patterns.warn.set(skillId, patternsArray);
+              break;
+            case 'suggest':
+              patterns.suggest.set(skillId, patternsArray);
+              break;
+          }
+        }
       }
     }
   }
@@ -64,13 +97,46 @@ function matchesPathPatterns(filePath: string, pathPatterns: string[]): boolean 
         return true;
       }
       // Probar si el path contiene segmentos clave del pattern (para casos como **/repository/**)
+      // Esta es una heurística más flexible para glob patterns complejos
       const patternSegments = pattern
         .split('/')
         .filter(s => s && !s.includes('*') && !s.includes('{') && s.length > 0);
       if (patternSegments.length > 0) {
         const allSegmentsMatch = patternSegments.every(segment => normalizedPath.includes(segment));
         if (allSegmentsMatch) {
-          // Verificar extensión también
+          // Verificar extensión también si está especificada
+          const extPattern = pattern.match(/\{([^}]+)\}/);
+          if (extPattern) {
+            const exts = extPattern[1].split(',').map(e => e.trim());
+            const fileExt = normalizedPath.split('.').pop()?.trim();
+            if (fileExt && exts.includes(fileExt)) {
+              return true;
+            }
+          } else if (pattern.includes('*.')) {
+            // Pattern tiene extensión wildcard pero no {ts,js}, verificar que el archivo tenga extensión
+            const hasExtension = normalizedPath.includes('.') && normalizedPath.split('.').length > 1;
+            if (hasExtension) {
+              return true;
+            }
+          } else {
+            // Sin especificar extensión explícita, si todos los segmentos coinciden, aceptar
+            return true;
+          }
+        }
+      }
+      
+      // Método adicional: verificar si path contiene la estructura básica del pattern
+      // Ejemplo: **/repository/** debería coincidir con cualquier path que tenga /repository/
+      if (pattern.includes('**/') || pattern.startsWith('**')) {
+        const corePath = pattern
+          .replace(/^\*\*\//, '')
+          .replace(/\/\*\*/g, '/')
+          .replace(/\*/g, '')
+          .replace(/\{[^}]+\}/g, '')
+          .replace(/\/$/, '');
+        
+        if (corePath && normalizedPath.includes(corePath)) {
+          // Verificar extensión si está especificada
           const extPattern = pattern.match(/\{([^}]+)\}/);
           if (extPattern) {
             const exts = extPattern[1].split(',').map(e => e.trim());
@@ -79,7 +145,7 @@ function matchesPathPatterns(filePath: string, pathPatterns: string[]): boolean 
               return true;
             }
           } else {
-            return true; // Sin especificar extensión, coincide
+            return true;
           }
         }
       }
@@ -93,12 +159,13 @@ function matchesPathPatterns(filePath: string, pathPatterns: string[]): boolean 
 }
 
 /**
- * Verifica archivo contra patterns de bloqueo
+ * Verifica archivo contra patterns de guardrail
  */
 async function checkFileAgainstPatterns(
   filePath: string,
   patterns: string[],
-  skillId: string
+  skillId: string,
+  enforcement: 'suggest' | 'warn' | 'block'
 ): Promise<GuardrailViolation[]> {
   const violations: GuardrailViolation[] = [];
 
@@ -109,7 +176,6 @@ async function checkFileAgainstPatterns(
     for (const pattern of patterns) {
       try {
         // Usar matchAll para evitar problemas con estado global de regex
-        // Nota: matchAll requiere Node 12+, pero es más seguro que exec() en loop
         const regex = new RegExp(pattern, 'g');
         const matches: Array<{ index: number; text: string }> = [];
 
@@ -132,28 +198,38 @@ async function checkFileAgainstPatterns(
 
         for (const matchItem of matches) {
           const lineNumber = content.substring(0, matchItem.index).split('\n').length;
-          const line = lines[lineNumber - 1];
+          const line = lines[lineNumber - 1] || '';
 
-          // Para deleteMany/updateMany, verificar que tenga where
-          if (pattern.includes('deleteMany') || pattern.includes('updateMany')) {
-            // Buscar contexto amplio alrededor del match
-            const contextStart = Math.max(0, matchItem.index - 200);
-            const contextEnd = Math.min(content.length, matchItem.index + 500);
+          // Para deleteMany/updateMany/findMany, verificar que tenga where
+          // El patrón puede ser complejo (con lookahead negativo), verificar contexto después del match
+          if (
+            pattern.includes('deleteMany') ||
+            pattern.includes('updateMany') ||
+            pattern.includes('findMany')
+          ) {
+            // Buscar contexto amplio alrededor y DESPUÉS del match (hasta encontrar el cierre de paréntesis o llave)
+            const contextStart = Math.max(0, matchItem.index - 100);
+            const contextEnd = Math.min(content.length, matchItem.index + matchItem.text.length + 300);
             const matchContext = content.substring(contextStart, contextEnd);
 
-            // Buscar patrones de where explícito
-            if (/\bwhere\s*[:=]?\s*\{/.test(matchContext)) {
+            // Buscar patrones de where explícito en el contexto (puede estar antes o después del match)
+            // Verificar tanto 'where:' como 'where {' en el contexto del objeto
+            if (/\bwhere\s*[:=]\s*\{/.test(matchContext) || /\bwhere\s*\{/.test(matchContext)) {
               continue; // Tiene where, no es violación
             }
+            
+            // Para findMany/updateMany/deleteMany, también verificar si el patrón ya excluía where
+            // Si el pattern tiene lookahead negativo (?!.*where), ya fue filtrado
           }
 
-          // Solo agregar violación si NO tiene where (ya se verificó arriba)
+          // Agregar violación con nivel de enforcement
           violations.push({
             skillId,
             file: filePath,
             line: lineNumber,
             pattern,
-            message: getViolationMessage(skillId, pattern, line),
+            message: getViolationMessage(skillId, pattern, line, enforcement),
+            enforcement,
           });
         }
       } catch (error) {
@@ -170,45 +246,59 @@ async function checkFileAgainstPatterns(
 }
 
 /**
- * Genera mensaje de violación específico
+ * Genera mensaje de violación específico y educativo
  */
-function getViolationMessage(skillId: string, pattern: string, line: string): string {
-  if (skillId === 'database-verification') {
-    if (pattern.includes('deleteMany')) {
-      return "deleteMany() sin cláusula 'where' explícita es peligroso. Añade { where: { ... } }";
+function getViolationMessage(
+  skillId: string,
+  pattern: string,
+  line: string,
+  enforcement: 'suggest' | 'warn' | 'block'
+): string {
+  const emoji = enforcement === 'block' ? '🚫' : enforcement === 'warn' ? '⚠️' : '💡';
+  const level = enforcement === 'block' ? 'BLOQUEADO' : enforcement === 'warn' ? 'ADVERTENCIA' : 'SUGERENCIA';
+
+  // Detectar tipo de operación por skillId o pattern
+  if (skillId.includes('database-verification') || skillId.includes('find') || skillId.includes('update') || skillId.includes('delete')) {
+    if (pattern.includes('findMany')) {
+      return `${emoji} [${level}] findMany() sin 'where' puede ser ineficiente. Considera agregar filtros: { where: { ... } }`;
     }
     if (pattern.includes('updateMany')) {
-      return "updateMany() sin cláusula 'where' explícita es peligroso. Añade { where: { ... } }";
+      const suggestion = enforcement === 'block'
+        ? 'NO PERMITIDO sin where explícito'
+        : 'Considera agregar { where: { ... } } para evitar actualizaciones masivas accidentales';
+      return `${emoji} [${level}] updateMany() sin cláusula 'where' explícita es peligroso. ${suggestion}`;
+    }
+    if (pattern.includes('deleteMany')) {
+      return `${emoji} [${level}] deleteMany() sin cláusula 'where' explícita es peligroso. Añade { where: { ... } }`;
     }
     if (pattern.includes('TRUNCATE') || pattern.includes('DROP')) {
-      return 'Operación destructiva detectada. Solo permitida en migraciones con plan de rollback.';
+      return `${emoji} [${level}] Operación destructiva detectada. Solo permitida en migraciones con plan de rollback.`;
     }
   }
 
-  return `Pattern peligroso detectado: ${pattern}`;
+  if (skillId === 'secrets-and-config') {
+    return `${emoji} [${level}] Secreto hardcodeado detectado. Usa variables de entorno (process.env.KEY_NAME).`;
+  }
+
+  return `${emoji} [${level}] Pattern peligroso detectado: ${pattern}`;
 }
 
 /**
- * Verifica todos los archivos editados contra guardrails de bloqueo
+ * Verifica todos los archivos editados contra guardrails multi-nivel
  */
 export async function checkGuardrails(
   editLog: EditLogEntry[],
   cwd: string
-): Promise<{
-  blocked: boolean;
-  violations: GuardrailViolation[];
-}> {
-  const blockingPatterns = await loadBlockingPatterns(cwd);
-
-  if (blockingPatterns.size === 0) {
-    return { blocked: false, violations: [] };
-  }
+): Promise<GuardrailResult> {
+  const { block, warn, suggest } = await loadGuardrailPatterns(cwd);
 
   // Cargar rules para obtener pathPatterns
   const { loadRules } = await import('./detectors.js');
   const rules = await loadRules(cwd);
 
-  const allViolations: GuardrailViolation[] = [];
+  const allBlocking: GuardrailViolation[] = [];
+  const allWarnings: GuardrailViolation[] = [];
+  const allSuggestions: GuardrailViolation[] = [];
 
   for (const entry of editLog) {
     // El entry.file puede ser relativo o absoluto
@@ -223,29 +313,63 @@ export async function checkGuardrails(
       relativeFile = entry.file.replace(/\\/g, '/');
     }
 
-    for (const [skillId, patterns] of blockingPatterns.entries()) {
-      // Verificar si el archivo coincide con pathPatterns del skill
+    // Verificar bloqueos
+    for (const [skillId, patterns] of block.entries()) {
       const rule = rules[skillId];
       let shouldCheck = true;
 
       if (rule?.fileTriggers?.pathPatterns && rule.fileTriggers.pathPatterns.length > 0) {
-        // Probar tanto con path relativo como absoluto
         const matchesRelative = matchesPathPatterns(relativeFile, rule.fileTriggers.pathPatterns);
         const matchesAbsolute = matchesPathPatterns(filePath, rule.fileTriggers.pathPatterns);
         shouldCheck = matchesRelative || matchesAbsolute;
       }
 
-      if (!shouldCheck) {
-        continue; // Archivo no coincide con pathPattern, saltar
+      if (shouldCheck) {
+        const violations = await checkFileAgainstPatterns(filePath, patterns, skillId, 'block');
+        allBlocking.push(...violations);
+      }
+    }
+
+    // Verificar warnings
+    for (const [skillId, patterns] of warn.entries()) {
+      const rule = rules[skillId];
+      let shouldCheck = true;
+
+      if (rule?.fileTriggers?.pathPatterns && rule.fileTriggers.pathPatterns.length > 0) {
+        const matchesRelative = matchesPathPatterns(relativeFile, rule.fileTriggers.pathPatterns);
+        const matchesAbsolute = matchesPathPatterns(filePath, rule.fileTriggers.pathPatterns);
+        shouldCheck = matchesRelative || matchesAbsolute;
       }
 
-      const violations = await checkFileAgainstPatterns(filePath, patterns, skillId);
-      allViolations.push(...violations);
+      if (shouldCheck) {
+        const violations = await checkFileAgainstPatterns(filePath, patterns, skillId, 'warn');
+        allWarnings.push(...violations);
+      }
+    }
+
+    // Verificar sugerencias
+    for (const [skillId, patterns] of suggest.entries()) {
+      const rule = rules[skillId];
+      let shouldCheck = true;
+
+      if (rule?.fileTriggers?.pathPatterns && rule.fileTriggers.pathPatterns.length > 0) {
+        const matchesRelative = matchesPathPatterns(relativeFile, rule.fileTriggers.pathPatterns);
+        const matchesAbsolute = matchesPathPatterns(filePath, rule.fileTriggers.pathPatterns);
+        shouldCheck = matchesRelative || matchesAbsolute;
+      }
+
+      if (shouldCheck) {
+        const violations = await checkFileAgainstPatterns(filePath, patterns, skillId, 'suggest');
+        allSuggestions.push(...violations);
+      }
     }
   }
 
   return {
-    blocked: allViolations.length > 0,
-    violations: allViolations,
+    blocked: allBlocking.length > 0,
+    warnings: allWarnings,
+    suggestions: allSuggestions,
+    violations: allBlocking, // Mantener para compatibilidad
   };
 }
+

@@ -3,10 +3,11 @@ id: secrets-and-config
 version: 0.1.0
 type: guardrail
 enforcement: require
-summary: Sin secretos embebidos; validar config en arranque y mantener .env.example.
+summary: 'Sin secretos embebidos; validar config en arranque y mantener .env.example.'
 audience: engineers
+when_to_use: 'Al revisar código o configuraciones para prevenir secretos hardcodeados.'
 resources:
-  - resources/.env.example
+  - resources/env.example.txt
 ---
 
 ## Reglas

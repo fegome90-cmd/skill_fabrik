@@ -1,0 +1,25 @@
+{
+  "userPromptSubmit": {
+    "enabled": true,
+    "skillRulesPath": "registry/index.json"
+  },
+  "stop": {
+    "enabled": true,
+    "buildCheck": true,
+    "prettier": true,
+    "kpiEmit": true,
+    "notifications": {
+      "enabled": true,
+      "onSuccess": true,
+      "onWarning": true,
+      "onError": true,
+      "scriptPath": "scripts/hooks/notify.sh"
+    },
+    "bashValidator": {
+      "enabled": true,
+      "scriptPath": "scripts/hooks/bash-validator.py",
+      "blockLevel": "error",
+      "warnLevel": "warning"
+    }
+  }
+}

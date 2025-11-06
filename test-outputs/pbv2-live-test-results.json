@@ -1,0 +1,344 @@
+{
+  "startTime": 1762186547069,
+  "tests": [
+    {
+      "planId": "plan-001",
+      "planTitle": "Implementación API REST para Gestión de Usuarios",
+      "startTime": 1762186547073,
+      "stages": {
+        "detection": {
+          "duration": 196,
+          "success": true,
+          "timestamp": 1762186547269,
+          "error": null
+        },
+        "activation": {
+          "duration": 6020,
+          "success": true,
+          "timestamp": 1762186553289,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 850ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 850ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186553289,
+      "totalTime": 6216
+    },
+    {
+      "planId": "plan-002",
+      "planTitle": "Dashboard React con Estado Global y Gráficos",
+      "startTime": 1762186553289,
+      "stages": {
+        "detection": {
+          "duration": 160,
+          "success": true,
+          "timestamp": 1762186553450,
+          "error": null
+        },
+        "activation": {
+          "duration": 5448,
+          "success": true,
+          "timestamp": 1762186558899,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 279ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 279ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186558899,
+      "totalTime": 5610
+    },
+    {
+      "planId": "plan-003",
+      "planTitle": "Migración de Base de Datos con Rollback Seguro",
+      "startTime": 1762186558900,
+      "stages": {
+        "detection": {
+          "duration": 161,
+          "success": true,
+          "timestamp": 1762186559061,
+          "error": null
+        },
+        "activation": {
+          "duration": 5421,
+          "success": true,
+          "timestamp": 1762186564482,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 255ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 255ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186564482,
+      "totalTime": 5582
+    },
+    {
+      "planId": "plan-004",
+      "planTitle": "Sistema de Autenticación OAuth2 Multi-Provider",
+      "startTime": 1762186564483,
+      "stages": {
+        "detection": {
+          "duration": 168,
+          "success": true,
+          "timestamp": 1762186564651,
+          "error": null
+        },
+        "activation": {
+          "duration": 5463,
+          "success": true,
+          "timestamp": 1762186570115,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 299ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 299ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186570115,
+      "totalTime": 5632
+    },
+    {
+      "planId": "plan-005",
+      "planTitle": "Optimización de Performance con Caching Multi-Nivel",
+      "startTime": 1762186570116,
+      "stages": {
+        "detection": {
+          "duration": 161,
+          "success": true,
+          "timestamp": 1762186570277,
+          "error": null
+        },
+        "activation": {
+          "duration": 5490,
+          "success": true,
+          "timestamp": 1762186575767,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 255ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 255ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186575767,
+      "totalTime": 5651
+    },
+    {
+      "planId": "plan-006",
+      "planTitle": "Suite de Tests E2E con Playwright",
+      "startTime": 1762186575768,
+      "stages": {
+        "detection": {
+          "duration": 157,
+          "success": true,
+          "timestamp": 1762186575925,
+          "error": null
+        },
+        "activation": {
+          "duration": 5503,
+          "success": true,
+          "timestamp": 1762186581428,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 327ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 327ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186581428,
+      "totalTime": 5660
+    },
+    {
+      "planId": "plan-007",
+      "planTitle": "Pipeline CI/CD con GitHub Actions",
+      "startTime": 1762186581429,
+      "stages": {
+        "detection": {
+          "duration": 163,
+          "success": true,
+          "timestamp": 1762186581592,
+          "error": null
+        },
+        "activation": {
+          "duration": 5478,
+          "success": true,
+          "timestamp": 1762186587071,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 300ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 300ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186587071,
+      "totalTime": 5642
+    },
+    {
+      "planId": "plan-008",
+      "planTitle": "Arquitectura de Microservicios con Comunicación Event-Driven",
+      "startTime": 1762186587071,
+      "stages": {
+        "detection": {
+          "duration": 170,
+          "success": true,
+          "timestamp": 1762186587241,
+          "error": null
+        },
+        "activation": {
+          "duration": 5615,
+          "success": true,
+          "timestamp": 1762186592856,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 375ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 375ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186592856,
+      "totalTime": 5785
+    },
+    {
+      "planId": "plan-009",
+      "planTitle": "App Móvil React Native con Push Notifications",
+      "startTime": 1762186592857,
+      "stages": {
+        "detection": {
+          "duration": 164,
+          "success": true,
+          "timestamp": 1762186593021,
+          "error": null
+        },
+        "activation": {
+          "duration": 5439,
+          "success": true,
+          "timestamp": 1762186598460,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 270ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 270ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186598460,
+      "totalTime": 5603
+    },
+    {
+      "planId": "plan-010",
+      "planTitle": "Modernización de Legacy System con Strangler Pattern",
+      "startTime": 1762186598461,
+      "stages": {
+        "detection": {
+          "duration": 158,
+          "success": true,
+          "timestamp": 1762186598619,
+          "error": null
+        },
+        "activation": {
+          "duration": 5423,
+          "success": true,
+          "timestamp": 1762186604043,
+          "error": null
+        }
+      },
+      "errors": [],
+      "status": "success",
+      "detectionResults": {
+        "detected": true,
+        "skills": [],
+        "output": "🧪 Running Plan Detector Tests:\n\n✅ Plan con [Layout]\n   Confidence: 95%\n   Hash: 19e27498...\n\n✅ CLOOP completo\n   Confidence: 95%\n   Hash: f18d8df6...\n\n✅ ## Plan como título\n   Confidence: 70%\n   Hash: 946357b8...\n\n✅ Texto genérico sin plan\n\n✅ Palabra \"plan\" sin estructura\n\n"
+      },
+      "pbv2Results": {
+        "generated": true,
+        "prompt": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 255ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n",
+        "output": "\n✅ **Activation Result:**\nSuccess: false\nLatency: 255ms\nScore: N/A\nSkills activated: 0\n❌ Error: Debe especificar al menos un skillId o skillIds\n\n📊 **Metadata:**\nRepo size: undefined\nRepo files: undefined\nMonorepo: undefined\n"
+      },
+      "endTime": 1762186604043,
+      "totalTime": 5582
+    }
+  ],
+  "summary": {
+    "totalPlans": 10,
+    "successful": 10,
+    "failed": 0,
+    "totalTime": 56974,
+    "avgDetectionTime": 166,
+    "avgActivationTime": 5530,
+    "avgTotalTime": 5696
+  }
+}

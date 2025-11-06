@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skills-fabrik.com/schemas/command-result.schema.json",
+  "title": "Slash Command Result Schema",
+  "description": "Schema for slash command execution results",
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Whether the command executed successfully"
+    },
+    "output": {
+      "type": "string",
+      "description": "Human-readable output from the command"
+    },
+    "data": {
+      "description": "Structured data returned by the command"
+    },
+    "context": {
+      "$ref": "#/definitions/slashCommandContext",
+      "description": "Updated command context"
+    },
+    "nextActions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "enum": ["command", "manual", "integration"] },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "command": { "type": "string" },
+          "priority": { "enum": ["high", "medium", "low"] }
+        }
+      },
+      "description": "Suggested next actions for the user"
+    },
+    "error": {
+      "$ref": "#/definitions/commandError",
+      "description": "Error information if execution failed"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "executionTimeMs": { "type": "number", "minimum": 0 },
+        "integrationType": { "enum": ["skill", "daemon", "cli", "native"] },
+        "persistenceKey": { "type": "string" },
+        "cacheHit": { "type": "boolean" },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      },
+      "description": "Execution metadata"
+    }
+  },
+  "required": ["success", "output"],
+  "additionalProperties": false,
+  "definitions": {
+    "slashCommandContext": {
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "userId": { "type": "string" },
+        "workspace": { "$ref": "slash-context.schema.json#/definitions/workspaceSnapshot" },
+        "command": {
+          "type": "object",
+          "properties": {
+            "raw": { "type": "string" },
+            "command": { "type": "string" },
+            "args": { "type": "array", "items": { "type": "string" } },
+            "flags": { "type": "object", "additionalProperties": true },
+            "options": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "metadata": { "$ref": "slash-context.schema.json#/definitions/commandMetadata" },
+        "state": { "type": "object", "additionalProperties": true },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sessionId", "workspace", "command", "metadata", "state", "createdAt", "updatedAt"],
+      "additionalProperties": false
+    },
+    "commandError": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["validation", "execution", "integration", "permission", "timeout"],
+          "description": "Type of error that occurred"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable error message"
+        },
+        "details": {
+          "description": "Additional error details or context"
+        },
+        "code": {
+          "type": "string",
+          "description": "Machine-readable error code"
+        },
+        "stack": {
+          "type": "string",
+          "description": "Error stack trace (for debugging)"
+        },
+        "suggestions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Suggested resolutions for the error"
+        }
+      },
+      "required": ["type", "message"],
+      "additionalProperties": false
+    }
+  }
+}

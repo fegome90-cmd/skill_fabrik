@@ -1,0 +1,140 @@
+{
+  "$id": "execute.response.schema.json",
+  "title": "Skill Execution Response",
+  "description": "Response schema for skill execution",
+  "type": "object",
+  "required": ["success", "timestamp"],
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Whether the execution was successful"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Response timestamp"
+    },
+    "result": {
+      "type": "object",
+      "description": "Execution result",
+      "properties": {
+        "output": {
+          "type": "string",
+          "description": "Main output from the skill execution"
+        },
+        "files": {
+          "type": "array",
+          "description": "Files created or modified",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "File path"
+              },
+              "action": {
+                "type": "string",
+                "enum": ["created", "modified", "deleted"],
+                "description": "Action performed on the file"
+              },
+              "size": {
+                "type": "integer",
+                "description": "File size in bytes"
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional metadata about the execution",
+          "properties": {
+            "skillName": {
+              "type": "string",
+              "description": "Name of the skill that was executed"
+            },
+            "executionTime": {
+              "type": "number",
+              "description": "Execution time in milliseconds"
+            },
+            "policyLevel": {
+              "type": "string",
+              "enum": ["S0", "S1", "S2", "NET"],
+              "description": "Policy level that was applied"
+            },
+            "confirmed": {
+              "type": "boolean",
+              "description": "Whether user confirmation was required and obtained"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "description": "Error information if execution failed",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Error code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message"
+        },
+        "details": {
+          "type": "object",
+          "description": "Additional error details",
+          "properties": {
+            "policyViolation": {
+              "type": "boolean",
+              "description": "Whether the error was due to a policy violation"
+            },
+            "requiredConfirmation": {
+              "type": "boolean",
+              "description": "Whether the error was due to missing required confirmation"
+            },
+            "suggestion": {
+              "type": "string",
+              "description": "Suggestion for resolving the error"
+            }
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Performance metrics",
+      "properties": {
+        "totalTime": {
+          "type": "number",
+          "description": "Total execution time in milliseconds"
+        },
+        "processingTime": {
+          "type": "number",
+          "description": "Pure processing time in milliseconds"
+        },
+        "validationTime": {
+          "type": "number",
+          "description": "Time spent in validation in milliseconds"
+        },
+        "policyCheckTime": {
+          "type": "number",
+          "description": "Time spent in policy checking in milliseconds"
+        },
+        "filesProcessed": {
+          "type": "integer",
+          "description": "Number of files processed"
+        }
+      }
+    },
+    "requiresConfirmation": {
+      "type": "boolean",
+      "description": "Whether the execution requires user confirmation to proceed"
+    },
+    "confirmationToken": {
+      "type": "string",
+      "description": "Token to use for confirming the execution"
+    }
+  },
+  "additionalProperties": false
+}

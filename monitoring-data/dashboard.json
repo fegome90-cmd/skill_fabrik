@@ -1,0 +1,58 @@
+{
+  "summary": {
+    "generatedAt": "2025-11-02T16:23:18.787Z",
+    "totalRuns": 8,
+    "successRate": 100,
+    "uptime": 2,
+    "activeAlerts": 1
+  },
+  "performance": {
+    "singleFile": {
+      "average": 2100,
+      "threshold": 3000,
+      "status": "HEALTHY"
+    },
+    "multiFile": {
+      "average": 2400,
+      "threshold": 5000,
+      "status": "HEALTHY"
+    },
+    "multiRepo": {
+      "average": 0,
+      "threshold": 12000,
+      "status": "HEALTHY"
+    },
+    "complexPipeline": {
+      "average": 0,
+      "threshold": 15000,
+      "status": "HEALTHY"
+    }
+  },
+  "cache": {
+    "averageHitRate": 3,
+    "threshold": 50,
+    "status": "WARNING"
+  },
+  "memory": {
+    "average": {
+      "heap": 16,
+      "external": 4
+    },
+    "threshold": 100,
+    "status": "HEALTHY"
+  },
+  "alerts": [
+    {
+      "type": "CACHE",
+      "severity": "CRITICAL",
+      "message": "Cache hit rate critically low: 3% (threshold: 30%)",
+      "timestamp": "2025-11-02T16:23:18.787Z",
+      "value": 3,
+      "threshold": 30
+    }
+  ],
+  "trends": {
+    "trend": "STABLE",
+    "change": 0
+  }
+}

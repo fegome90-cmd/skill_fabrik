@@ -1,0 +1,2 @@
+{"timestamp":"2025-11-01T15:17:49.499Z","sessionId":"test-session-1","command":"build-and-fix","action":"execute","success":true,"executionTimeMs":120,"workspace":"test-workspace","integrationType":"cli","metadata":{"argsCount":0,"flagsCount":1,"optionsCount":0}}
+{"timestamp":"2025-11-01T15:17:49.499Z","sessionId":"test-session-2","command":"code-review","action":"execute","success":true,"executionTimeMs":85,"workspace":"test-workspace","integrationType":"cli","metadata":{"argsCount":1,"flagsCount":0,"optionsCount":0}}

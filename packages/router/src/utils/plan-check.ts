@@ -44,20 +44,43 @@ export async function checkApprovedPlan(cwd: string): Promise<{
     for (const taskDir of taskDirs) {
       const taskJsonPath = join(activeBase, taskDir.name, 'task.json');
 
-      if (await pathExists(taskJsonPath)) {
-        const taskJson = JSON.parse(await readFile(taskJsonPath, 'utf-8'));
+      if (!(await pathExists(taskJsonPath))) {
+        continue;
+      }
 
-        if (taskJson.planPath && (await pathExists(resolve(taskJson.planPath)))) {
-          const plan = JSON.parse(await readFile(resolve(taskJson.planPath), 'utf-8')) as Plan;
+      let taskJson: any;
+      try {
+        taskJson = JSON.parse(await readFile(taskJsonPath, 'utf-8'));
+      } catch (error) {
+        // Skip corrupted task descriptors instead of failing the entire check
+        console.warn(`[plan-check] Invalid task.json at ${taskJsonPath}:`, error instanceof Error ? error.message : error);
+        continue;
+      }
 
-          if (plan.status === 'APPROVED' || plan.status === 'EXECUTING') {
-            return {
-              hasPlan: true,
-              plan,
-              taskName: taskDir.name,
-            };
-          }
+      if (!taskJson.planPath) {
+        continue;
+      }
+
+      const resolvedPlanPath = resolve(taskJson.planPath);
+      if (!(await pathExists(resolvedPlanPath))) {
+        continue;
+      }
+
+      try {
+        const rawPlan = await readFile(resolvedPlanPath, 'utf-8');
+        const plan = JSON.parse(rawPlan) as Plan;
+
+        if (plan.status === 'APPROVED' || plan.status === 'EXECUTING') {
+          return {
+            hasPlan: true,
+            plan,
+            taskName: taskDir.name,
+          };
         }
+      } catch (error) {
+        // Plans stored como Markdown u otro formato no deben bloquear el resto
+        console.warn(`[plan-check] Skipping invalid plan at ${resolvedPlanPath}:`, error instanceof Error ? error.message : error);
+        continue;
       }
     }
 

@@ -1,0 +1,40 @@
+{
+  "detection": {
+    "hash": "a5612a05f1862b945ddeb27a579d1c924ab9dfd8eb081ea5eb9da2fe2852cb01",
+    "confidence": 0.95,
+    "block": "[Layout] Crear API REST para autenticación:\n1. Diseñar endpoints de login/registro\n2. Implementar middleware de validación\n3. Configurar JWT tokens\n4. Testing de endpoints"
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 639,
+    "expectedScore": 0.5680000000000001,
+    "skillActivation": [
+      {
+        "skillId": "backend-architecture-patterns",
+        "score": 0.5,
+        "reasons": [
+          "keywords: arquitectura, backend, ddd",
+          "intent: 1 pattern(s) matched"
+        ]
+      },
+      {
+        "skillId": "backend-dev-guidelines",
+        "score": 0.5,
+        "reasons": [
+          "keywords: backend, api, endpoint, arquitectura, middleware, autenticación, login, registro",
+          "intent: 2 pattern(s) matched"
+        ]
+      },
+      {
+        "skillId": "security-testing-guide",
+        "score": 0.5,
+        "reasons": [
+          "keywords: testing, jwt",
+          "intent: 1 pattern(s) matched"
+        ]
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T21-06-19-516Z",
+  "version": "2.0.0"
+}
