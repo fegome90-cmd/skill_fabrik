@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Close issues/PRs with no response
-        uses: 'actions/stale@v9'
+        uses: 'actions/stale@v10'
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           days-before-stale: -1
