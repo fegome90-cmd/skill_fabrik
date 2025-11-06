@@ -1,0 +1,19 @@
+{
+  "id": "139d5ec30b5e",
+  "timestamp": "2025-11-03T15:01:15.402Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend\n2. Implementar API REST\n3. Configurar base de datos\n4. Testing de endpoints",
+  "optimizedPrompt": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend\n2. Implementar API REST\n3. Configurar base de datos\n4. Testing de endpoints",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "3a79f4dd7ac6e2c05632bafede7bedd877dc368854bb2e38dc15ea67c2123881",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "resolvePBv2Path is not defined"
+  }
+}

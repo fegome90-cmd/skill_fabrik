@@ -1,0 +1,10 @@
+{
+  "timestamp": "20251029_131842",
+  "summary": {
+    "P0": { "passed": 6, "failed": 3 },
+    "P1": { "passed": 3, "failed": 4 },
+    "P2": { "passed": 3, "failed": 1 }
+  },
+  "total_tests": 20,
+  "note": "Detailed test results logged to summary file"
+}

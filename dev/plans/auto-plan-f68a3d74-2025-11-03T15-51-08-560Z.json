@@ -1,0 +1,13 @@
+{
+  "detection": {
+    "hash": "f68a3d74ee24c84496d47e375ed19bfab8653a361f59407a8fdf809c0b871d9e",
+    "confidence": 0.95,
+    "block": "[Layout] Plan para la primera funcionalidad:\n\n1. Crear componente UserProfile\n2. Implementar lógica de actualización\n3. Testing unitario\n\n---\n\n[Layout] Plan para la segunda funcionalidad:\n\n1. Crear componente Settings\n2. Implementar preferencias de usuario\n3. Testing E2E\n\nAmbos planes son independientes."
+  },
+  "pbv2Result": {
+    "success": false,
+    "latency_ms": 121
+  },
+  "timestamp": "2025-11-03T15-51-08-560Z",
+  "version": "2.0.0"
+}

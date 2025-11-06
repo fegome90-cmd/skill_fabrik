@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "activate.request.schema.json",
+  "type": "object",
+  "required": ["intent", "cwd", "editor"],
+  "properties": {
+    "intent": { "type": "string", "minLength": 1 },
+    "repo": { "type": "string" },
+    "cwd": { "type": "string" },
+    "path": { "type": "string" },
+    "content_hash": { "type": "string" },
+    "hints": { "type": "array", "items": { "type": "string" } },
+    "editor": { "type": "string", "enum": ["cli", "vscode", "neovim", "other"] }
+  },
+  "additionalProperties": false
+}
+

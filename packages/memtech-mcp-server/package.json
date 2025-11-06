@@ -1,0 +1,47 @@
+{
+  "name": "@skills-fabrik/memtech-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server for MemTech Universal Memory System - enables Claude Code to access and search Skills Fabric documentation, skills, and context",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "watch": "tsx watch src/index.ts",
+    "test": "node --test"
+  },
+  "keywords": [
+    "mcp",
+    "memtech",
+    "skills-fabric",
+    "claude",
+    "documentation",
+    "memory"
+  ],
+  "author": "Skills Fabric Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "typescript": "^5.3.0",
+    "tsx": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skills-fabrik/memtech-mcp-server"
+  },
+  "mcp": {
+    "version": "2024-11-05",
+    "transport": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["dist/index.js"]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "f29f82f0c7a7",
+  "timestamp": "2025-11-03T15:07:26.692Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura\n2. Implementar API",
+  "optimizedPrompt": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura\n2. Implementar API",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "814f87d2f61d91ad0ebdfcc6aab4df0e52da8a41db9d0d7d87f217443bf72dbb",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 1,
+    "success": false,
+    "error": "getFastConfig is not defined"
+  }
+}

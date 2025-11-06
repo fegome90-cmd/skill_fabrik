@@ -3,7 +3,7 @@
  * Verifica activación de skills basada en prompt y archivos abiertos
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import { join } from 'path';
 import { userPromptSubmitHook } from '../pre-invoke.js';
 import type { PreHookInput } from '../types.js';

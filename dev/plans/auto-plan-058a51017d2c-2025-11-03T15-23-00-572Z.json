@@ -1,0 +1,24 @@
+{
+  "id": "058a51017d2c",
+  "timestamp": "2025-11-03T15:23:00.572Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Test Plan\n1. Item 1\n2. Item 2",
+  "optimizedPrompt": "Optimized prompt",
+  "skillsSuggested": [
+    {
+      "id": "test-skill",
+      "confidence": 0.9
+    }
+  ],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "abc123",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "expectedScore": 0.85,
+    "templateApplied": false,
+    "tagsGenerated": 2,
+    "latency_ms": 150,
+    "success": true
+  }
+}

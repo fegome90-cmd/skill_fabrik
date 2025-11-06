@@ -1,0 +1,19 @@
+{
+  "id": "24c447e2a9e8",
+  "timestamp": "2025-11-03T15:06:07.809Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan:\n1. Task 1\n2. Task 2\n3. Task 3",
+  "optimizedPrompt": "[Layout] Plan:\n1. Task 1\n2. Task 2\n3. Task 3",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "219d445bb400703a8de82c8edc6873db65bf97709d5df7620ed5c32ff01b0e1a",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 1,
+    "success": false,
+    "error": "resolvePBv2Path is not defined"
+  }
+}

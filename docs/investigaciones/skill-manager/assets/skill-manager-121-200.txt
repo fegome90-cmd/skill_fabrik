@@ -1,0 +1,3869 @@
+```
+**metadata.json generado:**
+
+```json
+{
+  "name": "testing-guidelines",
+  "version": "1.0.0",
+  "description": "Comprehensive testing patterns and best practices",
+  "category": "quality",
+  "type": "guidelines",
+  "priority": "high",
+  "created": "2024-10-30T10:30:00.000Z",
+  "lastUpdated": "2024-10-30T10:30:00.000Z",
+  "structure": {
+    "mainFile": "SKILL.md",
+    "resourcesDirectory": "resources",
+    "resourceCount": 0
+  },
+  "triggers": {
+    "keywords": [
+      "test",
+      "testing",
+      "unit test",
+      "integration test",
+      "e2e",
+      "jest",
+      "vitest",
+      "cypress"
+    ],
+    "filePatterns": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      "**/tests/**",
+      "**/e2e/**"
+    ],
+    "contentPatterns": [
+      "describe\\(",
+      "it\\(",
+      "test\\(",
+      "expect\\("
+    ]
+  },
+  "statistics": {
+    "totalLines": 150,
+    "averageResourceSize": 0
+  }
+}
+```
+**skill-rules.json actualizado automáticamente:**
+
+```json
+{
+  "testing-guidelines": {
+    "type": "guidelines",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "test",
+        "testing",
+        "unit test",
+        "integration test",
+        "e2e",
+        "jest",
+        "vitest",
+        "cypress"
+      ],
+      "intentPatterns": [
+        "(create|add|write|implement).*?(test|spec)",
+        "(how to|best practice).*?test",
+        "test.*?(pattern|strategy|approach)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "**/tests/**",
+        "**/e2e/**"
+      ],
+      "contentPatterns": [
+        "describe\\(",
+        "it\\(",
+        "test\\(",
+        "expect\\("
+      ]
+    },
+    "metadata": {
+      "structure": "new",
+      "mainFile": "SKILL.md",
+      "resourceCount": 0,
+      "created": "2024-10-30T10:30:00.000Z"
+    }
+  }
+}
+```
+
+-----
+
+### 10.2 Caso de Uso 2: Refactorizar un Skill Monolítico Existente
+
+```bash
+# Escenario: frontend-dev-guidelines tiene 1,500 líneas y necesita refactoring
+
+# Paso 1: Validar estado actual
+npm run skill:validate frontend-dev-guidelines
+
+
+🔍
+# Output:
+   Validating skill: frontend-dev-guidelines
+
+📊 Metrics:
+  Main file: 1,523 lines
+  Resources: 0 files
+  Average resource size: 0 lines
+  Total lines: 1,523
+  Estimated tokens: 22,845
+
+❌ Errors found:
+  1. MAIN_FILE_TOO_LARGE
+
+        💡
+    Main file has 1523 lines (max: 500)
+       Extract sections to resource files
+
+⚠️ Warnings:
+  1. NO_RESOURCES
+
+        💡
+    Skill has no resource files
+        Consider extracting detailed content to resources
+
+❌ Skill has validation errors that need to be fixed.
+💡 Suggestion: Run 'npm run skill:refactor frontend-dev-guidelines'
+# Paso 2: Ejecutar refactoring
+npm run skill:refactor frontend-dev-guidelines \
+ --min-section-size 50 \
+ --preserve-context \
+ --create-index
+
+
+🔄
+# Output:
+   Refactoring skill: frontend-dev-guidelines
+📊 Validating current state...
+ Main file: 1,523 lines
+ Total: 1,523 lines
+
+🔨 Refactoring skill at: /skills/public/frontend-dev-guidelines
+📦 Found 10 sections to extract
+ ✓ Extracted: component-patterns.md
+ ✓ Extracted: hooks-usage.md
+ ✓ Extracted: state-management.md
+ ✓ Extracted: routing.md
+ ✓ Extracted: data-fetching.md
+ ✓ Extracted: forms.md
+ ✓ Extracted: styling.md
+ ✓ Extracted: performance.md
+ ✓ Extracted: testing.md
+ ✓ Extracted: accessibility.md
+
+📊 Validating refactored skill...
+📈 Refactoring Results:
+ Original main file: 1,523 lines
+ New main file: 398 lines
+ Reduction: 1,125 lines
+ Resources created: 10
+ Total lines (main + resources): 1,650
+
+✅ Refactoring successful! Skill now follows best practices.
+💾 Backup saved: SKILL.md.backup
+# Paso 3: Validar resultado
+npm run skill:validate frontend-dev-guidelines
+
+
+🔍
+# Output:
+   Validating skill: frontend-dev-guidelines
+
+📊 Metrics:
+ Main file: 398 lines
+ Resources: 10 files
+ Average resource size: 125 lines
+ Total lines: 1,650
+ Estimated tokens: 24,750 (but loaded progressively)
+
+✅ Skill is valid and follows best practices!
+📊 Token Efficiency:
+ Before: ~22,845 tokens loaded at once
+   After: ~5,970 tokens (main file) + resources loaded on demand
+   Improvement: 74% reduction in initial token load
+```
+
+**Estructura después del refactoring:**
+
+```
+/skills/public/frontend-dev-guidelines/
+├── SKILL.md                     # 398 líneas (antes: 1,523)
+├── SKILL.md.backup                  # Backup del original
+├── resources/
+│ ├── README.md                      # Índice auto-generado
+│ ├── component-patterns.md             # 145 líneas
+│ ├── hooks-usage.md                 # 128 líneas
+│ ├── state-management.md               # 156 líneas
+│ ├── routing.md                 # 112 líneas
+│ ├── data-fetching.md              # 134 líneas
+│ ├── forms.md                   # 98 líneas
+│ ├── styling.md                # 87 líneas
+│ ├── performance.md                 # 142 líneas
+│ ├── testing.md                 # 119 líneas
+│ └── accessibility.md             # 129 líneas
+└── metadata.json                 # Actualizado automáticamente
+```
+
+**SKILL.md refactorizado (extracto):**
+
+```markdown
+# Frontend Development Guidelines
+
+## Overview
+
+Comprehensive patterns and best practices for React 19 frontend development
+with TypeScript, MUI v7, TanStack Query, and TanStack Router.
+
+**When to use this skill:**
+- Building React components
+- Managing application state
+- Implementing routing
+- Optimizing performance
+
+---
+
+## Quick Reference
+
+### Core Principles
+
+1. **Component Composition**
+  Components should be small, focused, and composable.
+
+   Example:
+   ```tsx
+   const UserCard = ({ user }: UserCardProps) => (
+     <Card>
+      <UserAvatar user={user} />
+      <UserInfo user={user} />
+      <UserActions user={user} />
+     </Card>
+   );
+```
+
+**📖 For detailed patterns:** See
+[component-patterns.md](resources/component-patterns.md)
+
+1. **Hooks Best Practices**
+  Use hooks to encapsulate reusable logic.
+
+  Basic example:
+
+  ```tsx
+  const useUser = (id: string) => {
+    return useQuery({
+      queryKey: ['user', id],
+      queryFn: () => fetchUser(id)
+    });
+  };
+  ```
+
+  **📖   For detailed hook patterns:** See [hooks-usage.md](resources/hooks-usage.md)
+1. **State Management**
+  Keep state as local as possible, lift when needed.
+
+  **📖  For state management strategies:** See
+[state-management.md](resources/state-management.md)
+
+-----
+
+## Common Patterns
+
+### Pattern: Data Fetching with TanStack Query
+
+```tsx
+// Simple example
+const { data, isLoading, error } = useQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsers
+});
+
+if (isLoading) return <Loading />;
+if (error) return <Error message={error.message} />;
+return <UserList users={data} />;
+```
+
+**📖  For advanced data fetching patterns:** See
+[data-fetching.md](resources/data-fetching.md)
+
+### Pattern: Form Handling
+
+```tsx
+// Basic controlled form
+const [value, setValue] = useState('');
+
+const handleSubmit = (e: FormEvent) => {
+  e.preventDefault();
+  // Handle submission
+};
+```
+
+**📖 For comprehensive form patterns:** See [forms.md](resources/forms.md)
+-----
+
+##    📚 Detailed Resources
+### Component Development
+
+- **[Component Patterns](resources/component-patterns.md)** - Composition, props,
+children
+- **[Hooks Usage](resources/hooks-usage.md)** - Custom hooks, built-in hooks
+- **[Styling](resources/styling.md)** - MUI, Emotion, responsive design
+
+### Data & State
+
+- **[State Management](resources/state-management.md)** - Local state, context, Zustand
+- **[Data Fetching](resources/data-fetching.md)** - TanStack Query patterns
+- **[Routing](resources/routing.md)** - TanStack Router, navigation
+
+### Quality & Performance
+
+- **[Testing](resources/testing.md)** - Component testing, integration tests
+- **[Performance](resources/performance.md)** - Optimization strategies
+- **[Accessibility](resources/accessibility.md)** - ARIA, keyboard navigation
+
+### Forms
+- **[Forms](resources/forms.md)** - Validation, controlled inputs, submission
+
+-----
+
+## Quick Checklist
+
+When creating a new component:
+
+- [ ] Component is properly typed with TypeScript
+- [ ] Props interface is defined and exported
+- [ ] Component follows composition patterns
+- [ ] Styling uses MUI theme system
+- [ ] Component is accessible (ARIA, keyboard)
+- [ ] Loading and error states handled
+- [ ] Component has tests
+
+-----
+
+*For questions or suggestions about this skill, see
+[MAINTENANCE_GUIDE.md](../../docs/MAINTENANCE_GUIDE.md)*
+
+```
+**resources/component-patterns.md (extracto):**
+
+```markdown
+<!--
+Resource: Component Patterns
+Part of: frontend-dev-guidelines
+Last Updated: 2024-10-30
+-->
+
+# Component Patterns
+
+Detailed guide to React component patterns, composition, and best practices.
+
+## Table of Contents
+- [Basic Component Structure](#basic-component-structure)
+- [Composition Patterns](#composition-patterns)
+- [Props Patterns](#props-patterns)
+- [Children Patterns](#children-patterns)
+- [Render Props](#render-props)
+- [Compound Components](#compound-components)
+
+---
+
+## Basic Component Structure
+Every component should follow this structure:
+
+```tsx
+// 1. Imports
+import { useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import type { ComponentProps } from './types';
+
+// 2. Types/Interfaces
+interface UserCardProps {
+  user: User;
+  onEdit?: (user: User) => void;
+  variant?: 'compact' | 'detailed';
+}
+
+// 3. Component
+export const UserCard = ({
+  user,
+  onEdit,
+  variant = 'compact'
+}: UserCardProps) => {
+  // Hooks first
+  const [isHovered, setIsHovered] = useState(false);
+
+ // Event handlers
+ const handleEdit = () => {
+   onEdit?.(user);
+ };
+
+  // Render
+  return (
+    <Box
+     onMouseEnter={() => setIsHovered(true)}
+     onMouseLeave={() => setIsHovered(false)}
+    >
+     <Typography variant="h6">{user.name}</Typography>
+     {/* Component content */}
+    </Box>
+  );
+};
+
+// 4. Display name (for debugging)
+UserCard.displayName = 'UserCard';
+```
+
+-----
+
+## Composition Patterns
+### Pattern 1: Container/Presenter
+
+Separate logic from presentation:
+
+```tsx
+// Container (logic)
+const UserCardContainer = ({ userId }: { userId: string }) => {
+  const { data: user, isLoading } = useUser(userId);
+  const { mutate: updateUser } = useUpdateUser();
+
+ if (isLoading) return <UserCardSkeleton />;
+ if (!user) return <UserCardError />;
+
+  return <UserCardPresenter user={user} onUpdate={updateUser} />;
+};
+
+// Presenter (UI)
+const UserCardPresenter = ({ user, onUpdate }: UserCardPresenterProps) => (
+  <Card>
+    <CardHeader title={user.name} />
+    <CardContent>
+     <Typography>{user.email}</Typography>
+    </CardContent>
+    <CardActions>
+     <Button onClick={() => onUpdate(user)}>Edit</Button>
+    </CardActions>
+  </Card>
+);
+```
+
+### Pattern 2: Composition via Children
+
+Build flexible components:
+
+```tsx
+// Flexible Card component
+const Card = ({ children }: { children: React.ReactNode }) => (
+  <Box className="card">{children}</Box>
+);
+
+Card.Header = ({ children }: { children: React.ReactNode }) => (
+  <Box className="card-header">{children}</Box>
+);
+
+Card.Body = ({ children }: { children: React.ReactNode }) => (
+  <Box className="card-body">{children}</Box>
+);
+Card.Footer = ({ children }: { children: React.ReactNode }) => (
+  <Box className="card-footer">{children}</Box>
+);
+
+// Usage
+<Card>
+  <Card.Header>
+    <Typography variant="h5">Title</Typography>
+  </Card.Header>
+  <Card.Body>
+    <Typography>Content</Typography>
+  </Card.Body>
+  <Card.Footer>
+    <Button>Action</Button>
+  </Card.Footer>
+</Card>
+```
+
+[… más contenido detallado …]
+
+```
+---
+
+### 10.3 Caso de Uso 3: Detectar y Resolver Problemas Automáticamente
+
+```bash
+# Escenario: Revisión mensual del sistema de skills
+
+# Paso 1: Validar todos los skills
+npm run skill:validate all
+
+
+🔍
+# Output:
+   Validating all skills...
+
+Processing 15 skills...
+
+✅ backend-dev-guidelines - Valid (Score: 92/100)
+✅ frontend-dev-guidelines - Valid (Score: 88/100)
+⚠️ database-verification - Valid with warnings (Score: 78/100)
+  - Warning: Not updated in 120 days
+
+❌
+  - Warning: Low usage (0.2 activations/day)
+    workflow-developer - Invalid (Score: 45/100)
+  - Error: Main file has 687 lines
+  - Error: Missing required section: Quick Reference
+
+✅
+  - Warning: No activations in 90 days
+
+❌
+    notification-developer - Valid (Score: 85/100)
+    api-documentation - Invalid (Score: 52/100)
+   - Error: 3 broken resource references
+
+✅
+   - Warning: Low activation accuracy (58%)
+     testing-guidelines - Valid (Score: 90/100)
+...
+
+Summary:
+ Total: 15 skills
+ Valid: 10 (67%)
+ Warnings: 3 (20%)
+ Errors: 2 (13%)
+
+  Critical issues: 5
+  Avg health score: 76/100
+
+💡 Recommendations:
+  1. Refactor workflow-developer (auto-fix available)
+  2. Fix broken references in api-documentation (auto-fix available)
+  3. Review database-verification for relevance
+  4. Optimize triggers for api-documentation
+
+Run with --fix to auto-fix issues
+
+
+# Paso 2: Auto-fix con validación
+npm run skill:validate all --fix
+
+
+🔍
+# Output:
+
+🔧
+   Validating all skills...
+   Auto-fix mode enabled
+
+
+  ❌
+Processing skill: workflow-developer
+
+  🔨
+     MAIN_FILE_TOO_LARGE (687 lines)
+
+   📦
+     Refactoring large main file...
+      Extracting 8 sections
+   ✓ Extracted: workflow-engine-patterns.md
+   ✓ Extracted: state-management.md
+   ✓ Extracted: transition-logic.md
+   ✓ Extracted: validation-rules.md
+   ✓ Extracted: error-handling.md
+   ✓ Extracted: testing-workflows.md
+   ✓ Extracted: debugging.md
+   ✓ Extracted: optimization.md
+
+
+   ✅
+    Result: 687 lines → 295 lines
+      Fixed: MAIN_FILE_TOO_LARGE
+
+  ❌ MISSING_REQUIRED_SECTION (Quick Reference)
+  🔨 Generating Quick Reference section...
+        ✅ Added Quick Reference with core patterns
+  ❌
+Processing skill: api-documentation
+
+  🔨
+     BROKEN_RESOURCE_REFERENCE (3 references)
+     Fixing broken references...
+   ✓ Created missing file: rest-api-patterns.md
+   ✓ Created missing file: graphql-patterns.md
+
+        ✅
+   ✓ Updated reference: authentication.md → auth-patterns.md
+       Fixed: All broken references
+
+Re-validating fixed skills...
+
+✅ workflow-developer - Now valid (Score: 85/100)
+  - Improved from 45 to 85
+  - All errors resolved
+
+✅ api-documentation - Now valid (Score: 79/100)
+  - Improved from 52 to 79
+  - All errors resolved
+  - Still has low accuracy warning
+
+Summary:
+ Fixed: 2 skills
+ Errors resolved: 5
+ Remaining warnings: 2
+
+💡 Next steps:
+   1. Review trigger configuration for api-documentation
+   2. Consider archiving database-verification (low usage)
+```
+
+-----
+
+### 10.4 Caso de Uso 4: Análisis de Uso y Optimización
+
+```bash
+# Escenario: Optimizar skills basándose en patrones de uso
+
+# Paso 1: Analizar uso de los últimos 30 días
+npm run skill:analyze --period 30d --top 10
+
+
+📊
+# Output:
+   Analyzing skill usage (last 30 days)...
+
+Top 10 most used skills:
+
+1. frontend-dev-guidelines
+  Activations: 145
+  Last used: 2 hours ago
+  Avg tokens: 1,250
+  Accuracy: 92%
+
+  📈 Trends:
+  - Activation frequency: ↑ +25% vs previous period
+  - Accuracy: → stable
+
+  💡 Insights:
+  - Most activated by keyword: "component"
+  - Peak usage: 10:00-12:00, 14:00-16:00
+  - Common co-activations: testing-guidelines, styling-patterns
+
+2. backend-dev-guidelines
+  Activations: 132
+  Last used: 30 minutes ago
+  Avg tokens: 1,180
+  Accuracy: 88%
+
+  📈 Trends:
+  - Activation frequency: ↑ +15% vs previous period
+  - Accuracy: ↑ +5%
+
+  💡 Insights:
+  - Most activated by file pattern: **/controllers/**
+  - Frequently activates with: database-patterns, error-handling
+
+3. testing-guidelines
+  Activations: 98
+  Last used: 1 hour ago
+  Avg tokens: 980
+  Accuracy: 95%
+
+  📈 Trends:
+  - Activation frequency: → stable
+  - Accuracy: ↑ +8% (recent trigger optimization)
+
+[... skills 4-10 ...]
+
+⚠️ 3 skills never activated:
+  - legacy-patterns (created 180 days ago)
+  - mobile-guidelines (created 45 days ago)
+  - deployment-automation (created 90 days ago)
+
+💡 Recommendations:
+1. HIGH PRIORITY: Add "react" keyword to frontend-dev-guidelines
+ - Reason: 23 prompts containing "react" failed to activate skill
+ - Expected impact: +15 activations/week
+ - Auto-fixable: Yes
+
+2. MEDIUM PRIORITY: Split backend-dev-guidelines
+  - Reason: High topic diversity score (0.82)
+  - Suggestion: Create separate skills for:
+    * API Development
+    * Database Operations
+    * Error Handling
+  - Expected impact: +10% accuracy
+
+3. LOW PRIORITY: Archive legacy-patterns
+  - Reason: No activations in 180 days
+  - Action: Move to /skills/archived/
+
+4. LOW PRIORITY: Review triggers for mobile-guidelines
+  - Reason: Created 45 days ago but never activated
+  - Possible issue: Triggers too specific or project doesn't use mobile
+
+Apply recommendations? (y/n):
+
+
+# Paso 2: Aplicar recomendaciones automáticas
+y
+
+
+🔧
+# Output:
+   Applying recommendations...
+
+1. Adding keyword "react" to frontend-dev-guidelines
+  ✓ Updated skill-rules.json
+  ✓ Skill metadata updated
+
+
+ 📊
+2. Analyzing backend-dev-guidelines for split...
+      Topic clusters identified:
+    - Cluster 1: API/Controllers (45% of activations)
+    - Cluster 2: Database/Repositories (35%)
+    - Cluster 3: Error Handling/Validation (20%)
+
+ 💡 Suggestion: Create 3 specialized skills
+ ⚠️ This requires manual review
+ 📄 Created split proposal: /reports/backend-split-proposal.md
+3. Archiving legacy-patterns...
+  ✓ Moved to /skills/archived/legacy-patterns
+  ✓ Removed from skill-rules.json
+  ✓ Added archive metadata
+ 📊
+4. Generating trigger suggestions for mobile-guidelines...
+
+ 💡
+     Analysis: No files match current patterns
+     Suggestions added to: /skills/public/mobile-guidelines/TRIGGER_SUGGESTIONS.md
+
+✅ Applied 2 automatic recommendations
+📝 Created 2 proposals for manual review
+Next validation in: 7 days
+```
+
+-----
+
+### 10.5 Caso de Uso 5: Generar Reporte Mensual
+
+```bash
+# Escenario: Fin de mes, generar reporte comprehensivo
+
+npm run skill:report --period monthly --output /reports/october-2024.md
+
+
+📊
+# Output:
+   Generating monthly system report...
+
+Analyzing system health...
+ ✓ Validated 15 skills
+ ✓ Analyzed 30 days of usage data
+ ✓ Calculated trends and predictions
+ ✓ Generated recommendations
+
+Generating report...
+ ✓ Created markdown report
+ ✓ Created HTML dashboard
+ ✓ Generated charts
+
+✅ Reports created:
+ 📄 Markdown: /reports/october-2024.md
+ 🌐 HTML: /reports/october-2024.html
+ 📊 JSON data: /reports/october-2024.json
+View HTML dashboard: open /reports/october-2024.html
+```
+
+**Reporte generado (extracto):**
+
+```markdown
+# Skill System Health Report - October 2024
+
+**Generated:** November 1, 2024, 9:00 AM
+**Period:** October 1-31, 2024
+---
+
+##    📊 Executive Summary
+**Overall System Health:**   🔵 Good (78/100)
+- **Total Skills:** 15
+- **Healthy Skills:** 12 (80%)
+- **Skills Needing Attention:** 3 (20%)
+- **Critical Issues:** 0
+- **Average Activation Rate:** 4.2/day
+
+### Key Highlights
+
+✅ **Achievements:**
+- Successfully refactored 2 large skills
+- Improved average activation accuracy from 82% to 87%
+- Reduced average token usage by 15%
+- Created 1 new skill (testing-guidelines)
+
+⚠️ **Challenges:**
+- 3 skills with low usage
+- 1 skill needs trigger optimization
+- Token efficiency could be improved further
+
+---
+
+##    📈 System Metrics
+| Metric | October | September | Change |
+|--------|---------|-----------|--------|
+| Total Activations | 1,285 | 1,120 | ↑ +15% |
+| Avg Accuracy | 87% | 82% | ↑ +5% |
+| Total Tokens Used | 1.8M | 2.1M | ↓ -14% |
+| Avg Tokens/Activation | 1,401 | 1,875 | ↓ -25% |
+
+### Activations Over Time
+```
+
+Week 1: ████████████████░░░░ 280 activations
+Week 2: ██████████████████░░ 320 activations
+Week 3: ███████████████░░░░░ 295 activations
+Week 4: ████████████████████ 390 activations
+
+```
+---
+##    🏆 Top Performing Skills
+1. **frontend-dev-guidelines** (92/100)
+  - 145 activations
+  - 92% accuracy
+  - Recent improvements: Refactored to progressive disclosure
+
+2. **backend-dev-guidelines** (88/100)
+  - 132 activations
+  - 88% accuracy
+  - Trending up in usage
+
+3. **testing-guidelines** (90/100)
+  - 98 activations
+  - 95% accuracy
+  - New skill performing excellently
+
+4. **database-patterns** (86/100)
+  - 87 activations
+  - 89% accuracy
+
+5. **error-handling** (84/100)
+  - 75 activations
+  - 91% accuracy
+
+---
+
+##    ⚠️ Skills Needing Attention
+### api-documentation (Score: 62/100)
+
+
+ 🔴
+**Issues:**
+-     **LOW_ACCURACY**: Only 58% of activations were appropriate
+  - *Impact:* Wasted tokens, Claude confused by irrelevant skill
+  - *Fix:* Refine triggers in skill-rules.json
+
+**Current Triggers:**
+```json
+"keywords": ["api", "documentation", "endpoint"]
+```
+
+**Suggested Improvements:**
+
+```json
+"keywords": [
+  "api",
+  "documentation",
+  "endpoint",
+  "swagger",       // NEW
+  "openapi",      // NEW
+  "api docs"      // NEW
+],
+"intentPatterns": [
+  "document.*?(api|endpoint)",        // NEW
+  "(create|write|generate).*?api docs" // NEW
+]
+```
+
+**Recommended Actions:**
+
+1. Update triggers (Priority: high, Effort: low, Automatable:   ✅)
+1. Review content for relevance
+1. Monitor accuracy after changes
+
+-----
+
+### database-verification (Score: 56/100)
+
+**Issues:**
+
+    🟡 **LOW_USAGE**: Only 0.2 activations/day
+    🟡 **OUTDATED**: Not updated in 120 days
+-
+-
+
+**Analysis:**
+This skill was created for a specific migration project that is now complete.
+
+**Recommendation:**
+Archive skill or repurpose for general database validation patterns.
+
+**Predicted Need:**
+
+- Type: archive
+- Confidence: 75%
+- Reasoning: “Purpose-built for completed project, low ongoing value”
+
+-----
+
+### mobile-guidelines (Score: 48/100)
+
+**Issues:**
+
+    🔴 **NO_USAGE**: No activations in 45 days since creation
+    🟡 **MISCONFIGURED_TRIGGERS**: File patterns don’t match project structure
+-
+-
+
+**Current File Patterns:**
+```
+**/mobile/**
+**/ios/**
+**/android/**
+```
+
+**Project Reality:**
+No mobile development currently happening. Project is web-only.
+
+**Recommendation:**
+
+1. If mobile development is planned: Update triggers and document timeline
+1. If not planned: Remove skill to reduce maintenance overhead
+
+-----
+
+##💡 System-Wide Recommendations
+### 1. Optimize Token Usage Further ⚡
+
+**Priority:** Medium | **Effort:** Medium | **Impact:** High
+
+While we’ve improved 15%, there’s opportunity for another 10-15% improvement:
+
+**Actions:**
+
+- Review resource file sizes (3 are > 200 lines)
+- Consider splitting large resources further
+- Add lazy-loading hints in main files
+
+**Expected Impact:**
+
+- 10-15% additional token savings
+- Faster skill loading
+- Better progressive disclosure
+
+### 2. Create Specialized Sub-Skills    🎯
+**Priority:** High | **Effort:** High | **Impact:** High
+
+backend-dev-guidelines has high topic diversity (0.82). Consider splitting:
+
+**Proposed Structure:**
+
+```
+backend-dev-guidelines/          (orchestrator)
+├── api-development/            (new)
+├── database-operations/          (new)
+└── error-handling-patterns/ (new)
+```
+
+**Benefits:**
+
+- More targeted activation
+- Better token efficiency
+- Easier maintenance
+
+**Timeline:** Q1 2025
+
+### 3. Implement Skill Versioning   📦
+**Priority:** Low | **Effort:** Medium | **Impact:** Medium
+
+As skills evolve, version control would help:
+
+**Proposal:**
+
+- Semantic versioning (1.0.0, 1.1.0, 2.0.0)
+- Changelog in metadata
+- Deprecation warnings for old patterns
+
+-----
+
+##   📉 System Trends
+### Activation Trends
+
+**Frontend Skills:** ↑ +22%
+
+- Driven by new component development
+- React 19 upgrade project
+
+**Backend Skills:** → Stable
+
+- Consistent API development pace
+
+**Quality Skills:** ↑ +35%
+
+- New testing-guidelines skill popular
+- Focus on test coverage initiative
+
+### Accuracy Trends
+
+**Overall:** ↑ +5% improvement
+
+- Trigger refinements working
+- Better keyword selection
+
+**Best Improved:** testing-guidelines (+12%)
+**Needs Work:** api-documentation (-3%)
+
+### Token Efficiency
+
+**Improvement:** 25% reduction per activation
+
+- Progressive disclosure paying off
+- Resource extraction effective
+
+**Breakdown:**
+
+- Main file tokens: ↓ -40%
+- Resource loading: ↑ +5% (acceptable tradeoff)
+- Net improvement: ↓ -25%
+
+-----
+
+##   🔮 Predictions for November
+Based on current trends and project roadmap:
+
+### 1. High Usage Expected
+
+**Skills:** frontend-dev-guidelines, testing-guidelines
+**Reasoning:** New feature sprint planned with heavy frontend work
+**Recommendation:** Ensure these skills are up-to-date
+
+### 2. Refactoring Needed Soon
+
+**Skill:** state-management-patterns
+**Prediction:** Will exceed 500 lines in ~45 days
+**Confidence:** 80%
+**Action:** Schedule proactive refactoring
+
+### 3. New Skill Opportunity
+
+**Topic:** Performance optimization
+**Reasoning:** Performance issues mentioned in 15+ recent prompts
+**Recommendation:** Create dedicated performance-guidelines skill
+
+-----
+
+##   ✅ Action Items for November
+### High Priority
+- [ ] Optimize triggers for api-documentation
+- [ ] Review and update database-verification (archive or repurpose)
+- [ ] Plan backend-dev-guidelines split
+- [ ] Create performance-guidelines skill
+
+### Medium Priority
+
+- [ ] Further optimize token usage in large resources
+- [ ] Update 3 skills not modified in 90+ days
+- [ ] Add more example code to testing-guidelines
+- [ ] Review mobile-guidelines purpose
+
+### Low Priority
+
+- [ ] Implement skill versioning system
+- [ ] Create skill creation tutorial
+- [ ] Improve documentation of skill system
+- [ ] Set up automated monthly reporting
+
+-----
+
+##    📊 Detailed Skill Reports
+[Individual detailed reports for each skill…]
+
+-----
+
+*Report generated by Skill Manager System*
+*Next monthly report: December 1, 2024*
+
+```
+---
+
+Continuaré en el siguiente mensaje con la Parte 11: Integración con CI/CD y Automatización
+Avanzada...​
+```
+
+# SKILL MANAGER SYSTEM - PARTE 4: AUTOMATIZACIÓN AVANZADA Y MEJORES
+PRÁCTICAS
+
+-----
+
+## PARTE 11: INTEGRACIÓN CON CI/CD Y AUTOMATIZACIÓN
+
+### 11.1 GitHub Actions Workflow para Skills
+
+```yaml
+# .github/workflows/skill-validation.yml
+
+name: Skill Validation & Quality Check
+
+on:
+ push:
+  branches: [main, develop]
+  paths:
+    - 'skills/**'
+    - 'skill-manager/**'
+    - 'config/skill-rules.json'
+ pull_request:
+  branches: [main, develop]
+  paths:
+    - 'skills/**'
+ schedule:
+  # Validación diaria a las 2 AM
+  - cron: '0 2 * * *'
+ workflow_dispatch:
+  inputs:
+    full_report:
+      description: 'Generate full health report'
+      required: false
+      type: boolean
+      default: false
+
+jobs:
+  validate-skills:
+   name: Validate All Skills
+   runs-on: ubuntu-latest
+
+  steps:
+   - name: Checkout code
+     uses: actions/checkout@v3
+     with:
+      fetch-depth: 0 # Necesario para comparaciones
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+       node-version: '18'
+       cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+       npm ci
+       cd skill-manager && npm ci
+- name: Validate all skills
+  id: validate
+  run: |
+    npm run skill:validate all --json > validation-results.json
+    echo "validation_status=$?" >> $GITHUB_OUTPUT
+
+- name: Check validation results
+  run: |
+   cat validation-results.json | jq '.'
+
+  # Extraer métricas
+  ERRORS=$(cat validation-results.json | jq '.summary.totalErrors')
+  WARNINGS=$(cat validation-results.json | jq '.summary.totalWarnings')
+  HEALTH=$(cat validation-results.json | jq '.summary.averageHealth')
+
+  echo "Total errors: $ERRORS"
+  echo "Total warnings: $WARNINGS"
+  echo "Average health: $HEALTH"
+
+  # Fallar si hay errores críticos
+  if [ "$ERRORS" -gt "0" ]; then
+     echo "::error::Skill validation found $ERRORS error(s)"
+     exit 1
+  fi
+
+- name: Auto-fix issues (on main branch)
+  if: github.ref == 'refs/heads/main' && steps.validate.outputs.validation_status != '0'
+  run: |
+    npm run skill:validate all --fix
+
+  # Commit cambios si hubo fixes
+  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+  git config --local user.name "github-actions[bot]"
+
+  if [[ -n $(git status -s) ]]; then
+     git add skills/
+     git add config/skill-rules.json
+     git commit -m "chore: auto-fix skill validation issues [skip ci]"
+     git push
+  fi
+
+- name: Generate validation report
+  if: always()
+  run: |
+    npm run skill:report:validation --output validation-report.md
+
+- name: Comment PR with results
+  if: github.event_name == 'pull_request'
+   uses: actions/github-script@v6
+   with:
+    script: |
+      const fs = require('fs');
+      const results = JSON.parse(fs.readFileSync('validation-results.json', 'utf8'));
+      const report = fs.readFileSync('validation-report.md', 'utf8');
+
+      const body = `##   🎯 Skill Validation Results
+      **Summary:**
+
+                                             ✅
+      - Total Skills: ${results.summary.totalSkills}
+
+                                              ❌
+      - Valid: ${results.summary.validSkills}
+
+                                                      ⚠️
+      - Errors: ${results.summary.totalErrors}
+      - Warnings: ${results.summary.totalWarnings}
+      - Average Health: ${results.summary.averageHealth}/100
+
+
+                   📋 Detailed Report</summary>
+      <details>
+      <summary>
+
+      ${report}
+
+      </details>
+      `;
+
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: body
+      });
+
+  - name: Upload validation artifacts
+    if: always()
+    uses: actions/upload-artifact@v3
+    with:
+      name: skill-validation-results
+      path: |
+        validation-results.json
+        validation-report.md
+      retention-days: 30
+
+check-skill-size:
+ name: Check Skill Size Limits
+ runs-on: ubuntu-latest
+
+ steps:
+  - uses: actions/checkout@v3
+    - name: Check main file sizes
+      run: |
+       echo "Checking SKILL.md files..."
+
+      find skills -name "SKILL.md" | while read file; do
+        lines=$(wc -l < "$file")
+        skill=$(dirname "$file" | xargs basename)
+
+       if [ "$lines" -gt 500 ]; then
+          echo "::error file=$file::$skill main file exceeds 500 lines ($lines lines)"
+          exit 1
+       elif [ "$lines" -gt 450 ]; then
+          echo "::warning file=$file::$skill main file approaching limit ($lines/500 lines)"
+       else
+          echo "✓ $skill: $lines lines (OK)"
+       fi
+      done
+
+    - name: Check resource file sizes
+      run: |
+       echo "Checking resource files..."
+
+      find skills -path "*/resources/*.md" | while read file; do
+        lines=$(wc -l < "$file")
+        resource=$(basename "$file")
+
+         if [ "$lines" -gt 1000 ]; then
+            echo "::warning file=$file::Resource $resource is large ($lines lines), consider
+splitting"
+         fi
+        done
+
+ test-skill-activation:
+  name: Test Skill Activation Logic
+  runs-on: ubuntu-latest
+
+  steps:
+   - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+       node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run activation tests
+   run: |
+    npm run test:skill-activation
+
+  - name: Test skill-rules.json validity
+    run: |
+     # Validar JSON
+     jq empty config/skill-rules.json || exit 1
+
+     # Validar estructura
+     npm run skill:validate-rules
+
+  - name: Simulation test
+    run: |
+     # Simular activaciones con prompts de ejemplo
+     npm run skill:simulate-activation \
+      --prompt "create a new React component" \
+      --expected "frontend-dev-guidelines"
+
+     npm run skill:simulate-activation \
+      --prompt "add error handling to controller" \
+      --expected "backend-dev-guidelines,error-handling"
+
+generate-weekly-report:
+ name: Generate Weekly Report
+ runs-on: ubuntu-latest
+ if: github.event.schedule == '0 2 * * 1' # Lunes a las 2 AM
+
+ steps:
+  - uses: actions/checkout@v3
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v3
+    with:
+     node-version: '18'
+
+  - name: Install dependencies
+    run: npm ci
+
+  - name: Generate weekly report
+    run: |
+     npm run skill:report --period weekly \
+      --output reports/weekly-$(date +%Y%m%d).md
+
+  - name: Commit report
+    run: |
+     git config --local user.email "github-actions[bot]@users.noreply.github.com"
+     git config --local user.name "github-actions[bot]"
+     git add reports/
+        git commit -m "docs: add weekly skill report"
+        git push
+
+    - name: Send notification
+      uses: slackapi/slack-github-action@v1
+      with:
+       webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+       payload: |
+
+                  📊
+         {
+           "text": "      Weekly Skill Report Generated",
+           "blocks": [
+             {
+               "type": "section",
+               "text": {
+                 "type": "mrkdwn",
+                 "text": "*Weekly Skill System Report*\n\nA new weekly report has been
+generated and committed to the repository."
+               }
+             }
+           ]
+         }
+```
+
+-----
+
+### 11.2 Pre-commit Hooks para Validación Local
+
+```bash
+# .husky/pre-commit
+
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "  🔍 Running skill validation checks..."
+# Detectar archivos de skills modificados
+CHANGED_SKILLS=$(git diff --cached --name-only | grep "^skills/" | grep "SKILL.md$" | sed
+'s|/SKILL.md||' | xargs -n1 basename)
+
+if [ -z "$CHANGED_SKILLS" ]; then
+   echo "✓ No skill files modified, skipping validation"
+   exit 0
+fi
+
+echo "Modified skills: $CHANGED_SKILLS"
+
+# Validar skills modificados
+for skill in $CHANGED_SKILLS; do
+     echo "Validating $skill..."
+     npm run skill:validate "$skill" --quiet
+
+
+             ❌
+ if [ $? -ne 0 ]; then
+    echo "    Validation failed for $skill"
+    echo "Run 'npm run skill:validate $skill' for details"
+    exit 1
+ fi
+done
+
+# Verificar que skill-rules.json es válido si fue modificado
+if git diff --cached --name-only | grep -q "config/skill-rules.json"; then
+  echo "Validating skill-rules.json..."
+  jq empty config/skill-rules.json
+
+
+             ❌
+     if [ $? -ne 0 ]; then
+        echo "    skill-rules.json is invalid JSON"
+        exit 1
+     fi
+
+     npm run skill:validate-rules
+
+
+             ❌
+     if [ $? -ne 0 ]; then
+        echo "    skill-rules.json structure is invalid"
+        exit 1
+     fi
+fi
+
+echo "    ✅ All skill validation checks passed"
+```
+
+-----
+
+### 11.3 Sistema de Notificaciones Automáticas
+
+```typescript
+// /skill-manager/notifications/notifier.ts
+
+interface NotificationConfig {
+  slack?: {
+    webhookUrl: string;
+    channels: {
+      alerts: string;
+      reports: string;
+      general: string;
+    };
+  };
+  email?: {
+      smtp: SMTPConfig;
+      recipients: {
+        critical: string[];
+        warnings: string[];
+        reports: string[];
+      };
+    };
+}
+
+class SkillSystemNotifier {
+ private config: NotificationConfig;
+
+    constructor(config: NotificationConfig) {
+      this.config = config;
+    }
+
+    /**
+     * Notifica cuando un skill necesita atención urgente
+     */
+    async notifyCriticalIssue(skill: string, issue: HealthIssue): Promise<void> {
+      const message = this.formatCriticalIssue(skill, issue);
+
+     // Slack
+     if (this.config.slack) {
+       await this.sendSlackMessage(
+         this.config.slack.channels.alerts,
+
+                🚨
+         {
+           text: '    Critical Skill Issue',
+           blocks: [
+            {
+              type: 'header',
+              text: {
+
+                    🚨
+                type: 'plain_text',
+                text: '    Critical Skill Issue'
+              }
+            },
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: message
+              }
+            },
+            {
+              type: 'actions',
+              elements: [
+                {
+                  type: 'button',
+                            text: {
+                              type: 'plain_text',
+                              text: 'View Details'
+                            },
+                            url: `${process.env.DASHBOARD_URL}/skills/${skill}`
+                          },
+                          {
+                            type: 'button',
+                            text: {
+                              type: 'plain_text',
+                              text: 'Auto-Fix'
+                            },
+                            value: `autofix_${skill}`,
+                            action_id: 'autofix_skill'
+                          }
+                      ]
+                  }
+              ]
+          }
+        );
+    }
+
+    // Email
+    if (this.config.email) {
+      await this.sendEmail(
+        this.config.email.recipients.critical,
+        `Critical Issue: ${skill}`,
+        message
+      );
+    }
+}
+
+/**
+ * Notifica reporte semanal
+ */
+async notifyWeeklyReport(report: SystemHealthReport): Promise<void> {
+  const summary = this.formatReportSummary(report);
+
+    if (this.config.slack) {
+      await this.sendSlackMessage(
+        this.config.slack.channels.reports,
+
+                           📊
+        {
+          text: '    Weekly Skill System Report',
+          blocks: [
+           {
+             type: 'header',
+             text: {
+               type: 'plain_text',
+                      📊 Weekly Skill System Report'
+                text: '
+                }
+              },
+              {
+                type: 'section',
+                fields: [
+                  {
+                    type: 'mrkdwn',
+                    text: `*Total Skills:*\n${report.summary.totalSkills}`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Health Score:*\n${report.summary.overallHealth}/100`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Critical Issues:*\n${report.summary.criticalIssues}`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Activations:*\n${report.metrics.totalActivations}`
+                  }
+                ]
+              },
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: summary
+                }
+              },
+              {
+                type: 'actions',
+                elements: [
+                  {
+                    type: 'button',
+                    text: {
+                      type: 'plain_text',
+                      text: 'View Full Report'
+                    },
+                    url: `${process.env.DASHBOARD_URL}/reports/latest`
+                  }
+                ]
+              }
+          ]
+      }
+    );
+}
+}
+
+/**
+ * Notifica cuando skill fue auto-reparado
+ */
+
+                         ✅
+async notifyAutoFix(skill: string, fixDetails: FixDetails): Promise<void> {
+  const message = `       Auto-fixed issues in skill: *${skill}*\n\n` +
+    `*Issues resolved:*\n` +
+    fixDetails.resolvedIssues.map(i => `• ${i}`).join('\n') +
+    `\n\n*Actions taken:*\n` +
+    fixDetails.actions.map(a => `• ${a}`).join('\n');
+
+    if (this.config.slack) {
+      await this.sendSlackMessage(
+        this.config.slack.channels.general,
+        {
+          text: `Auto-fix completed for ${skill}`,
+          blocks: [
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: message
+              }
+            }
+          ]
+        }
+      );
+    }
+}
+
+/**
+ * Notifica predicciones importantes
+ */
+async notifyPrediction(prediction: PredictedNeed): Promise<void> {
+  if (prediction.confidence < 0.75) return; // Solo predicciones confiables
+
+    const message = this.formatPrediction(prediction);
+
+    if (this.config.slack) {
+      await this.sendSlackMessage(
+        this.config.slack.channels.general,
+
+              🔮
+        {
+          text: `    Skill System Prediction`,
+          blocks: [
+           {
+             type: 'section',
+             text: {
+                          type: 'mrkdwn',
+                          text: message
+                      }
+                  }
+              ]
+          }
+        );
+    }
+}
+
+// Métodos auxiliares privados
+
+private formatCriticalIssue(skill: string, issue: HealthIssue): string {
+  return `*Skill:* ${skill}\n` +
+   `*Issue:* ${issue.type}\n` +
+   `*Severity:* ${issue.severity}\n` +
+   `*Message:* ${issue.message}\n\n` +
+   `*Impact:* ${issue.impact}\n` +
+   `*Suggested Fix:* ${issue.suggestedFix}`;
+}
+
+private formatReportSummary(report: SystemHealthReport): string {
+ const topIssues = report.skillReports
+   .filter(s => s.healthScore < 70)
+   .sort((a, b) => a.healthScore - b.healthScore)
+   .slice(0, 3);
+
+    let summary = '*Key Highlights:*\n\n';
+
+    if (topIssues.length > 0) {
+      summary += '*Skills Needing Attention:*\n';
+      topIssues.forEach(skill => {
+        summary += `• ${skill.skillName} (${skill.healthScore}/100)\n`;
+      });
+      summary += '\n';
+    }
+
+    if (report.recommendations.length > 0) {
+      summary += '*Top Recommendations:*\n';
+      report.recommendations.slice(0, 3).forEach((rec, i) => {
+        summary += `${i + 1}. ${rec.title}\n`;
+      });
+    }
+
+    return summary;
+}
+
+private formatPrediction(prediction: PredictedNeed): string {
+             🔮
+      return `   *Prediction Alert*\n\n` +
+       `*Type:* ${prediction.type.toUpperCase()}\n` +
+       `*Confidence:* ${(prediction.confidence * 100).toFixed(0)}%\n\n` +
+       `*Reasoning:* ${prediction.reasoning}\n\n` +
+       `*Suggested Action:* ${prediction.suggestedAction}`;
+ }
+
+ private async sendSlackMessage(
+   channel: string,
+   payload: any
+ ): Promise<void> {
+   if (!this.config.slack?.webhookUrl) return;
+
+      await fetch(this.config.slack.webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          channel,
+          ...payload
+        })
+      });
+ }
+
+ private async sendEmail(
+   recipients: string[],
+   subject: string,
+   body: string
+ ): Promise<void> {
+   // Implementación de envío de email
+ }
+}
+```
+
+-----
+
+## PARTE 12: DASHBOARD INTERACTIVO
+
+### 12.1 Web Dashboard con Métricas en Tiempo Real
+
+```typescript
+// /skill-manager/dashboard/server.ts
+
+import express from 'express';
+import { SkillAnalyzer } from '../core/analyzer';
+import { ReportGenerator } from '../reporting/report-generator';
+
+const app = express();
+const analyzer = new SkillAnalyzer();
+const reportGenerator = new ReportGenerator();
+
+// Servir dashboard estático
+app.use(express.static('dashboard/public'));
+
+// API endpoints
+
+/**
+ * GET /api/skills
+ * Lista todos los skills con métricas básicas
+ */
+app.get('/api/skills', async (req, res) => {
+  try {
+    const skills = await getAllSkills();
+    const skillsWithMetrics = await Promise.all(
+      skills.map(async (skillName) => {
+        const report = await analyzer.generateHealthReport(skillName);
+        return {
+          name: skillName,
+          healthScore: report.healthScore,
+          activations: report.metrics?.totalActivations || 0,
+          lastActivated: report.metrics?.lastActivated,
+          issues: report.issues.length,
+          warnings: report.warnings.length
+        };
+      })
+    );
+
+    res.json(skillsWithMetrics);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/skills/:name
+ * Detalle completo de un skill
+ */
+app.get('/api/skills/:name', async (req, res) => {
+  try {
+    const report = await analyzer.generateHealthReport(req.params.name);
+    res.json(report);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/system/health
+ * Health general del sistema
+ */
+app.get('/api/system/health', async (req, res) => {
+  try {
+    const report = await reportGenerator.generateSystemReport('monthly');
+    res.json({
+      summary: report.summary,
+      metrics: report.metrics,
+      trends: report.systemTrends
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/activations/recent
+ * Activaciones recientes
+ */
+app.get('/api/activations/recent', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 50;
+    const activations = await getRecentActivations(limit);
+    res.json(activations);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/metrics/realtime
+ * Métricas en tiempo real (SSE)
+ */
+app.get('/api/metrics/realtime', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+ // Enviar métricas cada 5 segundos
+ const interval = setInterval(async () => {
+   try {
+     const metrics = await getCurrentMetrics();
+     res.write(`data: ${JSON.stringify(metrics)}\n\n`);
+   } catch (error) {
+     console.error('Error sending metrics:', error);
+   }
+ }, 5000);
+  req.on('close', () => {
+    clearInterval(interval);
+    res.end();
+  });
+});
+
+/**
+ * POST /api/skills/:name/validate
+ * Validar skill bajo demanda
+ */
+app.post('/api/skills/:name/validate', async (req, res) => {
+  try {
+    const validator = new SkillValidator();
+    const result = await validator.validateSkill(req.params.name);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/skills/:name/refactor
+ * Refactorizar skill bajo demanda
+ */
+app.post('/api/skills/:name/refactor', async (req, res) => {
+  try {
+    const organizer = new SkillOrganizer();
+    const result = await organizer.refactorMonolithicSkill(
+      req.params.name,
+      req.body.config || {}
+    );
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/reports/latest
+ * Último reporte generado
+ */
+app.get('/api/reports/latest', async (req, res) => {
+  try {
+    const report = await getLatestReport();
+    res.json(report);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+const PORT = process.env.PORT || 3030;
+
+              📊
+app.listen(PORT, () => {
+  console.log(`  Skill Dashboard running on http://localhost:${PORT}`);
+});
+```
+
+**Dashboard Frontend (React):**
+
+```tsx
+// /skill-manager/dashboard/public/src/App.tsx
+
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  LinearProgress,
+  Chip,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton
+} from '@mui/material';
+import {
+  Refresh as RefreshIcon,
+  Warning as WarningIcon,
+  CheckCircle as CheckIcon,
+  Error as ErrorIcon
+} from '@mui/icons-material';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
+interface SkillMetrics {
+  name: string;
+  healthScore: number;
+  activations: number;
+  issues: number;
+  warnings: number;
+}
+
+interface SystemHealth {
+  summary: {
+    totalSkills: number;
+    healthySkills: number;
+    overallHealth: number;
+    criticalIssues: number;
+  };
+  metrics: {
+    totalActivations: number;
+    avgAccuracy: number;
+  };
+}
+
+const App: React.FC = () => {
+ const [skills, setSkills] = useState<SkillMetrics[]>([]);
+ const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
+ const [realtimeMetrics, setRealtimeMetrics] = useState<any>(null);
+ const [loading, setLoading] = useState(true);
+
+ useEffect(() => {
+  loadData();
+
+  // SSE para métricas en tiempo real
+  const eventSource = new EventSource('/api/metrics/realtime');
+  eventSource.onmessage = (event) => {
+    setRealtimeMetrics(JSON.parse(event.data));
+  };
+
+   return () => eventSource.close();
+ }, []);
+
+ const loadData = async () => {
+  setLoading(true);
+  try {
+    const [skillsRes, healthRes] = await Promise.all([
+      fetch('/api/skills'),
+      fetch('/api/system/health')
+    ]);
+
+    setSkills(await skillsRes.json());
+    setSystemHealth(await healthRes.json());
+  } catch (error) {
+    console.error('Error loading data:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const getHealthColor = (score: number) => {
+  if (score >= 85) return '#10b981';
+  if (score >= 70) return '#3b82f6';
+  if (score >= 50) return '#f59e0b';
+  return '#ef4444';
+};
+
+const getHealthLabel = (score: number) => {
+  if (score >= 85) return 'Excellent';
+  if (score >= 70) return 'Good';
+  if (score >= 50) return 'Fair';
+  return 'Poor';
+};
+
+if (loading || !systemHealth) {
+  return (
+    <Box sx={{ width: '100%', mt: 2 }}>
+      <LinearProgress />
+    </Box>
+  );
+}
+
+return (
+ <Box sx={{ p: 3 }}>
+   {/* Header */}
+   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+
+     🎯
+     <Typography variant="h4" component="h1">
+          Skill System Dashboard
+     </Typography>
+     <IconButton onClick={loadData}>
+      <RefreshIcon />
+     </IconButton>
+   </Box>
+
+  {/* Summary Cards */}
+  <Grid container spacing={3} sx={{ mb: 3 }}>
+    <Grid item xs={12} sm={6} md={3}>
+     <Card>
+       <CardContent>
+        <Typography color="textSecondary" gutterBottom>
+     Overall Health
+   </Typography>
+   <Typography variant="h3">
+     {systemHealth.summary.overallHealth}
+     <Typography component="span" variant="h5" color="textSecondary">
+       /100
+     </Typography>
+   </Typography>
+   <Chip
+     label={getHealthLabel(systemHealth.summary.overallHealth)}
+     sx={{
+       mt: 1,
+       bgcolor: getHealthColor(systemHealth.summary.overallHealth),
+       color: 'white'
+     }}
+   />
+  </CardContent>
+ </Card>
+</Grid>
+
+<Grid item xs={12} sm={6} md={3}>
+ <Card>
+  <CardContent>
+   <Typography color="textSecondary" gutterBottom>
+     Total Skills
+   </Typography>
+   <Typography variant="h3">
+     {systemHealth.summary.totalSkills}
+   </Typography>
+   <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+     {systemHealth.summary.healthySkills} healthy
+   </Typography>
+  </CardContent>
+ </Card>
+</Grid>
+
+<Grid item xs={12} sm={6} md={3}>
+ <Card>
+  <CardContent>
+   <Typography color="textSecondary" gutterBottom>
+     Activations
+   </Typography>
+   <Typography variant="h3">
+     {systemHealth.metrics.totalActivations.toLocaleString()}
+   </Typography>
+   <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+     {realtimeMetrics?.activationsToday || 0} today
+   </Typography>
+   </CardContent>
+  </Card>
+ </Grid>
+
+ <Grid item xs={12} sm={6} md={3}>
+  <Card>
+   <CardContent>
+     <Typography color="textSecondary" gutterBottom>
+      Accuracy
+     </Typography>
+     <Typography variant="h3">
+      {(systemHealth.metrics.avgAccuracy * 100).toFixed(1)}%
+     </Typography>
+     <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+      Average
+     </Typography>
+   </CardContent>
+  </Card>
+ </Grid>
+</Grid>
+
+{/* Charts */}
+<Grid container spacing={3} sx={{ mb: 3 }}>
+  <Grid item xs={12} md={8}>
+   <Card>
+     <CardContent>
+      <Typography variant="h6" gutterBottom>
+       Activations Over Time
+      </Typography>
+      <ResponsiveContainer width="100%" height={300}>
+       <LineChart data={realtimeMetrics?.activationHistory || []}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="time" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="activations"
+          stroke="#8884d8"
+          strokeWidth={2}
+        />
+       </LineChart>
+      </ResponsiveContainer>
+     </CardContent>
+   </Card>
+  </Grid>
+ <Grid item xs={12} md={4}>
+  <Card>
+   <CardContent>
+     <Typography variant="h6" gutterBottom>
+      Health Distribution
+     </Typography>
+     <ResponsiveContainer width="100%" height={300}>
+      <PieChart>
+       <Pie
+         data={[
+           {
+             name: 'Excellent',
+             value: skills.filter(s => s.healthScore >= 85).length
+           },
+           {
+             name: 'Good',
+             value: skills.filter(s => s.healthScore >= 70 && s.healthScore < 85).length
+           },
+           {
+             name: 'Fair',
+             value: skills.filter(s => s.healthScore >= 50 && s.healthScore < 70).length
+           },
+           {
+             name: 'Poor',
+             value: skills.filter(s => s.healthScore < 50).length
+           }
+         ]}
+         cx="50%"
+         cy="50%"
+         labelLine={false}
+         label={(entry) => `${entry.name}: ${entry.value}`}
+         outerRadius={80}
+         fill="#8884d8"
+         dataKey="value"
+       >
+         <Cell fill="#10b981" />
+         <Cell fill="#3b82f6" />
+         <Cell fill="#f59e0b" />
+         <Cell fill="#ef4444" />
+       </Pie>
+       <Tooltip />
+      </PieChart>
+     </ResponsiveContainer>
+   </CardContent>
+  </Card>
+ </Grid>
+</Grid>
+{/* Skills List */}
+<Card>
+  <CardContent>
+   <Typography variant="h6" gutterBottom>
+     All Skills
+   </Typography>
+   <List>
+     {skills
+      .sort((a, b) => b.healthScore - a.healthScore)
+      .map((skill) => (
+        <ListItem
+          key={skill.name}
+          secondaryAction={
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+             {skill.issues > 0 && (
+               <Chip
+                 icon={<ErrorIcon />}
+                 label={`${skill.issues} errors`}
+                 color="error"
+                 size="small"
+               />
+             )}
+             {skill.warnings > 0 && (
+               <Chip
+                 icon={<WarningIcon />}
+                 label={`${skill.warnings} warnings`}
+                 color="warning"
+                 size="small"
+               />
+             )}
+             <Chip
+               label={`${skill.healthScore}/100`}
+               sx={{
+                 bgcolor: getHealthColor(skill.healthScore),
+                 color: 'white'
+               }}
+             />
+            </Box>
+          }
+        >
+          <ListItemText
+            primary={skill.name}
+            secondary={`${skill.activations} activations`}
+          />
+        </ListItem>
+      ))}
+   </List>
+  </CardContent>
+     </Card>
+    </Box>
+  );
+};
+
+export default App;
+```
+
+-----
+
+## PARTE 13: MEJORES PRÁCTICAS Y GUÍAS
+
+### 13.1 Guía de Creación de Skills de Alta Calidad
+
+```markdown
+# Skill Creation Best Practices Guide
+
+## Principios Fundamentales
+
+### 1. KISS - Keep It Simple and Specific
+
+**Malo:**
+```markdown
+# Development Guidelines
+
+This skill covers everything about development including frontend, backend,
+testing, deployment, monitoring, documentation, and team collaboration.
+```
+
+**Bueno:**
+
+```markdown
+# Frontend Component Development
+
+This skill provides patterns for creating React components using TypeScript,
+focusing on composition, props design, and reusability.
+```
+
+**Por qué:** Skills específicos se activan correctamente y son más útiles.
+
+-----
+
+### 2. Progressive Disclosure
+
+**Main File Structure:**
+
+```markdown
+# Skill Title
+## Overview (2-3 paragraphs)
+Brief description, when to use, related skills
+
+## Quick Reference (10-20 lines)
+Core principles, common patterns, quick checklist
+
+## Detailed Resources (links only)
+- [Pattern 1](resources/pattern-1.md)
+- [Pattern 2](resources/pattern-2.md)
+
+## Troubleshooting (common issues only)
+Issue: Description
+Solution: Brief fix
+```
+
+**Resource File Structure:**
+
+```markdown
+# Detailed Topic
+
+## Table of Contents
+- [Section 1](#section-1)
+- [Section 2](#section-2)
+
+## Section 1
+Detailed explanation with examples
+
+## Section 2
+More details
+```
+
+-----
+
+### 3. Example-Driven Content
+
+**Malo:**
+
+```markdown
+Components should use TypeScript for type safety.
+```
+
+**Bueno:**
+
+```markdown
+**Type-Safe Components**
+
+```tsx
+// Define props interface
+interface UserCardProps {
+  user: User;
+  onEdit?: (user: User) => void;
+}
+
+// Use in component
+export const UserCard = ({ user, onEdit }: UserCardProps) => {
+  // Component implementation
+};
+```
+
+**Why:** Types catch errors at compile time and improve IDE autocomplete.
+
+```
+---
+
+### 4. Actionable Checklists
+
+**Malo:**
+```markdown
+Make sure your code is good.
+```
+
+**Bueno:**
+
+```markdown
+**Pre-commit Checklist:**
+- [ ] All TypeScript errors resolved
+- [ ] Tests passing (npm test)
+- [ ] No console.log statements
+- [ ] Props interface exported
+- [ ] Component has display name
+```
+
+-----
+
+## Content Guidelines
+
+### Writing Style
+
+**DO:**
+
+- Use active voice: “Create a component” not “A component should be created”
+- Be specific: “Use useState for local state” not “Manage state properly”
+- Include examples: Show code, don’t just describe it
+- Use consistent terminology throughout the skill
+**DON’T:**
+
+- Use ambiguous phrases: “usually”, “sometimes”, “maybe”
+- Assume knowledge: Always define technical terms
+- Mix different conventions in examples
+- Include outdated information without marking it clearly
+
+### Code Examples
+
+**Requirements:**
+
+- Must be copy-pasteable and runnable
+- Include necessary imports
+- Show complete context, not fragments
+- Add comments explaining non-obvious parts
+- Use realistic names (not foo/bar unless teaching concept)
+
+**Good Example:**
+
+```tsx
+// Good: Complete, realistic example
+import { useState } from 'react';
+import { Button, TextField, Box } from '@mui/material';
+
+interface LoginFormProps {
+  onSubmit: (email: string, password: string) => Promise<void>;
+}
+
+export const LoginForm = ({ onSubmit }: LoginFormProps) => {
+ const [email, setEmail] = useState('');
+ const [password, setPassword] = useState('');
+ const [loading, setLoading] = useState(false);
+
+ const handleSubmit = async (e: React.FormEvent) => {
+   e.preventDefault();
+   setLoading(true);
+   try {
+     await onSubmit(email, password);
+   } finally {
+     setLoading(false);
+   }
+ };
+
+ return (
+  <Box component="form" onSubmit={handleSubmit}>
+    <TextField
+     label="Email"
+     value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      fullWidth
+      required
+     />
+     <TextField
+      label="Password"
+      type="password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      fullWidth
+      required
+     />
+     <Button
+      type="submit"
+      variant="contained"
+      disabled={loading}
+     >
+      {loading ? 'Logging in...' : 'Login'}
+     </Button>
+    </Box>
+  );
+};
+```
+
+-----
+
+## Trigger Configuration
+
+### Keywords
+
+**Principles:**
+
+- Include variations: “test”, “testing”, “tests”
+- Include tool names: “jest”, “vitest”, “cypress”
+- Include action verbs: “create”, “add”, “implement”
+- Avoid overly generic terms: “code”, “file”, “project”
+
+**Example:**
+
+```json
+{
+  "keywords": [
+    "test", "testing", "tests", "unit test",
+    "jest", "vitest", "cypress",
+    "mock", "mocking", "stub",
+    "test coverage", "tdd"
+  ]
+}
+```
+
+### Intent Patterns
+
+**Principles:**
+
+- Capture action + target: “(create|add).*?test”
+- Include “how to” patterns: “how to.*?test”
+- Include best practice queries: “best practice.*?testing”
+
+**Example:**
+
+```json
+{
+  "intentPatterns": [
+    "(create|add|write).*?(test|spec)",
+    "(how to|best practice).*?test",
+    "test.*?(pattern|strategy|approach)",
+    "(unit|integration|e2e).*?test"
+  ]
+}
+```
+
+### File Patterns
+
+**Principles:**
+
+- Be specific enough to avoid false positives
+- Use glob patterns effectively
+- Include common conventions
+
+**Example:**
+
+```json
+{
+  "pathPatterns": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/tests/**/*.ts",
+    "**/__tests__/**/*.ts"
+  ]
+}
+```
+
+-----
+
+## Maintenance Guidelines
+### Regular Updates
+
+**Monthly:**
+
+- Review for outdated information
+- Add new patterns discovered in use
+- Update examples with latest library versions
+- Check external links
+
+**Quarterly:**
+
+- Full content audit
+- Consolidate similar sections
+- Add missing topics identified through usage
+- Update metadata
+
+**Yearly:**
+
+- Major revision
+- Consider splitting if too large
+- Align with team/project changes
+- Archive deprecated content
+
+### Version Control
+
+**When to Bump Version:**
+
+- Major (2.0.0): Breaking changes, complete restructure
+- Minor (1.1.0): New sections, significant additions
+- Patch (1.0.1): Fixes, typos, small improvements
+
+**Changelog Format:**
+
+```markdown
+## [1.2.0] - 2024-11-01
+
+### Added
+- New section on React 19 features
+- Examples using async components
+
+### Changed
+- Updated MUI examples to v6
+- Improved hook patterns section
+
+### Fixed
+- Corrected import paths in examples
+- Fixed broken link to routing guide
+```
+-----
+
+## Quality Checklist
+
+Before committing a skill, verify:
+
+**Structure:**
+
+- [ ] Main file < 500 lines
+- [ ] Has all required sections
+- [ ] Resources properly linked
+- [ ] metadata.json is complete
+
+**Content:**
+
+- [ ] Examples are complete and runnable
+- [ ] No broken links
+- [ ] Consistent terminology
+- [ ] No typos or grammar errors
+
+**Triggers:**
+
+- [ ] Keywords cover common variations
+- [ ] Intent patterns capture typical queries
+- [ ] File patterns match project structure
+- [ ] No overly broad triggers
+
+**Testing:**
+
+- [ ] Validated with npm run skill:validate
+- [ ] Tested activation with sample prompts
+- [ ] Reviewed by peer (for major skills)
+- [ ] Token count is reasonable
+
+-----
+
+## Anti-Patterns to Avoid
+
+###     ❌ The Kitchen Sink
+**Problem:** Trying to cover everything in one skill
+
+**Example:**
+
+```
+web-development-complete-guide/
+└── SKILL.md (5000 lines covering HTML, CSS, JS, React, Node, databases, etc.)
+```
+
+**Solution:** Create focused, specific skills
+
+###   ❌ The Copy-Paste Documentation
+**Problem:** Just copying official docs without adding value
+
+**Example:**
+
+```markdown
+# React Documentation
+
+[Entire React documentation pasted here]
+```
+
+**Solution:** Distill to patterns, add project-specific context
+
+###   ❌ The Outdated Example
+**Problem:** Examples using deprecated APIs or old versions
+
+**Example:**
+
+```jsx
+// Don't do this - componentDidMount is legacy
+class MyComponent extends React.Component {
+  componentDidMount() {
+    // ...
+  }
+}
+```
+
+**Solution:** Keep examples current, mark legacy patterns clearly
+
+###   ❌ The Vague Guideline
+**Problem:** Guidelines without actionable advice
+
+**Example:**
+
+```markdown
+Make sure to write clean code and follow best practices.
+```
+
+**Solution:** Be specific with concrete examples
+
+###   ❌ The Monolithic Main File
+**Problem:** Everything in main file, no resources
+
+**Example:**
+
+```
+testing-guidelines/
+└── SKILL.md (2000 lines)
+```
+
+**Solution:** Extract detailed content to resources
+
+-----
+
+## Success Metrics
+
+Track these to ensure skill quality:
+
+- **Activation Rate:** > 1/week for general skills
+- **Accuracy:** > 80% of activations appropriate
+- **Health Score:** > 70
+- **Token Efficiency:** Main file < 7500 tokens
+- **Update Frequency:** At least quarterly
+- **User Satisfaction:** Subjective but important
+
+-----
+
+*This guide is a living document. Suggest improvements via pull request.*
+
+```
+---
+
+Continuaré con la Parte 14: Testing y Conclusiones en el siguiente mensaje...​
+```
+# SKILL MANAGER SYSTEM - PARTE 5: TESTING, CASOS AVANZADOS Y
+CONCLUSIÓN
+
+-----
+
+## PARTE 14: TESTING DEL SISTEMA DE SKILLS
+
+### 14.1 Suite de Tests para Skill Manager
+
+```typescript
+// /skill-manager/tests/validator.test.ts
+
+import { describe, it, expect, beforeEach } from 'vitest';
+import { SkillValidator } from '../core/validator';
+import { createTestSkill, cleanupTestSkills } from './helpers';
+
+describe('SkillValidator', () => {
+ let validator: SkillValidator;
+
+ beforeEach(() => {
+   validator = new SkillValidator();
+ });
+
+ afterAll(() => {
+   cleanupTestSkills();
+ });
+
+ describe('validateMainFileSize', () => {
+  it('should pass for skill under 500 lines', async () => {
+    const skillPath = await createTestSkill({
+      name: 'test-small-skill',
+      mainFileLines: 350
+    });
+
+    const result = await validator.validateSkill(skillPath);
+
+    expect(result.isValid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+    expect(result.metrics.mainFileLines).toBe(350);
+  });
+
+  it('should fail for skill over 500 lines', async () => {
+    const skillPath = await createTestSkill({
+      name: 'test-large-skill',
+      mainFileLines: 687
+    });
+
+    const result = await validator.validateSkill(skillPath);
+
+    expect(result.isValid).toBe(false);
+    expect(result.errors).toContainEqual(
+      expect.objectContaining({
+        type: 'MAIN_FILE_TOO_LARGE',
+        severity: 'error'
+      })
+    );
+  });
+
+  it('should warn when approaching limit', async () => {
+    const skillPath = await createTestSkill({
+      name: 'test-almost-large',
+      mainFileLines: 475
+    });
+
+    const result = await validator.validateSkill(skillPath);
+
+     expect(result.isValid).toBe(true);
+     expect(result.warnings).toContainEqual(
+       expect.objectContaining({
+         type: 'MAIN_FILE_APPROACHING_LIMIT'
+       })
+     );
+   });
+ });
+
+ describe('validateMainFileStructure', () => {
+  it('should detect missing required sections', async () => {
+    const skillPath = await createTestSkill({
+      name: 'test-incomplete',
+      content: `# Test Skill\n\nSome content but missing required sections.`
+    });
+
+    const result = await validator.validateSkill(skillPath);
+
+    expect(result.errors).toContainEqual(
+      expect.objectContaining({
+        type: 'MISSING_REQUIRED_SECTION',
+        message: expect.stringContaining('Overview')
+      })
+    );
+  });
+
+   it('should pass with all required sections', async () => {
+     const content = `
+# Test Skill
+
+## Overview
+Description of the skill
+
+## Quick Reference
+Core concepts here
+
+## Resources
+Links to detailed guides
+    `.trim();
+
+    const skillPath = await createTestSkill({
+      name: 'test-complete',
+      content
+    });
+    const result = await validator.validateSkill(skillPath);
+
+     expect(result.errors.filter(e => e.type === 'MISSING_REQUIRED_SECTION'))
+       .toHaveLength(0);
+   });
+ });
+
+ describe('validateResourceReferences', () => {
+   it('should detect broken resource links', async () => {
+     const content = `
+# Test Skill
+
+## Resources
+- [Missing Resource](resources/missing.md)
+    `.trim();
+
+    const skillPath = await createTestSkill({
+      name: 'test-broken-refs',
+      content
+    });
+
+    const result = await validator.validateSkill(skillPath);
+
+    expect(result.errors).toContainEqual(
+      expect.objectContaining({
+        type: 'BROKEN_RESOURCE_REFERENCE'
+      })
+    );
+  });
+
+   it('should pass with valid resource links', async () => {
+     const skillPath = await createTestSkill({
+       name: 'test-valid-refs',
+       content: `
+# Test Skill
+
+## Resources
+- [Valid Resource](resources/valid.md)
+      `.trim(),
+      resources: [
+        { filename: 'valid.md', content: '# Valid Resource\n\nContent here.' }
+      ]
+    });
+
+    const result = await validator.validateSkill(skillPath);
+
+    expect(result.errors.filter(e => e.type === 'BROKEN_RESOURCE_REFERENCE'))
+         .toHaveLength(0);
+   });
+ });
+
+ describe('calculateMetrics', () => {
+  it('should calculate accurate metrics', async () => {
+    const skillPath = await createTestSkill({
+      name: 'test-metrics',
+      mainFileLines: 250,
+      resources: [
+        { filename: 'resource1.md', lines: 100 },
+        { filename: 'resource2.md', lines: 150 }
+      ]
+    });
+
+        const result = await validator.validateSkill(skillPath);
+
+      expect(result.metrics).toMatchObject({
+        mainFileLines: 250,
+        resourceCount: 2,
+        totalLines: 500,
+        averageResourceSize: 125
+      });
+      expect(result.metrics.tokenEstimate).toBeGreaterThan(0);
+    });
+  });
+});
+```
+
+-----
+
+### 14.2 Tests de Integración del Sistema Completo
+
+```typescript
+// /skill-manager/tests/integration/skill-lifecycle.test.ts
+
+import { describe, it, expect } from 'vitest';
+import { execSync } from 'child_process';
+import path from 'path';
+import fs from 'fs/promises';
+
+describe('Skill Lifecycle Integration', () => {
+ const testSkillName = 'test-integration-skill';
+ const skillPath = path.join(process.cwd(), 'skills/test', testSkillName);
+
+ afterAll(async () => {
+  // Cleanup
+  await fs.rm(skillPath, { recursive: true, force: true });
+});
+
+it('should complete full skill lifecycle', async () => {
+  // PASO 1: Crear skill
+  console.log('Creating skill...');
+  execSync(
+    `npm run skill:create ${testSkillName} -- \
+      --type guidelines \
+      --category test \
+      --priority medium \
+      --no-interactive`,
+    { stdio: 'inherit' }
+  );
+
+ // Verificar que se creó
+ const exists = await fs.access(skillPath)
+   .then(() => true)
+   .catch(() => false);
+ expect(exists).toBe(true);
+
+ // Verificar estructura
+ const mainFile = await fs.readFile(
+   path.join(skillPath, 'SKILL.md'),
+   'utf-8'
+ );
+ expect(mainFile).toContain('# test-integration-skill');
+ expect(mainFile).toContain('## Overview');
+
+ // PASO 2: Validar skill inicial
+ console.log('Validating new skill...');
+ const validationOutput = execSync(
+   `npm run skill:validate ${testSkillName} -- --json`,
+   { encoding: 'utf-8' }
+ );
+ const validation = JSON.parse(validationOutput);
+
+ expect(validation.isValid).toBe(true);
+ expect(validation.metrics.mainFileLines).toBeLessThan(500);
+
+ // PASO 3: Agregar contenido que exceda límite
+ console.log('Adding content to exceed limit...');
+ const largeContent = Array(600)
+   .fill('Lorem ipsum dolor sit amet.\n')
+   .join('');
+
+ await fs.appendFile(
+  path.join(skillPath, 'SKILL.md'),
+  '\n\n' + largeContent
+);
+
+// PASO 4: Validar y verificar que falla
+console.log('Validating oversized skill...');
+const failedValidation = JSON.parse(
+  execSync(
+    `npm run skill:validate ${testSkillName} -- --json`,
+    { encoding: 'utf-8' }
+  )
+);
+
+expect(failedValidation.isValid).toBe(false);
+expect(failedValidation.errors).toContainEqual(
+  expect.objectContaining({ type: 'MAIN_FILE_TOO_LARGE' })
+);
+
+// PASO 5: Auto-refactor
+console.log('Auto-refactoring...');
+execSync(
+  `npm run skill:refactor ${testSkillName} -- \
+    --min-section-size 50 \
+    --preserve-context \
+    --create-index`,
+  { stdio: 'inherit' }
+);
+
+// PASO 6: Validar refactorizado
+console.log('Validating refactored skill...');
+const refactoredValidation = JSON.parse(
+  execSync(
+    `npm run skill:validate ${testSkillName} -- --json`,
+    { encoding: 'utf-8' }
+  )
+);
+
+expect(refactoredValidation.isValid).toBe(true);
+expect(refactoredValidation.metrics.mainFileLines).toBeLessThan(500);
+expect(refactoredValidation.metrics.resourceCount).toBeGreaterThan(0);
+
+// PASO 7: Verificar skill-rules.json actualizado
+console.log('Checking skill-rules.json...');
+const rulesContent = await fs.readFile(
+  'config/skill-rules.json',
+  'utf-8'
+);
+const rules = JSON.parse(rulesContent);
+
+expect(rules[testSkillName]).toBeDefined();
+   expect(rules[testSkillName].metadata).toMatchObject({
+     structure: 'progressive-disclosure'
+   });
+
+                ✅ Full lifecycle test passed!');
+    console.log('
+  });
+});
+```
+
+-----
+
+### 14.3 Tests de Performance
+
+```typescript
+// /skill-manager/tests/performance/activation-speed.test.ts
+
+import { describe, it, expect } from 'vitest';
+import { performance } from 'perf_hooks';
+import { UserPromptSubmitHook } from '../../hooks/user-prompt-submit';
+
+describe('Activation Performance', () => {
+ const hook = new UserPromptSubmitHook();
+
+ it('should activate skills in under 100ms', async () => {
+   const prompt = 'create a new React component with TypeScript';
+   const context = {
+     currentFile: '/src/components/UserCard.tsx'
+   };
+
+   const start = performance.now();
+   await hook.execute(prompt, context);
+   const duration = performance.now() - start;
+
+   expect(duration).toBeLessThan(100);
+   console.log(`Activation took ${duration.toFixed(2)}ms`);
+ });
+
+ it('should handle large skill-rules.json efficiently', async () => {
+   // Simular 100 skills en rules
+   const largeRules = {};
+   for (let i = 0; i < 100; i++) {
+     largeRules[`test-skill-${i}`] = {
+       type: 'guidelines',
+       enforcement: 'suggest',
+       priority: 'medium',
+       promptTriggers: {
+         keywords: [`keyword${i}`, `term${i}`],
+         intentPatterns: [`pattern${i}`]
+          },
+          fileTriggers: {
+            pathPatterns: [`**/${i}/**`],
+            contentPatterns: [`content${i}`]
+          }
+        };
+   }
+
+   // Override rules temporalmente
+   const originalLoadRules = hook['loadSkillRules'];
+   hook['loadSkillRules'] = async () => largeRules;
+
+   const start = performance.now();
+   await hook.execute('test prompt', {});
+   const duration = performance.now() - start;
+
+   // Restore
+   hook['loadSkillRules'] = originalLoadRules;
+
+   expect(duration).toBeLessThan(200);
+   console.log(`Large rules processing took ${duration.toFixed(2)}ms`);
+ });
+
+ it('should cache compiled regexes', async () => {
+   const prompt = 'test prompt';
+
+   // Primera ejecución (sin cache)
+   const start1 = performance.now();
+   await hook.execute(prompt, {});
+   const duration1 = performance.now() - start1;
+
+   // Segunda ejecución (con cache)
+   const start2 = performance.now();
+   await hook.execute(prompt, {});
+   const duration2 = performance.now() - start2;
+
+    expect(duration2).toBeLessThan(duration1 * 0.8); // 20% más rápido
+    console.log(`First: ${duration1.toFixed(2)}ms, Cached: ${duration2.toFixed(2)}ms`);
+  });
+});
+```
+
+-----
+
+### 14.4 Tests de Activation Accuracy
+
+```typescript
+// /skill-manager/tests/accuracy/activation-accuracy.test.ts
+import { describe, it, expect } from 'vitest';
+import { UserPromptSubmitHook } from '../../hooks/user-prompt-submit';
+
+describe('Activation Accuracy', () => {
+ const hook = new UserPromptSubmitHook();
+
+ describe('Frontend prompts', () => {
+  const testCases = [
+    {
+      prompt: 'create a new React component',
+      expectedSkills: ['frontend-dev-guidelines'],
+      description: 'Should activate on basic component creation'
+    },
+    {
+      prompt: 'how do I use hooks in React?',
+      expectedSkills: ['frontend-dev-guidelines'],
+      description: 'Should activate on hooks question'
+    },
+    {
+      prompt: 'implement state management with Zustand',
+      expectedSkills: ['frontend-dev-guidelines', 'state-management'],
+      description: 'Should activate multiple related skills'
+    },
+    {
+      prompt: 'style this button with MUI',
+      expectedSkills: ['frontend-dev-guidelines'],
+      description: 'Should activate on styling question'
+    }
+  ];
+
+  testCases.forEach(({ prompt, expectedSkills, description }) => {
+   it(description, async () => {
+     const result = await hook.matchSkills(prompt, {});
+     const activatedSkills = result.map(r => r.name);
+
+       expectedSkills.forEach(skill => {
+         expect(activatedSkills).toContain(skill);
+       });
+     });
+   });
+ });
+
+ describe('Backend prompts', () => {
+  const testCases = [
+   {
+     prompt: 'create a new API endpoint',
+     expectedSkills: ['backend-dev-guidelines'],
+      description: 'Should activate on API creation'
+    },
+    {
+      prompt: 'add error handling to controller',
+      expectedSkills: ['backend-dev-guidelines', 'error-handling'],
+      description: 'Should activate on error handling'
+    },
+    {
+      prompt: 'write a Prisma query',
+      expectedSkills: ['backend-dev-guidelines', 'database-patterns'],
+      description: 'Should activate on database query'
+    }
+  ];
+
+  testCases.forEach(({ prompt, expectedSkills, description }) => {
+   it(description, async () => {
+     const result = await hook.matchSkills(prompt, {});
+     const activatedSkills = result.map(r => r.name);
+
+       expectedSkills.forEach(skill => {
+         expect(activatedSkills).toContain(skill);
+       });
+     });
+   });
+ });
+
+ describe('File-based activation', () => {
+  it('should activate based on file path', async () => {
+    const result = await hook.matchSkills('fix this bug', {
+      currentFile: '/src/components/UserCard.tsx'
+    });
+
+    const activatedSkills = result.map(r => r.name);
+    expect(activatedSkills).toContain('frontend-dev-guidelines');
+  });
+
+  it('should activate based on file content', async () => {
+    const fileContent = `
+import { Router } from 'express';
+export const userRouter = Router();
+    `;
+
+   const result = await hook.matchSkills('update this', {
+     currentFile: '/backend/routes/users.ts',
+     fileContent
+   });
+
+   const activatedSkills = result.map(r => r.name);
+    expect(activatedSkills).toContain('backend-dev-guidelines');
+  });
+});
+
+describe('False positive prevention', () => {
+ it('should NOT activate on unrelated prompts', async () => {
+   const unrelatedPrompts = [
+     'what is the weather today?',
+     'explain quantum physics',
+     'translate this to Spanish',
+     'tell me a joke'
+   ];
+
+   for (const prompt of unrelatedPrompts) {
+     const result = await hook.matchSkills(prompt, {});
+     expect(result).toHaveLength(0);
+   }
+ });
+
+ it('should NOT activate frontend skill on backend work', async () => {
+   const result = await hook.matchSkills('create database migration', {
+     currentFile: '/backend/migrations/001_add_users.ts'
+   });
+
+    const activatedSkills = result.map(r => r.name);
+    expect(activatedSkills).not.toContain('frontend-dev-guidelines');
+  });
+});
+
+describe('Priority ordering', () => {
+ it('should prioritize high-priority skills', async () => {
+   const result = await hook.matchSkills(
+     'verify database schema before deployment',
+     {}
+   );
+
+   // database-verification tiene enforcement: "block" y prioridad alta
+   expect(result[0]?.name).toBe('database-verification');
+ });
+
+ it('should order by priority when multiple match', async () => {
+   const result = await hook.matchSkills(
+     'create React component with tests',
+     {}
+   );
+
+  const priorities = result.map(r => r.priority);
+        // Verificar que están ordenados: high -> medium -> low
+        for (let i = 0; i < priorities.length - 1; i++) {
+          const current = priorities[i];
+          const next = priorities[i + 1];
+
+          const priorityOrder = { high: 3, medium: 2, low: 1 };
+          expect(priorityOrder[current]).toBeGreaterThanOrEqual(priorityOrder[next]);
+      }
+    });
+  });
+});
+```
+
+-----
+
+## PARTE 15: CASOS AVANZADOS Y EDGE CASES
+
+### 15.1 Skill Dinámico Generado por IA
+
+```typescript
+// /skill-manager/advanced/dynamic-skill-generator.ts
+
+interface DynamicSkillConfig {
+  topic: string;
+  context: string[];
+  existingPatterns: string[];
+  projectSpecific: boolean;
+}
+
+class DynamicSkillGenerator {
+ /**
+  * Genera un skill dinámico basado en patrones emergentes
+  * del proyecto usando Claude API
+  */
+ async generateSkillFromPatterns(
+   config: DynamicSkillConfig
+
+                      🤖
+ ): Promise<GeneratedSkill> {
+   console.log(`\n    Generating dynamic skill for: ${config.topic}`);
+
+   // 1. Analizar código existente
+   const codePatterns = await this.analyzeExistingCode(config.context);
+
+   // 2. Generar contenido con Claude
+   const skillContent = await this.generateContentWithClaude({
+     topic: config.topic,
+     patterns: codePatterns,
+     existingPatterns: config.existingPatterns
+   });
+    // 3. Generar triggers inteligentes
+    const triggers = await this.generateSmartTriggers({
+      topic: config.topic,
+      content: skillContent
+    });
+
+    // 4. Crear estructura del skill
+    const skill: GeneratedSkill = {
+      name: this.topicToSkillName(config.topic),
+      content: skillContent,
+      triggers,
+      metadata: {
+        generated: true,
+        generatedAt: new Date().toISOString(),
+        basedOn: config.context,
+        confidence: await this.calculateConfidence(skillContent)
+      }
+    };
+
+    // 5. Validar skill generado
+    const validation = await this.validateGeneratedSkill(skill);
+
+
+                    ⚠️
+    if (!validation.isValid) {
+      console.log('      Generated skill has issues, refining...');
+      return this.refineGeneratedSkill(skill, validation.issues);
+    }
+
+    return skill;
+}
+
+/**
+ * Analiza código existente para extraer patrones
+ */
+private async analyzeExistingCode(
+  contextPaths: string[]
+): Promise<CodePattern[]> {
+  const patterns: CodePattern[] = [];
+
+    for (const contextPath of contextPaths) {
+     const files = await this.findRelevantFiles(contextPath);
+
+     for (const file of files) {
+      const content = await fs.readFile(file, 'utf-8');
+
+      // Extraer imports comunes
+      const imports = this.extractImports(content);
+             // Extraer patrones de código
+             const codePatterns = this.extractCodePatterns(content);
+
+             // Extraer naming conventions
+             const namingPatterns = this.extractNamingPatterns(content);
+
+             patterns.push({
+               file,
+               imports,
+               codePatterns,
+               namingPatterns
+             });
+         }
+     }
+
+     return this.consolidatePatterns(patterns);
+ }
+
+ /**
+  * Genera contenido del skill usando Claude API
+  */
+ private async generateContentWithClaude(params: {
+   topic: string;
+   patterns: CodePattern[];
+   existingPatterns: string[];
+ }): Promise<string> {
+   const prompt = `
+You are creating a skill guide for a development team. The skill should follow this format:
+
+# ${params.topic}
+
+## Overview
+Brief description (2-3 paragraphs)
+
+## Quick Reference
+Core principles and common patterns (with code examples)
+
+## Detailed Resources
+Links to resource files for specific topics
+
+Based on these existing code patterns in the project:
+${JSON.stringify(params.patterns, null, 2)}
+
+And these existing patterns to build upon:
+${params.existingPatterns.join('\n')}
+
+Create a comprehensive skill guide that:
+1. Documents the patterns actually used in this project
+2. Provides clear, copy-pasteable examples
+3. Includes checklists for common tasks
+4. Follows best practices
+5. Is under 400 lines for the main file
+
+Generate the skill content in markdown format.
+  `.trim();
+
+     const response = await fetch('https://api.anthropic.com/v1/messages', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'anthropic-version': '2023-06-01'
+       },
+       body: JSON.stringify({
+         model: 'claude-sonnet-4-20250514',
+         max_tokens: 4000,
+         messages: [{ role: 'user', content: prompt }]
+       })
+     });
+
+     const data = await response.json();
+     return data.content[0].text;
+ }
+
+ /**
+  * Genera triggers inteligentes basados en contenido
+  */
+ private async generateSmartTriggers(params: {
+   topic: string;
+   content: string;
+ }): Promise<SkillTriggers> {
+   // Extraer keywords del contenido
+   const keywords = this.extractKeywordsFromContent(params.content);
+
+     // Generar intent patterns
+     const intentPatterns = this.generateIntentPatterns(params.topic, keywords);
+
+     // Generar file patterns basados en imports mencionados
+     const filePatterns = this.extractFilePatterns(params.content);
+
+     // Generar content patterns basados en code examples
+     const contentPatterns = this.extractContentPatterns(params.content);
+
+     return {
+      keywords,
+      intentPatterns,
+      filePatterns,
+      contentPatterns
+    };
+}
+
+/**
+ * Calcula confianza del skill generado
+ */
+private async calculateConfidence(content: string): Promise<number> {
+  let confidence = 1.0;
+
+    // Penalizar si hay muy pocos ejemplos
+    const codeBlocks = (content.match(/```/g) || []).length / 2;
+    if (codeBlocks < 3) confidence *= 0.8;
+
+    // Penalizar si es muy corto
+    const lines = content.split('\n').length;
+    if (lines < 100) confidence *= 0.7;
+
+    // Penalizar si faltan secciones
+    if (!content.includes('## Overview')) confidence *= 0.6;
+    if (!content.includes('## Quick Reference')) confidence *= 0.7;
+
+    // Bonus si tiene checklists
+    if (content.includes('- [ ]')) confidence *= 1.1;
+
+    return Math.min(1.0, confidence);
+}
+
+/**
+ * Refina skill generado basándose en issues
+ */
+private async refineGeneratedSkill(
+  skill: GeneratedSkill,
+  issues: ValidationIssue[]
+): Promise<GeneratedSkill> {
+  // Aplicar fixes automáticos
+  let refinedContent = skill.content;
+
+    for (const issue of issues) {
+     switch (issue.type) {
+       case 'MISSING_SECTION':
+         refinedContent = this.addMissingSection(refinedContent, issue.section);
+         break;
+
+      case 'TOO_SHORT':
+       refinedContent = await this.expandContent(refinedContent);
+       break;
+                case 'FEW_EXAMPLES':
+                 refinedContent = await this.addMoreExamples(refinedContent);
+                 break;
+            }
+        }
+
+        return {
+          ...skill,
+          content: refinedContent,
+          metadata: {
+            ...skill.metadata,
+            refined: true,
+            refinements: issues.length
+          }
+        };
+    }
+}
+
+/**
+ * Uso del generador
+ */
+async function generateCustomSkill() {
+  const generator = new DynamicSkillGenerator();
+
+    const skill = await generator.generateSkillFromPatterns({
+      topic: 'Custom Hook Patterns',
+      context: [
+        '/src/hooks',
+        '/src/components'
+      ],
+      existingPatterns: [
+        'Use TanStack Query for data fetching',
+        'Always memoize expensive computations',
+        'Custom hooks start with "use"'
+      ],
+      projectSpecific: true
+    });
+
+    console.log('Generated skill:', skill.name);
+    console.log('Confidence:', skill.metadata.confidence);
+
+    // Crear skill en filesystem
+    const organizer = new SkillOrganizer();
+    await organizer.createSkillFromGenerated(skill);
+
+    // Actualizar skill-rules.json
+    const integrator = new SkillIntegrator();
+    await integrator.addSkillToRules(skill.name, {
+   type: 'guidelines',
+   enforcement: 'suggest',
+   priority: 'medium',
+   promptTriggers: skill.triggers.promptTriggers,
+   fileTriggers: skill.triggers.fileTriggers,
+   metadata: {
+     ...skill.metadata,
+     autoGenerated: true
+   }
+ });
+
+ console.log(' ✅ Dynamic skill created and integrated!');
+}
+```
+
+-----
+
+### 15.2 Skill Versionado con Rollback
+
+```typescript
+// /skill-manager/versioning/skill-versioner.ts
+
+interface SkillVersion {
+  version: string;
+  content: string;
+  metadata: any;
+  triggers: any;
+  timestamp: string;
+  author: string;
+  changelog: string;
+}
+
+class SkillVersioner {
+ private versionsDir = '/skills/.versions';
+
+ /**
+  * Crear nueva versión de un skill
+  */
+ async createVersion(
+   skillName: string,
+   changes: {
+     content?: string;
+     metadata?: any;
+     triggers?: any;
+     changelog: string;
+   }
+ ): Promise<string> {
+   // Cargar versión actual
+    const currentVersion = await this.getCurrentVersion(skillName);
+
+    // Calcular nueva versión
+    const newVersion = this.bumpVersion(
+      currentVersion.version,
+      this.determineVersionType(changes.changelog)
+    );
+
+    // Crear snapshot de versión actual
+    await this.saveVersionSnapshot(skillName, currentVersion);
+
+    // Aplicar cambios
+    const newContent = changes.content || currentVersion.content;
+    const newMetadata = { ...currentVersion.metadata, ...changes.metadata };
+    const newTriggers = { ...currentVersion.triggers, ...changes.triggers };
+
+    // Guardar nueva versión
+    const version: SkillVersion = {
+      version: newVersion,
+      content: newContent,
+      metadata: newMetadata,
+      triggers: newTriggers,
+      timestamp: new Date().toISOString(),
+      author: process.env.USER || 'system',
+      changelog: changes.changelog
+    };
+
+    await this.saveVersion(skillName, version);
+
+    // Actualizar archivos del skill
+    await this.applyVersion(skillName, version);
+
+    return newVersion;
+}
+
+/**
+ * Rollback a versión anterior
+ */
+async rollback(
+  skillName: string,
+  targetVersion: string
+
+                      🔄
+): Promise<void> {
+  console.log(`\n     Rolling back ${skillName} to version ${targetVersion}`);
+
+    // Cargar versión objetivo
+    const version = await this.loadVersion(skillName, targetVersion);
+
+    if (!version) {
+        throw new Error(`Version ${targetVersion} not found for ${skillName}`);
+    }
+
+    // Crear snapshot de versión actual antes de rollback
+    const currentVersion = await this.getCurrentVersion(skillName);
+    await this.saveVersionSnapshot(skillName, currentVersion);
+
+    // Aplicar versión objetivo
+    await this.applyVersion(skillName, version);
+
+    // Actualizar metadata con info de rollback
+    version.metadata.rolledBack = true;
+    version.metadata.rolledBackFrom = currentVersion.version;
+    version.metadata.rolledBackAt = new Date().toISOString();
+
+    await this.updateMetadata(skillName, version.metadata);
+
+    console.log(`  ✅ Rolled back to version ${targetVersion}`);
+}
+
+/**
+ * Comparar dos versiones
+ */
+async diff(
+  skillName: string,
+  version1: string,
+  version2: string
+): Promise<VersionDiff> {
+  const v1 = await this.loadVersion(skillName, version1);
+  const v2 = await this.loadVersion(skillName, version2);
+
+    return {
+      contentChanges: this.diffContent(v1.content, v2.content),
+      metadataChanges: this.diffMetadata(v1.metadata, v2.metadata),
+      triggerChanges: this.diffTriggers(v1.triggers, v2.triggers),
+      summary: this.generateDiffSummary(v1, v2)
+    };
+}
+
+/**
+ * Listar todas las versiones de un skill
+ */
+async listVersions(skillName: string): Promise<SkillVersion[]> {
+  const versionsPath = path.join(this.versionsDir, skillName);
+
+    if (!await this.directoryExists(versionsPath)) {
+      return [];
+    }
+    const files = await fs.readdir(versionsPath);
+    const versions: SkillVersion[] = [];
+
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        const content = await fs.readFile(
+          path.join(versionsPath, file),
+          'utf-8'
+        );
+        versions.push(JSON.parse(content));
+      }
+    }
+
+    return versions.sort((a, b) =>
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+}
+
+// Métodos privados de utilidad
+
+private bumpVersion(
+  currentVersion: string,
+  type: 'major' | 'minor' | 'patch'
+): string {
+  const [major, minor, patch] = currentVersion.split('.').map(Number);
+
+    switch (type) {
+      case 'major':
+       return `${major + 1}.0.0`;
+      case 'minor':
+       return `${major}.${minor + 1}.0`;
+      case 'patch':
+       return `${major}.${minor}.${patch + 1}`;
+    }
+}
+
+private determineVersionType(
+  changelog: string
+): 'major' | 'minor' | 'patch' {
+  const lower = changelog.toLowerCase();
+
+    if (lower.includes('breaking') || lower.includes('major')) {
+      return 'major';
+    }
+
+    if (lower.includes('feature') || lower.includes('add')) {
+      return 'minor';
+        }
+
+        return 'patch';
+    }
+
+    private async applyVersion(
+      skillName: string,
+      version: SkillVersion
+    ): Promise<void> {
+      const skillPath = await findSkillPath(skillName);
+
+        // Escribir contenido
+        await fs.writeFile(
+          path.join(skillPath, 'SKILL.md'),
+          version.content
+        );
+
+        // Actualizar metadata
+        await fs.writeFile(
+          path.join(skillPath, 'metadata.json'),
+          JSON.stringify(version.metadata, null, 2)
+        );
+
+        // Actualizar triggers en skill-rules.json
+        const integrator = new SkillIntegrator();
+        await integrator.updateSkillTriggers(skillName, version.triggers);
+    }
+
+    private diffContent(content1: string, content2: string): ContentDiff {
+     // Implementar diff line-by-line
+     const lines1 = content1.split('\n');
+     const lines2 = content2.split('\n');
+
+        const added: number[] = [];
+        const removed: number[] = [];
+        const modified: number[] = [];
+
+        // Algoritmo simple de diff
+        // (en producción usarías una librería como 'diff')
+
+        return { added, removed, modified };
+    }
+}
+
+/**
+ * Uso del versionador
+ */
+async function versioningExample() {
+ const versioner = new SkillVersioner();
+
+ // Crear nueva versión con cambios
+ const newVersion = await versioner.createVersion('frontend-dev-guidelines', {
+   content: updatedContent,
+   changelog: 'feat: Add React 19 patterns and update examples'
+ });
+
+ console.log(`Created version ${newVersion}`);
+
+ // Listar historial
+ const versions = await versioner.listVersions('frontend-dev-guidelines');
+ console.log('Version history:');
+ versions.forEach(v => {
+   console.log(` ${v.version} - ${v.timestamp} - ${v.changelog}`);
+ });
+
+ // Comparar versiones
+ const diff = await versioner.diff(
+   'frontend-dev-guidelines',
+   '1.0.0',
+   '2.0.0'
+ );
+ console.log('Changes:', diff.summary);
+
+ // Rollback si es necesario
+ if (somethingWentWrong) {
+   await versioner.rollback('frontend-dev-guidelines', '1.5.0');
+ }
+}
+```
+
+-----
+
+### 15.3 A/B Testing de Skills
+
+```typescript
+// /skill-manager/experiments/skill-ab-testing.ts
+
+interface SkillExperiment {
+  id: string;
+  skillName: string;
+  variants: {
+    control: SkillVariant;
+    treatment: SkillVariant;
+  };
+  allocation: number; // 0.5 = 50/50 split
+  startDate: string;
+    endDate?: string;
+    metrics: ExperimentMetrics;
+}
+
+interface SkillVariant {
+  name: string;
+  triggers: any;
+  content?: string;
+  description: string;
+}
+
+interface ExperimentMetrics {
+  control: VariantMetrics;
+  treatment: VariantMetrics;
+}
+
+interface VariantMetrics {
+  activations: number;
+  appropriateActivations: number;
+  avgTokensUsed: number;
+  avgResponseQuality: number;
+  userSatisfaction: number;
+}
+
+class SkillABTester {
+ private experiments: Map<string, SkillExperiment> = new Map();
+
+    /**
+     * Crear nuevo experimento A/B
+     */
+    async createExperiment(
+      skillName: string,
+      treatmentVariant: Partial<SkillVariant>,
+      options: {
+        allocation?: number;
+        duration?: number; // días
+      } = {}
+    ): Promise<string> {
+      const experimentId = `exp_${Date.now()}`;
+
+     // Cargar skill actual (control)
+     const currentSkill = await this.loadSkill(skillName);
+
+     const experiment: SkillExperiment = {
+      id: experimentId,
+      skillName,
+      variants: {
+        control: {
+

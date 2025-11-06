@@ -1,0 +1,233 @@
+{
+  "name": "MemTech MCP Server",
+  "description": "Access and search Skills Fabric documentation, skills, and context through MemTech Universal Memory System",
+  "version": "1.0.0",
+  "author": "Skills Fabric Team",
+  "license": "MIT",
+  "homepage": "https://github.com/skills-fabrik/memtech-mcp-server",
+  "capabilities": {
+    "tools": {
+      "listChanged": true
+    },
+    "resources": {
+      "listChanged": true
+    },
+    "logging": {}
+  },
+  "runtime": {
+    "type": "node",
+    "command": "node",
+    "args": ["dist/index.js"],
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "tools": [
+    {
+      "name": "memtech_search",
+      "description": "Search for documents, skills, and context in the MemTech memory system using full-text search",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query (keywords, phrases, or questions)"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of results to return (default: 10)",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 10
+          },
+          "filter": {
+            "type": "object",
+            "description": "Optional filters to narrow results",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Filter by type: 'doc', 'skill', 'event'",
+                "enum": ["doc", "skill", "event"]
+              },
+              "category": {
+                "type": "string",
+                "description": "Filter by category (e.g., 'architecture', 'guardrail')"
+              },
+              "tags": {
+                "type": "array",
+                "description": "Filter by tags"
+              }
+            }
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "memtech_get",
+      "description": "Get a specific document or resource by its path",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to the resource (e.g., 'docs/architecture/memtech.md')"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "memtech_index",
+      "description": "Index a new document into MemTech for future searchability",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path where the document should be stored"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the document"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata for the document",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Type of document (doc, skill, note)"
+              },
+              "category": {
+                "type": "string",
+                "description": "Category or topic"
+              },
+              "tags": {
+                "type": "array",
+                "description": "Tags for categorization"
+              }
+            }
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "memtech_query",
+      "description": "Query MemTech for events, activations, or historical data",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of event to query (activation, query, error, etc.)"
+          },
+          "filters": {
+            "type": "object",
+            "description": "Additional filters for the query",
+            "properties": {
+              "skill": {
+                "type": "string",
+                "description": "Filter by skill name"
+              },
+              "from": {
+                "type": "string",
+                "description": "Start date (ISO 8601)"
+              },
+              "to": {
+                "type": "string",
+                "description": "End date (ISO 8601)"
+              }
+            }
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of results (default: 50)",
+            "default": 50
+          }
+        },
+        "required": ["type"]
+      }
+    },
+    {
+      "name": "memtech_stats",
+      "description": "Get statistics about the MemTech system (cache usage, database stats, etc.)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "memtech_enrich_context",
+      "description": "Enrich a prompt or question with relevant context from MemTech",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The prompt or question to enrich with context"
+          },
+          "context_size": {
+            "type": "number",
+            "description": "Desired context size: 'brief', 'standard', or 'comprehensive'",
+            "enum": ["brief", "standard", "comprehensive"],
+            "default": "standard"
+          }
+        },
+        "required": ["prompt"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "memtech://docs/{path=*}",
+      "description": "Access documentation files from the Skills Fabric repository",
+      "mimeType": "text/markdown"
+    },
+    {
+      "name": "memtech://skills/{name=*}",
+      "description": "Access skill definitions and metadata",
+      "mimeType": "text/markdown"
+    },
+    {
+      "name": "memtech://registry/{skill}",
+      "description": "Access the skills registry index",
+      "mimeType": "application/json"
+    },
+    {
+      "name": "memtech://config",
+      "description": "Access MemTech system configuration",
+      "mimeType": "application/json"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "memtech_context_research",
+      "description": "Generate a research prompt enriched with MemTech context for investigating a topic",
+      "arguments": [
+        {
+          "name": "topic",
+          "description": "The topic to research",
+          "required": true
+        },
+        {
+          "name": "depth",
+          "description": "Depth of research: 'surface', 'detailed', 'exhaustive'",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "memtech_skill_guidance",
+      "description": "Get guidance on implementing or using a specific skill from MemTech documentation",
+      "arguments": [
+        {
+          "name": "skill",
+          "description": "Name of the skill",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

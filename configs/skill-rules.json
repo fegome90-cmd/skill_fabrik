@@ -1,25 +1,252 @@
 {
-  "database-verification": {
+  "backend-architecture-patterns": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "arquitectura",
+        "backend",
+        "ddd",
+        "cqrs",
+        "event",
+        "sourcing",
+        "hexagonal",
+        "clean",
+        "architecture",
+        "patrones",
+        "aggregates",
+        "domain",
+        "events",
+        "repositories"
+      ],
+      "intentPatterns": [
+        "(implementar|crear|design|disenar|arquitectura|pattern|patron).*(ddd|domain|aggregate|cqrs|hexagonal|clean)",
+        "(estructurar|organizar|refactor).*(backend|servicio|service|domain|domain-driven)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{domain,application,infrastructure,interfaces}/**/*.{ts,js}",
+        "**/{core,adapters}/{ports,entities,use-cases}/**/*.{ts,js}"
+      ],
+      "contentPatterns": [
+        "export\\s+(class|interface)\\s+\\w+(Aggregate|Entity|ValueObject|Repository)",
+        "class\\s+\\w+(Aggregate|Service|Handler)",
+        "interface\\s+\\w+(Repository|Service|Port)"
+      ]
+    }
+  },
+  "api-design-and-testing": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "threshold": 0.55,
+    "promptTriggers": {
+      "keywords": [
+        "api",
+        "design",
+        "testing",
+        "rest",
+        "graphql",
+        "grpc",
+        "endpoints",
+        "routes",
+        "controllers",
+        "swagger",
+        "openapi",
+        "schema",
+        "validation",
+        "query",
+        "mutation",
+        "subscription",
+        "http",
+        "status",
+        "post",
+        "get",
+        "put",
+        "delete",
+        "patch",
+        "payload",
+        "request",
+        "response",
+        "verbo",
+        "http",
+        "restful",
+        "crud"
+      ],
+      "intentPatterns": [
+        "(crear|diseñar|implementar|design|desarrollar).*(api|rest|graphql|grpc|restful)",
+        "(crear|implementar|agregar).*(endpoint|route|controller|verbo)",
+        "(testing|test|testear).*(api|rest|graphql|grpc|endpoint|post|get)",
+        "(documentar|documentacion|especificar).*(openapi|swagger|schema|api)",
+        "(configurar|setup).*(swagger|openapi|schema|validation)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{routes,routers,controllers}/**/*.{ts,js}",
+        "**/api/**/*.{ts,js}",
+        "**/{graphql,resolvers,types}/**/*.{ts,js}",
+        "**/{proto,grpc}/**/*.{ts,js}"
+      ],
+      "contentPatterns": [
+        "router\\.(get|post|put|patch|delete)\\(",
+        "app\\.(get|post|put|patch|delete)\\(",
+        "export\\s+(class|const)\\s+\\w+Controller",
+        "export\\s+(type|interface)\\s+\\w+(Input|Type|Query|Mutation)",
+        "type\\s+Query\\s*=",
+        "service\\s+\\w+Service\\s*{"
+      ]
+    }
+  },
+  "ci-cd-pipelines": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "pipeline",
+        "ci",
+        "cd",
+        "deploy",
+        "github",
+        "actions",
+        "gitlab",
+        "ci",
+        "jenkins",
+        "automate",
+        "deployment",
+        "build",
+        "testing",
+        "workflow",
+        "automated"
+      ],
+      "intentPatterns": [
+        "(implementar|crear|configurar|pipeline|ci|cd|deploy|deployment).*(github|gitlab|jenkins|workflow)",
+        "(automatizar|automate).*(build|test|deploy|testing|workflow)",
+        "(setup|configurar).*(ci/cd|pipeline|github-actions|gitlab-ci)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/.github/workflows/**/*",
+        "**/.gitlab-ci.yml",
+        "**/Jenkinsfile",
+        "**/jenkins/**/*"
+      ],
+      "contentPatterns": [
+        "name:\\s+(pipeline|workflow|ci|cd)",
+        "on:\\s+(push|pull_request|workflow)",
+        "jobs:",
+        "stages:",
+        "script:",
+        "pipeline\\s*{",
+        "steps:",
+        "actions/checkout",
+        "uses:\\s+actions/"
+      ]
+    }
+  },
+  "plan-architect": {
     "type": "guideline",
     "enforcement": "suggest",
     "priority": "medium",
     "promptTriggers": {
       "keywords": [
-        "bloquea",
-        "mutaciones",
-        "masivas",
-        "filtro",
-        "operaciones",
-        "destructivas",
-        "inseguras."
+        "genera",
+        "planes",
+        "estructurados",
+        "siguiendo",
+        "metodología",
+        "cloop",
+        "(clarify",
+        "layout",
+        "operate",
+        "observe"
       ]
     },
     "fileTriggers": {}
   },
-  "secrets-and-config": {
+  "visual-regression-testing": {
     "type": "guideline",
-    "enforcement": "suggest",
-    "priority": "medium",
+    "enforcement": "require",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "visual",
+        "regression",
+        "testing",
+        "cli",
+        "output",
+        "consistencia",
+        "snapshots",
+        "formatting"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "error-pattern-standardization": {
+    "type": "guideline",
+    "enforcement": "require",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "error",
+        "patterns",
+        "standardization",
+        "exit-codes",
+        "consistency",
+        "handling",
+        "messages",
+        "debugging"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "database-verification": {
+    "type": "guardrail",
+    "enforcement": "block",
+    "priority": "critical",
+    "promptTriggers": {
+      "keywords": [
+        "aplica",
+        "bloqueo",
+        "mutaciones",
+        "masivas",
+        "filtro",
+        "previene",
+        "operaciones",
+        "destructivas",
+        "inseguras."
+      ],
+      "intentPatterns": [
+        "(query|consulta|operaci[oó]n|mutaci[oó]n|update|delete|insert).*(masiv[oa]|bulk|riesgo|peligros[ao]|sin\\s+where)",
+        "(revisar|auditar).*(findMany|updateMany|deleteMany)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{repositories,repos,db,prisma,migrations}/**/*.{ts,js,sql}"
+      ],
+      "contentPatterns": [
+        "deleteMany\\([^)]*\\)(?!.*where)",
+        "updateMany\\([^)]*\\)(?!.*where)",
+        "findMany\\(\\)(?!.*where|\\s+limit\\s*\\d+)",
+        "prisma\\.(user|post|comment|profile|account)\\.deleteMany\\(\\)",
+        "prisma\\.(user|post|comment|profile|account)\\.updateMany\\(\\)",
+        "\\.(delete|update)Many\\(\\{\\s*\\})",
+        "db\\.(delete|update)Many\\(\\)",
+        "pool\\.query.*deleteMany|client\\.query.*updateMany",
+        "DELETE\\s+FROM\\s+\\w+\\s*(?!.*WHERE)",
+        "UPDATE\\s+\\w+\\s+SET\\s*(?!.*WHERE)"
+      ]
+    }
+  },
+  "secrets-and-config": {
+    "type": "guardrail",
+    "enforcement": "block",
+    "priority": "critical",
     "promptTriggers": {
       "keywords": [
         "secretos",
@@ -29,25 +256,87 @@
         "arranque",
         "mantener",
         ".env.example."
+      ],
+      "intentPatterns": [
+        "(secreto|secret|credencial|credential|token|api\\s*key|config|\\.env|variable\\s+de\\s+entorno)",
+        "revisar.*(PASSWORD|SECRET|API[_-]?KEY|TOKEN)"
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/.env*",
+        "**/config/**",
+        "**/*config*.{ts,js,json}"
+      ],
+      "contentPatterns": [
+        "API_KEY\\s*=\\s*['\"][^'\"]{10,}['\"]",
+        "SECRET_KEY\\s*=\\s*['\"][^'\"]{10,}['\"]",
+        "PASSWORD\\s*=\\s*['\"][^'\"]{8,}['\"]",
+        "TOKEN\\s*=\\s*['\"][^'\"]{10,}['\"]",
+        "AKIA[0-9A-Z]{16}",
+        "sk-[a-zA-Z0-9]{24,}",
+        "ghp_[a-zA-Z0-9]{36}",
+        "xoxb-[0-9]{10,}-[0-9]{10,}-[a-zA-Z0-9]{24}",
+        "postgresql://[^:]+:[^@]+@",
+        "mongodb://[^:]+:[^@]+@",
+        "mysql://[^:]+:[^@]+@",
+        "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\s*:\\s*[^\\s]{8,}",
+        "\"password\"\\s*:\\s*\"[^\"]{8,}\"",
+        "(PASSWORD|SECRET|API[_-]?KEY|TOKEN|AUTH[_-]?TOKEN)"
+      ]
+    }
   },
   "backend-dev-guidelines": {
     "type": "guideline",
     "enforcement": "suggest",
     "priority": "medium",
+    "threshold": 0.55,
     "promptTriggers": {
       "keywords": [
-        "patrones",
         "backend",
-        "(rutas→controladores→servicios→repositorios),",
-        "manejo",
-        "errores",
-        "pruebas."
+        "api",
+        "endpoint",
+        "controller",
+        "service",
+        "repository",
+        "microservicio",
+        "DTO",
+        "capa",
+        "arquitectura",
+        "rutas",
+        "servicios",
+        "middleware",
+        "auth",
+        "autenticación",
+        "login",
+        "registro",
+        "signup",
+        "ruta",
+        "controlador",
+        "HTTP",
+        "express",
+        "fastify",
+        "nest",
+        "crud"
+      ],
+      "intentPatterns": [
+        "(crear|agregar|añadir|implementar|fix|refactor|desarrollar).*?(endpoint|ruta|route|controller|controlador|service|servicio|api|backend|middleware)",
+        "(autenticaci[oó]n|auth|login|registro|signup|usuarios).*(ruta|endpoint|controller|servicio|middleware)",
+        "(estructurar|organizar|arquitectura).*?(backend|service|capa|dto|repository)"
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{controllers,routes,services}/**/*.{ts,js,tsx}",
+        "backend/src/**/*",
+        "packages/**/{controllers,routes,services}/**/*.{ts,js}"
+      ],
+      "contentPatterns": [
+        "router\\.(get|post|put|delete)\\(",
+        "export\\s+(class|const)\\s+\\w+Controller",
+        "express\\.(Router|router)\\("
+      ]
+    }
   },
   "frontend-dev-guidelines": {
     "type": "guideline",
@@ -56,16 +345,33 @@
     "promptTriggers": {
       "keywords": [
         "patrones",
+        "frontend",
+        "para",
+        "crear",
         "componentes",
+        "react,",
+        "interfaces.",
+        "guía",
         "puros,",
-        "fetching",
-        "cache,",
-        "routing",
-        "file-based",
-        "consistencia."
+        "fetching"
+      ],
+      "intentPatterns": [
+        "(crear|agregar|añadir|implementar|fix|refactor).*?(componente|component|hook|vista|view|ui)",
+        "(dashboard|lista|tabla|card|formulario).*(react|componente|hook)"
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/components/**/*.{ts,tsx}",
+        "frontend/src/**/*.{ts,tsx}",
+        "packages/**/src/**/components/**/*.{ts,tsx}"
+      ],
+      "contentPatterns": [
+        "function\\s+[A-Z]\\w+\\(",
+        "use[A-Z]\\w+\\(",
+        "export\\s+default\\s+function\\s+[A-Z]\\w+"
+      ]
+    }
   },
   "project-catalog-developer": {
     "type": "guideline",
@@ -73,14 +379,55 @@
     "priority": "medium",
     "promptTriggers": {
       "keywords": [
+        "define",
         "catálogo",
-        "(datagrid):",
+        "(datagrid)",
         "columnas",
         "tipadas,",
+        "implementa",
         "filtros",
         "url,",
-        "virtualización",
-        "rendimiento."
+        "configura",
+        "virtualización"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "sample-skill": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "demostración",
+        "plantilla",
+        "skill.md",
+        "para",
+        "validación",
+        "estructura",
+        "mínima",
+        "(≤400",
+        "líneas)."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "cli-integration-testing": {
+    "type": "guardrail",
+    "enforcement": "block",
+    "priority": "critical",
+    "promptTriggers": {
+      "keywords": [
+        "implementa",
+        "tests",
+        "integración",
+        "comprehensivos",
+        "para",
+        "cobertura",
+        "casos",
+        "críticos",
+        "regresión",
+        "visual."
       ]
     },
     "fileTriggers": {}
@@ -90,8 +437,531 @@
     "enforcement": "suggest",
     "priority": "medium",
     "promptTriggers": {
-      "keywords": ["test", "verify", "indexing", "functionality", "works", "correctly"]
+      "keywords": [
+        "valida",
+        "sistema",
+        "indexación",
+        "verificando",
+        "funciona",
+        "correctamente",
+        "(solo",
+        "para",
+        "pruebas)."
+      ]
     },
     "fileTriggers": {}
+  },
+  "plan-save-workflow": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "workflow",
+        "para",
+        "guardar",
+        "plan",
+        "aprobado:",
+        "genera",
+        "tríada",
+        "dev-docs",
+        "(plan.md,",
+        "context.md,"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "pm2-monitor": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "configura",
+        "para",
+        "gestión",
+        "procesos",
+        "backend",
+        "monitoreo,",
+        "logs",
+        "playbooks",
+        "troubleshooting."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "code-review-checklist": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "code",
+        "review",
+        "checklist",
+        "revisión",
+        "código",
+        "quality",
+        "quality",
+        "assurance",
+        "peer",
+        "review",
+        "best",
+        "practices",
+        "style",
+        "security",
+        "performance",
+        "testing",
+        "refactoring",
+        "bug",
+        "fix"
+      ],
+      "intentPatterns": [
+        "(crear|implementar|realizar).*(code|peer|código).*(review|revisión|checklist)",
+        "(review|revisar|analizar).*(pull|merge|request|código|codigo|code)",
+        "(establecer|definir).*(proceso|checklist|estándar|standard).*(review|quality)",
+        "(mejora|mejorar|optimizar).*(código|code|performance|security|readability)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/pull_request_template.md",
+        "**/.github/PULL_REQUEST_TEMPLATE.md",
+        "**/CODE_REVIEW.md",
+        "**/{review,reviews}/**/*.{md,ts,js}",
+        "**/.gitlab/**/*"
+      ],
+      "contentPatterns": [
+        "PR|Pull Request|Code Review|peer review",
+        "checklist|Quality Assurance",
+        "best practices|best practices|code style",
+        "security|performance|testing",
+        "README.*review|review process"
+      ]
+    }
+  },
+  "security-testing-guide": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "threshold": 0.55,
+    "promptTriggers": {
+      "keywords": [
+        "security",
+        "testing",
+        "penetration",
+        "vulnerability",
+        "owasp",
+        "sast",
+        "dast",
+        "audit",
+        "scan",
+        "exploit",
+        "threat",
+        "modeling",
+        "xss",
+        "sql",
+        "injection",
+        "csrf",
+        "authentication",
+        "authorization",
+        "auth",
+        "jwt",
+        "oauth",
+        "security",
+        "vulnerabilidad",
+        "seguridad",
+        "exploit",
+        "breach",
+        "attack",
+        "secure",
+        "encryption",
+        "hash",
+        "salt",
+        "pepper"
+      ],
+      "intentPatterns": [
+        "(implementar|realizar|realizar).*(security|penetration|vulnerability|seguridad).*(testing|test|scan|audit)",
+        "(crear|diseñar|planificar).*(security|owasp|penetration|seguridad).*(test|strategy|plan|estrategia)",
+        "(auditar|scan|scanear|revisar).*(security|owasp|vulnerab|seguridad|vulnerabilidad)",
+        "(testear|testing|probar).*(xss|csrf|sql|injection|authentication|authorization|auth|jwt)",
+        "(configurar|setup).*(security|auth|oauth|jwt|encryption)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{security,tests}/**/*.{ts,js,py}",
+        "**/cypress/**/*",
+        "**/playwright/**/*",
+        "**/{__tests__,test}/**/*security*.{ts,js}"
+      ],
+      "contentPatterns": [
+        "describe\\('.*security|'security|'penetration|'vulnerability",
+        "it\\('.*(xss|csrf|sql|auth|injection)",
+        "test\\('.*(security|vulnerability|owasp)",
+        "security|penetration|vulnerability|owasp|sast|dast",
+        "supertest|cypress|playwright"
+      ]
+    }
+  },
+  "performance-optimization": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "threshold": 0.55,
+    "promptTriggers": {
+      "keywords": [
+        "performance",
+        "optimization",
+        "optimización",
+        "optimizar",
+        "profiling",
+        "benchmark",
+        "latency",
+        "throughput",
+        "memory",
+        "cache",
+        "lazy",
+        "loading",
+        "bundle",
+        "size",
+        "web",
+        "vitals",
+        "lcp",
+        "fid",
+        "cls",
+        "speed",
+        "fast",
+        "rendimiento",
+        "mejorar",
+        "velocidad",
+        "lento",
+        "time",
+        "tiempo",
+        "delay",
+        "demora",
+        "carga",
+        "load",
+        "cpu",
+        "ram",
+        "memoria",
+        "debounce",
+        "throttle",
+        "memo",
+        "useMemo",
+        "useCallback"
+      ],
+      "intentPatterns": [
+        "(optimizar|optimize|mejorar|mejora|acelerar).*(performance|rendimiento|velocidad|speed|carga)",
+        "(implementar|crear|configurar).*(cache|caching|lazy|loading|profiling|benchmark|memo)",
+        "(reduci|reducir|minimize|disminuir).*(bundle|time|latency|size|memory|tamaño)",
+        "(medir|measure|monitor|analizar).*(performance|rendimiento|lcp|fid|cls|web|vitals|speed)",
+        "(detectar|identificar).*(bottleneck|problema|rendimiento|lentitud)",
+        "(optimizar|mejorar).*(query|base|datos|database)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{performance,optimization}/**/*.{ts,js,tsx}",
+        "**/next.config.*",
+        "**/webpack.config.*",
+        "**/vite.config.*",
+        "**/{src,lib,utils}/**/*.{ts,tsx}"
+      ],
+      "contentPatterns": [
+        "useMemo|useCallback|memo\\(",
+        "cache|cacheFirst|cacheOnly",
+        "lazy|Suspense",
+        "optimization|performance|lighthouse",
+        "compression|gzip|brotli"
+      ]
+    }
+  },
+  "database-management": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "high",
+    "threshold": 0.55,
+    "promptTriggers": {
+      "keywords": [
+        "database",
+        "schema",
+        "migrations",
+        "backup",
+        "recovery",
+        "optimization",
+        "query",
+        "index",
+        "postgres",
+        "mysql",
+        "mongodb",
+        "prisma",
+        "typeorm",
+        "redis",
+        "replication",
+        "sharding",
+        "normalization",
+        "denormalization",
+        "tabla",
+        "tablas",
+        "relación",
+        "relaciones",
+        "fk",
+        "primary",
+        "key",
+        "migrar",
+        "seed",
+        "datos",
+        "crud",
+        "orm",
+        "modelo",
+        "entity"
+      ],
+      "intentPatterns": [
+        "(crear|diseñar|implementar|configurar).*(database|schema|migration|backup|recovery|tabla|modelo)",
+        "(optimizar|optimize|mejorar).*(query|query|database|performance|index|índice)",
+        "(configurar|setup|instalar).*(postgres|mysql|mongodb|prisma|typeorm|redis|orm)",
+        "(backup|backups|disaster|recovery).*(database|db|datos)",
+        "(migración|migration| migrar).*(database|schema|table|tabla|datos)",
+        "(crear|agregar).*(relación|fk|foreign|key|clave)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "**/{migrations,schema}/**/*.{sql,ts,js}",
+        "**/prisma/schema.prisma",
+        "**/typeorm/**",
+        "**/{models,repositories}/**/*.{ts,js}",
+        "**/database/**/*.{ts,js}"
+      ],
+      "contentPatterns": [
+        "CREATE TABLE|ALTER TABLE|DROP TABLE",
+        "CREATE INDEX|CREATE UNIQUE INDEX",
+        "migrations?|schema.prisma|typeorm|entity",
+        "pg_dump|pg_restore|mongodump|mysqldump",
+        "backup|recovery|disaster"
+      ]
+    }
+  },
+
+  "cli-compilation-fixes": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["compile", "compilation", "error", "fix", "typescript", "build", "lint", "tsc"],
+      "intentPatterns": [
+        "(fix|arreglar|resolver).*(compile|compilation|build|typescript)",
+        "(problema|issue|error).*(typescript|compile|build)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.ts", "**/*.tsx", "tsconfig.json", "package.json"],
+      "contentPatterns": ["import.*from|export|interface|type.*=|class.*{"]
+    }
+  },
+
+  "skill-creator": {
+    "type": "generator",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["skill", "create", "crear", "generate", "nueva", "nuevo"],
+      "intentPatterns": [
+        "(crear|generate|make).*(skill|habilidad)",
+        "(nueva|nuevo).*(skill|habilidad|feature)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["skills/**/*"],
+      "contentPatterns": ["SKILL\\.md|# Skill|## Description"]
+    }
+  },
+
+  "template-skill": {
+    "type": "generator",
+    "enforcement": "suggest",
+    "priority": "low",
+    "promptTriggers": {
+      "keywords": ["template", "plantilla", "skeleton", "boilerplate"],
+      "intentPatterns": [
+        "(crear|generate).*(template|plantilla)",
+        "(usar|use).*(skeleton|boilerplate|starter)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["skills/**/*"],
+      "contentPatterns": ["SKILL\\.md|# Skill"]
+    }
+  },
+
+  "root-cause-tracing": {
+    "type": "guideline",
+    "enforcement": "warn",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": ["debug", "root", "cause", "trace", "tracing", "find", "findings"],
+      "intentPatterns": [
+        "(find|hallar|descubrir).*(root.*cause|causa.*raiz)",
+        "(debug|trace|rastrear).*(problem|issue|error)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{ts,js,py,java}"],
+      "contentPatterns": ["console\\.log|print|logger|debug"]
+    }
+  },
+
+  "systematic-debugging": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["debug", "debugging", "systematic", "paso", "steps", "reproduce"],
+      "intentPatterns": [
+        "(debug|debugging).*(systematic|sistematico)",
+        "(pasos|steps).*(debug|reproduce|reproducir)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{ts,js,py,java}"],
+      "contentPatterns": ["console\\.log|print|debugger"]
+    }
+  },
+
+  "test-driven-development": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["test", "tdd", "test-driven", "tests", "unit", "integration"],
+      "intentPatterns": [
+        "(implement|write|crear).*(test|tests)",
+        "(tdd|test-driven).*(development|desarrollo)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{test,spec}.{ts,js,py,java}", "test/**/*", "tests/**/*"],
+      "contentPatterns": ["describe\\(|it\\(|test\\(|assert|expect"]
+    }
+  },
+
+  "using-git-worktrees": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "low",
+    "promptTriggers": {
+      "keywords": ["git", "worktree", "branch", "checkout", "feature"],
+      "intentPatterns": [
+        "(git|worktree).*(branch|checkout)",
+        "(manejar|manage).*(multiple|múltiples).*(branch|branches)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [".git/**/*"],
+      "contentPatterns": [".git/worktrees|git branch"]
+    }
+  },
+
+  "webapp-testing": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["webapp", "web", "frontend", "test", "testing", "e2e", "cypress"],
+      "intentPatterns": [
+        "(test|testing).*(webapp|web|frontend)",
+        "(e2e|end-to-end).*(test|prueba)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{test,spec}.{ts,js}", "cypress/**/*", "e2e/**/*"],
+      "contentPatterns": ["describe\\(|it\\(|cy\\.|visit|get|find"]
+    }
+  },
+
+  "Auditor de repositorio (read-only)": {
+    "type": "policy",
+    "enforcement": "require",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": ["audit", "auditor", "repositorio", "repository", "review", "readonly", "read-only"],
+      "intentPatterns": [
+        "(audit|auditor|revisar).*(repositorio|repository)",
+        "(review|revisar).*(code|código|repo)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{ts,js,py,java,md}"],
+      "contentPatterns": ["TODO|FIXME|BUG|HACK"]
+    }
+  },
+
+  "Auditor sin permisos": {
+    "type": "policy",
+    "enforcement": "require",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": ["audit", "auditor", "permissions", "permisos", "access", "acceso"],
+      "intentPatterns": [
+        "(audit|auditor).*(permissions|permisos|access|acceso)",
+        "(verificar|check).*(access|acceso|permission|permiso)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.{ts,js,py}"],
+      "contentPatterns": ["chmod|chown|permission|access"]
+    }
+  },
+
+  "Policy NET Example": {
+    "type": "policy",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["policy", "net", "example", "ejemplo", "security", "seguridad"],
+      "intentPatterns": [
+        "(policy|politica).*(net|network|red)",
+        "(example|ejemplo).*(policy|politica|security|seguridad)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.cs", "**/*.config"],
+      "contentPatterns": ["Security|X509|permission"]
+    }
+  },
+
+  "Policy S1 Example": {
+    "type": "policy",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["policy", "s1", "security", "seguridad", "nivel1", "level1"],
+      "intentPatterns": [
+        "(policy|politica).*(s1|security|seguridad)",
+        "(nivel1|level1).*(security|seguridad)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.yaml", "**/*.yml", "**/*.json"],
+      "contentPatterns": ["security|permission|auth"]
+    }
+  },
+
+  "Policy S2 Example": {
+    "type": "policy",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": ["policy", "s2", "security", "seguridad", "nivel2", "level2"],
+      "intentPatterns": [
+        "(policy|politica).*(s2|security|seguridad)",
+        "(nivel2|level2).*(security|seguridad)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": ["**/*.yaml", "**/*.yml", "**/*.json"],
+      "contentPatterns": ["security|permission|auth"]
+    }
   }
 }

@@ -1,0 +1,19 @@
+{
+  "id": "2e2eaa6af3e7",
+  "timestamp": "2025-11-03T15:07:26.720Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan de desarrollo completo:\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial",
+  "optimizedPrompt": "[Layout] Plan de desarrollo completo:\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial\n1. Análisis inicial",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "dd1c9f48593d0381b6f6bb97ecf870aa3ddb84678cd1a1633ea837f691d3c647",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "getFastConfig is not defined"
+  }
+}

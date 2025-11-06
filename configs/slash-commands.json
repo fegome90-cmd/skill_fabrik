@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "commands": {
+    "dev-docs": {
+      "name": "dev-docs",
+      "description": "Generate strategic CLOOP-based guidance for development tasks without writing files",
+      "category": "dev-docs",
+      "handler": "dev-docs.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "aliases": ["plan", "strategy"],
+      "examples": [
+        "/dev-docs implement user authentication system",
+        "/dev-docs create REST API with OAuth2 --template cloop",
+        "/dev-docs migrate database schema --verbose"
+      ]
+    },
+    "create-dev-docs": {
+      "name": "create-dev-docs",
+      "description": "Materialize dev/active/<task>/ structure with plan.md, context.md, tasks.md and MemTech snapshot",
+      "category": "dev-docs",
+      "handler": "create-dev-docs.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "permanent",
+      "aliases": ["create", "materialize", "init"],
+      "examples": [
+        "/create-dev-docs user-auth --plan-from-context",
+        "/create-dev-docs oauth-integration --plan ./plan.json --force",
+        "/create-dev-docs api-migration --snapshot --include-context"
+      ]
+    },
+    "dev-docs-update": {
+      "name": "dev-docs-update",
+      "description": "Update existing dev docs with progress, findings, and conversation compaction",
+      "category": "dev-docs",
+      "handler": "dev-docs-update.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "aliases": ["update", "progress", "track"],
+      "examples": [
+        "/dev-docs-update user-auth --progress",
+        "/dev-docs-update api-integration --finding 'Database connection pool optimized'",
+        "/dev-docs-update oauth-system --compact --save"
+      ]
+    },
+    "build-and-fix": {
+      "name": "build-and-fix",
+      "description": "Execute prettier, TypeScript compilation, and tests with zero-errors-left-behind enforcement",
+      "category": "quality",
+      "handler": "build-and-fix.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "aliases": ["build", "fix", "quality"],
+      "examples": [
+        "/build-and-fix --fix-errors --max-errors 5",
+        "/build-and-fix --no-fix --verbose",
+        "/build-and-fix --prettier-only"
+      ]
+    },
+    "code-review": {
+      "name": "code-review",
+      "description": "Perform architectural review with guardrails and quality suggestions",
+      "category": "quality",
+      "handler": "code-review.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "aliases": ["review", "audit"],
+      "examples": [
+        "/code-review --strict",
+        "/code-review --focus security,performance",
+        "/code-review --format json --output review.json"
+      ]
+    },
+    "route-research-for-testing": {
+      "name": "route-research-for-testing",
+      "description": "Discover affected routes and generate relevant test recommendations",
+      "category": "testing",
+      "handler": "route-research-for-testing.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "aliases": ["test-research", "route-analysis"],
+      "examples": [
+        "/route-research-for-testing --changed-files src/api/",
+        "/route-research-for-testing --coverage --format json",
+        "/route-research-for-testing --include-integration"
+      ]
+    },
+    "test-route": {
+      "name": "test-route",
+      "description": "Test specific routes with authentication profiles and comprehensive validation",
+      "category": "testing",
+      "handler": "test-route.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "aliases": ["test", "route-test"],
+      "examples": [
+        "/test-route /api/users --auth admin",
+        "/test-route POST /api/auth/login --fixture login-data.json",
+        "/test-route /api/data --auth user --verbose"
+      ]
+    },
+    "compact": {
+      "name": "compact",
+      "description": "Summarize conversation history and restart with high-fidelity context preservation",
+      "category": "utilities",
+      "handler": "compact.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "session",
+      "aliases": ["summarize", "compress"],
+      "examples": [
+        "/compact --save-summary",
+        "/compact --max-items 50 --format markdown",
+        "/compact --preserve-decisions"
+      ]
+    },
+    "undo": {
+      "name": "undo",
+      "description": "Revert last patch at local patch set level with safety validation",
+      "category": "utilities",
+      "handler": "undo.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "aliases": ["revert", "rollback"],
+      "examples": [
+        "/undo --last-patch",
+        "/undo --confirm",
+        "/undo --dry-run"
+      ]
+    },
+    "plugin": {
+      "name": "plugin",
+      "description": "Register and manage plugins/skill packs in the local marketplace",
+      "category": "utilities",
+      "handler": "plugin.ts",
+      "requiresAuth": false,
+      "persistenceLevel": "none",
+      "aliases": ["plugins", "extend"],
+      "examples": [
+        "/plugin list",
+        "/plugin install @skills-fabrik/security-pack",
+        "/plugin search testing",
+        "/plugin remove @skills-fabrik/security-pack"
+      ]
+    }
+  },
+  "categories": {
+    "dev-docs": [
+      "dev-docs",
+      "create-dev-docs",
+      "dev-docs-update"
+    ],
+    "quality": [
+      "build-and-fix",
+      "code-review"
+    ],
+    "testing": [
+      "route-research-for-testing",
+      "test-route"
+    ],
+    "utilities": [
+      "compact",
+      "undo",
+      "plugin"
+    ]
+  },
+  "aliases": {
+    "plan": "dev-docs",
+    "strategy": "dev-docs",
+    "create": "create-dev-docs",
+    "materialize": "create-dev-docs",
+    "init": "create-dev-docs",
+    "update": "dev-docs-update",
+    "progress": "dev-docs-update",
+    "track": "dev-docs-update",
+    "build": "build-and-fix",
+    "fix": "build-and-fix",
+    "quality": "build-and-fix",
+    "review": "code-review",
+    "audit": "code-review",
+    "test-research": "route-research-for-testing",
+    "route-analysis": "route-research-for-testing",
+    "test": "test-route",
+    "route-test": "test-route",
+    "summarize": "compact",
+    "compress": "compact",
+    "revert": "undo",
+    "rollback": "undo",
+    "plugins": "plugin",
+    "extend": "plugin"
+  }
+}

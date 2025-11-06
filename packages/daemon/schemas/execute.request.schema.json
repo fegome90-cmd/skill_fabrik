@@ -1,0 +1,110 @@
+{
+  "$id": "execute.request.schema.json",
+  "title": "Skill Execution Request",
+  "description": "Request schema for skill execution",
+  "type": "object",
+  "required": ["skillId", "input"],
+  "properties": {
+    "skillId": {
+      "type": "string",
+      "description": "Identifier of the skill to execute",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "input": {
+      "type": "object",
+      "description": "Input data for the skill execution",
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "description": "Prompt or command to execute",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "context": {
+          "type": "object",
+          "description": "Additional context for execution",
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "File path"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "File content"
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "Programming language"
+                  }
+                }
+              }
+            },
+            "workingDirectory": {
+              "type": "string",
+              "description": "Current working directory"
+            },
+            "environment": {
+              "type": "object",
+              "description": "Environment variables"
+            }
+          }
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "description": "Execution options",
+      "properties": {
+        "timeout": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 300000,
+          "default": 30000,
+          "description": "Execution timeout in milliseconds"
+        },
+        "dryRun": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to perform a dry run without making changes"
+        },
+        "confirmLevel": {
+          "type": "string",
+          "enum": ["none", "warn", "confirm"],
+          "default": "warn",
+          "description": "Level of confirmation required for dangerous operations"
+        },
+        "outputFormat": {
+          "type": "string",
+          "enum": ["text", "json", "markdown"],
+          "default": "text",
+          "description": "Desired output format"
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "description": "Authentication information",
+      "properties": {
+        "confirmToken": {
+          "type": "string",
+          "description": "Confirmation token for dangerous operations"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User identifier"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Session identifier"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

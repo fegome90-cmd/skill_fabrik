@@ -1,0 +1,30 @@
+{
+  "name": "mcp-prompt-builder",
+  "version": "1.0.0",
+  "description": "MCP Server for Prompt Builder v2 - Optimize prompts with PBv2",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@skills-fabrik/skills-cli": "workspace:*",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "claude-code",
+    "prompt-builder",
+    "prompt-optimization"
+  ],
+  "author": "Skills Fabric Team",
+  "license": "MIT"
+}

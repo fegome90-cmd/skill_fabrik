@@ -1,3 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm -w build
+
+      - name: Run CI Gates
+        run: pnpm gates
+
+      - name: KPI rollup (optional)
+        run: pnpm kpi:rollup || true
+
+      - name: Upload KPI daily summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kpi-daily
+          path: obs/kpi/daily
+          if-no-files-found: ignore
+
 name: CI Pipeline
 
 on:

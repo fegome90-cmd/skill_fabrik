@@ -1,0 +1,19 @@
+{
+  "id": "40090b13938a",
+  "timestamp": "2025-11-03T15:07:13.189Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Primer plan\n...\n[Layout] Segundo plan\n1. Nueva tarea\n2. Otra tarea",
+  "optimizedPrompt": "[Layout] Primer plan\n...\n[Layout] Segundo plan\n1. Nueva tarea\n2. Otra tarea",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "4ca1ae437be28a6b6d551c93c72bbb83682201fa001ada9f933353cfb17a18b2",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "getFastConfig is not defined"
+  }
+}

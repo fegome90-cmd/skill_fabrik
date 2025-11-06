@@ -1,0 +1,33 @@
+{
+  "name": "@skills-fabrik/kpi",
+  "version": "0.1.0",
+  "description": "KPI aggregator and dashboard for Skills Fabric",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "kpi",
+    "metrics",
+    "dashboard",
+    "skills-fabric"
+  ],
+  "author": "Skills Fabrik Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.11.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

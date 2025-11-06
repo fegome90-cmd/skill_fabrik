@@ -1,0 +1,19 @@
+{
+  "id": "9d4ff9cde0ff",
+  "timestamp": "2025-11-03T15:08:20.622Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan:\n1. Task 1",
+  "optimizedPrompt": "[Layout] Plan:\n1. Task 1",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "43e83b03f514c71e550b8691c6e4d69772215642cf1e6c894e1527ad2857c5f9",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 1,
+    "success": false,
+    "error": "TEST_detectRepoInfo is not defined"
+  }
+}

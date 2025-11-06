@@ -1,0 +1,48 @@
+{
+  "pages": 271,
+  "sections": [
+    {
+      "title": "Solución de activación por señales ponderadas",
+      "from_page": 252,
+      "to_page": 271,
+      "source": "Copia de Skill manager.pdf",
+      "highlights": [
+        "Fuzzy match Levenshtein > 0.8 suma parcial",
+        "Score ponderado por señales y pesos",
+        "Allow/Deny list y umbral configurable",
+        "Cálculo de confianza por consistencia y accuracy histórica",
+        "Reasoning explicable con señales fuertes/débiles"
+      ]
+    },
+    {
+      "title": "Panorama inicial",
+      "from_page": 1,
+      "to_page": 30,
+      "source": "Skill manager.pdf",
+      "highlights": []
+    },
+    {
+      "title": "Cuerpo intermedio",
+      "from_page": 31,
+      "to_page": 120,
+      "source": "Skill manager.pdf",
+      "highlights": []
+    },
+    {
+      "title": "Desarrollo avanzado",
+      "from_page": 121,
+      "to_page": 200,
+      "source": "Skill manager.pdf",
+      "highlights": []
+    },
+    {
+      "title": "Sección final",
+      "from_page": 201,
+      "to_page": 247,
+      "source": "Skill manager.pdf",
+      "highlights": []
+    }
+  ],
+  "notes": "TOC inicial basado en lectura de la sección final de la copia. El resto se completará conforme avance la lectura exhaustiva (Barrido 2)."
+}
+

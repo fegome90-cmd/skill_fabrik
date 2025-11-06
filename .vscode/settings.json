@@ -1,0 +1,8 @@
+{
+  "terminal.integrated.env.osx": {
+    "SF_ENDPOINT": "http://127.0.0.1:7727",
+    "SF_STORAGE_L0": "${workspaceFolder}/.sf",
+    "SF_STORAGE_L1": "${workspaceFolder}/.sf/cache"
+  }
+}
+

@@ -1,0 +1,19 @@
+{
+  "id": "bf1a4acd899e",
+  "timestamp": "2025-11-03T15:08:14.795Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan de desarrollo:\n1. Configurar repositorio\n2. Implementar funcionalidades core\n3. Testing y validación",
+  "optimizedPrompt": "[Layout] Plan de desarrollo:\n1. Configurar repositorio\n2. Implementar funcionalidades core\n3. Testing y validación",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "aa4b8da0931275d4464b98fd870e1392ef2ecffe18a7dfdb4e8d799b8bcda85c",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "TEST_detectRepoInfo is not defined"
+  }
+}

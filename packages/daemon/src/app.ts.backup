@@ -1,0 +1,694 @@
+import Fastify, { type FastifyInstance } from 'fastify';
+import Ajv2020 from 'ajv/dist/2020.js';
+import type { AnySchema } from 'ajv';
+import addFormats from 'ajv-formats';
+import { readFile, appendFile, mkdir, readdir } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import { config as loadEnv } from 'dotenv';
+import { Pool } from 'pg';
+import { ensurePostgresTables } from './ensurePostgresTables.js';
+import {
+  recordActivation,
+  recordExecute,
+  recordPolicyDecision,
+  renderMetrics,
+} from './metrics.js';
+import {
+  newChallenge,
+  getChallenge,
+  consumeChallenge,
+  verifyConfirmToken,
+} from './confirm.js';
+import { sandboxRoot, buildWritePlan, applyWritePlan } from './sandbox.js';
+import { levelForTool, LEVEL_PRIORITY, type PolicyLevel } from './policyLevels.js';
+
+loadEnv();
+
+const PORT = Number(process.env.SF_PORT || 7727);
+const HOST = process.env.SF_HOST || '127.0.0.1';
+
+const ajv = new Ajv2020({ allErrors: true, strict: false });
+addFormats(ajv);
+
+async function loadSchema(name: string): Promise<AnySchema> {
+  const p = resolve(process.cwd(), 'schemas', name);
+  return JSON.parse(await readFile(p, 'utf-8')) as AnySchema;
+}
+
+function evidenceId(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+async function appendEvent(evt: Record<string, unknown>): Promise<void> {
+  const dir = resolve(process.cwd(), 'obs/kpi');
+  await mkdir(dir, { recursive: true });
+  await appendFile(join(dir, 'events.jsonl'), JSON.stringify(evt) + '\n', 'utf-8');
+}
+
+async function makeDbPool(): Promise<Pool | null> {
+  if (!process.env.PG_HOST) return null;
+  try {
+    const pool = new Pool({
+      host: process.env.PG_HOST,
+      port: Number(process.env.PG_PORT || 5432),
+      user: process.env.PG_USER,
+      password: process.env.PG_PASSWORD,
+      database: process.env.PG_DATABASE,
+      max: 5,
+      idleTimeoutMillis: 5000,
+      connectionTimeoutMillis: 5000,
+    });
+    const c = await pool.connect();
+    c.release();
+    await ensurePostgresTables(pool);
+    return pool;
+  } catch {
+    return null;
+  }
+}
+
+export async function createApp(): Promise<FastifyInstance> {
+  const app = Fastify({ logger: false });
+  const db = await makeDbPool();
+
+  if (db) {
+    app.addHook('onClose', async () => {
+      await db.end().catch(() => {});
+    });
+  }
+
+  const actReqSchema = await loadSchema('activate.request.schema.json');
+  const actResSchema = await loadSchema('activate.response.schema.json');
+  const exeReqSchema = await loadSchema('execute.request.schema.json');
+  const exeResSchema = await loadSchema('execute.response.schema.json');
+
+  const vActReq = ajv.compile(actReqSchema);
+  const vActRes = ajv.compile(actResSchema);
+  const vExeReq = ajv.compile(exeReqSchema);
+  const vExeRes = ajv.compile(exeResSchema);
+
+  const startedAt = Date.now();
+  const activationLatencies: number[] = [];
+  const actCache = new Map<
+    string,
+    { labels: string[]; candidates: Array<{ id: string; score: number; reason: string }>; ts: number }
+  >();
+  const TTL_MS = 60_000;
+
+  app.get('/health', async (request, reply) => {
+    const uptime = Date.now() - startedAt;
+
+    // Database health check
+    let dbStatus = 'not_configured';
+    let dbError = null;
+    if (db) {
+      try {
+        const result = await db.query('SELECT 1');
+        dbStatus = result ? 'healthy' : 'unhealthy';
+      } catch (error) {
+        dbStatus = 'unhealthy';
+        dbError = error instanceof Error ? error.message : String(error);
+      }
+    }
+
+    // Cache health check
+    const cacheSize = actCache.size;
+    const cacheHitRate = activationLatencies.length > 0
+      ? Math.round(activationLatencies.reduce((a, b) => a + b, 0) / activationLatencies.length)
+      : 0;
+
+    // Calculate cache metrics
+    const cacheMetrics = {
+      status: 'healthy',
+      size: cacheSize,
+      maxSize: Math.floor(TTL_MS / 1000), // Approximate max size
+      hitRate: `${cacheHitRate}ms`,
+      memoryUsage: process.memoryUsage().heapUsed
+    };
+
+    // System metrics
+    const systemMetrics = {
+      uptime: Math.floor(uptime / 1000),
+      version: process.env.npm_package_version || '1.0.0',
+      environment: process.env.NODE_ENV || 'development',
+      memoryUsage: process.memoryUsage(),
+      cpuUsage: process.cpuUsage(),
+      nodeVersion: process.version,
+      pid: process.pid
+    };
+
+    // Service health
+    const overallStatus = dbStatus === 'unhealthy' ? 'degraded' : 'healthy';
+
+    const health = {
+      status: overallStatus,
+      timestamp: new Date().toISOString(),
+      uptime: uptime,
+      services: {
+        database: {
+          status: dbStatus,
+          error: dbError,
+          url: process.env.PG_HOST ? `postgresql://${process.env.PG_HOST}:${process.env.PG_PORT || 5432}` : null
+        },
+        cache: cacheMetrics,
+        schemas: {
+          status: 'healthy',
+          loaded: Object.keys({
+            actReqSchema: !!actReqSchema,
+            actResSchema: !!actResSchema,
+            exeReqSchema: !!exeReqSchema,
+            exeResSchema: !!exeResSchema
+          }).filter(key => key).length
+        }
+      },
+      metrics: {
+        totalActivations: activationLatencies.length,
+        averageLatency: cacheHitRate,
+        cacheSize: cacheSize,
+        requestsProcessed: activationLatencies.length
+      },
+      system: systemMetrics,
+      endpoints: {
+        health: '/health',
+        list: '/list',
+        activate: '/activate',
+        execute: '/execute',
+        metrics: '/metrics',
+        validate: '/validate'
+      }
+    };
+
+    // Return appropriate HTTP status based on health
+    const statusCode = dbStatus === 'unhealthy' ? 503 : 200;
+    reply.code(statusCode).send(health);
+  });
+
+  app.post('/list', async () => {
+    const skillsDir = resolve(process.cwd(), 'skills');
+    try {
+      const entries = await readdir(skillsDir, { withFileTypes: true });
+      const items = entries.filter(d => d.isDirectory()).map(d => d.name);
+      return { skills: items };
+    } catch {
+      return { skills: [] };
+    }
+  });
+
+  app.post('/activate', async (req, rep) => {
+    const body: any = ((req as any).body as any) || {};
+    if (!vActReq(body)) return rep.status(400).send({ error: 'bad_request', details: vActReq.errors });
+
+    const t0 = Date.now();
+    const intent = String(body.intent || '').trim().toLowerCase();
+
+    const hit = actCache.get(intent);
+    if (hit && Date.now() - hit.ts < TTL_MS) {
+      const out = { labels: hit.labels, candidates: hit.candidates, latency_ms: 1 };
+      if (!vActRes(out)) return rep.status(500).send({ error: 'schema_mismatch', details: vActRes.errors });
+      activationLatencies.push(out.latency_ms);
+      const evt = {
+        ts: new Date().toISOString(),
+        editor: body.editor || 'cli',
+        repo: body.repo || '',
+        task: '',
+        skill: hit.candidates[0]?.id || '',
+        activation_latency_ms: out.latency_ms,
+        labels: out.labels,
+        policy_decision: null,
+        evidence_id: null,
+      };
+      await appendEvent(evt);
+      recordActivation(out.latency_ms);
+      if (db)
+        await db.query(
+          'INSERT INTO sf_events (editor, repo, skill, activation_latency_ms, labels) VALUES ($1,$2,$3,$4,$5)',
+          [evt.editor, evt.repo, evt.skill, evt.activation_latency_ms, evt.labels]
+        );
+      return out;
+    }
+    const candidates = [
+      intent.includes('lint') ? { id: 'lint-fast', score: 0.78, reason: "matched keyword 'lint'" } : null,
+      intent.includes('refactor') ? { id: 'refactor-safe', score: 0.72, reason: "matched keyword 'refactor'" } : null,
+      { id: 'repo-auditor', score: 0.55, reason: 'default baseline' },
+    ].filter(Boolean) as Array<{ id: string; score: number; reason: string }>;
+
+    const labels = [
+      `@intent:${intent.slice(0, 24) || 'unknown'}`,
+      `@skill:${candidates[0]?.id || 'repo-auditor'}`,
+      `@guard:base`,
+      `@adr:ADR-001`,
+    ];
+
+    const out = { labels, candidates, latency_ms: Date.now() - t0 };
+    if (!vActRes(out)) return rep.status(500).send({ error: 'schema_mismatch', details: vActRes.errors });
+
+    activationLatencies.push(out.latency_ms);
+    const evt = {
+      ts: new Date().toISOString(),
+      editor: body.editor || 'cli',
+      repo: body.repo || '',
+      task: '',
+      skill: candidates[0]?.id || '',
+      activation_latency_ms: out.latency_ms,
+      labels,
+      policy_decision: null,
+      evidence_id: null,
+    };
+    await appendEvent(evt);
+    actCache.set(intent, { labels, candidates, ts: Date.now() });
+    if (db)
+      await db.query(
+        'INSERT INTO sf_events (editor, repo, skill, activation_latency_ms, labels) VALUES ($1,$2,$3,$4,$5)',
+        [evt.editor, evt.repo, evt.skill, evt.activation_latency_ms, evt.labels]
+      );
+
+    recordActivation(out.latency_ms);
+    return out;
+  });
+
+  app.post('/execute', async (req, rep) => {
+    const body: any = ((req as any).body as any) || {};
+    if (!vExeReq(body)) return rep.status(400).send({ error: 'bad_request', details: vExeReq.errors });
+
+    const { loadSkillMeta } = await import('./skills.js');
+    const { READ_ONLY } = await import('./needs.js');
+    const Tools = await import('./tools.js');
+
+    const skillId = String(body.skill_id);
+    const meta = await loadSkillMeta(skillId);
+    const allowedTools = Array.isArray(meta.allowedTools)
+      ? meta.allowedTools.map(tool => String(tool))
+      : [];
+    const allowedSet = new Set(allowedTools);
+    const wildcardAllowed = allowedSet.has('*');
+
+    const args = typeof body.args === 'object' && body.args !== null ? body.args : {};
+    const dryRun = Boolean(body.dry_run);
+    const cwd = typeof body.cwd === 'string' && body.cwd.trim().length > 0 ? body.cwd : '.';
+    const requestedNeeds = Array.isArray(body.needs)
+      ? body.needs.map((need: unknown) => String(need))
+      : [];
+    const baselineNeeds = dryRun ? [] : (READ_ONLY[skillId] || []);
+    const isConfirmAttempt = typeof body.challenge_id === 'string' && typeof body.confirm_token === 'string';
+    const needsSet = new Set<string>([...baselineNeeds, ...requestedNeeds]);
+    if (isConfirmAttempt) needsSet.add('fs.write');
+    const allNeeds = Array.from(needsSet);
+
+    const deniedNeeds = allNeeds.filter(tool => !wildcardAllowed && !allowedSet.has(tool));
+
+    let highestLevel: PolicyLevel = 'S0';
+    for (const tool of allNeeds) {
+      const level = levelForTool(tool);
+      if (LEVEL_PRIORITY[level] > LEVEL_PRIORITY[highestLevel]) {
+        highestLevel = level;
+      }
+    }
+    if (allNeeds.length === 0 && !isConfirmAttempt) {
+      highestLevel = 'S0';
+    }
+    if (isConfirmAttempt) {
+      highestLevel = 'S1';
+    }
+
+    const baseEvent = {
+      ts: new Date().toISOString(),
+      skill: skillId,
+      needs: allNeeds,
+      allowed: allowedTools,
+      policy_level: highestLevel,
+      source: 'execute',
+    };
+
+    const policyTool = allNeeds.length > 0 ? allNeeds.join(',') : 'none';
+
+    if (deniedNeeds.length > 0) {
+      const response = {
+        error: 'operation_denied',
+        message: 'Skill requested operations outside allowed tools',
+        policy_level: highestLevel,
+        needs: allNeeds,
+        denied: deniedNeeds,
+      };
+      await appendEvent({
+        kind: 'execute',
+        ...baseEvent,
+        policy_decision: 'deny',
+        policy_tool: policyTool,
+        denied: deniedNeeds,
+        require_confirm: false,
+      });
+      if (db) {
+        await db.query(
+          'INSERT INTO sf_events (skill, policy_decision, policy_tool, extra) VALUES ($1,$2,$3,$4)',
+          [
+            skillId,
+            'deny',
+            policyTool,
+            {
+              policy_level: highestLevel,
+              needs: allNeeds,
+              allowed: allowedTools,
+              denied: deniedNeeds,
+              require_confirm: false,
+            } as any,
+          ]
+        );
+      }
+      recordPolicyDecision(highestLevel, 'deny');
+      return rep.status(403).send(response);
+    }
+
+    if (highestLevel === 'S2' || highestLevel === 'NET') {
+      const response = {
+        error: 'operation_denied',
+        message: 'Skill requires operations not permitted in current policy level',
+        policy_level: highestLevel,
+        needs: allNeeds,
+        denied: allNeeds,
+      };
+      await appendEvent({
+        kind: 'execute',
+        ...baseEvent,
+        policy_decision: 'deny',
+        policy_tool: policyTool,
+        denied: allNeeds,
+        require_confirm: false,
+      });
+      if (db) {
+        await db.query(
+          'INSERT INTO sf_events (skill, policy_decision, policy_tool, extra) VALUES ($1,$2,$3,$4)',
+          [
+            skillId,
+            'deny',
+            policyTool,
+            {
+              policy_level: highestLevel,
+              needs: allNeeds,
+              allowed: allowedTools,
+              denied: allNeeds,
+              require_confirm: false,
+            } as any,
+          ]
+        );
+      }
+      recordPolicyDecision(highestLevel, 'deny');
+      return rep.status(403).send(response);
+    }
+
+    if (highestLevel === 'S1') {
+      const secret = process.env.CONFIRM_SECRET || '';
+      const challengeId = typeof body.challenge_id === 'string' ? String(body.challenge_id) : undefined;
+      const confirmToken = typeof body.confirm_token === 'string' ? String(body.confirm_token) : undefined;
+
+      if (challengeId && confirmToken) {
+        const existingChallenge = getChallenge(challengeId);
+        if (!existingChallenge || existingChallenge.skill !== skillId) {
+          await appendEvent({
+            kind: 'execute',
+            ...baseEvent,
+            policy_decision: 'deny',
+            policy_tool: policyTool,
+            confirm: false,
+            challenge_id: challengeId,
+            reason: 'challenge_expired',
+            require_confirm: true,
+          });
+          recordPolicyDecision('S1', 'deny');
+        }
+        if (!existingChallenge || existingChallenge.skill !== skillId) {
+          return rep.status(410).send({ error: 'challenge_expired' });
+        }
+
+        if (!secret) {
+          await appendEvent({
+            kind: 'execute',
+            ...baseEvent,
+            policy_decision: 'deny',
+            policy_tool: policyTool,
+            confirm: false,
+            challenge_id: challengeId,
+            reason: 'confirm_secret_missing',
+            require_confirm: true,
+          });
+          recordPolicyDecision('S1', 'deny');
+          return rep.status(500).send({ error: 'confirm_secret_missing' });
+        }
+
+        const tokenOk = verifyConfirmToken(existingChallenge.id, existingChallenge.nonce, confirmToken, secret);
+        if (!tokenOk) {
+          await appendEvent({
+            kind: 'execute',
+            ...baseEvent,
+            policy_decision: 'deny',
+            policy_tool: policyTool,
+            confirm: false,
+            challenge_id: existingChallenge.id,
+            reason: 'invalid_token',
+            require_confirm: true,
+          });
+          recordPolicyDecision('S1', 'deny');
+          return rep.status(401).send({ error: 'invalid_confirm_token' });
+        }
+
+        const consumedChallenge = consumeChallenge(existingChallenge.id);
+        if (!consumedChallenge) {
+          return rep.status(410).send({ error: 'challenge_expired' });
+        }
+
+        const execStart = Date.now();
+        const root = sandboxRoot(consumedChallenge.cwd);
+        try {
+          await applyWritePlan(root, consumedChallenge.plan);
+        } catch (error) {
+          if ((error as Error).message === 'sandbox_escape') {
+            await appendEvent({
+              kind: 'execute',
+              ...baseEvent,
+              policy_decision: 'deny',
+              policy_tool: policyTool,
+              confirm: false,
+              challenge_id: consumedChallenge.id,
+            reason: 'sandbox_escape',
+            require_confirm: true,
+          });
+          recordPolicyDecision('S1', 'deny');
+          return rep.status(403).send({ error: 'sandbox_escape' });
+        }
+          throw error;
+        }
+
+        const runLatency = Date.now() - execStart;
+        const evidence = evidenceId();
+        const stdoutPayload = {
+          write_scope: 'sandbox',
+          files: consumedChallenge.plan.files,
+        };
+        const stdout = JSON.stringify(stdoutPayload, null, 2);
+        const changes = consumedChallenge.plan.files.map(file => ({
+          path: join('workspace', 'sandbox', file.path).replace(/\\/g, '/'),
+          diff: 'sandbox-write',
+        }));
+        const rollbackPlan = {
+          files: consumedChallenge.plan.files.map(file =>
+            join('workspace', 'sandbox', file.path).replace(/\\/g, '/')
+          ),
+          summary: 'Delete sandbox files to rollback',
+        };
+        const responseBody = {
+          stdout,
+          artifacts: [] as Array<{ path: string; hash: string }>,
+          changes,
+          run_latency_ms: runLatency,
+          evidence_id: evidence,
+          rollback_plan: rollbackPlan,
+        };
+        if (!vExeRes(responseBody)) {
+          return rep.status(500).send({ error: 'schema_mismatch', details: vExeRes.errors });
+        }
+
+        await appendEvent({
+          kind: 'execute',
+          ...baseEvent,
+          policy_decision: 'allow',
+          policy_tool: policyTool,
+          confirm: true,
+          challenge_id: consumedChallenge.id,
+          write_scope: 'sandbox',
+          evidence_id: evidence,
+          run_latency_ms: runLatency,
+        });
+        if (db) {
+          await db.query(
+            'INSERT INTO sf_events (skill, run_latency_ms, policy_decision, policy_tool, evidence_id, extra) VALUES ($1,$2,$3,$4,$5,$6)',
+            [
+              skillId,
+              runLatency,
+              'allow',
+              policyTool,
+              evidence,
+              {
+                policy_level: highestLevel,
+                needs: allNeeds,
+                allowed: allowedTools,
+                denied: [],
+                confirm: true,
+                challenge_id: consumedChallenge.id,
+                write_scope: 'sandbox',
+              } as any,
+            ]
+          );
+        }
+
+        recordExecute(runLatency);
+        recordPolicyDecision('S1', 'allow');
+
+        return responseBody;
+      }
+
+      const plan = buildWritePlan(args);
+      const challenge = newChallenge(skillId, cwd, plan);
+      const response: Record<string, unknown> = {
+        error: 'challenge_required',
+        requireConfirm: true,
+        challenge_id: challenge.id,
+        write_plan: plan,
+        policy_level: 'S1',
+        ttl_ms: challenge.ttlMs,
+        denied: [],
+      };
+      if (process.env.CONFIRM_TEST_EXPOSE_NONCE === 'true') {
+        response.challenge_nonce = challenge.nonce;
+      }
+
+      await appendEvent({
+        kind: 'execute',
+        ...baseEvent,
+        policy_decision: 'challenge',
+        policy_tool: policyTool,
+        denied: [],
+        challenge_id: challenge.id,
+        require_confirm: true,
+        write_scope: 'sandbox',
+        ttl_ms: challenge.ttlMs,
+      });
+
+      if (db) {
+        try {
+          await db.query(
+            'INSERT INTO sf_events (skill, policy_decision, policy_tool, extra) VALUES ($1,$2,$3,$4)',
+            [
+              skillId,
+              'challenge',
+              policyTool,
+              {
+                policy_level: 'S1',
+                needs: allNeeds,
+                allowed: allowedTools,
+                denied: [],
+                challenge_id: challenge.id,
+                require_confirm: true,
+                write_scope: 'sandbox',
+                ttl_ms: challenge.ttlMs,
+              } as any,
+            ]
+          );
+        } catch {
+          // Some DB schemas might not allow 'challenge' as policy_decision; ignore
+        }
+      }
+
+      recordPolicyDecision('S1', 'challenge');
+
+      return rep.status(403).send(response);
+    }
+
+    const execStart = Date.now();
+    let stdout = '';
+    if (dryRun) {
+      stdout = JSON.stringify(
+        {
+          planned_steps: [
+            { step: 'resolve-skill', skill: skillId },
+            { step: 'check-policy', allowed: allowedTools },
+            { step: 'prepare-exec', mode: 'dry-run' },
+          ],
+        },
+        null,
+        2
+      );
+    } else {
+      const status = await Tools.gitStatus(cwd);
+      const diff = await Tools.gitDiff(cwd);
+      stdout = JSON.stringify({ status, diff }, null, 2);
+    }
+
+    const responseBody = {
+      stdout,
+      artifacts: [] as Array<{ path: string; hash: string }>,
+      changes: [] as Array<{ path: string; diff: string }>,
+      run_latency_ms: Date.now() - execStart,
+      evidence_id: evidenceId(),
+    };
+    if (!vExeRes(responseBody)) {
+      return rep.status(500).send({ error: 'schema_mismatch', details: vExeRes.errors });
+    }
+
+    await appendEvent({
+      kind: 'execute',
+      ...baseEvent,
+      editor: 'cli',
+      repo: '',
+      task: '',
+      policy_decision: 'allow',
+      policy_tool: dryRun ? 'simulate' : policyTool,
+      denied: [],
+      require_confirm: false,
+      evidence_id: responseBody.evidence_id,
+      run_latency_ms: responseBody.run_latency_ms,
+    });
+    if (db) {
+      await db.query(
+        'INSERT INTO sf_events (skill, run_latency_ms, policy_decision, policy_tool, evidence_id, extra) VALUES ($1,$2,$3,$4,$5,$6)',
+        [
+          skillId,
+          responseBody.run_latency_ms,
+          'allow',
+          dryRun ? 'simulate' : policyTool,
+          responseBody.evidence_id,
+          {
+            policy_level: highestLevel,
+            needs: allNeeds,
+            allowed: allowedTools,
+            denied: [],
+            require_confirm: false,
+          } as any,
+        ]
+      );
+    }
+
+    recordExecute(responseBody.run_latency_ms);
+    recordPolicyDecision(highestLevel, 'allow');
+
+    return responseBody;
+  });
+
+  app.get('/metrics', async (_req, rep) => {
+    rep.header('content-type', 'text/plain; version=0.0.4');
+    return rep.send(renderMetrics());
+  });
+
+  app.post('/validate', async () => ({ status: 'ok' }));
+
+  return app;
+}
+
+export async function startServer(): Promise<void> {
+  const app = await createApp();
+  await app.listen({ port: PORT, host: HOST });
+  // eslint-disable-next-line no-console
+  console.log(`[sf-daemon] listening on http://${HOST}:${PORT}`);
+}

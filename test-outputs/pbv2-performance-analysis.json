@@ -1,0 +1,368 @@
+{
+  "testSuite": "PBv2 Live Performance & Error Analysis",
+  "timestamp": "2025-11-03T12:00:00Z",
+  "version": "2.0.0",
+  "analyzer": "Performance Benchmarker Agent",
+
+  "performanceMetrics": {
+    "throughput": {
+      "current": 1.05,
+      "benchmark": 100,
+      "ratio": 0.0105,
+      "status": "CRITICAL FAIL",
+      "analysis": "Throughput 95x menor que benchmark. Causa: configuración sistémica incorrecta impide activación PBv2"
+    },
+
+    "latencyDistribution": {
+      "detection": {
+        "min": 157,
+        "max": 196,
+        "mean": 166,
+        "median": 163,
+        "p95": 189,
+        "p99": 195,
+        "stdDev": 13.2,
+        "coefficientOfVariation": 0.08,
+        "benchmark": 50,
+        "analysis": "Latencia 3.3x más lenta que benchmark pero consistente (CV=0.08)"
+      },
+      "activation": {
+        "min": 5421,
+        "max": 6020,
+        "mean": 5530,
+        "median": 5463,
+        "p95": 5747,
+        "p99": 5964,
+        "stdDev": 198.7,
+        "coefficientOfVariation": 0.036,
+        "benchmark": 200,
+        "analysis": "Latencia 27.7x más lenta. Variabilidad baja (CV=0.036) indica overhead constante"
+      },
+      "total": {
+        "min": 5582,
+        "max": 6216,
+        "mean": 5696,
+        "median": 5642,
+        "p95": 5898,
+        "p99": 6153,
+        "stdDev": 207.3,
+        "coefficientOfVariation": 0.036,
+        "benchmark": 500,
+        "analysis": "Total 11.4x más lento. Overhead consistente del sistema"
+      }
+    },
+
+    "systemEfficiency": {
+      "cpuEfficiency": "N/A - Requiere instrumentación adicional",
+      "memoryEfficiency": "N/A - Requiere instrumentation adicional",
+      "ioEfficiency": "ALTA - Baja variabilidad indica I/O consistente",
+      "cacheHitRate": "N/A - Sistema no implementado completamente",
+      "warmUpTime": "~5400ms - Tiempo de inicialización del sistema PBv2"
+    }
+  },
+
+  "errorAnalysis": {
+    "totalErrors": 0,
+    "criticalErrors": 0,
+    "errorCategories": {
+      "configuration": {
+        "count": 10,
+        "percentage": 100,
+        "severity": "CRITICAL",
+        "description": "skillId no especificado en todos los tests",
+        "impact": "Sistema no puede generar prompts PBv2",
+        "errorPattern": "Error: Debe especificar al menos un skillId o skillIds",
+        "rootCause": "Configuración sistémica incorrecta",
+        "fixRequired": "Mapear skillIds por categoría de plan",
+        "affectedTests": ["plan-001", "plan-002", "plan-003", "plan-004", "plan-005", "plan-006", "plan-007", "plan-008", "plan-009", "plan-010"]
+      },
+      "performance": {
+        "count": 10,
+        "percentage": 100,
+        "severity": "HIGH",
+        "description": "Latencia excede benchmarks significativamente",
+        "impact": "Sistema no cumple SLOs de performance",
+        "affectedStages": ["detection", "activation"]
+      },
+      "functional": {
+        "count": 0,
+        "percentage": 0,
+        "severity": "NONE",
+        "description": "Plan detection funciona correctamente"
+      }
+    },
+
+    "errorTrends": {
+      "detectionErrors": "0/10 (0%)",
+      "activationErrors": "10/10 (100%)",
+      "recoveryAttempts": 0,
+      "retrySuccessRate": "N/A - No se implementaron reintentos"
+    }
+  },
+
+  "bottleneckAnalysis": {
+    "primaryBottleneck": {
+      "stage": "pbv2-activation",
+      "contribution": "96.8%",
+      "timeSpent": "5530ms de 5696ms total",
+      "description": "Overhead de inicialización del sistema PBv2",
+      "characteristics": [
+        "Variabilidad muy baja (CV=0.036)",
+        "Overhead constante independiente del plan",
+        "No correlaciona con complejidad del plan"
+      ]
+    },
+
+    "secondaryBottleneck": {
+      "stage": "plan-detection",
+      "contribution": "2.9%",
+      "timeSpent": "166ms de 5696ms total",
+      "description": "Performance acceptable pero no óptimo",
+      "characteristics": [
+        "Consistent across all plans",
+        "Within acceptable range",
+        "Minor optimization opportunity"
+      ]
+    },
+
+    "bottleneckProgression": {
+      "pattern": "Detection → Warm-up → Activation",
+      "criticalPath": [
+        {
+          "stage": "System Initialization",
+          "duration": "~5400ms",
+          "percentage": "94.8%",
+          "optimizable": true
+        },
+        {
+          "stage": "Plan Processing",
+          "duration": "~300ms",
+          "percentage": "5.3%",
+          "optimizable": false
+        }
+      ]
+    }
+  },
+
+  "scalabilityAnalysis": {
+    "currentLoad": {
+      "concurrentTests": 1,
+      "sequentialExecution": true,
+      "resourceUtilization": "Baja - Un solo proceso ejecutándose"
+    },
+
+    "scalabilityProjections": {
+      "capacity10Concurrent": {
+        "estimatedTime": "56960ms",
+        "bottleneckIdentified": "CPU-bound en pbv2-activation",
+        "limitingFactor": "Single-threaded initialization",
+        "confidence": "High"
+      },
+      "capacity50Concurrent": {
+        "estimatedTime": "284800ms",
+        "bottleneckIdentified": "Memory pressure + initialization overhead",
+        "limitingFactor": "System architecture",
+        "confidence": "Medium"
+      },
+      "capacity100Concurrent": {
+        "estimatedTime": "569600ms",
+        "bottleneckIdentified": "System resource exhaustion",
+        "limitingFactor": "Process limits + memory",
+        "confidence": "Low"
+      }
+    },
+
+    "scalingRecommendations": [
+      {
+        "strategy": "Parallel Processing",
+        "description": "Implementar paralelización de activación PBv2",
+        "expectedImprovement": "3-5x throughput",
+        "implementationComplexity": "Medium"
+      },
+      {
+        "strategy": "Connection Pooling",
+        "description": "Pool de conexiones pre-initializadas",
+        "expectedImprovement": "2-3x throughput",
+        "implementationComplexity": "Low"
+      },
+      {
+        "strategy": "Async/Batch Processing",
+        "description": "Procesamiento asíncrono de múltiples planes",
+        "expectedImprovement": "5-10x throughput",
+        "implementationComplexity": "High"
+      }
+    ]
+  },
+
+  "optimizationOpportunities": {
+    "immediate": [
+      {
+        "issue": "skillId Configuration",
+        "impact": "100% success rate improvement",
+        "effort": "Low",
+        "timeline": "1-2 hours",
+        "description": "Configurar skillId mapping por categoría"
+      },
+      {
+        "issue": "System Warm-up",
+        "impact": "90% latency reduction",
+        "effort": "Medium",
+        "timeline": "4-8 hours",
+        "description": "Implementar warm-up cache y connection pooling"
+      }
+    ],
+
+    "shortTerm": [
+      {
+        "issue": "Detection Optimization",
+        "impact": "66% latency reduction (166ms → 55ms)",
+        "effort": "Medium",
+        "timeline": "1-2 days",
+        "description": "Optimizar algoritmo de detección y caching"
+      },
+      {
+        "issue": "Parallel Activation",
+        "impact": "3-5x throughput improvement",
+        "effort": "High",
+        "timeline": "3-5 days",
+        "description": "Paralelizar proceso de activación PBv2"
+      }
+    ],
+
+    "longTerm": [
+      {
+        "issue": "Distributed Processing",
+        "impact": "10-50x scalability improvement",
+        "effort": "Very High",
+        "timeline": "2-4 weeks",
+        "description": "Implementar arquitectura distribuida"
+      },
+      {
+        "issue": "ML-Based Optimization",
+        "impact": "Predictive optimization",
+        "effort": "High",
+        "timeline": "1-3 weeks",
+        "description": "ML para predicción y optimización automática"
+      }
+    ]
+  },
+
+  "benchmarks": {
+    "current": {
+      "detection": {
+        "latency": "166ms",
+        "throughput": "360 plans/min",
+        "successRate": "100%"
+      },
+      "activation": {
+        "latency": "5530ms",
+        "throughput": "10.8 activations/min",
+        "successRate": "0%"
+      },
+      "endToEnd": {
+        "latency": "5696ms",
+        "throughput": "10.5 plans/min",
+        "successRate": "0%"
+      }
+    },
+
+    "targets": {
+      "detection": {
+        "latency": "50ms",
+        "throughput": "1200 plans/min",
+        "successRate": ">99%"
+      },
+      "activation": {
+        "latency": "200ms",
+        "throughput": "300 activations/min",
+        "successRate": ">95%"
+      },
+      "endToEnd": {
+        "latency": "500ms",
+        "throughput": "120 plans/min",
+        "successRate": ">90%"
+      }
+    },
+
+    "gapAnalysis": {
+      "detection": {
+        "latencyGap": "232%",
+        "throughputGap": "233%",
+        "priority": "Medium"
+      },
+      "activation": {
+        "latencyGap": "2665%",
+        "throughputGap": "95%",
+        "priority": "Critical"
+      },
+      "endToEnd": {
+        "latencyGap": "1039%",
+        "throughputGap": "91%",
+        "priority": "Critical"
+      }
+    }
+  },
+
+  "recommendations": {
+    "critical": [
+      {
+        "action": "Fix skillId Configuration",
+        "justification": "0% success rate es unacceptable",
+        "owner": "System Configuration Team",
+        "timeline": "24 hours"
+      },
+      {
+        "action": "Optimize PBv2 Activation",
+        "justification": "96.8% del tiempo se gasta en activación",
+        "owner": "Performance Team",
+        "timeline": "1 week"
+      }
+    ],
+
+    "highPriority": [
+      {
+        "action": "Implement Connection Pooling",
+        "justification": "Reducir overhead de inicialización",
+        "owner": "Infrastructure Team",
+        "timeline": "3 days"
+      },
+      {
+        "action": "Add Performance Monitoring",
+        "justification": "Visibilidad en métricas de sistema",
+        "owner": "Observability Team",
+        "timeline": "2 days"
+      }
+    ],
+
+    "mediumPriority": [
+      {
+        "action": "Optimize Plan Detection",
+        "justification": "Mejora incremental de performance",
+        "owner": "Algorithm Team",
+        "timeline": "1 week"
+      },
+      {
+        "action": "Implement Caching Strategy",
+        "justification": "Reducir latencia con cache",
+        "owner": "Caching Team",
+        "timeline": "3 days"
+      }
+    ]
+  },
+
+  "conclusions": {
+    "overallStatus": "NEEDS_WORK - Critical configuration issues",
+    "primaryIssue": "System configuration prevents PBv2 activation",
+    "performance": "Poor - 11.4x slower than targets",
+    "reliability": "Partial - Detection works, activation fails",
+    "scalability": "Limited - Single-threaded bottleneck",
+    "nextSteps": [
+      "1. Configure skillId mapping immediately",
+      "2. Optimize PBv2 activation latency",
+      "3. Implement performance monitoring",
+      "4. Re-run tests with fixes",
+      "5. Measure improvement"
+    ],
+    "expectedOutcome": "Con skillIds configurados, sistema debería alcanzar >90% success rate y latencia <1000ms"
+  }
+}

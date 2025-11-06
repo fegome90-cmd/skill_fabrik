@@ -1,0 +1,178 @@
+{
+  "testSuite": "PBv2 Live Test - Real Plans",
+  "version": "2.0.0",
+  "timestamp": "2025-11-03T12:00:00Z",
+  "totalPlans": 10,
+  "testPlans": [
+    {
+      "id": "plan-001",
+      "title": "Implementación API REST para Gestión de Usuarios",
+      "category": "backend",
+      "complexity": "high",
+      "description": "Desarrollar API REST completa para CRUD de usuarios con autenticación JWT, validación de datos, y documentación OpenAPI",
+      "expectedSkills": [
+        "backend-dev-guidelines",
+        "api-development",
+        "database-verification",
+        "security-implementation"
+      ],
+      "keywords": ["backend", "api", "rest", "users", "jwt", "authentication", "crud"],
+      "expectedTags": ["[K:BACKEND-ARCHITECTURE]", "[C:API-DEVELOPMENT]", "[EVIDENCIA]", "[PROPUESTA]"],
+      "estimatedTime": "2-3 horas",
+      "successCriteria": ["API funcional", "Documentación completa", "Tests unitarios"]
+    },
+    {
+      "id": "plan-002",
+      "title": "Dashboard React con Estado Global y Gráficos",
+      "category": "frontend",
+      "complexity": "medium",
+      "description": "Crear dashboard moderno con React, Context API, Recharts para visualización de datos, y diseño responsivo",
+      "expectedSkills": [
+        "frontend-dev-guidelines",
+        "react-components",
+        "state-management",
+        "data-visualization"
+      ],
+      "keywords": ["frontend", "react", "dashboard", "context", "charts", "responsive"],
+      "expectedTags": ["[K:FRONTEND-ARCHITECTURE]", "[C:UI-DEVELOPMENT]", "[U:USER-EXPERIENCE]", "[EVIDENCIA]"],
+      "estimatedTime": "3-4 horas",
+      "successCriteria": ["Dashboard funcional", "Gráficos interactivos", "Diseño responsivo"]
+    },
+    {
+      "id": "plan-003",
+      "title": "Migración de Base de Datos con Rollback Seguro",
+      "category": "database",
+      "complexity": "high",
+      "description": "Ejecutar migración compleja de esquema con datos existentes, backup automático, y plan de rollback",
+      "expectedSkills": [
+        "database-verification",
+        "migration-strategy",
+        "data-integrity",
+        "backup-recovery"
+      ],
+      "keywords": ["database", "migration", "schema", "backup", "rollback", "prisma"],
+      "expectedTags": ["[K:DATA-ARCHITECTURE]", "[C:DATABASE-OPERATIONS]", "[EVIDENCIA]", "[PROPUESTA]"],
+      "estimatedTime": "4-5 horas",
+      "successCriteria": ["Migración exitosa", "Datos preservados", "Rollback verificado"]
+    },
+    {
+      "id": "plan-004",
+      "title": "Sistema de Autenticación OAuth2 Multi-Provider",
+      "category": "security",
+      "complexity": "high",
+      "description": "Implementar login social con Google, GitHub, y gestión de tokens seguros con refresh automático",
+      "expectedSkills": [
+        "security-implementation",
+        "oauth2",
+        "token-management",
+        "session-handling"
+      ],
+      "keywords": ["security", "oauth2", "google", "github", "tokens", "authentication"],
+      "expectedTags": ["[K:SECURITY-ARCHITECTURE]", "[C:AUTHENTICATION]", "[U:SECURITY]", "[EVIDENCIA]"],
+      "estimatedTime": "3-4 horas",
+      "successCriteria": ["Login funcional", "Tokens seguros", "Multi-provider"]
+    },
+    {
+      "id": "plan-005",
+      "title": "Optimización de Performance con Caching Multi-Nivel",
+      "category": "performance",
+      "complexity": "medium",
+      "description": "Implementar caché Redis, CDN para assets, lazy loading, y optimización de queries de base de datos",
+      "expectedSkills": [
+        "performance-optimization",
+        "caching-strategy",
+        "cdn-configuration",
+        "query-optimization"
+      ],
+      "keywords": ["performance", "cache", "redis", "cdn", "optimization", "lazy-loading"],
+      "expectedTags": ["[K:PERFORMANCE-ARCHITECTURE]", "[C:CACHING]", "[EVIDENCIA]", "[PROPUESTA]"],
+      "estimatedTime": "2-3 horas",
+      "successCriteria": ["Velocidad mejorada", "Cache hit rate >80%", "Latencia reducida"]
+    },
+    {
+      "id": "plan-006",
+      "title": "Suite de Tests E2E con Playwright",
+      "category": "testing",
+      "complexity": "medium",
+      "description": "Crear tests end-to-end automatizados para flujos críticos: login, registro, compra, y navegación",
+      "expectedSkills": [
+        "e2e-testing",
+        "playwright",
+        "test-automation",
+        "ci-integration"
+      ],
+      "keywords": ["testing", "e2e", "playwright", "automation", "ci", "tests"],
+      "expectedTags": ["[K:TESTING-ARCHITECTURE]", "[C:E2E-TESTS]", "[U:QUALITY]", "[EVIDENCIA]"],
+      "estimatedTime": "3-4 horas",
+      "successCriteria": ["Tests automatizados", "Flujos cubiertos", "CI integrado"]
+    },
+    {
+      "id": "plan-007",
+      "title": "Pipeline CI/CD con GitHub Actions",
+      "category": "devops",
+      "complexity": "medium",
+      "description": "Configurar pipeline automático con build, test, security scan, y deployment a staging/production",
+      "expectedSkills": [
+        "ci-cd-pipeline",
+        "github-actions",
+        "deployment",
+        "security-scanning"
+      ],
+      "keywords": ["devops", "ci-cd", "github", "actions", "deployment", "automation"],
+      "expectedTags": ["[K:DEVOPS-ARCHITECTURE]", "[C:CI-CD]", "[EVIDENCIA]", "[PROPUESTA]"],
+      "estimatedTime": "2-3 horas",
+      "successCriteria": ["Pipeline automatizado", "Deploy exitoso", "Scans configurados"]
+    },
+    {
+      "id": "plan-008",
+      "title": "Arquitectura de Microservicios con Comunicación Event-Driven",
+      "category": "architecture",
+      "complexity": "high",
+      "description": "Diseñar e implementar microservicios independientes con event bus (Redis/RabbitMQ) y API Gateway",
+      "expectedSkills": [
+        "microservices",
+        "event-driven",
+        "api-gateway",
+        "service-mesh"
+      ],
+      "keywords": ["microservices", "events", "redis", "rabbitmq", "gateway", "architecture"],
+      "expectedTags": ["[K:SYSTEM-ARCHITECTURE]", "[C:MICROSERVICES]", "[U:SCALABILITY]", "[PROPUESTA]"],
+      "estimatedTime": "5-6 horas",
+      "successCriteria": ["Servicios independientes", "Eventos sincronizados", "Gateway funcional"]
+    },
+    {
+      "id": "plan-009",
+      "title": "App Móvil React Native con Push Notifications",
+      "category": "mobile",
+      "complexity": "medium",
+      "description": "Desarrollar app cross-platform con navegación, estado offline, y notificaciones push integradas",
+      "expectedSkills": [
+        "mobile-development",
+        "react-native",
+        "push-notifications",
+        "offline-state"
+      ],
+      "keywords": ["mobile", "react-native", "push", "notifications", "offline", "cross-platform"],
+      "expectedTags": ["[K:MOBILE-ARCHITECTURE]", "[C:APP-DEVELOPMENT]", "[U:USER-EXPERIENCE]", "[EVIDENCIA]"],
+      "estimatedTime": "4-5 horas",
+      "successCriteria": ["App funcional", "Notificaciones push", "Estado offline"]
+    },
+    {
+      "id": "plan-010",
+      "title": "Modernización de Legacy System con Strangler Pattern",
+      "category": "legacy",
+      "complexity": "high",
+      "description": "Migrar sistema legacy a arquitectura moderna incrementalmente usando strangler fig pattern",
+      "expectedSkills": [
+        "legacy-modernization",
+        "strangler-pattern",
+        "incremental-migration",
+        "backward-compatibility"
+      ],
+      "keywords": ["legacy", "modernization", "strangler", "migration", "compatibility", "refactor"],
+      "expectedTags": ["[K:LEGACY-ARCHITECTURE]", "[C:MIGRATION]", "[EVIDENCIA]", "[PROPUESTA]"],
+      "estimatedTime": "6-8 horas",
+      "successCriteria": ["Funcionalidad preservada", "Migración incremental", "Compatibilidad mantenida"]
+    }
+  ]
+}

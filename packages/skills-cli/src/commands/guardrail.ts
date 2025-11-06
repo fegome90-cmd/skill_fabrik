@@ -3,7 +3,7 @@ import { Logger } from '../utils/logger.js';
 
 interface GuardrailRule {
   pattern: string | RegExp;
-  type: 'command' | 'code' | 'path';
+  type: 'command' | 'code' | 'path' | 'security';
   severity: 'critical' | 'high' | 'medium';
   message: string;
   block: boolean;
@@ -18,11 +18,42 @@ const DESTRUCTIVE_PATTERNS: GuardrailRule[] = [
     block: true,
   },
   {
-    pattern: /\bdeleteMany\(\)\s*(?!.*where)/,
+    pattern: /\bdeleteMany\s*\(\s*\)/,
     type: 'code',
     severity: 'critical',
     message: 'deleteMany() without where clause - will delete all records!',
     block: true,
+  },
+  // deleteMany({ ... }) without where → BLOCK
+  {
+    pattern: /\bdeleteMany\s*\(\s*\{(?![\s\S]*?\bwhere\s*:)\s*[\s\S]*?\}\s*\)/,
+    type: 'code',
+    severity: 'critical',
+    message: 'deleteMany({...}) without where clause - will delete all records!',
+    block: true,
+  },
+  {
+    pattern: /\bupdateMany\s*\(\s*\)/,
+    type: 'code',
+    severity: 'high',
+    message: 'updateMany() without where clause - will update all records!',
+    block: false,
+  },
+  // updateMany({ ... }) without where → WARN (non-blocking)
+  {
+    pattern: /\bupdateMany\s*\(\s*\{(?![\s\S]*?\bwhere\s*:)\s*[\s\S]*?\}\s*\)/,
+    type: 'code',
+    severity: 'high',
+    message: 'updateMany({...}) without where clause - risk of updating all records',
+    block: false,
+  },
+  // findMany({ ... }) without where → SUGGEST (non-blocking)
+  {
+    pattern: /\bfindMany\s*\(\s*\{(?![\s\S]*?\bwhere\s*:)\s*[\s\S]*?\}\s*\)/,
+    type: 'code',
+    severity: 'medium',
+    message: 'findMany({...}) without where clause - consider narrowing results',
+    block: false,
   },
   {
     pattern: /\bDROP\s+TABLE\s+\w+/i,
@@ -45,6 +76,21 @@ const DESTRUCTIVE_PATTERNS: GuardrailRule[] = [
     message: 'eval() usage detected - security risk',
     block: false,
   },
+  // Detección de secretos hardcodeados
+  {
+    pattern: /(?:API_KEY|SECRET_KEY|PASSWORD|TOKEN|PRIVATE_KEY)\s*[:=]\s*['"](?:sk_live|sk-|pk_live|pk-|eyJ)[\w-]{20,}['"]/i,
+    type: 'security',
+    severity: 'critical',
+    message: 'Secretos hardcodeados detectados (API_KEY, SECRET_KEY, etc.). Usar variables de entorno.',
+    block: true,
+  },
+  {
+    pattern: /(?:password|secret|api_key|token|jwt_secret)\s*[:=]\s*['"][\w-]{15,}['"]/i,
+    type: 'security',
+    severity: 'high',
+    message: 'Posible secreto hardcodeado detectado. Verificar y usar variables de entorno.',
+    block: false,
+  },
 ];
 
 export function guardrailCommand(program: Command) {
@@ -64,8 +110,7 @@ export function guardrailCommand(program: Command) {
 
         // If file option provided, read file content
         if (options.file) {
-          const fs = await import('fs-extra');
-          const { readFile } = fs;
+          const { readFile } = await import('fs/promises');
           contentToTest = await readFile(options.file, { encoding: 'utf-8' });
           logger.debug(`Reading content from: ${options.file}`);
         }

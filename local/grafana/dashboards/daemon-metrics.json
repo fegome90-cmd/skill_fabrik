@@ -1,0 +1,83 @@
+{
+  "__inputs": [],
+  "__requires": [
+    { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "9.5.0" },
+    { "type": "panel", "id": "timeseries", "name": "Time series", "version": "9.5.0" },
+    { "type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "2.0.0" }
+  ],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1,
+  "links": [],
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Activation Latency Count",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "PROMETHEUS_DS" },
+      "targets": [
+        { "expr": "skills_activation_latency_ms_count", "legendFormat": "count", "refId": "A" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Activation Cache Hits/Misses",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "PROMETHEUS_DS" },
+      "targets": [
+        { "expr": "activation_cache_hits_total", "legendFormat": "hits", "refId": "A" },
+        { "expr": "activation_cache_misses_total", "legendFormat": "misses", "refId": "B" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Retry Attempts/Success/Exhausted",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "PROMETHEUS_DS" },
+      "targets": [
+        { "expr": "sum by (operation) (retry_attempts_total)", "legendFormat": "attempts {{operation}}", "refId": "A" },
+        { "expr": "sum by (operation) (retry_successes_total)", "legendFormat": "success {{operation}}", "refId": "B" },
+        { "expr": "sum by (operation) (retry_exhausted_total)", "legendFormat": "exhausted {{operation}}", "refId": "C" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Circuit Breaker State (0=CLOSED,1=OPEN,2=HALF_OPEN)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "PROMETHEUS_DS" },
+      "targets": [
+        { "expr": "circuit_breaker_state", "legendFormat": "{{service}}", "refId": "A" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Activation Latency P95 (ms)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "PROMETHEUS_DS" },
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(skills_activation_latency_ms_bucket[5m])))", "legendFormat": "p95", "refId": "A" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Policy Decisions Total",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "PROMETHEUS_DS" },
+      "targets": [
+        { "expr": "sum by (level,decision) (policy_decisions_total)", "legendFormat": "{{level}}:{{decision}}", "refId": "A" }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["sf-daemon"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": ""
+}

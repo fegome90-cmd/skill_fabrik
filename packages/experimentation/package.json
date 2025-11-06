@@ -1,0 +1,46 @@
+{
+  "name": "@skills-fabrik/experimentation",
+  "version": "0.1.0",
+  "description": "A/B testing and weight optimization framework for skill activation",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@skills-fabrik/router": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "a-b-testing",
+    "experimentation",
+    "optimization",
+    "machine-learning",
+    "skills",
+    "activation"
+  ],
+  "author": "Skills Fabric Team",
+  "license": "MIT"
+}

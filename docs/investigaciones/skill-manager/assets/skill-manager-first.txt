@@ -1,0 +1,1634 @@
+# DEEP DIVE EN LAS HERRAMIENTAS Y EL SISTEMA DE SKILLS
+
+Muy bien, ahora vamos a profundizar en cómo este desarrollador realmente construyó todo
+este sistema. Vamos a hablar de las herramientas específicas, el diseño técnico, y cómo
+creó este sistema de auto-activación de skills que cambió completamente su forma de
+trabajar.
+
+-----
+
+## LA ARQUITECTURA TÉCNICA DEL SISTEMA DE HOOKS
+
+Primero, hablemos de cómo funcionan los hooks en Claude Code. Los hooks son
+básicamente puntos de interceptación en el ciclo de vida de las interacciones con Claude.
+Piensa en ellos como middleware o interceptores si vienes del mundo del desarrollo web.
+
+Claude Code tiene varios puntos donde puedes inyectar código personalizado. El
+desarrollador identificó dos puntos críticos que le darían el máximo control sobre el
+comportamiento de Claude.
+
+El primer punto es UserPromptSubmit. Este hook se ejecuta en el momento exacto ANTES
+de que tu mensaje llegue a Claude. Es como un guardia de seguridad que ve todo lo que
+entra al edificio antes de que entre. En este punto, el hook puede leer tu prompt, analizarlo,
+modificarlo, o agregar información adicional.
+
+El segundo punto es el Stop Event hook. Este se ejecuta cuando Claude termina de generar
+su respuesta completa. Es como un inspector de calidad al final de una línea de producción.
+En este punto, el hook puede analizar qué hizo Claude, qué archivos tocó, y proporcionar
+feedback o ejecutar acciones adicionales.
+
+Estos hooks están escritos en TypeScript, lo cual le da al desarrollador acceso completo al
+sistema de archivos, la capacidad de ejecutar comandos, y manipular strings y objetos de
+manera sofisticada.
+
+-----
+
+## EL ARCHIVO SKILL-RULES PUNTO JSON
+
+El corazón del sistema de auto-activación es este archivo de configuración. Es básicamente
+un mapa que define las reglas para cuándo y cómo activar cada skill. Déjame explicarte la
+estructura con más detalle.
+
+Cada skill en el archivo tiene varias propiedades. Primero está el tipo. Esto puede ser
+domain para skills específicos de dominio, o guidelines para mejores prácticas generales.
+Esta clasificación ayuda al sistema a priorizar qué skills cargar primero.
+
+Luego está enforcement. Esto puede ser suggest, que significa que el hook simplemente le
+recordará a Claude sobre el skill, o block, que significa que el hook prevendrá activamente
+ciertas acciones. El skill de database verification usa block para prevenir que Claude cometa
+errores con nombres de columnas.
+
+La prioridad puede ser high, medium, o low. Los skills de alta prioridad se mencionan
+primero en el recordatorio que se inyecta en el contexto de Claude.
+
+Ahora viene la parte interesante: los triggers. Hay dos categorías principales de triggers.
+
+Los prompt triggers se activan basándose en lo que TÚ escribes. Tienen keywords, que es
+una lista de palabras que si aparecen en tu prompt, activan el skill. Por ejemplo, si tu prompt
+contiene las palabras backend, controller, service, API, o endpoint, eso activará el skill de
+backend dev guidelines.
+
+También tienen intent patterns, que son expresiones regulares más sofisticadas. Estas
+pueden detectar patrones de intención en tu lenguaje natural. Por ejemplo, la regex create o
+add seguido de cualquier cosa y luego route o endpoint o controller detectará cuando estás
+pidiendo crear algo relacionado con el backend.
+
+Los file triggers se activan basándose en QUÉ ARCHIVOS está tocando Claude. Tienen
+path patterns, que son patrones glob que coinciden con rutas de archivos. Por ejemplo,
+backend slash src slash asterisco asterisco slash asterisco punto ts coincidirá con cualquier
+archivo TypeScript en el directorio backend src.
+
+También tienen content patterns, que son regexes que buscan dentro del contenido del
+archivo. Por ejemplo, si un archivo contiene router punto o export seguido de Controller, eso
+sugiere que es un archivo de routing o controller y debería activar el skill de backend.
+
+Esta combinación de triggers basados en prompt y basados en archivos significa que el
+sistema puede ser muy inteligente sobre cuándo sugerir skills. No es solo sobre palabras
+clave brutas, es sobre entender intención y contexto.
+
+-----
+
+## CÓMO FUNCIONA EL HOOK USER PROMPT SUBMIT
+
+Ahora hablemos del flujo real de ejecución cuando envías un prompt.
+
+Presionas enter en tu mensaje. Antes de que Claude lo vea, el hook UserPromptSubmit se
+ejecuta. El hook primero lee el archivo skill-rules punto json para cargar todas las reglas.
+
+Luego analiza tu prompt. Extrae todas las palabras y las compara contra las keywords de
+cada skill. También ejecuta las regexes de intent patterns contra tu prompt completo.
+
+Para cada match que encuentra, agrega ese skill a una lista de skills relevantes. También
+verifica la prioridad de cada skill matched.
+Ahora, si estás trabajando en el contexto de un archivo específico, el hook también puede
+analizar ese archivo. Verifica si la ruta del archivo coincide con algún path pattern. Si el
+archivo ya existe, también puede leer su contenido y verificar contra content patterns.
+
+Una vez que tiene la lista completa de skills relevantes, el hook construye un mensaje de
+recordatorio. Este mensaje se formatea de manera que sea muy visible para Claude. Usa
+caracteres especiales, emojis, y formato claro.
+
+El mensaje típicamente se ve algo así: línea de separación con guiones o símbolos. Emoji
+de objetivo. SKILL ACTIVATION CHECK en mayúsculas. Lista de skills que deberían ser
+consultados. Una breve descripción de por qué estos skills son relevantes. Otra línea de
+separación.
+
+Este mensaje se PREPONE a tu prompt original. Entonces Claude ve primero el
+recordatorio, y LUEGO lee tu pregunta actual. Esto es crucial porque significa que Claude
+tiene esa información fresca en su contexto inmediato antes de empezar a procesar tu
+request.
+
+El hook entonces pasa el prompt modificado al sistema de Claude Code, y desde la
+perspectiva de Claude, simplemente recibió un prompt que comienza con un recordatorio
+útil sobre qué skills consultar.
+
+-----
+
+## CÓMO FUNCIONA EL HOOK STOP EVENT
+
+Ahora hablemos de qué pasa después de que Claude termina su respuesta.
+
+Claude completa su respuesta y está a punto de devolverte el control. El hook Stop Event
+se activa. Este hook tiene acceso a todo lo que Claude acaba de hacer. Puede ver qué
+archivos fueron editados, creados, o eliminados. Puede ver qué comandos fueron
+ejecutados.
+
+El hook primero revisa los logs del hook anterior que rastrea ediciones de archivos. Este log
+mantiene una lista de todos los archivos que fueron tocados durante la interacción actual.
+
+Para cada archivo en la lista, el hook analiza el archivo para detectar patrones riesgosos.
+Busca cosas como bloques try catch. Funciones async. Operaciones de base de datos
+como llamadas a Prisma. Imports de controllers o services. Cualquier cosa que típicamente
+requiere manejo de errores cuidadoso.
+
+Si detecta estos patrones, construye un mensaje de recordatorio gentil. La clave aquí es
+que es gentil y no bloqueante. No detiene a Claude ni fuerza una acción. Simplemente dice
+oye, nota que editaste código que involucra operaciones async. Consideraste agregar
+manejo de errores apropiado? Las operaciones de Prisma están envueltas en try-catch? Los
+errores se están reportando a Sentry?
+Este mensaje se muestra en la terminal después de la respuesta de Claude. Claude puede
+verlo en el siguiente ciclo de interacción, y frecuentemente se auto-corregirá o confirmará
+que sí consideró esos aspectos.
+
+El hook también ejecuta otra acción crucial: corre los build scripts. Identifica qué repos
+fueron modificados basándose en las rutas de los archivos editados. Para cada repo
+modificado, ejecuta el comando de build apropiado. Captura el output del build.
+
+Si hay errores de TypeScript, el hook los cuenta. Si hay menos de cinco errores, los muestra
+directamente a Claude en un formato limpio. Si hay cinco o más errores, el hook sugiere
+que podrías querer usar el agente auto-error-resolver porque hay múltiples problemas que
+arreglar.
+
+También hay un hook de Prettier que simplemente ejecuta prettier sobre todos los archivos
+modificados. Esto asegura formateo consistente sin que tengas que pensar en ello.
+
+-----
+
+## LA ESTRUCTURA DE DIRECTORIOS DE SKILLS
+
+Hablemos de cómo están organizados físicamente los skills en el sistema de archivos.
+
+Tienes un directorio principal de skills. Dentro de esto, hay subdirectorios para diferentes
+categorías. El desarrollador tiene un directorio public para skills de uso general. Un
+directorio private para skills específicos de su proyecto. Y un directorio examples para skills
+de referencia.
+
+Dentro de cada categoría, cada skill tiene su propio directorio. Por ejemplo,
+frontend-dev-guidelines es un directorio. Dentro de ese directorio está el archivo principal
+SKILL punto MD. Este es el archivo ligero que Claude lee primero.
+
+También hay un subdirectorio resources dentro del directorio del skill. Este contiene todos
+los archivos de recursos adicionales. Por ejemplo, component-patterns punto MD,
+state-management punto MD, routing-guide punto MD, y así sucesivamente.
+
+El archivo principal SKILL punto MD tiene una estructura específica. Comienza con una
+breve descripción del propósito del skill. Luego tiene secciones para diferentes aspectos de
+la guía.
+
+Cada sección puede tener referencias a archivos de recursos. Estas referencias se escriben
+de manera que Claude sepa que puede profundizar si necesita más información. Por
+ejemplo, una sección podría decir: para patrones detallados de componentes, consulta
+resources slash component-patterns punto MD.
+
+Esta estructura modular significa que Claude puede leer solo el archivo principal y obtener
+una visión general de alto nivel. Si necesita profundizar en un tema específico, puede cargar
+el archivo de recursos relevante. Esto es mucho más eficiente en términos de tokens que
+cargar todo de una vez.
+-----
+
+## EL ARCHIVO DEV DOCS Y SU AUTOMATIZACIÓN
+
+Ahora hablemos del sistema de dev docs con más detalle técnico. El desarrollador creó
+comandos slash personalizados que automatizan la creación y mantenimiento de estos
+documentos.
+
+El comando slash create-dev-docs hace lo siguiente: primero, pregunta por el nombre de la
+tarea. Esto se usa para crear nombres de archivos consistentes. Luego crea un directorio en
+dev slash active slash nombre-de-tarea.
+
+Dentro de ese directorio, crea tres archivos. El archivo nombre-de-tarea-plan punto MD
+contiene el plan completo tal como fue aprobado. Este es básicamente una copia del plan
+que Claude generó en modo planning.
+
+El archivo nombre-de-tarea-context punto MD es más dinámico. Contiene una lista de
+archivos clave que son relevantes para esta tarea. Para cada archivo, hay una breve
+descripción de por qué es relevante. También contiene decisiones arquitecturales
+importantes que se tomaron durante la planificación. Y tiene una sección para notas y
+observaciones que se agregan durante la implementación.
+
+El archivo nombre-de-tarea-tasks punto MD es un checklist simple. Cada tarea del plan se
+lista con un checkbox de markdown. Cuando una tarea se completa, el checkbox se marca.
+Este archivo es la verdad fuente para el progreso de la implementación.
+
+El comando slash dev-docs-update es aún más interesante. Cuando lo ejecutas, Claude
+hace lo siguiente: primero, revisa todos los archivos en el directorio de la tarea. Lee el
+archivo de contexto actual y el archivo de tasks actual.
+
+Luego, analiza la conversación reciente. Identifica qué tareas se completaron. Identifica
+cualquier nuevo contexto o decisiones que surgieron. Identifica cualquier nuevas tareas que
+necesitan ser agregadas.
+
+Actualiza el archivo de tasks marcando las tareas completadas y agregando nuevas tareas.
+Actualiza el archivo de contexto agregando nuevas decisiones o archivos relevantes.
+Agrega una sección de next steps que resume exactamente dónde quedaste.
+
+Y finalmente, agrega un timestamp de última actualización. Esto es crucial porque cuando
+regresas después de una compactación de conversación, puedes ver exactamente cuándo
+fue la última actualización y confiar en que la información está fresca.
+
+-----
+
+## CÓMO SE INTEGRAN LOS AGENTES CON EL SISTEMA
+Los agentes son otra pieza del rompecabezas. El desarrollador creó múltiples agentes
+especializados, y cada uno tiene un propósito muy específico.
+
+El agente strategic-plan-architect es probablemente el más importante. Cuando lo llamas,
+hace lo siguiente: primero, pregunta sobre la tarea o característica que quieres implementar.
+Luego comienza una fase de investigación. Usa las herramientas de búsqueda de código de
+Claude Code para encontrar archivos relevantes. Lee la documentación del proyecto.
+Examina código existente similar.
+
+Una vez que tiene suficiente contexto, construye un plan estructurado. El plan tiene varias
+secciones. Executive summary que resume el objetivo y approach. Technical context que
+explica la arquitectura relevante. Implementation phases que divide el trabajo en fases
+manejables. Cada fase tiene tareas específicas. Risk assessment que identifica problemas
+potenciales. Success criteria que define qué significa done. Timeline estimate que da una
+idea de cuánto tomará.
+
+Este plan se formatea en markdown hermoso con headers claros y estructura lógica.
+Cuando el agente termina, te presenta el plan completo para revisión. Puedes aceptarlo,
+rechazarlo, o pedir modificaciones.
+
+El agente code-architecture-reviewer funciona de manera diferente. Tomas código que
+Claude acaba de escribir y llamas al agente. El agente hace una revisión profunda. Verifica
+adherencia a los patterns definidos en los skills. Busca code smells y anti-patterns. Revisa
+manejo de errores. Verifica que las abstracciones son apropiadas. Busca problemas de
+performance potenciales.
+
+El output del agente es un reporte de revisión. Lista problemas encontrados por severidad:
+crítico, mayor, menor. Para cada problema, explica por qué es un problema y sugiere cómo
+arreglarlo. También lista aspectos positivos del código.
+
+Este tipo de revisión automatizada atrapa muchos problemas antes de que lleguen a
+producción. Y lo hace de manera consistente, no como humanos que pueden estar
+cansados o distraídos.
+
+-----
+
+## PM DOS Y SU CONFIGURACIÓN DETALLADA
+
+Hablemos más a fondo sobre cómo configuró PM dos para sus microservicios.
+
+PM dos usa un archivo de configuración llamado ecosystem punto config punto js. Este
+archivo define todos los procesos que PM dos debe gestionar. El desarrollador tiene siete
+microservicios, entonces su archivo de configuración define siete apps.
+
+Para cada app, especifica el nombre, que es un identificador único. El script, que
+típicamente es npm o node. Los args, que son los argumentos a pasar al script. El cwd, que
+es el directorio de trabajo para ese proceso. Y crucialmente, error underscore file y out
+underscore file, que son las rutas donde PM dos escribirá los logs.
+Por ejemplo, el servicio de forms podría configurarse así: nombre: form-service. Script: npm.
+Args: start. CWD: punto slash form. Error file: punto slash form slash logs slash error punto
+log. Out file: punto slash form slash logs slash out punto log.
+
+Lo brillante de esta configuración es que cada servicio tiene sus propios archivos de log
+separados. Entonces cuando Claude necesita debuggear el servicio de email, puede
+simplemente leer el archivo de log del servicio de email sin tener que filtrar a través de logs
+de todos los servicios.
+
+El comando pnpm pm2 dos puntos start es un script en package punto json que ejecuta
+pm2 start ecosystem punto config punto js. Este comando inicia todos los siete servicios
+simultáneamente, cada uno como su propio proceso gestionado.
+
+Una vez que los servicios están corriendo, Claude puede usar comandos de PM dos para
+interactuar con ellos. PM dos logs nombre-del-servicio muestra los logs en tiempo real de
+ese servicio. PM dos restart nombre-del-servicio reinicia un servicio específico. PM dos stop
+nombre-del-servicio detiene un servicio. PM dos monit abre una interfaz de monitoreo que
+muestra uso de CPU y memoria de todos los servicios.
+
+El hook que mencionamos antes puede ejecutar estos comandos programáticamente.
+Entonces cuando detecta errores en los logs, puede automáticamente reiniciar el servicio
+afectado y continuar monitoreando.
+
+-----
+
+## LA INTEGRACIÓN DE PRETTIER EN EL WORKFLOW
+
+El hook de Prettier es técnicamente simple pero operacionalmente importante. Después de
+cada respuesta de Claude, el hook identifica qué archivos fueron editados. Para cada
+archivo, determina qué repo pertenece. Cada repo tiene su propio archivo punto prettierrc
+con reglas de formateo específicas.
+
+El hook ejecuta prettier con el flag write contra cada archivo modificado, usando la
+configuración del repo apropiado. Prettier lee el archivo, lo formatea según las reglas, y lo
+escribe de vuelta. Todo esto pasa en milisegundos.
+
+El beneficio es enorme. Sin este hook, inevitablemente tendrías inconsistencias de
+formateo. Claude podría usar comillas simples en un archivo y comillas dobles en otro.
+Podría dejar trailing commas a veces y omitirlas otras veces. Las indentaciones podrían ser
+inconsistentes.
+
+Con el hook, todo el código siempre se formatea consistentemente sin pensar en ello.
+Cuando abres un archivo en tu editor, se ve profesional y limpio. Cuando haces git diff, ves
+solo los cambios reales de lógica, no cientos de cambios de whitespace.
+
+-----
+## SCRIPTS UTILITARIOS Y SU ROL
+
+Hablemos más sobre los scripts utilitarios que mencionó adjuntar a los skills.
+
+El script test-auth-route punto js es un ejemplo perfecto. Este script automatiza algo que
+sería tedioso hacer manualmente. Autenticación en su sistema involucra Keycloak, JWTs,
+cookies, y múltiples pasos.
+
+El script primero hace un request a Keycloak para obtener un refresh token. Usa
+credenciales de desarrollo que están configuradas en variables de entorno. Una vez que
+tiene el refresh token, lo firma usando el JWT secret de la aplicación. Luego construye un
+header de cookie con el formato correcto. Finalmente hace un request HTTP a la URL que
+le pasaste, incluyendo la cookie de autenticación.
+
+El output del script muestra el status code de la respuesta, los headers, y el body. Si hay un
+error, muestra el mensaje de error completo. Esto hace que testear rutas autenticadas sea
+trivial. En lugar de abrir Postman y configurar todo manualmente, simplemente ejecutas
+node scripts slash test-auth-route punto js URL.
+
+El skill de backend dev guidelines tiene una sección que dice: al testear rutas autenticadas,
+usa el script test-auth-route punto js provisto. Entonces cuando Claude necesita testear una
+ruta, sabe exactamente qué hacer.
+
+Otros scripts incluyen un generador de datos de prueba. Antes tenía que llenar
+manualmente un formulario de ciento veinte preguntas solo para crear una sumisión de
+prueba. Ahora tiene un script CLI que genera datos mock realistas. Puedes especificar
+cuántas sumisiones quieres, qué tipos de datos incluir, y el script los crea en la base de
+datos.
+
+Hay un script para resetear la base de datos de desarrollo a un estado limpio. Otro para
+seedear la base de datos con datos de ejemplo. Un script que compara el schema actual de
+la base de datos con las migraciones de Prisma y te avisa si hay inconsistencias antes de
+que ejecutes la migración.
+
+Todos estos scripts están documentados en CLAUDE punto MD o adjuntos a skills
+relevantes. Entonces Claude siempre sabe qué herramientas están disponibles y cómo
+usarlas.
+
+-----
+
+## BETTER TOUCH TOOL Y AUTOMATIZACIÓN DE WORKFLOWS
+
+Better Touch Tool es una herramienta de Mac para crear atajos personalizados y
+automatizaciones. El desarrollador la usa de maneras creativas para acelerar su workflow
+con Claude Code.
+
+El ejemplo más interesante es el atajo para copiar rutas de archivos desde Cursor o
+VSCode. Tiene VSCode abierto en un monitor y Claude Code en otro. Cuando necesita
+referenciar un archivo en un prompt a Claude, podría escribir la ruta manualmente. Pero eso
+es lento y propenso a errores.
+
+En lugar de eso, encuentra el archivo en VSCode, presiona doble tap en CAPS LOCK.
+Better Touch Tool detecta este gesto personalizado. Automáticamente ejecuta el atajo de
+teclado de VSCode para copiar la ruta relativa del archivo. Luego transforma el contenido
+del clipboard, agregando un símbolo arroba al principio. Luego cambia el foco a la ventana
+de terminal donde está Claude Code. Y finalmente pega el contenido.
+
+Todo esto sucede en menos de un segundo. Desde su perspectiva, presiona doble CAPS
+LOCK y mágicamente el archivo que estaba mirando en VSCode ahora está referenciado
+en su prompt de Claude con el formato correcto.
+
+Tiene otros gestos. Doble CMD cambia el foco a Claude Code sin importar qué app esté
+usando. Doble OPT cambia el foco al navegador. Tres dedos deslizando hacia arriba en el
+trackpad ejecuta un comando específico que usa frecuentemente.
+
+Estos pequeños ahorros de tiempo se acumulan. Si cambias entre apps cien veces al día y
+cada cambio te ahorra dos segundos, estás ahorrando más de tres minutos diarios. En un
+año son horas.
+
+-----
+
+## MEMORY MCP Y GESTIÓN DE ESTADO
+
+Memory MCP es una herramienta que permite a Claude mantener memoria persistente
+entre sesiones. El desarrollador la usaba más al principio, antes de que su sistema de skills
+madurara.
+
+Memory MCP funciona permitiéndote guardar información explícitamente. Puedes decirle a
+Claude recuerda que estamos usando el patrón repository para operaciones de base de
+datos. Claude guarda esto en su memoria persistente. Luego en sesiones futuras, Claude
+puede recuperar esta información.
+
+Lo que el desarrollador encontró es que a medida que sus skills se volvieron más
+comprehensivos y el sistema de auto-activación más confiable, necesitaba menos Memory
+MCP. Los skills esencialmente se convirtieron en su memoria de largo plazo.
+
+Sin embargo, todavía usa Memory MCP para ciertos tipos de información. Decisiones
+arquitecturales que son específicas de este proyecto. Por ejemplo, decidimos usar Redis
+para caching en lugar de memcached porque necesitamos persistencia de datos. Esa es
+una decisión que no pertenece en un skill porque es demasiado específica.
+
+También usa Memory MCP para rastrear deuda técnica conocida y TODOs de largo plazo.
+Cosas como hay un bug conocido en el servicio de email cuando se envían más de
+cincuenta emails simultáneamente, pero es de baja prioridad arreglarlo ahora. Esta
+información es útil que Claude la tenga pero no justifica un archivo de documentación
+completo.
+-----
+
+## CÓMO FUNCIONAN LOS COMANDOS SLASH INTERNAMENTE
+
+Los comandos slash son básicamente macros de prompt. Cuando creas un comando slash
+en Claude Code, defines un trigger, que es el texto que escribes, y una expansión, que es el
+prompt completo que se envía a Claude.
+
+El comando slash dev-docs del desarrollador se expande en un prompt muy largo y
+detallado. El prompt dice algo como: actúa como un arquitecto estratégico de planning. Tu
+trabajo es crear un plan comprehensivo para implementar la siguiente característica. Sigue
+esta estructura: uno, executive summary. Dos, technical context con análisis de codebase.
+Tres, implementation phases con tareas específicas. Cuatro, risk assessment. Cinco,
+success criteria. Seis, timeline estimate. Investiga la base de código a fondo antes de crear
+el plan. Lee archivos relevantes. Examina patrones existentes. Considera dependencias. El
+plan debe ser lo suficientemente detallado que un desarrollador pueda implementarlo sin
+ambigüedad.
+
+Entonces cuando escribes slash dev-docs, todo ese prompt detallado se envía a Claude,
+más tu descripción específica de la característica que quieres planear.
+
+El comando slash code-review se expande en un prompt que dice: revisa el código que
+acabas de escribir usando estos criterios. Adherencia a patterns definidos en skills. Manejo
+de errores apropiado. Código limpio y principios de legibilidad. Problemas potenciales de
+performance. Oportunidades de refactoring. Produce un reporte estructurado con secciones
+para problemas críticos, problemas mayores, problemas menores, y aspectos positivos.
+
+La belleza de los comandos slash es que encapsulan prompts complejos en shortcuts
+simples. No tienes que recordar la estructura exacta del reporte de revisión de código que
+quieres. Solo escribes slash code-review y obtienes resultados consistentes.
+
+-----
+
+## EL WORKFLOW COMPLETO DE PRINCIPIO A FIN
+
+Déjame recorrer un workflow completo desde que decides implementar una nueva
+característica hasta que está completa y testeada.
+
+Paso uno: Decidir la característica. Supongamos que quieres agregar un sistema de
+notificaciones por email.
+
+Paso dos: Entrar en planning mode en Claude Code. Escribes slash dev-docs o llamas al
+agente strategic-plan-architect. Das una descripción de alto nivel de lo que quieres.
+
+Paso tres: Claude investiga. Lee archivos relevantes. Examina el servicio de email
+existente. Revisa la estructura de la base de datos. Consulta el skill de
+notification-developer automáticamente por el hook.
+Paso cuatro: Claude produce un plan. Tiene cinco fases. Fase uno: schema de base de
+datos para notificaciones. Fase dos: service layer para crear y enviar notificaciones. Fase
+tres: controller y rutas API. Fase cuatro: integración de frontend. Fase cinco: tests.
+
+Paso cinco: Revisas el plan cuidadosamente. Notas que Claude asumió que usarías
+SendGrid pero en realidad usas AWS SES. Le pides que actualice el plan.
+
+Paso seis: Claude actualiza el plan. Ahora estás satisfecho. Aceptas el plan.
+
+Paso siete: Inmediatamente presionas ESC para prevenir que Claude empiece a
+implementar. Ejecutas slash create-dev-docs. Claude crea el directorio dev slash active
+slash email-notifications. Crea los tres archivos: plan, context, y tasks.
+
+Paso ocho: Ahora empiezas la implementación. Le dices a Claude implementa solo la fase
+uno, schema de base de datos. Claude crea la migración de Prisma. El hook Stop Event se
+ejecuta, corre el build, verifica errores. Todo limpio.
+
+Paso nueve: Revisas la migración. Se ve bien. Le dices a Claude marca la fase uno como
+completa y procede con la fase dos.
+
+Paso diez: Claude implementa el service layer. Crea notification service punto ts. El hook
+UserPromptSubmit vio que estás trabajando en backend y cargó backend-dev-guidelines
+automáticamente. Claude sigue el patrón repository correctamente.
+
+Paso once: Durante la implementación, tu contexto se está agotando. Ejecutas slash
+dev-docs-update. Claude actualiza el archivo de contexto con decisiones recientes, marca
+tareas completadas, y agrega next steps. Compactas la conversación.
+
+Paso doce: En la nueva sesión, simplemente escribes continuar. Claude lee los archivos de
+dev docs y continúa exactamente donde lo dejaste.
+
+Paso trece: Implementas las fases tres y cuatro. Periódicamente llamas al agente
+code-architecture-reviewer para verificar que todo se ve bien.
+
+Paso catorce: Implementas tests en la fase cinco. Usas el script test-auth-route punto js
+para verificar los endpoints de API manualmente también.
+
+Paso quince: Todo está implementado. Ejecutas slash build-and-fix. Claude corre builds en
+todos los repos, encuentra un par de errores de TypeScript menores, los arregla.
+
+Paso dieciséis: Mueves los archivos de dev docs de dev slash active a dev slash completed.
+La característica está hecha.
+
+Este workflow completo tomó quizás seis a ocho horas de trabajo activo, pero
+implementaste una característica completa de notificaciones por email con tests, siguiendo
+todas las mejores prácticas, con cero errores dejados atrás.
+-----
+
+## LECCIONES SOBRE ESCALABILIDAD DEL SISTEMA
+
+Una cosa importante que el desarrollador aprendió es que este sistema escala muy bien a
+medida que tu base de código crece.
+
+Al principio, cuando tenía cien mil líneas de código, podía salirse con la suya con menos
+estructura. Claude podía mantener suficiente contexto mentalmente para trabajar de
+manera efectiva.
+
+Pero a medida que el proyecto creció a trescientas mil líneas, el contexto se volvió
+imposible de manejar sin sistemas. Hay demasiados archivos, demasiados patterns,
+demasiadas interdependencias para que Claude o incluso un humano las mantenga en la
+cabeza.
+
+Los skills resuelven el problema de patterns consistentes. Sin skills, cada vez que Claude ve
+un nuevo área del código, podría inventar un nuevo patrón. Con skills, siempre usa los
+patterns establecidos.
+
+Los dev docs resuelven el problema de mantener el enfoque en tareas grandes. Sin dev
+docs, Claude inevitablemente se distrae o olvida el objetivo original. Con dev docs, siempre
+hay una verdad fuente sobre qué se supone que debe hacer.
+
+Los hooks resuelven el problema de calidad. Sin hooks, errores se escapan, formateo es
+inconsistente, skills son ignorados. Con hooks, hay verificaciones automáticas en cada
+paso.
+
+Los agentes resuelven el problema de tareas especializadas. Sin agentes, tendrías que
+instruir a Claude manualmente sobre cómo hacer cada tipo de revisión o análisis. Con
+agentes, solo llamas al agente apropiado.
+
+Juntos, estos sistemas crean una arquitectura que puede manejar bases de código de
+cualquier tamaño con calidad consistente.
+
+-----
+
+## POR QUÉ ESTE SISTEMA FUNCIONA TAN BIEN
+
+Déjame resumir por qué esta combinación de técnicas es tan efectiva.
+
+Primero, trabaja CON las fortalezas de Claude en lugar de contra ellas. Claude es excelente
+en seguir instrucciones detalladas cuando las tiene frente a él. El sistema asegura que
+siempre tenga las instrucciones correctas en el momento correcto.
+
+Segundo, trabaja ALREDEDOR de las debilidades de Claude. Claude tiende a olvidar cosas
+y perder el foco. Los dev docs proveen memoria externa. Claude a veces ignora guías. Los
+hooks fuerzan la activación. Claude comete errores. Las verificaciones automáticas las
+atrapan.
+
+Tercero, reduce la carga cognitiva en el desarrollador humano. No tienes que recordar
+activar skills. No tienes que recordar correr builds. No tienes que recordar formatear código.
+El sistema hace todo eso automáticamente.
+
+Cuarto, crea ciclos de feedback rápidos. Los errores se atrapan inmediatamente, no horas
+después. Las revisiones de código suceden durante la implementación, no al final. Los
+problemas se arreglan cuando están frescos.
+
+Quinto, escala con el crecimiento del proyecto. A medida que agregas más código, agregas
+más skills. A medida que tu arquitectura evoluciona, actualizas la documentación. El
+sistema crece orgánicamente con tu proyecto.
+
+Y finalmente, es reproducible. Otro desarrollador podría tomar este sistema, adaptarlo a su
+proyecto, y obtener resultados similares. No depende de conocimiento tribal o técnica
+personal. Está todo codificado en configuración y scripts.
+
+-----
+
+Espero que esta explicación profunda te dé una imagen clara de cómo este desarrollador
+realmente construyó y usa este sistema. La clave es que no es un solo truco, es una
+arquitectura completa de herramientas trabajando juntas. Cada pieza resuelve un problema
+específico, y juntas crean un workflow que permite a una persona hacer el trabajo de un
+equipo pequeño.​
+
+# ARCHIVOS DEV DOCS PARA EL PROYECTO DEL DESARROLLADOR
+
+Voy a crear los tres archivos de dev docs que el desarrollador habría creado para su propio
+proyecto de sistema de Claude Code. Esto te dará una idea exacta de cómo se ven y
+funcionan estos documentos en la práctica.
+
+-----
+
+## ARCHIVO 1: claude-code-optimization-system-plan.md
+
+```markdown
+# Plan de Implementación: Sistema de Optimización de Claude Code
+
+**Fecha de Creación:** 2024-04-15
+**Última Actualización:** 2024-10-15
+**Estado:** Completado
+**Desarrollador:** DevOps Engineer (Solo)
+**Duración Estimada:** 6 meses
+**Duración Real:** 6 meses
+
+---
+## EXECUTIVE SUMMARY
+
+Este proyecto implementa un sistema comprehensivo de optimización para Claude Code
+que transforma la experiencia de desarrollo con IA de "vibe coding" inconsistente a un
+workflow estructurado y confiable. El sistema incluye:
+
+- Auto-activación de Skills mediante hooks de TypeScript
+- Sistema de Dev Docs para mantener foco y contexto
+- Gestión de procesos backend con PM2
+- Pipeline de hooks para quality assurance automático
+- Suite de agentes especializados
+- Comandos slash para workflows repetitivos
+
+**Resultado Esperado:** Capacidad de mantener calidad consistente en proyectos de
+300k+ líneas de código trabajando solo con Claude Code.
+
+---
+
+## TECHNICAL CONTEXT
+
+### Proyecto Base
+- **Tipo:** Aplicación web interna corporativa
+- **Tamaño Inicial:** ~100k LOC
+- **Tamaño Final:** ~400k LOC
+- **Stack Tecnológico:**
+  - Frontend: React 19, TypeScript, MUI v7, TanStack Query/Router
+  - Backend: Node.js, 7 microservicios, Prisma ORM
+  - Infraestructura: PM2, Keycloak, AWS SES
+
+### Problemas Identificados
+1. **Skills ignorados:** Claude no usaba guías documentadas consistentemente
+2. **Pérdida de contexto:** En tareas grandes, Claude perdía el rumbo
+3. **Errores no detectados:** TypeScript errors quedaban sin resolver
+4. **Backend debugging:** Sin acceso a logs en tiempo real
+5. **Formateo inconsistente:** Código con estilos mezclados
+6. **Falta de revisiones:** Errores críticos no detectados hasta tarde
+
+### Arquitectura del Sistema a Construir
+```
+
+Claude Code Workflow
+│
+├── Input Layer (UserPromptSubmit Hook)
+│ ├── Skill Rules Analyzer
+│ ├── Keyword Matcher
+│ ├── File Path Analyzer
+│ └── Context Injector
+│
+├── Processing Layer (Claude)
+│ ├── Skills (Auto-loaded)
+│ ├── Dev Docs (Task guidance)
+│ └── Documentation (Project knowledge)
+│
+├── Output Layer (Stop Event Hooks)
+│ ├── File Edit Tracker
+│ ├── Build Checker
+│ ├── Prettier Formatter
+│ └── Error Reminder
+│
+└── Support Systems
+├── PM2 (Process management)
+├── Agents (Specialized tasks)
+└── Slash Commands (Workflow shortcuts)
+
+```
+---
+
+## IMPLEMENTATION PHASES
+
+### FASE 1: Configuración Base y Hooks Framework       ✅
+**Duración:** 2 semanas
+**Prioridad:** CRÍTICA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Estudiar sistema de hooks de Claude Code
+
+      ✅
+2.   Crear estructura de directorios para hooks personalizados
+
+      ✅
+3.   Implementar hook básico UserPromptSubmit
+
+      ✅
+4.   Implementar hook básico Stop Event
+
+      ✅
+5.   Probar pipeline de hooks con ejemplos simples
+6.   Documentar API de hooks en CLAUDE.md
+
+#### Entregables:
+- `/hooks/user-prompt-submit.ts`
+- `/hooks/stop-event.ts`
+- Documentación de arquitectura de hooks
+
+#### Criterios de Éxito:
+- Hooks se ejecutan en el momento correcto del ciclo
+- Pueden leer y modificar prompts
+- Pueden analizar outputs y archivos editados
+- No causan errores o degradación de performance
+
+---
+
+### FASE 2: Sistema de Auto-Activación de Skills   ✅
+**Duración:** 3 semanas
+**Prioridad:** CRÍTICA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Diseñar estructura de skill-rules.json
+
+      ✅
+2.   Implementar keyword matching en UserPromptSubmit
+
+      ✅
+3.   Implementar intent pattern matching (regex)
+
+      ✅
+4.   Implementar file path pattern matching
+
+      ✅
+5.   Implementar content pattern matching
+
+      ✅
+6.   Crear sistema de prioridades para skills
+
+      ✅
+7.   Diseñar formato de mensaje de activación
+
+      ✅
+8.   Implementar inyección de recordatorio en prompt
+
+      ✅
+9.   Testing con skills existentes
+10.   Refinar reglas basado en resultados
+
+#### Entregables:
+- `/config/skill-rules.json`
+- Hook actualizado con lógica de matching
+- Plantilla de mensaje de activación
+- Documentación de cómo agregar nuevos skills
+
+#### Criterios de Éxito:
+- Skills se activan correctamente basados en keywords
+- Skills se activan correctamente basados en archivos
+- Mensaje de activación es visible y claro para Claude
+- Tasa de activación correcta > 95%
+
+---
+
+### FASE 3: Reestructuración de Skills según Best Practices   ✅
+**Duración:** 2 semanas
+**Prioridad:** ALTA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Auditar skills existentes (tamaño, estructura)
+
+      ✅
+2.   Identificar skills > 500 líneas
+
+      ✅
+3.   Dividir frontend-dev-guidelines (1500 líneas → 398 líneas + recursos)
+
+      ✅
+4.   Dividir backend-dev-guidelines (1200 líneas → 304 líneas + recursos)
+
+      ✅
+5.   Crear estructura de /resources para cada skill
+
+      ✅
+6.   Migrar contenido detallado a archivos de recursos
+
+      ✅
+7.   Actualizar skill-rules.json con nuevas rutas
+
+      ✅
+8.   Probar eficiencia de tokens
+9.   Actualizar documentación de skills
+
+#### Entregables:
+- Skills restructurados con progressive disclosure
+- Archivos de recursos organizados por tema
+- Métricas de eficiencia de tokens
+#### Criterios de Éxito:
+- Ningún skill principal > 500 líneas
+- Mejora de eficiencia de tokens 40-60%
+- Claude puede navegar resources cuando necesita detalle
+
+---
+
+### FASE 4: Sistema de Dev Docs    ✅
+**Duración:** 2 semanas
+**Prioridad:** CRÍTICA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Diseñar estructura de 3 archivos (plan, context, tasks)
+
+      ✅
+2.   Crear plantillas para cada tipo de archivo
+
+      ✅
+3.   Implementar comando slash /create-dev-docs
+
+      ✅
+4.   Implementar comando slash /update-dev-docs
+
+      ✅
+5.   Integrar con planning mode workflow
+
+      ✅
+6.   Crear agente strategic-plan-architect
+
+      ✅
+7.   Probar workflow completo con tarea real
+8.   Documentar proceso en CLAUDE.md
+
+#### Entregables:
+- Plantillas de dev docs
+- Comandos slash implementados
+- Agente de planning
+- Sección en CLAUDE.md sobre dev docs workflow
+
+#### Criterios de Éxito:
+- Dev docs mantienen contexto a través de compactaciones
+- Claude puede continuar trabajo sin perderse
+- Tareas se rastrean claramente
+- Decisiones se documentan automáticamente
+
+---
+
+### FASE 5: Integración de PM2 para Backend     ✅
+**Duración:** 1 semana
+**Prioridad:** ALTA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Instalar y configurar PM2
+
+      ✅
+2.   Crear ecosystem.config.js para 7 microservicios
+
+      ✅
+3.   Configurar logging por servicio
+
+      ✅
+4.   Crear script pnpm pm2:start
+
+      ✅
+5.   Crear script pnpm pm2:stop
+
+      ✅
+6.   Crear script pnpm pm2:restart
+7.   Probar acceso de Claude a logs
+8.    ✅ Documentar comandos PM2 en CLAUDE.md
+#### Entregables:
+- ecosystem.config.js configurado
+- Scripts npm para gestión de PM2
+- Estructura de directorios de logs
+
+#### Criterios de Éxito:
+- Todos los servicios corren bajo PM2
+- Logs son accesibles por servicio
+- Claude puede leer y analizar logs
+- Auto-restart funciona en crashes
+
+---
+
+### FASE 6: Pipeline de Hooks de Quality Assurance    ✅
+**Duración:** 2 semanas
+**Prioridad:** ALTA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Implementar File Edit Tracker hook
+
+      ✅
+2.   Implementar Build Checker hook
+
+      ✅
+3.   Implementar Prettier Formatter hook
+
+      ✅
+4.   Implementar Error Handling Reminder hook
+
+      ✅
+5.   Integrar con skill-rules para detectar código riesgoso
+
+      ✅
+6.   Configurar prettier configs por repo
+
+      ✅
+7.   Crear formato de output para errores
+
+      ✅
+8.   Implementar lógica de threshold (< 5 errores vs >= 5)
+9.   Testing del pipeline completo
+
+#### Entregables:
+- 4 hooks de quality assurance
+- Sistema de tracking de ediciones
+- Pipeline automatizado de verificación
+
+#### Criterios de Éxito:
+- Cero errores de TypeScript quedan sin detectar
+- Todo código se formatea automáticamente
+- Claude recibe recordatorios apropiados
+- Build se ejecuta solo cuando necesario
+
+---
+
+### FASE 7: Suite de Agentes Especializados   ✅
+**Duración:** 3 semanas
+**Prioridad:** MEDIA
+
+#### Tareas:
+      ✅ Crear agente code-architecture-reviewer
+      ✅ Crear agente build-error-resolver
+1.
+
+      ✅ Crear agente refactor-planner
+2.
+
+      ✅ Crear agente auth-route-tester
+3.
+
+      ✅ Crear agente auth-route-debugger
+4.
+
+      ✅ Crear agente frontend-error-fixer
+5.
+
+      ✅ Crear agente plan-reviewer
+6.
+
+      ✅ Crear agente documentation-architect
+7.
+
+      ✅ Crear agente frontend-ux-designer
+8.
+
+      ✅ Crear agente web-research-specialist
+9.
+
+      ✅ Documentar cada agente y su propósito
+10.
+11.
+
+#### Entregables:
+- 10+ agentes especializados
+- Documentación de uso de agentes
+- Ejemplos de workflows con agentes
+
+#### Criterios de Éxito:
+- Cada agente tiene rol específico claro
+- Agentes retornan outputs estructurados
+- Agentes pueden ser llamados fácilmente
+- Documentación clara de cuándo usar cada uno
+
+---
+
+### FASE 8: Comandos Slash y Scripts Utilitarios   ✅
+**Duración:** 2 semanas
+**Prioridad:** MEDIA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Crear /dev-docs (planning comprehensivo)
+
+      ✅
+2.   Crear /create-dev-docs (generación de archivos)
+
+      ✅
+3.   Crear /update-dev-docs (actualización pre-compactación)
+
+      ✅
+4.   Crear /code-review (revisión arquitectural)
+
+      ✅
+5.   Crear /build-and-fix (build y corrección)
+
+      ✅
+6.   Crear /route-research-for-testing
+
+      ✅
+7.   Crear /test-route
+
+      ✅
+8.   Desarrollar test-auth-route.js script
+
+      ✅
+9.   Desarrollar script de generación de mock data
+10.   Adjuntar scripts a skills relevantes
+
+#### Entregables:
+- 7+ comandos slash personalizados
+- Scripts utilitarios documentados
+- Integración de scripts con skills
+
+#### Criterios de Éxito:
+- Comandos slash funcionan consistentemente
+- Scripts automatizan tareas tediosas
+- Documentación clara en skills
+- Ahorro de tiempo medible
+
+---
+
+### FASE 9: Reorganización de Documentación      ✅
+**Duración:** 1 semana
+**Prioridad:** MEDIA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Auditar CLAUDE.md y BEST_PRACTICES.md existentes
+
+      ✅
+2.   Migrar best practices a skills
+
+      ✅
+3.   Reducir CLAUDE.md a info específica del proyecto
+
+      ✅
+4.   Crear estructura de claude.md por repo
+
+      ✅
+5.   Crear PROJECT_KNOWLEDGE.md
+
+      ✅
+6.   Crear TROUBLESHOOTING.md
+
+      ✅
+7.   Organizar 850+ archivos de documentación
+8.   Crear índice navegable
+
+#### Entregables:
+- CLAUDE.md refactorizado (~200 líneas)
+- Documentación reorganizada por niveles
+- Separación clara: skills vs docs
+
+#### Criterios de Éxito:
+- CLAUDE.md es conciso y relevante
+- Skills manejan "cómo escribir código"
+- Docs manejan "cómo funciona el proyecto"
+- Fácil navegación de documentación
+
+---
+
+### FASE 10: Herramientas de Productividad   ✅
+**Duración:** 1 semana
+**Prioridad:** BAJA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Configurar SuperWhisper para voice-to-text
+
+      ✅
+2.   Configurar Memory MCP
+
+      ✅
+3.   Configurar BetterTouchTool
+
+      ✅
+4.   Crear gesture: copiar ruta desde VSCode
+
+      ✅
+5.   Crear gesture: doble-CMD para focus Claude
+
+      ✅
+6.   Crear gesture: doble-OPT para focus Browser
+7.   Documentar setup de herramientas
+
+#### Entregables:
+- Herramientas configuradas y documentadas
+- Gestures personalizados
+- Guía de setup
+
+#### Criterios de Éxito:
+- Voice-to-text funciona confiablemente
+- Gestures ahorran tiempo
+- Workflow es más fluido
+
+---
+
+### FASE 11: Testing, Refinamiento y Optimización   ✅
+**Duración:** Ongoing durante todo el proyecto
+**Prioridad:** ALTA
+
+
+      ✅
+#### Tareas:
+
+      ✅
+1.   Testing de sistema con tareas reales
+
+      ✅
+2.   Identificar y arreglar bugs
+
+      ✅
+3.   Optimizar reglas de skill activation
+
+      ✅
+4.   Refinar prompts de agentes
+
+      ✅
+5.   Mejorar formato de outputs
+
+      ✅
+6.   Ajustar thresholds y parámetros
+
+      ✅
+7.   Recopilar métricas de efectividad
+8.   Iterar basado en experiencia
+
+#### Entregables:
+- Sistema estable y confiable
+- Métricas de mejora
+- Lecciones aprendidas documentadas
+
+#### Criterios de Éxito:
+- Sistema funciona consistentemente
+- Calidad de código es alta
+- Velocidad de desarrollo aumentó
+- Menos errores en producción
+
+---
+
+## RISK ASSESSMENT
+
+### Riesgos Técnicos
+
+**ALTO: Hooks pueden romper funcionalidad de Claude Code**
+- Mitigación: Testing exhaustivo, rollback plan, feature flags
+- Estado: Mitigado - hooks son no-invasivos
+
+**MEDIO: Skills pueden volverse obsoletos con actualizaciones**
+- Mitigación: Versionado de skills, revisión periódica
+- Estado: Gestionado - proceso de actualización establecido
+**MEDIO: Overhead de tokens por activación de skills**
+- Mitigación: Progressive disclosure, optimización de tamaño
+- Estado: Resuelto - eficiencia mejoró 40-60%
+
+**BAJO: PM2 puede tener problemas con hot reload**
+- Mitigación: Usar pnpm dev para frontend separadamente
+- Estado: Aceptado - tradeoff vale la pena
+
+### Riesgos de Proceso
+
+**ALTO: Sistema demasiado complejo para mantener**
+- Mitigación: Documentación exhaustiva, diseño modular
+- Estado: Mitigado - sistema es mantenible
+
+**MEDIO: Curva de aprendizaje para otros desarrolladores**
+- Mitigación: Documentación clara, ejemplos, onboarding docs
+- Estado: Pendiente - crear guía de onboarding
+
+**BAJO: Dependencia de herramientas externas**
+- Mitigación: Mantener sistema core independiente
+- Estado: Aceptado - beneficios superan riesgo
+
+---
+
+## SUCCESS CRITERIA
+
+
+ ✅
+### Métricas Cuantitativas
+
+ ✅
+-   Tasa de activación correcta de skills > 95%
+
+ ✅
+-   Errores de TypeScript no detectados = 0
+
+ ✅
+-   Eficiencia de tokens mejorada 40-60%
+
+ ✅                                        ✅
+-   Tiempo de debugging backend reducido 70%
+-   Líneas de código gestionables: 300k+      (400k alcanzado)
+
+
+ ✅
+### Métricas Cualitativas
+
+ ✅
+-   Código consistente con patterns establecidos
+
+ ✅
+-   Claude mantiene foco en tareas grandes
+
+ ✅
+-   Calidad de código es profesional
+
+ ✅
+-   Workflow es fluido y eficiente
+-   Confianza en outputs de Claude
+
+
+ ✅
+### Objetivos de Negocio
+
+ ✅
+-   Proyecto completado en timeline (6 meses)
+
+ ✅
+-   Una persona puede manejar 400k LOC
+
+ ✅
+-   Velocidad de desarrollo aumentada 3-5x
+
+ ✅
+-   Tech debt bajo control
+-   Sistema listo para producción
+---
+
+## TIMELINE ESTIMATE
+```
+
+Mes 1: Fases 1-2 (Hooks + Auto-activación)
+Mes 2: Fases 3-4 (Reestructuración + Dev Docs)
+Mes 3: Fases 5-6 (PM2 + QA Pipeline)
+Mes 4: Fases 7-8 (Agentes + Comandos)
+Mes 5: Fases 9-10 (Docs + Herramientas)
+Mes 6: Fase 11 (Refinamiento) + Trabajo real en proyecto
+
+```
+**Nota:** Timeline es flexible. Refinamiento sucede continuamente. Sistema evoluciona
+basado en necesidades reales durante desarrollo del proyecto principal.
+
+---
+
+## DEPENDENCIES
+
+### Externas
+- Claude Code (plataforma base)
+- PM2 (gestión de procesos)
+- Prettier (formateo)
+- TypeScript (type checking)
+- Node.js ecosystem
+
+### Internas
+- Skills existentes (requieren reestructuración)
+- Proyecto base (testbed para el sistema)
+- Conocimiento de arquitectura del proyecto
+
+---
+
+## NEXT STEPS AFTER COMPLETION
+
+1. **Documentar sistema para comunidad**
+  - Post en Reddit explicando enfoque
+  - Compartir ejemplos de configuración
+  - Crear repositorio con templates
+
+2. **Crear onboarding guide para equipo**
+  - Cómo usar el sistema
+  - Cómo agregar skills nuevos
+  - Cómo crear agentes personalizados
+
+3. **Continuar refinamiento**
+  - Agregar más agentes según necesidad
+  - Optimizar reglas de activation
+  - Mejorar documentación
+
+4. **Explorar automatizaciones adicionales**
+  - Testing automatizado
+  - Deployment automation
+  - Monitoring y alertas
+
+---
+
+## LESSONS LEARNED
+
+### Lo Que Funcionó Bien
+1. **Auto-activación de skills** - Game changer absoluto
+2. **Dev docs de 3 archivos** - Mantiene Claude enfocado
+3. **PM2 para backend** - Debugging mucho más fácil
+4. **Pipeline de hooks** - Calidad consistente
+5. **Diseño modular** - Fácil de extender
+
+### Lo Que Necesitó Iteración
+1. **Tamaño de skills** - Inicialmente demasiado grandes
+2. **Frecuencia de builds** - Demasiado al principio
+3. **Formato de reminders** - Refinado para ser más efectivo
+4. **Estructura de agentes** - Algunos roles muy amplios
+5. **Balance de automatización** - Algunas cosas mejor manuales
+
+### Lo Que Cambiaría
+1. Empezar con skills pequeños desde el inicio
+2. Implementar PM2 más temprano
+3. Crear más ejemplos de workflows
+4. Documentar decisiones mientras se toman
+5. Hacer más testing con proyectos pequeños primero
+
+---
+
+**ESTADO FINAL: COMPLETADO Y EN PRODUCCIÓN**
+**RESULTADO: ÉXITO - Sistema permite desarrollo de 400k LOC con alta calidad**
+```
+
+-----
+
+## ARCHIVO 2: claude-code-optimization-system-context.md
+
+```markdown
+# Contexto de Implementación: Sistema de Optimización de Claude Code
+
+**Última Actualización:** 2024-10-15
+**Proyecto:** Sistema de auto-optimización para Claude Code
+**Estado:** Completado
+
+---
+
+## ARCHIVOS CLAVE Y SU PROPÓSITO
+
+### Hooks System
+```
+
+/hooks/
+├── user-prompt-submit.ts       # Pre-procesa prompts, activa skills
+├── stop-event.ts           # Post-procesa respuestas, QA checks
+├── file-edit-tracker.ts    # Rastrea todas las ediciones
+├── build-checker.ts         # Ejecuta builds y verifica errores
+├── prettier-formatter.ts    # Formatea código automáticamente
+└── error-handling-reminder.ts # Recuerda sobre error handling
+
+```
+**user-prompt-submit.ts (CRÍTICO)**
+- Lee skill-rules.json
+- Analiza prompt del usuario buscando keywords
+- Ejecuta regexes de intent patterns
+- Verifica file paths si está trabajando en archivo
+- Lee contenido de archivo para content patterns
+- Construye mensaje de activación de skills
+- Inyecta mensaje ANTES del prompt original
+- Pasa prompt modificado a Claude
+
+**stop-event.ts (CRÍTICO)**
+- Coordina ejecución de otros hooks post-respuesta
+- Ejecuta en orden: file tracker → build → prettier → reminder
+- Maneja errores de hooks individuales gracefully
+- Registra todas las acciones para debugging
+
+**build-checker.ts (CRÍTICO)**
+- Lee file-edit-tracker log
+- Identifica repos modificados
+- Ejecuta comando build apropiado por repo
+- Parsea output buscando errores de TypeScript
+- Si < 5 errores: muestra directamente a Claude
+- Si >= 5 errores: sugiere agente auto-error-resolver
+- Limpia logs después de procesamiento
+
+---
+
+### Configuration Files
+```
+/config/
+├── skill-rules.json       # Reglas de activación de skills
+├── prettier-configs/       # Configs por repo
+│ ├── frontend/.prettierrc
+│ ├── backend/.prettierrc
+│ └── shared/.prettierrc
+└── pm2/
+└── ecosystem.config.js     # Configuración de microservicios
+
+```
+**skill-rules.json (CRÍTICO)**
+- Define todos los skills disponibles
+- Estructura por skill:
+  - type: "domain" o "guidelines"
+  - enforcement: "suggest" o "block"
+  - priority: "high", "medium", "low"
+  - promptTriggers:
+    - keywords: array de strings
+    - intentPatterns: array de regex strings
+  - fileTriggers:
+    - pathPatterns: array de glob patterns
+    - contentPatterns: array de regex strings
+
+**Ejemplo de regla:**
+```json
+{
+  "backend-dev-guidelines": {
+    "type": "guidelines",
+    "enforcement": "suggest",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": ["backend", "controller", "service", "API", "endpoint", "route"],
+      "intentPatterns": [
+        "(create|add|implement).*?(route|endpoint|controller|service)",
+        "(how to|best practice).*?(backend|API|server)",
+        "backend.*?(pattern|architecture)"
+      ]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "backend/src/**/*.ts",
+        "**/controllers/**/*.ts",
+        "**/services/**/*.ts",
+        "**/routes/**/*.ts"
+      ],
+      "contentPatterns": [
+        "router\\.",
+        "export.*Controller",
+              "export.*Service",
+              "@route",
+              "express\\.Request"
+          ]
+      }
+ }
+}
+```
+
+-----
+
+### Skills Structure
+
+```
+/skills/
+├── public/                # Skills compartibles
+│ ├── backend-dev-guidelines/
+│ │ ├── SKILL.md               # 304 líneas - archivo principal
+│ │ └── resources/
+│ │      ├── controller-pattern.md
+│ │      ├── service-layer.md
+│ │      ├── repository-pattern.md
+│ │      ├── error-handling.md
+│ │      ├── routing.md
+│ │      ├── validation.md
+│ │      ├── authentication.md
+│ │      ├── database-operations.md
+│ │      ├── testing.md
+│ │      ├── api-documentation.md
+│ │      └── scripts/
+│ │        └── test-auth-route.js
+│ │
+│ ├── frontend-dev-guidelines/
+│ │ ├── SKILL.md               # 398 líneas - archivo principal
+│ │ └── resources/
+│ │      ├── component-patterns.md
+│ │      ├── hooks-usage.md
+│ │      ├── state-management.md
+│ │      ├── routing.md
+│ │      ├── data-fetching.md
+│ │      ├── forms.md
+│ │      ├── styling.md
+│ │      ├── performance.md
+│ │      ├── testing.md
+│ │      └── accessibility.md
+│ │
+│ └── database-verification/
+│      └── SKILL.md           # Skill con enforcement: "block"
+│
+└── private/                # Skills específicos del proyecto
+    ├── workflow-developer/
+    ├── notification-developer/
+    └── project-catalog-developer/
+```
+
+**Decisión de Diseño:** Skills públicos son reutilizables, privados son específicos del
+proyecto. Todos siguen regla de < 500 líneas en archivo principal.
+
+-----
+
+### PM2 Configuration
+
+```
+/pm2/
+└── ecosystem.config.js
+```
+
+**ecosystem.config.js:**
+
+```javascript
+module.exports = {
+  apps: [
+    {
+      name: 'form-service',
+      script: 'npm',
+      args: 'start',
+      cwd: './backend/form',
+      error_file: './backend/form/logs/error.log',
+      out_file: './backend/form/logs/out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      merge_logs: true,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G'
+    },
+    // ... 6 servicios más con configuración similar
+  ]
+};
+```
+
+**Por Qué PM2:**
+
+- Claude puede leer logs por servicio: `pm2 logs service-name --lines 200`
+- Auto-restart en crashes
+- Gestión centralizada de procesos
+- Monitoreo de recursos: `pm2 monit`
+- Comandos simples: `pnpm pm2:start`, `pnpm pm2:stop`
+
+-----
+
+### Agents Directory
+
+```
+/agents/
+├── strategic-plan-architect.md
+├── code-architecture-reviewer.md
+├── build-error-resolver.md
+├── refactor-planner.md
+├── auth-route-tester.md
+├── auth-route-debugger.md
+├── frontend-error-fixer.md
+├── plan-reviewer.md
+├── documentation-architect.md
+├── frontend-ux-designer.md
+└── web-research-specialist.md
+```
+
+**Cada agente tiene:**
+
+- Rol específico claramente definido
+- Instrucciones de qué información necesita
+- Formato de output esperado
+- Ejemplos de uso
+- Cuándo usar vs no usar
+
+-----
+
+### Documentation Structure
+
+```
+/docs/
+├── CLAUDE.md                 # 200 líneas - info del proyecto
+├── architecture/
+│ ├── overview.md
+│ ├── frontend-architecture.md
+│ ├── backend-architecture.md
+│ ├── database-schema.md
+│ └── service-interactions.md
+├── api/
+│ ├── form-service-api.md
+│ ├── email-service-api.md
+│ └── [auto-generated docs]
+├── PROJECT_KNOWLEDGE.md                # Conocimiento profundo del proyecto
+└── TROUBLESHOOTING.md                # Problemas comunes y soluciones
+```
+
+**CLAUDE.md - Secciones:**
+
+1. Quick Start Commands
+1. Service-Specific Configuration
+1. Dev Docs Workflow (cómo usar el sistema)
+1. Testing Authenticated Routes
+1. PM2 Commands Reference
+1. Referencias a skills y documentation
+
+-----
+
+### Scripts Directory
+
+```
+/scripts/
+├── test-auth-route.js     # Testea rutas con autenticación
+├── generate-mock-data.js      # CLI para datos de prueba
+├── reset-db.sh           # Resetea base de datos dev
+├── seed-db.sh            # Seedea datos de ejemplo
+├── schema-diff-check.sh      # Verifica schema vs migraciones
+├── backup-dev-db.sh         # Backup de DB
+└── restore-dev-db.sh       # Restore de DB
+```
+
+**test-auth-route.js (Usado frecuentemente):**
+
+```javascript
+// Uso: node scripts/test-auth-route.js http://localhost:3002/api/endpoint
+
+const axios = require('axios');
+const jwt = require('jsonwebtoken');
+
+async function testAuthRoute(url) {
+ // 1. Obtener refresh token de Keycloak
+ const refreshToken = await getKeycloakToken();
+
+ // 2. Firmar con JWT secret
+ const signedToken = jwt.sign({ refresh_token: refreshToken }, process.env.JWT_SECRET);
+
+ // 3. Construir cookie header
+ const cookie = `refresh_token=${signedToken}`;
+
+ // 4. Hacer request
+ try {
+   const response = await axios.get(url, {
+    headers: { Cookie: cookie }
+

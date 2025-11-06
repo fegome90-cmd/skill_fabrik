@@ -1,21 +1,169 @@
-import { Command } from 'commander';
 import chalk from 'chalk';
+import { Command } from 'commander';
 import type { SkillMetadata, SkillRegistry } from '../types/skill.js';
-import { join, resolve } from 'path';
+import path, { join, resolve } from 'path';
+import { colors, format, createBox } from '../utils/colors.js';
+import { Spinner, StepIndicator, promptSelect, promptConfirm, withSpinner } from '../utils/progress.js';
+import {
+  packSkill,
+  loadManifest,
+  verifyPackage,
+  installPackage,
+  type SkillManifest,
+} from '../utils/skill-packager.js';
+import { writeEvent } from '../lib/events.js';
+import { buildOptimizedPromptV2 } from '../utils/prompt-builder-v2.js';
+import { fileURLToPath } from 'url';
 
-function extractKeywords(description: string): string[] {
-  // Simple keyword extraction from description
-  // Split by common words and extract meaningful terms
-  const words = description
+// --- Safety Layer Lite helpers (shim + sanitize + rate limit) ---
+const safetyLayerOn = () => process.env.SF_SAFETY_LAYER !== 'off';
+
+function normalizeActivateResponse(raw: any) {
+  if (raw && typeof raw === 'object' && 'success' in raw && 'results' in raw) return raw;
+  const candidates = raw?.candidates ?? [];
+  return {
+    success: true,
+    timestamp: new Date().toISOString(),
+    results: candidates.map((c: any) => ({
+      skillId: c?.id ?? c?.skillId ?? 'unknown',
+      confidence: c?.score ?? c?.confidence ?? 0,
+      reason: c?.reason ?? 'legacy-adapter',
+      metadata: c?.metadata ?? {},
+      matchedSignals: raw?.signals ?? {},
+    })),
+    metrics: { latency_ms: raw?.latency_ms },
+  };
+}
+
+function sanitizeContext(ctx: any, limits = { maxFiles: 5, maxChars: 4096 }) {
+  const files = Array.isArray(ctx?.files) ? ctx.files.slice(0, limits.maxFiles) : undefined;
+  const clip = (s?: string) => (s && s.length > limits.maxChars ? s.slice(0, limits.maxChars) : s);
+  return {
+    ...ctx,
+    files,
+    activeFileContent: clip(ctx?.activeFileContent),
+  };
+}
+
+const bucket = { tokens: 3, last: Date.now() };
+function allow(): boolean {
+  const now = Date.now();
+  const elapsed = now - bucket.last;
+  if (elapsed >= 10000) {
+    const refill = Math.floor(elapsed / 10000) * 3;
+    bucket.tokens = Math.min(3, bucket.tokens + refill);
+    bucket.last = now;
+  }
+  if (bucket.tokens > 0) { bucket.tokens--; return true; }
+  return false;
+}
+
+export function extractKeywords(description: string, metadata?: any): string[] {
+  const keywords = new Set<string>();
+
+  // Enhanced keyword extraction using multiple metadata fields
+
+  // 1. Extract from description (original logic)
+  const descWords = description
     .toLowerCase()
     .split(/\s+/)
-    .filter(word => word.length > 3)
-    .filter(
-      word => !['when', 'should', 'this', 'skill', 'that', 'with', 'from', 'will'].includes(word)
-    );
+    .filter(word => word.length > 2)
+    .filter(word => !['when', 'should', 'this', 'skill', 'that', 'with', 'from', 'will'].includes(word));
 
-  // Return unique keywords (max 10)
-  return [...new Set(words)].slice(0, 10);
+  descWords.forEach(word => keywords.add(word));
+
+  // 2. Extract from metadata fields if available
+  if (metadata) {
+    // Extract from tags
+    if (metadata.tags && Array.isArray(metadata.tags)) {
+      metadata.tags.forEach((tag: string) => {
+        keywords.add(tag.toLowerCase());
+      });
+    }
+
+    // Extract from type
+    if (metadata.type) {
+      keywords.add(metadata.type.toLowerCase());
+    }
+
+    // Extract from allowed-tools
+    if (metadata.allowedTools && Array.isArray(metadata.allowedTools)) {
+      metadata.allowedTools.forEach((tool: string) => {
+        // Split tool names by dots and add parts
+        const parts = tool.toLowerCase().split('.');
+        parts.forEach(part => {
+          if (part.length > 2) keywords.add(part);
+        });
+        keywords.add(tool.toLowerCase());
+      });
+    }
+
+    // Extract from summary (if different from description)
+    if (metadata.summary && metadata.summary !== description) {
+      const summaryWords = metadata.summary
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(word => word.length > 2);
+      summaryWords.forEach(word => keywords.add(word));
+    }
+
+    // Extract from when_to_use
+    if (metadata.when_to_use) {
+      const whenWords = metadata.when_to_use
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(word => word.length > 2);
+      whenWords.forEach(word => keywords.add(word));
+    }
+
+    // Add domain-specific keywords based on type and tools
+    if (metadata.type === 'guardrail') {
+      keywords.add('security');
+      keywords.add('validation');
+      keywords.add('safety');
+      keywords.add('check');
+
+      if (metadata.allowedTools) {
+        if (metadata.allowedTools.includes('fs.write')) {
+          keywords.add('filesystem');
+          keywords.add('write');
+          keywords.add('permissions');
+        }
+        if (metadata.allowedTools.includes('fs.rm')) {
+          keywords.add('destructive');
+          keywords.add('delete');
+          keywords.add('remove');
+        }
+        if (metadata.allowedTools.includes('net.request')) {
+          keywords.add('network');
+          keywords.add('request');
+          keywords.add('internet');
+        }
+      }
+    }
+
+    if (metadata.type === 'guideline') {
+      keywords.add('guidelines');
+      keywords.add('best');
+      keywords.add('practice');
+      keywords.add('recommendation');
+    }
+
+    if (metadata.type === 'workflow') {
+      keywords.add('workflow');
+      keywords.add('process');
+      keywords.add('automation');
+      keywords.add('pipeline');
+    }
+  }
+
+  // Convert to array, filter out common words, and limit
+  const filteredKeywords = Array.from(keywords)
+    .filter(word => word.length > 2)
+    .filter(word => !['and', 'the', 'for', 'are', 'not', 'you', 'can', 'all', 'any', 'has', 'have', 'been'].includes(word))
+    .slice(0, 12); // Increased limit for better coverage
+
+  return filteredKeywords;
 }
 
 interface LintResult {
@@ -81,9 +229,10 @@ async function validateSkill(
     errors.push(`Tipo inválido '${metadata.type}', debe ser uno de: ${validTypes.join(', ')}`);
   }
 
-  // Validación: verbos de acción (advertencia)
+  // Validación: verbos de acción (advertencia) - solo en modo strict
+  // Patrón más flexible que incluye palabras comunes en español
   const actionVerbs =
-    /(?:ejecuta|crea|valida|genera|analiza|aplica|implementa|diseña|desarrolla|construye|configura|establece)/i;
+    /(?:ejecuta|crea|valida|genera|analiza|aplica|implementa|diseña|desarrolla|construye|configura|establece|patrones|manejo|pruebas|guía|guía|define|organiza)/i;
   if (!actionVerbs.test(description)) {
     warnings.push('Descripción podría beneficiarse de verbos de acción más claros');
   }
@@ -98,7 +247,7 @@ async function validateSkill(
 export function skillsCommand(program: Command) {
   const skillsCmd = program
     .command('skills')
-    .description('Skills management commands (index/lint/check)');
+    .description('Skills management commands (index/lint/check/pack/verify/install/activate/execute)');
 
   skillsCmd
     .command('index')
@@ -114,13 +263,27 @@ export function skillsCommand(program: Command) {
         const { parseSkillMD } = await import('../utils/skill-parser.js');
         const fsModule = await import('fs-extra');
         const fs = fsModule.default || fsModule;
-        const { pathExists, ensureDir, writeJson, readdir } = fs;
+        const { pathExists, ensureDir, writeJson, readdir, readJson } = fs;
         const { join, resolve: resolvePath } = await import('path');
 
         const resolvedPath = resolvePath(skillsPath);
 
         if (!(await pathExists(resolvedPath))) {
           throw new Error(`Skills directory not found: ${resolvedPath}`);
+        }
+
+        // Load existing skill-rules.json to merge with registry data
+        const skillRulesPath = join(resolvePath(process.cwd()), 'configs', 'skill-rules.json');
+        let skillRules: Record<string, any> = {};
+        if (await pathExists(skillRulesPath)) {
+          try {
+            skillRules = await readJson(skillRulesPath);
+            if (options.verbose) {
+              console.log(chalk.blue(`Loaded ${Object.keys(skillRules).length} skill rules from ${skillRulesPath}`));
+            }
+          } catch (error) {
+            console.warn(chalk.yellow(`Warning: Could not load skill-rules.json: ${error}`));
+          }
         }
 
         // Find all SKILL.md files
@@ -131,10 +294,47 @@ export function skillsCommand(program: Command) {
           if (!category.isDirectory()) continue;
 
           const categoryPath = join(resolvedPath, category.name);
-          const skillDirs = await readdir(categoryPath, { withFileTypes: true });
 
+          // First, check if there's a SKILL.md directly in the category directory
+          const categorySkillMD = join(categoryPath, 'SKILL.md');
+          if (await pathExists(categorySkillMD)) {
+            try {
+              const metadata = await parseSkillMD(categorySkillMD);
+              const rule = skillRules[metadata.name];
+
+              skills.push({
+                name: metadata.name,
+                description: metadata.description,
+                severity: metadata.severity || rule?.priority || 'medium',
+                type: metadata.type || rule?.type || 'guideline',
+                enforcement: metadata.enforcement || rule?.enforcement || 'suggest',
+                priority: metadata.priority || rule?.priority || 'normal',
+                triggers: {
+                  keywords: extractKeywords(metadata.description, metadata),
+                  intentPatterns: rule?.promptTriggers?.intentPatterns || [],
+                  pathPatterns: rule?.fileTriggers?.pathPatterns || [],
+                  contentPatterns: rule?.fileTriggers?.contentPatterns || [],
+                },
+              });
+
+              if (options.verbose) {
+                const ruleInfo = rule ? ' (from rules)' : ' (metadata only)';
+                console.log(chalk.green(`✓ Indexed: ${category.name}${ruleInfo}`));
+              }
+            } catch (error) {
+              console.error(
+                chalk.red(`✗ Error parsing ${category.name}: ${error}`)
+              );
+            }
+          }
+
+          // Then, check for skills in subdirectories
+          const skillDirs = await readdir(categoryPath, { withFileTypes: true });
           for (const skillDir of skillDirs) {
             if (!skillDir.isDirectory()) continue;
+            if (['resources', 'scripts', 'exec-scripts', 'examples', 'tests', '__tests__'].includes(skillDir.name)) {
+              continue;
+            }
 
             const skillMD = join(categoryPath, skillDir.name, 'SKILL.md');
 
@@ -149,20 +349,27 @@ export function skillsCommand(program: Command) {
 
             try {
               const metadata = await parseSkillMD(skillMD);
+              const rule = skillRules[metadata.name];
 
-              // Try to extract triggers from content (basic implementation)
-              // TODO: Read triggers from config or skill-rules.json
+              // Include ALL information from skill-rules.json if available
               skills.push({
                 name: metadata.name,
                 description: metadata.description,
-                severity: metadata.severity || 'medium',
+                severity: metadata.severity || rule?.priority || 'medium',
+                type: metadata.type || rule?.type || 'guideline',
+                enforcement: metadata.enforcement || rule?.enforcement || 'suggest',
+                priority: metadata.priority || rule?.priority || 'normal',
                 triggers: {
-                  keywords: extractKeywords(metadata.description),
+                  keywords: extractKeywords(metadata.description, metadata),
+                  intentPatterns: rule?.promptTriggers?.intentPatterns || [],
+                  pathPatterns: rule?.fileTriggers?.pathPatterns || [],
+                  contentPatterns: rule?.fileTriggers?.contentPatterns || [],
                 },
               });
 
               if (options.verbose) {
-                console.log(chalk.green(`✓ Indexed: ${category.name}/${skillDir.name}`));
+                const ruleInfo = rule ? ' (from rules)' : ' (metadata only)';
+                console.log(chalk.green(`✓ Indexed: ${category.name}/${skillDir.name}${ruleInfo}`));
               }
             } catch (error) {
               console.error(
@@ -223,7 +430,6 @@ export function skillsCommand(program: Command) {
         const fs = fsModule.default || fsModule;
         const { readdir, pathExists } = fs;
 
-        // Buscar todos los SKILL.md en subdirectorios
         const categories = await readdir(resolvedPath, { withFileTypes: true });
 
         for (const category of categories) {
@@ -235,10 +441,7 @@ export function skillsCommand(program: Command) {
           for (const skillDir of skillDirs) {
             if (!skillDir.isDirectory()) continue;
 
-            // Ignorar directorios comunes (resources, scripts, etc.)
-            if (
-              ['resources', 'scripts', 'examples', 'tests', '__tests__'].includes(skillDir.name)
-            ) {
+            if (['resources', 'scripts', 'exec-scripts', 'examples', 'tests', '__tests__'].includes(skillDir.name)) {
               continue;
             }
 
@@ -274,7 +477,6 @@ export function skillsCommand(program: Command) {
           }
         }
 
-        // Reporte
         const validCount = results.filter(r => r.valid).length;
         const totalCount = results.length;
 
@@ -309,6 +511,247 @@ export function skillsCommand(program: Command) {
         process.exit(1);
       }
     });
+
+
+  skillsCmd
+    .command('pack')
+    .description('Package a skill directory into a reproducible .tgz and manifest')
+    .argument('<skillDir>', 'Path to skill directory')
+    .option('-o, --out <dir>', 'Output directory', '.registry')
+    .option('--manifest-version <version>', 'Version to embed in manifest')
+    .action(async (skillDir: string, options: { out: string; manifestVersion?: string }) => {
+      try {
+        const { manifest, packagePath, manifestPath } = await packSkill(skillDir, {
+          outDir: options.out,
+          version: options.manifestVersion,
+        });
+        console.log(chalk.green('✓ Skill packaged successfully'));
+        console.log(`  package : ${packagePath}`);
+        console.log(`  manifest: ${manifestPath}`);
+        await writeEvent({
+          type: 'skill-pack',
+          id: manifest.id,
+          version: manifest.version,
+          package: packagePath,
+          manifest: manifestPath,
+        });
+        process.exit(0);
+      } catch (error) {
+        console.error(chalk.red('Failed to package skill:'), error instanceof Error ? error.message : String(error));
+        process.exit(1);
+      }
+    });
+
+  skillsCmd
+    .command('verify')
+    .description('Verify a packaged skill (.tgz) against its manifest and schema')
+    .argument('<package>', 'Path to skill package (.tgz)')
+    .option('--manifest <path>', 'Manifest JSON path (defaults to same directory with .manifest.json)')
+    .action(async (pkgPath: string, options: { manifest?: string }) => {
+      const resolvePkgPath = (input: string): string => {
+        if (input.startsWith('file://')) {
+          return fileURLToPath(input);
+        }
+        return path.resolve(input);
+      };
+
+      try {
+        const resolvedPackage = resolvePkgPath(pkgPath);
+        const manifestPath =
+          options.manifest !== undefined
+            ? path.resolve(options.manifest)
+            : resolvedPackage.replace(/\.tgz$/, '.manifest.json');
+
+        const fsModule = await import('fs-extra');
+        const fs = fsModule.default || fsModule;
+
+        if (!(await fs.pathExists(manifestPath))) {
+          throw new Error(`Manifest not found at ${manifestPath}`);
+        }
+
+        const manifest = await loadManifest(manifestPath);
+        await verifyPackage(resolvedPackage, manifest);
+        console.log(chalk.green('✓ Package verified successfully'));
+        process.exit(0);
+      } catch (error) {
+        console.error(chalk.red('Failed to verify package:'), error instanceof Error ? error.message : String(error));
+        process.exit(1);
+      }
+    });
+
+  skillsCmd
+    .command('install')
+    .description('Install a packaged skill into the local workspace (read-only policy)')
+    .argument('<package>', 'Path to skill package (.tgz or file://)')
+    .option('--manifest <path>', 'Manifest JSON path (defaults to same directory with .manifest.json)')
+    .option('--target <dir>', 'Target skills directory', 'skills')
+    .option('--force', 'Overwrite existing installation', false)
+    .action(
+      async (
+        pkgPath: string,
+        options: { manifest?: string; target: string; force?: boolean }
+      ) => {
+        const resolvePkgPath = (input: string): string => {
+          if (input.startsWith('file://')) {
+            return fileURLToPath(input);
+          }
+          return path.resolve(input);
+        };
+
+        try {
+          const resolvedPackage = resolvePkgPath(pkgPath);
+          const manifestPath =
+            options.manifest !== undefined
+              ? path.resolve(options.manifest)
+              : resolvedPackage.replace(/\.tgz$/, '.manifest.json');
+
+          const fsModule = await import('fs-extra');
+          const fs = fsModule.default || fsModule;
+
+          if (!(await fs.pathExists(manifestPath))) {
+            throw new Error(`Manifest not found at ${manifestPath}`);
+          }
+
+          const manifest: SkillManifest = await loadManifest(manifestPath);
+          await verifyPackage(resolvedPackage, manifest);
+
+          const installDir = await installPackage(resolvedPackage, manifest, {
+            targetDir: options.target,
+            force: options.force,
+          });
+
+          console.log(chalk.green(`✓ Skill ${manifest.id}@${manifest.version} installed at ${installDir}`));
+          await writeEvent({
+            type: 'skill-install',
+            id: manifest.id,
+            version: manifest.version,
+            package: resolvedPackage,
+            target: installDir,
+          });
+          process.exit(0);
+        } catch (error) {
+          console.error(chalk.red('Failed to install package:'), error instanceof Error ? error.message : String(error));
+          process.exit(1);
+        }
+      }
+    );
+
+  // New: activate (calls daemon /activate)
+  skillsCmd
+    .command('activate')
+    .description('Activate skills based on intent (via daemon /activate)')
+    .requiredOption('--intent <text>', 'Intent text')
+    .option('--cwd <path>', '.', 'Working directory')
+    .option('--threshold <num>', 'Activation threshold (default 0.6)')
+    .option('--daemon <url>', 'Daemon URL (overrides SF_ENDPOINT)')
+    .option('--json', 'Print JSON output', false)
+    .action(async (options: { intent: string; cwd?: string; json?: boolean; threshold?: string; daemon?: string }) => {
+      try {
+        if (options.daemon) process.env.SF_ENDPOINT = String(options.daemon);
+        const { post } = await import('../lib/http.js');
+        const { writeEvent } = await import('../lib/events.js');
+        const t0 = Date.now();
+        if (safetyLayerOn() && !allow()) {
+          console.error('⚠️  rate-limited: reintenta en unos segundos');
+          process.exit(0);
+        }
+
+        const baseContext = {
+          workingDirectory: options.cwd || process.cwd(),
+          environment: process.env,
+          files: [],
+          userId: 'cli-user',
+          sessionId: `cli-${Date.now()}`,
+        };
+        const ctx = safetyLayerOn() ? sanitizeContext(baseContext) : baseContext;
+
+        const body = {
+          intent: options.intent,
+          context: ctx,
+          options: {
+            threshold: isFinite(Number(options.threshold)) ? Number(options.threshold) : 0.6,
+            maxCandidates: 3,
+            maxResults: 5,
+            includeMetadata: true,
+          },
+        };
+
+        const { ok, status, json } = await post('/activate', body);
+        const latency = Date.now() - t0;
+        await writeEvent({ type: 'cli-activate', ok, status, latency_ms: latency });
+
+        const payload = safetyLayerOn() ? normalizeActivateResponse(json) : json;
+
+        if (options.json) {
+          console.log(JSON.stringify(payload, null, 2));
+        } else {
+          // When safety layer is off and legacy shape comes back, avoid hard failure
+          if (!ok || (payload && 'success' in payload && payload.success === false)) {
+            console.error('[activate] error', status, (payload as any)?.error?.message || payload);
+            process.exit(1);
+          }
+          const results = (payload as any)?.results || (payload as any)?.candidates || [];
+          console.log('Activated skills:', Array.isArray(results) ? results.length : 0);
+          if (Array.isArray(results) && results.length > 0) {
+            results.forEach((result: any, index: number) => {
+              console.log(`${index + 1}. ${result.skillId}: ${(result.confidence * 100).toFixed(1)}%`);
+              if (result.reason) {
+                console.log(`   Reason: ${result.reason}`);
+              }
+            });
+          }
+          const m = (payload as any)?.metrics;
+          if (m) {
+            const proc = m.processingTime ?? m.latency_ms;
+            if (proc !== undefined) console.log(`Processing time: ${proc}ms`);
+            if (m.cacheHit !== undefined) {
+              console.log(`Cache hit: ${json.metrics.cacheHit ? 'YES' : 'NO'}`);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('activate failed:', error instanceof Error ? error.message : String(error));
+        process.exit(1);
+      }
+    });
+
+  // New: execute (dry-run only until Policy)
+  skillsCmd
+    .command('execute')
+    .description('Execute a skill (dry-run) via daemon /execute')
+    .requiredOption('--skill-id <id>', "Skill id or 'auto'")
+    .option('--dry-run', 'Simulation (no effects)', false)
+    .option('--json', 'Print JSON output', false)
+    .action(async (options: { skillId: string; dryRun?: boolean; json?: boolean }) => {
+      try {
+        const { post } = await import('../lib/http.js');
+        const { writeEvent } = await import('../lib/events.js');
+        const { ok, status, json } = await post('/execute', {
+          skill_id: options.skillId,
+          args: {},
+          dry_run: !!options.dryRun,
+        });
+        await writeEvent({ type: 'cli-execute', ok, status });
+
+        if (options.json) {
+          console.log(JSON.stringify(json, null, 2));
+        } else {
+          if (!ok) {
+            console.error('[execute] error', status, json);
+            process.exit(1);
+          }
+          console.log(json.stdout);
+          console.log('Latency:', json.run_latency_ms, 'ms');
+          console.log('Evidence:', json.evidence_id);
+        }
+      } catch (error) {
+        console.error('execute failed:', error instanceof Error ? error.message : String(error));
+        process.exit(1);
+      }
+    });
+
+
+
 
   skillsCmd
     .command('rules')
@@ -409,10 +852,11 @@ export function skillsCommand(program: Command) {
     .option('-v, --verbose', 'Verbose output')
     .option('--open-files <files...>', 'Open files to consider for path triggers')
     .option('--threshold <number>', 'Activation threshold (0-1)', '0.6')
+    .option('--v2', 'Use Prompt Builder v2 for enhanced analysis')
     .action(
       async (
         intent: string,
-        options: { verbose?: boolean; openFiles?: string[]; threshold?: string }
+        options: { verbose?: boolean; openFiles?: string[]; threshold?: string; v2?: boolean }
       ) => {
         try {
           console.log(chalk.blue(`Checking intent: "${intent}"`));
@@ -531,6 +975,36 @@ export function skillsCommand(program: Command) {
             }
           });
 
+          // Enhanced analysis with Prompt Builder v2 if requested
+          if (options.v2) {
+            console.log(chalk.blue('\n🔍 Enhanced analysis with Prompt Builder v2:'));
+
+            try {
+              const optimizedPrompt = await buildOptimizedPromptV2({
+                description: intent,
+                skillIds: matches.map(m => m.skill.name),
+                includeTemplate: true,
+                includeTags: true,
+                complexity: 'medium',
+                cwd: process.cwd(),
+              });
+
+              console.log(chalk.cyan(`  📊 Expected score: ${optimizedPrompt.expectedScore.toFixed(1)}`));
+              console.log(chalk.cyan(`  🏷️  TAGs coverage: ${((optimizedPrompt.tagsCoverage || 0) * 100).toFixed(0)}%`));
+              console.log(chalk.cyan(`  🔗 Template coverage: ${((optimizedPrompt.templateScore || 0) * 100).toFixed(0)}%`));
+
+              if (optimizedPrompt.signals.tags && optimizedPrompt.signals.tags.length > 0) {
+                console.log(chalk.gray(`  📋 Relevant tags: ${optimizedPrompt.signals.tags.slice(0, 5).join(', ')}`));
+              }
+
+              if (optimizedPrompt.skillActivation.length > 0) {
+                console.log(chalk.gray(`  ⚡ Skill activations: ${optimizedPrompt.skillActivation.slice(0, 3).map(s => s.skillId).join(', ')}`));
+              }
+            } catch (error) {
+              console.log(chalk.yellow(`  ⚠️  Enhanced analysis failed: ${error instanceof Error ? error.message : String(error)}`));
+            }
+          }
+
           process.exit(0);
         } catch (error) {
           console.error(
@@ -542,4 +1016,108 @@ export function skillsCommand(program: Command) {
         }
       }
     );
+  skillsCmd
+    .command('confirm')
+    .description('Confirm a write-safe (S1) challenge for a skill')
+    .requiredOption('--challenge <id>', 'Challenge identifier returned by /execute preflight')
+    .option('--nonce <value>', 'Nonce returned when CONFIRM_TEST_EXPOSE_NONCE=true (dev only)')
+    .option('--cwd <path>', 'Working directory', '.')
+    .option('--skill-id <id>', 'Skill id to confirm (defaults to policy-s1 example)', 'policy-s1')
+    .option('--json', 'Print JSON response', false)
+    .action(async (options: {
+      challenge: string;
+      nonce?: string;
+      cwd?: string;
+      skillId: string;
+      json?: boolean;
+    }) => {
+      try {
+        const secret = process.env.CONFIRM_SECRET || '';
+        if (!secret) {
+          console.error(chalk.red('CONFIRM_SECRET is required to generate confirm tokens.'));
+          process.exit(2);
+        }
+
+        const nonce = options.nonce || '';
+        const tokenArgs = ['scripts/make-confirm-token.mjs', options.challenge];
+        if (nonce) tokenArgs.push(nonce);
+
+        const { execFile } = await import('node:child_process');
+        const { promisify } = await import('node:util');
+        const execFileAsync = promisify(execFile);
+        const tokenResult = await execFileAsync(process.execPath, tokenArgs, {
+          cwd: process.cwd(),
+          env: process.env,
+        });
+        const confirmToken = tokenResult.stdout.toString().trim();
+
+        const confirmBody = {
+          skill_id: options.skillId,
+          challenge_id: options.challenge,
+          confirm_token: confirmToken,
+          needs: ['fs.write'],
+          cwd: options.cwd || '.',
+        };
+
+        let status = 0;
+        let json: any = {};
+        let ok = false;
+
+        if (process.env.SF_CONFIRM_INLINE === 'true') {
+          const { inlineExecute, inlineClose, seedInlineChallenge } = await import('../lib/inline-execute.js');
+          if (process.env.SF_CONFIRM_INLINE_SEED) {
+            try {
+              const seedData = JSON.parse(process.env.SF_CONFIRM_INLINE_SEED);
+              await seedInlineChallenge(seedData);
+            } catch (error) {
+              console.warn('Failed to parse SF_CONFIRM_INLINE_SEED:', error);
+            }
+          }
+          const response = await inlineExecute(confirmBody);
+          status = response.statusCode;
+          json = await response.json();
+          ok = status >= 200 && status < 300;
+          await inlineClose();
+        } else {
+          const { post } = await import('../lib/http.js');
+          const result = await post('/execute', confirmBody);
+          ok = result.ok;
+          status = result.status;
+          json = result.json;
+        }
+
+        await writeEvent({
+          type: 'cli-confirm',
+          ok,
+          status,
+          challenge_id: options.challenge,
+          nonce: nonce || undefined,
+        });
+
+        if (!ok) {
+          console.error(chalk.red('confirm failed'), status, json);
+          process.exit(typeof status === 'number' ? status : 1);
+        }
+
+        if (options.json) {
+          console.log(JSON.stringify(json, null, 2));
+        } else {
+          console.log(chalk.green('✓ Confirmed challenge'));
+          const stdoutValue = typeof json.stdout === 'string' ? json.stdout : JSON.stringify(json.stdout, null, 2);
+          console.log(stdoutValue);
+          if (Array.isArray(json.changes)) {
+            console.log('Changes:');
+            for (const change of json.changes) {
+              console.log(` - ${change.path}`);
+            }
+          }
+          if (json.rollback_plan) {
+            console.log('Rollback plan:', JSON.stringify(json.rollback_plan, null, 2));
+          }
+        }
+      } catch (error) {
+        console.error('confirm failed:', error instanceof Error ? error.message : String(error));
+        process.exit(1);
+      }
+    });
 }

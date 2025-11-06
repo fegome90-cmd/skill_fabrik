@@ -1,0 +1,13 @@
+{
+  "detection": {
+    "hash": "d96d7c1a466df46f277f9070f89ef70d0f09a2db5b5ba753b2a52178f77fc18a",
+    "confidence": 0.95,
+    "block": "[Layout] Plan de implementación:\n\n1. **Configuración inicial**\n   - npm init -y\n   - npm install express cors\n   - Crear estructura de archivos\n\n2. **Implementación del servidor**\n   ```javascript\n   const express = require('express');\n   const app = express();\n\n   app.get('/api/health', (req, res) => {\n     res.json({ status: 'ok' });\n   });\n\n   app.listen(3000);\n   ```\n\n3. **Testing**\n   - Crear tests con Jest\n   - Verificar endpoints\n\nPlan estructurado para el desarrollo."
+  },
+  "pbv2Result": {
+    "success": false,
+    "latency_ms": 123
+  },
+  "timestamp": "2025-11-03T15-54-57-210Z",
+  "version": "2.0.0"
+}

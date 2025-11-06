@@ -1,0 +1,7 @@
+{
+  "stdout": "{\n  \"planned_steps\": [\n    {\n      \"step\": \"resolve-skill\",\n      \"skill\": \"repo-auditor\"\n    },\n    {\n      \"step\": \"check-policy\",\n      \"allowed\": [\n        \"fs.read\",\n        \"git.status\",\n        \"git.diff\"\n      ]\n    },\n    {\n      \"step\": \"prepare-exec\",\n      \"mode\": \"dry-run\"\n    }\n  ]\n}",
+  "artifacts": [],
+  "changes": [],
+  "evidence_id": "89e43da6-0794-4e68-97e3-832479ba478d",
+  "run_latency_ms": 0
+}

@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # Redis Cache (L0) - Puerto 6380
+  redis-cache:
+    image: redis:7-alpine
+    container_name: mcp-redis-cache
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-cache-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # Redis Core (L1) - Puerto 6381
+  redis-core:
+    image: redis:7-alpine
+    container_name: mcp-redis-core
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis-core-data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # PostgreSQL (L2) - Puerto 5433
+  postgres:
+    image: postgres:15-alpine
+    container_name: mcp-postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-mcp_password}
+      POSTGRES_DB: ${PG_DATABASE:-surprise_metrics}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-surprise_metrics}"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - mcp-network
+
+  # Optional: ChromaDB (L3) - Solo si está habilitado
+  chromadb:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: mcp-chromadb
+    ports:
+      - "8000:8000"
+    environment:
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=${CHROMA_API_KEY:-admin:admin}
+      - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.basic.BasicAuthenticationServerProvider
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    volumes:
+      - chromadb-data:/chroma/chroma
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mcp-network
+    profiles:
+      - chroma  # Solo iniciar con --profile chroma
+
+volumes:
+  redis-cache-data:
+    driver: local
+  redis-core-data:
+    driver: local
+  postgres-data:
+    driver: local
+  chromadb-data:
+    driver: local
+
+networks:
+  mcp-network:
+    driver: bridge
+    name: mcp-local-network

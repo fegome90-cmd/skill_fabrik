@@ -1,0 +1,31 @@
+Crear endpoint /auth/login en Express con validación de entrada y controlador AuthController
+Agregar ruta GET /users/profile con controlador y servicio asociado
+Refactor servicio de usuarios y añadir endpoint POST /users
+Crear componente Dashboard con hook useDashboardData y UI responsive
+Añadir componente ProfileCard y hook useUserProfile
+Implementar vista ListadoProductos con hook de datos y tabla responsive
+Revisar findMany sin filtros en repositorio de usuarios
+Auditar updateMany masivo en repositorio y aplicar where
+Buscar deleteMany sin where en servicio de órdenes
+Verificar API_KEY y SECRET en archivos de configuración
+Auditar .env y variables TOKEN antes de despliegue
+Validar que PASSWORD no esté hardcodeado y existe .env.example
+Crear middleware de autenticación JWT para rutas protegidas
+Añadir controlador de registro de usuarios con validación de esquema
+Crear endpoint PUT /users/:id para actualizar perfil con servicio y repositorio
+Implementar paginación y filtros en endpoint GET /products
+Refactorizar rutas a router modular en backend/src/routes
+Crear componente LoginForm con validación de campos y submit seguro
+Implementar hook useFetchProducts con cache y estado de carga
+Crear vista ProductDetail con card y manejo de errores
+Detectar y corregir updateMany sin where en repositorio de órdenes
+Revisar migraciones SQL que afectan múltiples filas sin condición
+Auditar configuración de variables APP_SECRET y DB_PASSWORD
+Revisar que .env.example tenga todas las variables requeridas
+Buscar tokens hardcodeados en archivos de configuración
+Crear componente Settings con formulario controlado y guardado
+Añadir hook useAuth para estado de sesión del usuario
+Refactorizar servicio de email y su controlador asociado
+Implementar pruebas de regresión visual con snapshots de componentes críticos
+Estandarizar manejo de errores y códigos de salida en el CLI
+Definir catálogo (DataGrid) con columnas tipadas y paginación

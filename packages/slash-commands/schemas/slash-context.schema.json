@@ -1,0 +1,237 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skills-fabrik.com/schemas/slash-context.schema.json",
+  "title": "Slash Command Context Schema",
+  "description": "Schema for persistent slash command context storage",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the context"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Session identifier for grouping related commands"
+    },
+    "command": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9-_]*$",
+      "description": "Command name that created this context"
+    },
+    "state": {
+      "type": "object",
+      "description": "Command execution state and data",
+      "properties": {
+        "commandHistory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "command": { "type": "string" },
+              "timestamp": { "type": "string", "format": "date-time" },
+              "success": { "type": "boolean" },
+              "output": { "type": "string" }
+            }
+          }
+        },
+        "currentTask": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string" },
+            "status": { "enum": ["pending", "in-progress", "completed", "blocked"] },
+            "progress": { "type": "number", "minimum": 0, "maximum": 100 }
+          }
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "completed": { "type": "boolean" }
+            }
+          }
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "probability": { "enum": ["low", "medium", "high"] },
+              "impact": { "enum": ["low", "medium", "high"] },
+              "mitigation": { "type": "string" },
+              "status": { "enum": ["open", "mitigated", "accepted"] }
+            }
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "decision": { "type": "string" },
+              "rationale": { "type": "string" },
+              "timestamp": { "type": "string", "format": "date-time" }
+            }
+          }
+        },
+        "workspaceSnapshot": {
+          "$ref": "#/definitions/workspaceSnapshot"
+        },
+        "executionSummary": {
+          "$ref": "#/definitions/commandMetadata"
+        },
+        "compacted": {
+          "type": "boolean",
+          "description": "Whether this context has been compacted"
+        },
+        "compactedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the context was compacted"
+        },
+        "originalContextSize": {
+          "type": "number",
+          "description": "Size of context before compaction in bytes"
+        }
+      }
+    },
+    "workspaceSnapshot": {
+      "$ref": "#/definitions/workspaceSnapshot"
+    },
+    "memtechL1Key": {
+      "type": "string",
+      "pattern": "^slash:context:[a-f0-9-]+$",
+      "description": "MemTech L1 storage key"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the context was created"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the context was last updated"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the context expires and should be cleaned up"
+    }
+  },
+  "required": ["id", "sessionId", "command", "state", "workspaceSnapshot", "createdAt", "updatedAt"],
+  "additionalProperties": false,
+  "definitions": {
+    "workspaceSnapshot": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "type": "string",
+          "description": "Absolute path to workspace root"
+        },
+        "gitStatus": {
+          "$ref": "#/definitions/gitStatus"
+        },
+        "packageJson": {
+          "type": "object",
+          "description": "Contents of package.json if it exists"
+        },
+        "env": {
+          "type": "object",
+          "properties": {
+            "NODE_ENV": { "type": "string" },
+            "LOG_LEVEL": { "type": "string" },
+            "SF_STORAGE_L0": { "type": "string" },
+            "SF_STORAGE_L1": { "type": "string" }
+          },
+          "additionalProperties": false,
+          "description": "Non-sensitive environment variables"
+        },
+        "openFiles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of currently open files in the editor"
+        }
+      },
+      "required": ["root"],
+      "additionalProperties": false
+    },
+    "gitStatus": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Current git branch"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{7,40}$",
+          "description": "Current commit hash"
+        },
+        "clean": {
+          "type": "boolean",
+          "description": "Whether the working directory is clean"
+        },
+        "modified": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of modified files"
+        },
+        "staged": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of staged files"
+        },
+        "untracked": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of untracked files"
+        }
+      },
+      "required": ["branch", "commit", "clean"],
+      "additionalProperties": false
+    },
+    "commandMetadata": {
+      "type": "object",
+      "properties": {
+        "executionTimeMs": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Execution time in milliseconds"
+        },
+        "success": {
+          "type": "boolean",
+          "description": "Whether the command executed successfully"
+        },
+        "errorType": {
+          "enum": ["validation", "execution", "integration", "permission", "timeout"],
+          "description": "Type of error if execution failed"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "Error message if execution failed"
+        },
+        "integrationType": {
+          "enum": ["skill", "daemon", "cli", "native"],
+          "description": "Type of integration used for execution"
+        },
+        "persistenceKey": {
+          "type": "string",
+          "description": "Key used for persistent storage"
+        }
+      },
+      "required": ["success", "integrationType"],
+      "additionalProperties": false
+    }
+  }
+}

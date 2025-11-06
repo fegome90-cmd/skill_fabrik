@@ -1,0 +1,73 @@
+{
+  "name": "@skills-fabrik/performance",
+  "version": "0.1.0",
+  "description": "High-performance caching and optimization layer for Skills Fabric",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cache": {
+      "types": "./dist/cache/index.d.ts",
+      "import": "./dist/cache/index.js"
+    },
+    "./warming": {
+      "types": "./dist/warming/index.d.ts",
+      "import": "./dist/warming/index.js"
+    },
+    "./invalidation": {
+      "types": "./dist/invalidation/index.d.ts",
+      "import": "./dist/invalidation/index.js"
+    },
+    "./integration": {
+      "types": "./dist/integration/index.d.ts",
+      "import": "./dist/integration/index.js"
+    },
+    "./monitoring": {
+      "types": "./dist/monitoring/index.d.ts",
+      "import": "./dist/monitoring/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@skills-fabrik/router": "workspace:*",
+    "ioredis": "^5.3.2",
+    "cron": "^3.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/ioredis": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "redis": "^4.6.0"
+  },
+  "keywords": [
+    "caching",
+    "performance",
+    "redis",
+    "optimization",
+    "skills",
+    "cache-warming",
+    "cache-invalidation"
+  ],
+  "author": "Skills Fabric Team",
+  "license": "MIT"
+}

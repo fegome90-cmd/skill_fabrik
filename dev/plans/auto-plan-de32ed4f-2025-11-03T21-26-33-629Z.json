@@ -1,0 +1,40 @@
+{
+  "detection": {
+    "hash": "de32ed4fa6a6d46d022c1101ca35c320ed204c6c2f6ac560ad317ebe913ef7d0",
+    "confidence": 0.95,
+    "block": "[Layout] Implementar sistema de autenticación JWT:\n1. Diseñar endpoints de registro y login\n2. Implementar middleware de validación\n3. Configurar tokens JWT con expiración\n4. Agregar refresh tokens\n5. Testing de seguridad\n\nPlan estructurado con 5 pasos principales."
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 1053,
+    "expectedScore": 0.5800000000000001,
+    "skillActivation": [
+      {
+        "skillId": "backend-architecture-patterns",
+        "score": 0.5,
+        "reasons": [
+          "keywords: arquitectura, backend, ddd",
+          "intent: 1 pattern(s) matched"
+        ]
+      },
+      {
+        "skillId": "backend-dev-guidelines",
+        "score": 0.5,
+        "reasons": [
+          "keywords: backend, endpoint, arquitectura, middleware, autenticación, login, registro",
+          "intent: 2 pattern(s) matched"
+        ]
+      },
+      {
+        "skillId": "security-testing-guide",
+        "score": 0.5,
+        "reasons": [
+          "keywords: testing, jwt, seguridad",
+          "intent: 1 pattern(s) matched"
+        ]
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T21-26-33-629Z",
+  "version": "2.0.0"
+}

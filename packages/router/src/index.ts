@@ -7,6 +7,8 @@ export { userPromptSubmitHook } from './pre-invoke.js';
 export { stopHook } from './stop.js';
 export { loadRules, matchRulesFor } from './detectors.js';
 export { checkGuardrails } from './guardrails.js';
+export * as activation from './activation/index.js';
+export { startServer } from './server.js';
 export type {
   SkillRule,
   SkillRules,

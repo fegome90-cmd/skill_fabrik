@@ -2,7 +2,7 @@
 id: frontend-dev-guidelines
 version: 0.1.0
 type: guideline
-summary: 'Patrones UI: componentes puros, fetching con cache, routing file-based y consistencia.'
+summary: 'Patrones frontend para crear componentes React, UI e interfaces. Guía de componentes puros, fetching con cache, routing file-based y consistencia.'
 audience: engineers
 when_to_use: Al tocar componentes, hooks, data fetching o navegación.
 resources:

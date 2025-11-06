@@ -25,8 +25,9 @@ module.exports = {
       cwd: './packages/daemon',
       script: 'node',
       args: 'dist/index.js',
-      instances: 1,
-      exec_mode: 'fork',
+      // Cluster mode minimal: opt-in via PM2_CLUSTER=1 or env_production
+      instances: process.env.PM2_CLUSTER === '1' ? 'max' : 1,
+      exec_mode: process.env.PM2_CLUSTER === '1' ? 'cluster' : 'fork',
 
       // Process Management
       autorestart: true,
@@ -48,13 +49,17 @@ module.exports = {
         NODE_ENV: 'development',
         SF_PORT: 7727,
         SF_HOST: '127.0.0.1',
-        LOG_LEVEL: 'info'
+        LOG_LEVEL: 'info',
+        SF_DASHBOARD_ENABLED: 'false'  // ⭐ Deshabilitar dashboard WebSocket
       },
       env_production: {
         NODE_ENV: 'production',
+        // Prefer YAML config to drive host/port. Fallbacks remain here.
         SF_PORT: 7727,
         SF_HOST: '0.0.0.0',
-        LOG_LEVEL: 'warn'
+        PM2_CLUSTER: '1',
+        LOG_LEVEL: 'warn',
+        SF_DASHBOARD_ENABLED: 'false'  // ⭐ Deshabilitar dashboard WebSocket
       },
 
       // Health Monitoring

@@ -1,0 +1,45 @@
+{
+  "id": "TP006",
+  "name": "Testing Strategy Implementation",
+  "task": "Create comprehensive testing suite with TDD approach",
+  "skillId": "test-driven-development",
+  "description": "Implementar estrategia completa de testing incluyendo unit tests, integration tests, e2e tests con Jest, Testing Library y Cypress.",
+  "phases": [
+    {
+      "name": "Clarify",
+      "description": "Definir test coverage y casos críticos"
+    },
+    {
+      "name": "Layout",
+      "description": "Diseñar estructura de test suite"
+    },
+    {
+      "name": "Operate",
+      "description": "Crear tests siguiendo TDD"
+    },
+    {
+      "name": "Observe",
+      "description": "Ejecutar test suite completo"
+    },
+    {
+      "name": "Reflect",
+      "description": "Analizar coverage y ajustar tests"
+    }
+  ],
+  "expectedDuration": "6-8 horas",
+  "complexity": "high",
+  "keywords": [
+    "testing",
+    "tdd",
+    "unit",
+    "integration",
+    "e2e"
+  ],
+  "metadata": {
+    "version": "2.0.0",
+    "created": "2025-11-03T16:23:50.451Z",
+    "skillId": "test-driven-development",
+    "category": "testing",
+    "testType": "pbv2_activation"
+  }
+}

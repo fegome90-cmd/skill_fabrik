@@ -1,0 +1,28 @@
+{
+  "id": "plan-skill-fabric",
+  "name": "F0 – Bootstrap: contratos, heurística, hooks, KPI smoke",
+  "status": "APPROVED",
+  "phase": "F0",
+  "objectives": [
+    "Validar schema+plantilla",
+    "Configurar heurística multi-señal (0.2/0.3/0.3/0.2, th=0.6)",
+    "Hooks mínimos pre-invoke/stop",
+    "KPI smoke evidenciado"
+  ],
+  "skills": [
+    "plan-save-workflow",
+    "backend-dev-guidelines",
+    "database-verification-find",
+    "secrets-and-config",
+    "pm2-monitor"
+  ],
+  "evidence": [
+    "dev/active/plan-post-estudio-operacional/plan.md",
+    "dev/active/plan-post-estudio-operacional/context.md",
+    "dev/active/plan-post-estudio-operacional/tasks.md",
+    "obs/kpi/events.jsonl"
+  ],
+  "createdAt": "2025-10-30T00:00:00.000Z"
+}
+
+

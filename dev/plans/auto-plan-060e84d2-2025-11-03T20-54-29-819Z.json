@@ -1,0 +1,36 @@
+{
+  "detection": {
+    "hash": "060e84d2ed59354feebdc80446ff265c8c76b0263a2461e704b3bb1c154903d7",
+    "confidence": 0.95,
+    "block": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend\n2. Implementar API REST\n3. Configurar base de datos\n4. Testing de endpoints\n\nPlan estructurado."
+  },
+  "pbv2Result": {
+    "success": true,
+    "latency_ms": 532,
+    "expectedScore": 0.29533333333333334,
+    "skillActivation": [
+      {
+        "skillId": "backend-architecture-patterns",
+        "score": 0.2,
+        "reasons": [
+          "keywords: arquitectura, backend, ddd"
+        ]
+      },
+      {
+        "skillId": "backend-dev-guidelines",
+        "score": 0.5,
+        "reasons": [
+          "keywords: backend, api, endpoint, arquitectura",
+          "intent: 2 pattern(s) matched"
+        ]
+      },
+      {
+        "skillId": "frontend-dev-guidelines",
+        "score": 0,
+        "reasons": []
+      }
+    ]
+  },
+  "timestamp": "2025-11-03T20-54-29-819Z",
+  "version": "2.0.0"
+}

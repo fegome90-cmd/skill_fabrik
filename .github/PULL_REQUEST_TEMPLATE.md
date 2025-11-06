@@ -1,43 +1,77 @@
-## 📋 Descripción
+## TLDR
 
-<!-- Describe los cambios realizados y el problema que resuelven -->
+<!-- Add a brief description of what this pull request changes and why and any important things for reviewers to look at -->
 
-## 🔗 Tipo de Cambio
+## Dive Deeper
 
-<!-- Marca con una X el tipo de cambio -->
+<!-- More thoughts and in-depth discussion here. Include:
+- Design decisions made
+- Trade-offs considered
+- Alternative approaches explored
+- Context for reviewers -->
+
+## Reviewer Test Plan
+
+<!-- When a person reviews your code they should ideally be pulling and running that code. How would they validate your change works and if relevant what are some good classes of example prompts and ways they can exercise your changes -->
+
+**Steps to validate:**
+1. 
+2. 
+3. 
+
+**Example scenarios to test:**
+- 
+
+## Testing Matrix
+
+<!-- Before submitting please validate your changes on as many of these options as possible -->
+
+|          | 🍏 macOS | 🪟 Windows | 🐧 Linux |
+| -------- | -------- | ---------- | -------- |
+| npm run  | ❓        | ❓          | ❓        |
+| pnpm     | ❓        | ❓          | ❓        |
+| Docker   | ❓        | ❓          | ❓        |
+
+## Type of Change
+
+<!-- Mark with an X the type of change -->
 
 - [ ] 🐛 Bug fix
-- [ ] ✨ Nueva funcionalidad
+- [ ] ✨ New feature
 - [ ] 💥 Breaking change
-- [ ] 📝 Documentación
-- [ ] 🎨 Estilo/Formato
-- [ ] ♻️ Refactorización
+- [ ] 📝 Documentation
+- [ ] 🎨 Style/Format
+- [ ] ♻️ Refactoring
 - [ ] ⚡ Performance
 - [ ] ✅ Test
 
-## ✅ Checklist
+## Checklist
 
-<!-- Verifica que hayas completado los siguientes pasos -->
+<!-- Verify you have completed the following steps -->
 
-- [ ] Mi código sigue las guías de estilo del proyecto
-- [ ] He revisado mi propio código
-- [ ] He comentado código complejo donde sea necesario
-- [ ] He realizado los cambios correspondientes en la documentación
-- [ ] Mis cambios no generan nuevos warnings
-- [ ] He agregado tests que prueban mi fix/funcionalidad
-- [ ] Los tests nuevos y existentes pasan localmente
-- [ ] He seguido Conventional Commits en mis mensajes de commit
+- [ ] My code follows the project's style guidelines
+- [ ] I have reviewed my own code
+- [ ] I have commented code where necessary
+- [ ] I have updated the documentation accordingly
+- [ ] My changes don't generate new warnings
+- [ ] I have added tests that prove my fix/feature
+- [ ] New and existing tests pass locally
+- [ ] I have followed Conventional Commits in my commit messages
 
-## 🧪 Testing
+## Linked Issues / Bugs
 
-<!-- Describe las pruebas que realizaste para verificar tus cambios -->
+<!--
+Link to any related issues or bugs.
 
-## 📸 Screenshots (si aplica)
+**If this PR fully resolves the issue, use one of the following keywords to automatically close the issue when this PR is merged:**
 
-<!-- Agrega screenshots si los cambios afectan la UI -->
+- Closes #<issue_number>
+- Fixes #<issue_number>
+- Resolves #<issue_number>
 
-## 📚 Referencias
+*Example: `Resolves #123`*
 
-<!-- Lista cualquier issue, ADR, o documento relacionado -->
+**If this PR is only related to an issue or is a partial fix, simply reference the issue number without a keyword:**
 
-Closes #
+*Example: `This PR makes progress on #456` or `Related to #789`*
+-->

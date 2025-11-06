@@ -4,7 +4,7 @@
 
 export interface SkillRule {
   type: 'guideline' | 'guardrail' | 'workflow' | 'analyst' | 'generator';
-  enforcement?: 'suggest' | 'require' | 'block';
+  enforcement?: 'suggest' | 'warn' | 'require' | 'block';
   priority?: 'critical' | 'high' | 'normal' | 'low';
   promptTriggers?: {
     keywords?: string[];
@@ -26,6 +26,8 @@ export interface PreHookInput {
   openFiles: string[];
   activeFileContent?: string; // Snapshot ≤2KB
   cwd: string;
+  activeFile?: string;
+  editor?: string;
 }
 
 export interface PreHookOutput {
@@ -34,6 +36,7 @@ export interface PreHookOutput {
   metadata: {
     scores: Record<string, number>; // Score de cada skill
     reasons: Record<string, string[]>; // Razones de activación
+    [key: string]: any; // Allow additional metadata properties
   };
   blocked?: boolean; // Si está bloqueado por gate (plan, etc.)
   blockReason?: string; // Razón del bloqueo
@@ -62,7 +65,9 @@ export interface StopHookOutput {
   typecheck: TypeCheckResult[];
   hints?: string[]; // Sugerencias de errores
   autoResolved: boolean; // Si se auto-resolvió
+  autoResolveSummary?: string[]; // Resumen de errores auto-resueltos
   kpiEvent?: KPIEvent; // Evento JSONL
+  metrics?: any; // Métricas de performance del pipeline
 }
 
 export interface KPIEvent {
@@ -95,6 +100,7 @@ export interface GuardrailViolation {
   line: number;
   pattern: string;
   message: string;
+  enforcement: 'suggest' | 'warn' | 'block';
 }
 
 /**

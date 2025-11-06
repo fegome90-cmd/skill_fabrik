@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-11-03T15:54:58.229Z",
+  "phase": "FASE 6 - Claude Code Integration Testing",
+  "version": "2.0.0",
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "successRate": "100.0%",
+    "totalTime": 1707,
+    "averageTime": "171ms"
+  },
+  "results": [
+    {
+      "name": "A1: userPromptSubmit hook detection",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Plan detected successfully",
+      "latency": 4,
+      "error": null,
+      "details": {
+        "confidence": 0.95,
+        "hash": "e8a8db9e",
+        "blockLength": 210
+      }
+    },
+    {
+      "name": "A2: stop hook processing",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Stop hook processed successfully",
+      "latency": 429,
+      "error": null,
+      "details": {
+        "action": "saved",
+        "detectionConfidence": 0.95,
+        "hasHash": true
+      }
+    },
+    {
+      "name": "A3: bashValidator safety",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Bash validation passed - plan is safe",
+      "latency": 1,
+      "error": null,
+      "details": {
+        "planLength": 479,
+        "hasCodeBlocks": true
+      }
+    },
+    {
+      "name": "A4: multiple hooks sequence",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Multiple hooks executed without conflicts",
+      "latency": 252,
+      "error": null,
+      "details": {
+        "cacheSize": 2,
+        "allDetected": true,
+        "cacheWorking": true
+      }
+    },
+    {
+      "name": "B1: complete flow",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Complete flow executed successfully",
+      "latency": 385,
+      "error": null,
+      "details": {
+        "detectionConfidence": 0.95,
+        "activationSuccess": true,
+        "activationLatency": 127,
+        "expectedScore": 0.18000000000000002
+      }
+    },
+    {
+      "name": "B2: plan with code",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Plan with code processed successfully",
+      "latency": 268,
+      "error": null,
+      "details": {
+        "planHasCode": true,
+        "pbv2PromptHasCode": true,
+        "pbv2Latency": 143,
+        "pbv2Score": 0.28
+      }
+    },
+    {
+      "name": "B3: long plan parsing",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Long plan parsed successfully",
+      "latency": 1,
+      "error": null,
+      "details": {
+        "originalLength": 10481,
+        "extractedLength": 10481,
+        "parseTime": "1ms",
+        "confidence": 0.95
+      }
+    },
+    {
+      "name": "B4: multiple plans in conversation",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Multiple plans handled correctly",
+      "latency": 123,
+      "error": null,
+      "details": {
+        "planCount": 2,
+        "firstPlanHash": "f68a3d74",
+        "secondPlanHash": "e8a8db9e",
+        "hashesDifferent": true
+      }
+    },
+    {
+      "name": "C1: real response parsing",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Real Claude response parsed correctly",
+      "latency": 0,
+      "error": null,
+      "details": {
+        "confidence": 0.95,
+        "blockLength": 557,
+        "hasStructure": true
+      }
+    },
+    {
+      "name": "C2: timeouts and streaming",
+      "suite": "Unknown",
+      "passed": true,
+      "message": "Timeouts and streaming handled correctly",
+      "latency": 240,
+      "error": null,
+      "details": {
+        "detectionTime": "0ms",
+        "pbv2Latency": "122ms",
+        "pbv2Success": true
+      }
+    }
+  ]
+}

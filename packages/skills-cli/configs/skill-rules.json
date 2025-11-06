@@ -1,0 +1,272 @@
+{
+  "plan-architect": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "genera",
+        "planes",
+        "estructurados",
+        "siguiendo",
+        "metodología",
+        "cloop",
+        "(clarify",
+        "layout",
+        "operate",
+        "observe"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "database-verification": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "aplica",
+        "bloqueo",
+        "mutaciones",
+        "masivas",
+        "filtro",
+        "previene",
+        "operaciones",
+        "destructivas",
+        "inseguras."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "secrets-and-config": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "secretos",
+        "embebidos;",
+        "validar",
+        "config",
+        "arranque",
+        "mantener",
+        ".env.example."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "backend-dev-guidelines": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "patrones",
+        "backend",
+        "para",
+        "crear",
+        "endpoints,",
+        "apis",
+        "servicios.",
+        "guía",
+        "rutas→controladores→servicios→repositorios,",
+        "manejo"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "cli-compilation-fixes": {
+    "type": "guardrail",
+    "enforcement": "block",
+    "priority": "critical",
+    "promptTriggers": {
+      "keywords": [
+        "repara",
+        "errores",
+        "compilación",
+        "relacionados",
+        "colors/chalk",
+        "spinner",
+        "changes."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "error-pattern-standardization": {
+    "type": "guideline",
+    "enforcement": "require",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "estandariza",
+        "patrones",
+        "error",
+        "códigos",
+        "salida",
+        "consistentes",
+        "todos",
+        "comandos",
+        "para",
+        "mejorar"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "frontend-dev-guidelines": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "patrones",
+        "frontend",
+        "para",
+        "crear",
+        "componentes",
+        "react,",
+        "interfaces.",
+        "guía",
+        "puros,",
+        "fetching"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "project-catalog-developer": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "define",
+        "catálogo",
+        "(datagrid)",
+        "columnas",
+        "tipadas,",
+        "implementa",
+        "filtros",
+        "url,",
+        "configura",
+        "virtualización"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "sample-skill": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "demostración",
+        "plantilla",
+        "skill.md",
+        "para",
+        "validación",
+        "estructura",
+        "mínima",
+        "(≤400",
+        "líneas)."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "cli-integration-testing": {
+    "type": "guardrail",
+    "enforcement": "block",
+    "priority": "critical",
+    "promptTriggers": {
+      "keywords": [
+        "implementa",
+        "tests",
+        "integración",
+        "comprehensivos",
+        "para",
+        "cobertura",
+        "casos",
+        "críticos",
+        "regresión",
+        "visual."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "test-skill": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "valida",
+        "sistema",
+        "indexación",
+        "verificando",
+        "funciona",
+        "correctamente",
+        "(solo",
+        "para",
+        "pruebas)."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "visual-regression-testing": {
+    "type": "guideline",
+    "enforcement": "require",
+    "priority": "high",
+    "promptTriggers": {
+      "keywords": [
+        "implementa",
+        "visual",
+        "regression",
+        "testing",
+        "para",
+        "output",
+        "ensuring",
+        "consistencia",
+        "formatos",
+        "consistentes."
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "plan-save-workflow": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "workflow",
+        "para",
+        "guardar",
+        "plan",
+        "aprobado:",
+        "genera",
+        "tríada",
+        "dev-docs",
+        "(plan.md,",
+        "context.md,"
+      ]
+    },
+    "fileTriggers": {}
+  },
+  "pm2-monitor": {
+    "type": "guideline",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "promptTriggers": {
+      "keywords": [
+        "configura",
+        "para",
+        "gestión",
+        "procesos",
+        "backend",
+        "monitoreo,",
+        "logs",
+        "playbooks",
+        "troubleshooting."
+      ]
+    },
+    "fileTriggers": {}
+  }
+}

@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Validar formato de commit message según Conventional Commits
+# Formato: <type>(<scope>): <subject>
+# Ejemplos válidos:
+#   feat: add new skill router
+#   fix(cli): resolve index command issue
+#   docs: update README
+
+commit_msg=$(cat "$1")
+
+# Patrón para Conventional Commits
+pattern="^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?: .{1,50}"
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "Commit message must follow Conventional Commits:"
+  echo "  <type>(<scope>): <subject>"
+  echo ""
+  echo "Types: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert"
+  echo ""
+  echo "Examples:"
+  echo "  feat: add new skill router"
+  echo "  fix(cli): resolve index command issue"
+  echo "  docs: update README"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Commit message format valid!"

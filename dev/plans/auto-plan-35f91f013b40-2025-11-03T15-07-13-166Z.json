@@ -1,0 +1,19 @@
+{
+  "id": "35f91f013b40",
+  "timestamp": "2025-11-03T15:07:13.165Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend\n2. Implementar API REST\n3. Configurar base de datos\n4. Testing de endpoints\n\nContinuamos con el desarrollo...",
+  "optimizedPrompt": "[Layout] Plan de desarrollo:\n1. Diseñar arquitectura backend\n2. Implementar API REST\n3. Configurar base de datos\n4. Testing de endpoints\n\nContinuamos con el desarrollo...",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "4b7ab8797c2575c1d4dd0d889d2cad31b63eaf86b3ab23769c9d37442ede971c",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 9,
+    "success": false,
+    "error": "getFastConfig is not defined"
+  }
+}

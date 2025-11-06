@@ -1,0 +1,4416 @@
+   });
+   console.log('Status:', response.status);
+   console.log('Data:', response.data);
+ } catch (error) {
+   console.error('Error:', error.response?.status, error.response?.data);
+ }
+}
+```
+
+-----
+
+## DECISIONES ARQUITECTURALES IMPORTANTES
+
+### Decisión 1: Hooks como Sistema de Auto-Activación
+
+**Fecha:** Mes 1
+**Contexto:** Skills documentados pero ignorados por Claude
+**Decisión:** Usar hooks de TypeScript para forzar activación
+**Razón:** Único método confiable de asegurar que Claude consulte skills
+**Tradeoff:** Complejidad adicional, pero beneficio enorme
+**Estado:** Validado - funcionó perfectamente
+
+### Decisión 2: Progressive Disclosure para Skills
+
+**Fecha:** Mes 2
+**Contexto:** Skills monolíticos consumían demasiados tokens
+**Decisión:** Dividir en archivo principal < 500 líneas + resources
+**Razón:** Seguir best practices de Anthropic, eficiencia de tokens
+**Resultado:** 40-60% mejora en eficiencia de tokens
+**Estado:** Implementado en todos los skills
+
+### Decisión 3: Sistema de 3 Archivos para Dev Docs
+
+**Fecha:** Mes 2
+**Contexto:** Claude perdía contexto en tareas grandes
+**Decisión:** plan.md + context.md + tasks.md por tarea
+**Razón:** Separación de responsabilidades, fácil actualización
+**Resultado:** Claude mantiene foco a través de compactaciones
+**Estado:** Crítico para el éxito, usado en todas las tareas
+
+### Decisión 4: PM2 para Gestión de Backend
+
+**Fecha:** Mes 3
+**Contexto:** Sin acceso a logs, debugging difícil
+**Decisión:** Usar PM2 en lugar de scripts manuales
+**Razón:** Logs accesibles, auto-restart, gestión centralizada
+**Tradeoff:** No hot reload, pero vale la pena
+**Estado:** Implementado, dramática mejora en debugging
+### Decisión 5: Pipeline de Hooks para QA
+
+**Fecha:** Mes 3
+**Contexto:** Errores quedaban sin detectar, código mal formateado
+**Decisión:** Hooks automáticos post-respuesta para QA
+**Razón:** Catch errores inmediatamente, mantener calidad
+**Resultado:** Cero errores no detectados desde implementación
+**Estado:** Funcionando perfectamente
+
+### Decisión 6: Agentes Especializados vs Prompts Genéricos
+
+**Fecha:** Mes 4
+**Contexto:** Tareas especializadas requerían instrucciones repetidas
+**Decisión:** Crear agentes con roles muy específicos
+**Razón:** Consistencia, outputs estructurados, reutilización
+**Estado:** 10+ agentes creados, altamente útiles
+
+### Decisión 7: Comandos Slash para Workflows Comunes
+
+**Fecha:** Mes 4
+**Contexto:** Escribir mismas instrucciones repetidamente
+**Decisión:** Encapsular en comandos slash
+**Razón:** Eficiencia, consistencia, menos errores
+**Estado:** 7+ comandos, ahorran tiempo significativo
+
+### Decisión 8: Separación Skills vs Documentation
+
+**Fecha:** Mes 5
+**Contexto:** CLAUDE.md y BEST_PRACTICES.md sobrecargados
+**Decisión:** Skills = “cómo escribir”, Docs = “cómo funciona”
+**Razón:** Claridad, eficiencia, evitar duplicación
+**Resultado:** Sistema mucho más organizado y mantenible
+**Estado:** Reestructuración completa exitosa
+
+-----
+
+## PATRONES Y CONVENCIONES
+
+### Naming Conventions
+
+- **Skills:** kebab-case, descriptivo, termina en “-guidelines” o “-developer”
+- **Agentes:** kebab-case, nombre de rol claro
+- **Hooks:** kebab-case, describe acción
+- **Scripts:** kebab-case, verbo-sustantivo
+- **Dev Docs:** nombre-tarea-tipo.md
+
+### File Organization
+- Skills por categoría: public vs private
+- Resources dentro del directorio del skill
+- Scripts adjuntos a skills en /resources/scripts
+- Docs organizados por área: architecture, api, guides
+
+### Commit Messages (cuando se versiona)
+
+- `feat(hooks):` para nuevas funcionalidades de hooks
+- `fix(skills):` para correcciones de skills
+- `docs:` para documentación
+- `refactor:` para mejoras sin cambio de funcionalidad
+
+-----
+
+## INTEGRATION POINTS
+
+### Claude Code ↔ Hooks
+
+- UserPromptSubmit: Intercepta ANTES de Claude
+- Stop Event: Ejecuta DESPUÉS de Claude
+- File operations: Hooks pueden leer/modificar archivos
+- Terminal: Hooks pueden ejecutar comandos
+
+### Skills ↔ Hooks
+
+- skill-rules.json define cuándo activar
+- UserPromptSubmit lee reglas y activa skills
+- Stop Event puede verificar adherencia a skills
+- Skills pueden referenciar scripts que hooks ejecutan
+
+### Dev Docs ↔ Workflow
+
+- Planning mode → genera plan
+- /create-dev-docs → crea 3 archivos
+- Durante implementación → Claude lee dev docs
+- Pre-compactación → /update-dev-docs
+- Post-compactación → “continue” y Claude lee dev docs
+
+### PM2 ↔ Claude
+
+- Claude ejecuta comandos PM2 directamente
+- Lee logs con `pm2 logs service-name`
+- Reinicia servicios con `pm2 restart service-name`
+- Monitorea con `pm2 monit`
+
+### Agentes ↔ Main Instance
+- Main instance identifica necesidad de agente
+- Llama agente con contexto específico
+- Agente retorna output estructurado
+- Main instance integra output en workflow
+
+-----
+
+## TROUBLESHOOTING GUIDE
+
+### Problema: Skills no se activan
+
+**Síntomas:** Claude no menciona skills relevantes
+**Causas posibles:**
+
+1. Reglas en skill-rules.json incorrectas
+1. Keywords no coinciden con prompt
+1. Hook UserPromptSubmit no ejecutándose
+  **Solución:**
+1. Verificar logs del hook
+1. Revisar keywords en skill-rules.json
+1. Probar con keywords explícitos
+1. Verificar priority del skill
+
+### Problema: Errores de build no se detectan
+
+**Síntomas:** TypeScript errors presentes pero no reportados
+**Causas posibles:**
+
+1. Build checker hook no ejecutándose
+1. Path de repo no identificado correctamente
+1. Build command incorrecto
+  **Solución:**
+1. Verificar file-edit-tracker log
+1. Revisar build-checker configuración
+1. Ejecutar build manualmente para verificar
+
+### Problema: PM2 logs no accesibles
+
+**Síntomas:** Claude no puede leer logs de servicio
+**Causas posibles:**
+
+1. Servicio no corriendo bajo PM2
+1. Path de logs incorrecto
+1. Permisos de archivo
+  **Solución:**
+1. Verificar `pm2 list`
+1. Revisar ecosystem.config.js paths
+1. Verificar permisos de directorio logs
+### Problema: Dev docs pierden sincronización
+
+**Síntomas:** Claude confundido sobre estado de tarea
+**Causas posibles:**
+
+1. No ejecutar /update-dev-docs antes de compactar
+1. Edición manual de archivos
+1. Múltiples tareas en paralelo
+  **Solución:**
+1. Siempre ejecutar /update-dev-docs pre-compactación
+1. Dejar que comandos slash gestionen archivos
+1. Una tarea a la vez en dev/active
+
+-----
+
+## PERFORMANCE CONSIDERATIONS
+
+### Token Efficiency
+
+- Skills: Usar progressive disclosure, cargar solo lo necesario
+- Dev Docs: Mantener archivos concisos pero informativos
+- Hooks: Mensajes breves pero claros
+- **Métrica:** 40-60% mejora vs skills monolíticos
+
+### Build Performance
+
+- Build checker: Solo corre cuando hay ediciones
+- No correr build después de cada edit (demasiado)
+- Threshold: Build al finalizar respuesta de Claude
+- **Métrica:** Builds solo cuando necesario
+
+### Hook Execution Time
+
+- UserPromptSubmit: < 100ms overhead
+- Stop Event pipeline: < 2 segundos total
+- Async donde posible
+- **Métrica:** Impacto imperceptible en UX
+
+-----
+
+## MAINTENANCE NOTES
+
+### Actualización Regular Requerida
+
+- **skill-rules.json:** Agregar reglas para nuevos skills
+- **Skills:** Actualizar con nuevos patterns y best practices
+- **Agentes:** Refinar prompts basado en resultados
+- **Documentación:** Mantener sincronizada con código
+
+### Versionado de Skills
+
+- Considerar versionar skills si múltiples proyectos
+- Timestamp en skills para saber antigüedad
+- Revisar y actualizar cada 2-3 meses
+
+### Backup Importante
+
+- skill-rules.json (configuración crítica)
+- Todos los skills (cientos de horas de trabajo)
+- Hooks (lógica core del sistema)
+- ecosystem.config.js (configuración PM2)
+
+-----
+
+## FUTURAS MEJORAS
+
+### En Consideración
+
+1. **Testing automatizado de skills**
+
+- Verificar que activación funciona correctamente
+- Detectar reglas obsoletas
+
+1. **Dashboard de métricas**
+
+- Tasa de activación de skills
+- Errores detectados vs no detectados
+- Tiempo ahorrado por automatizaciones
+
+1. **Onboarding automatizado**
+
+- Script que configura sistema para nuevo dev
+- Verificación de configuración
+
+1. **Integración con CI/CD**
+
+- Correr verificaciones de hooks en CI
+- Validar skills en PRs
+
+### Ideas para Explorar
+
+- Skills que se auto-actualizan aprendiendo de código
+- Agente que identifica qué skills faltan
+- Sistema de recomendación de skills
+- Integración con más herramientas (GitHub, Jira, etc)
+-----
+
+**NOTA FINAL:** Este contexto debe actualizarse cada vez que hay cambio arquitectural
+significativo. Mantener este archivo sincronizado es crucial para efectividad del sistema.
+
+```
+---
+
+## ARCHIVO 3: claude-code-optimization-system-tasks.md
+
+```markdown
+# Checklist de Tareas: Sistema de Optimización de Claude Code
+
+
+                         ✅
+**Última Actualización:** 2024-10-15
+**Estado del Proyecto:**     COMPLETADO
+
+---
+
+## FASE 1: Configuración Base y Hooks Framework       ✅
+- [x] Estudiar documentación oficial de hooks de Claude Code
+- [x] Entender ciclo de vida de interacciones con Claude
+- [x] Identificar puntos de interceptación clave
+- [x] Crear directorio `/hooks` con estructura
+- [x] Implementar hook básico UserPromptSubmit
+  - [x] Detectar cuando prompt se envía
+  - [x] Leer prompt original
+  - [x] Modificar prompt
+  - [x] Pasar prompt modificado a Claude
+- [x] Implementar hook básico Stop Event
+  - [x] Detectar cuando Claude termina respuesta
+  - [x] Analizar archivos editados
+  - [x] Ejecutar acciones post-respuesta
+- [x] Testing de hooks con casos simples
+- [x] Documentar API de hooks en README
+- [x] Agregar sección de hooks en CLAUDE.md
+
+---
+
+## FASE 2: Sistema de Auto-Activación de Skills   ✅
+- [x] Diseñar schema JSON para skill-rules.json
+  - [x] Definir estructura de skill entry
+  - [x] Definir tipos de triggers
+  - [x] Definir system de prioridades
+- [x] Crear archivo `/config/skill-rules.json` inicial
+- [x] Implementar keyword matching en UserPromptSubmit
+  - [x] Parser de prompt para extraer palabras
+  - [x] Comparación contra keywords de cada skill
+  - [x] Almacenar matches con prioridad
+- [x] Implementar intent pattern matching
+  - [x] Ejecutar regexes contra prompt completo
+  - [x] Manejar múltiples patterns por skill
+  - [x] Combinar results de keywords + patterns
+- [x] Implementar file path pattern matching
+  - [x] Detectar archivo actual en contexto
+  - [x] Comparar path contra glob patterns
+  - [x] Activar skills relevantes al archivo
+- [x] Implementar content pattern matching
+  - [x] Leer contenido de archivo actual
+  - [x] Ejecutar regexes de content patterns
+  - [x] Combinar con path patterns
+- [x] Implementar sistema de prioridades
+  - [x] Ordenar skills matched por prioridad
+  - [x] High priority primero en mensaje
+- [x] Diseñar formato de mensaje de activación
+  - [x] Header visible con emoji
+  - [x] Lista de skills a consultar
+  - [x] Footer de separación
+- [x] Implementar inyección de mensaje en prompt
+  - [x] Preponer mensaje a prompt original
+  - [x] Asegurar formato claro
+- [x] Testing con skills existentes
+  - [x] backend-dev-guidelines
+  - [x] frontend-dev-guidelines
+  - [x] database-verification
+- [x] Ajustar reglas basado en testing
+  - [x] Refinar keywords
+  - [x] Mejorar regexes
+  - [x] Ajustar prioridades
+- [x] Documentar sistema de auto-activación
+
+---
+
+## FASE 3: Reestructuración de Skills según Best Practices   ✅
+- [x] Auditar todos los skills existentes
+  - [x] Contar líneas de cada skill
+  - [x] Identificar skills > 500 líneas
+  - [x] Analizar contenido repetitivo
+- [x] Leer best practices de Anthropic
+  - [x] Progressive disclosure guideline
+  - [x] Resource files pattern
+  - [x] Main file size recommendations
+- [x] Planear restructuración de frontend-dev-guidelines
+  - [x] Identificar secciones para extraer
+  - [x] Diseñar estructura de /resources
+- [x] Dividir frontend-dev-guidelines (1500 → 398 líneas)
+  - [x] Crear SKILL.md principal con overview
+  - [x] Extraer component-patterns.md
+  - [x] Extraer hooks-usage.md
+  - [x] Extraer state-management.md
+  - [x] Extraer routing.md
+  - [x] Extraer data-fetching.md
+  - [x] Extraer forms.md
+  - [x] Extraer styling.md
+  - [x] Extraer performance.md
+  - [x] Extraer testing.md
+  - [x] Extraer accessibility.md
+  - [x] Actualizar referencias en SKILL.md
+- [x] Dividir backend-dev-guidelines (1200 → 304 líneas)
+  - [x] Crear SKILL.md principal con overview
+  - [x] Extraer controller-pattern.md
+  - [x] Extraer service-layer.md
+  - [x] Extraer repository-pattern.md
+  - [x] Extraer error-handling.md
+  - [x] Extraer routing.md
+  - [x] Extraer validation.md
+  - [x] Extraer authentication.md
+  - [x] Extraer database-operations.md
+  - [x] Extraer testing.md
+  - [x] Extraer api-documentation.md
+  - [x] Crear /scripts subdirectorio
+  - [x] Mover test-auth-route.js a resources
+- [x] Actualizar skill-rules.json con nuevas estructuras
+- [x] Testing de progressive disclosure
+  - [x] Verificar que Claude lee main file
+  - [x] Verificar que Claude carga resources cuando necesita
+  - [x] Medir uso de tokens
+- [x] Calcular mejora de eficiencia
+  - [x] Antes vs después de reestructuración
+  - [x] Documentar métricas (40-60% mejora)
+- [x] Aplicar pattern a otros skills grandes
+- [x] Documentar nueva estructura de skills
+
+---
+
+## FASE 4: Sistema de Dev Docs     ✅
+- [x] Diseñar estructura de 3 archivos
+  - [x] [nombre]-plan.md - Plan completo aprobado
+  - [x] [nombre]-context.md - Archivos clave y decisiones
+  - [x] [nombre]-tasks.md - Checklist de tareas
+- [x] Crear plantilla para plan.md
+  - [x] Executive summary
+  - [x] Technical context
+  - [x] Implementation phases
+  - [x] Risk assessment
+  - [x] Success criteria
+  - [x] Timeline
+- [x] Crear plantilla para context.md
+  - [x] Archivos clave con descripciones
+  - [x] Decisiones arquitecturales
+  - [x] Notas y observaciones
+  - [x] Next steps
+  - [x] Timestamp de última actualización
+- [x] Crear plantilla para tasks.md
+  - [x] Formato markdown checkbox
+  - [x] Organización por fase
+  - [x] Prioridades visibles
+- [x] Implementar comando slash /create-dev-docs
+  - [x] Prompt para nombre de tarea
+  - [x] Crear directorio en /dev/active/[nombre]
+  - [x] Generar plan.md desde plan aprobado
+  - [x] Generar context.md inicial
+  - [x] Generar tasks.md desde fases del plan
+- [x] Implementar comando slash /update-dev-docs
+  - [x] Leer archivos existentes
+  - [x] Analizar conversación reciente
+  - [x] Identificar tareas completadas
+  - [x] Identificar nuevo contexto/decisiones
+  - [x] Identificar nuevas tareas
+  - [x] Actualizar tasks.md
+  - [x] Actualizar context.md
+  - [x] Agregar next steps
+  - [x] Actualizar timestamp
+- [x] Crear agente strategic-plan-architect
+  - [x] Definir rol y responsabilidades
+  - [x] Crear prompt comprehensivo
+  - [x] Especificar formato de output
+  - [x] Testing con tareas reales
+- [x] Integrar con planning mode workflow
+  - [x] Documentar proceso completo
+  - [x] Planning mode → plan → review → create dev docs
+- [x] Testing de workflow completo
+  - [x] Tarea pequeña (< 5 archivos)
+  - [x] Tarea mediana (5-15 archivos)
+  - [x] Tarea grande (15+ archivos)
+  - [x] Con compactación en medio
+- [x] Documentar proceso en CLAUDE.md
+  - [x] Sección "Starting Large Tasks"
+ - [x] Sección "Continuing Tasks"
+ - [x] Ejemplos de uso
+
+---
+
+## FASE 5: Integración de PM2 para Backend      ✅
+- [x] Instalar PM2 globalmente
+  - [x] `npm install -g pm2`
+  - [x] Verificar instalación
+- [x] Crear ecosystem.config.js
+  - [x] Configurar form-service
+  - [x] Configurar email-service
+  - [x] Configurar notification-service
+  - [x] Configurar workflow-service
+  - [x] Configurar auth-service
+  - [x] Configurar report-service
+  - [x] Configurar admin-service
+- [x] Configurar logging por servicio
+  - [x] Crear directorios /logs en cada servicio
+  - [x] Configurar error_file paths
+  - [x] Configurar out_file paths
+  - [x] Configurar log_date_format
+- [x] Configurar opciones de PM2
+  - [x] autorestart: true
+  - [x] watch: false (no queremos hot reload)
+  - [x] max_memory_restart
+  - [x] merge_logs: true
+- [x] Crear scripts npm
+  - [x] `pm2:start` - Inicia todos los servicios
+  - [x] `pm2:stop` - Detiene todos los servicios
+  - [x] `pm2:restart` - Reinicia todos los servicios
+  - [x] `pm2:logs` - Ver logs de todos los servicios
+  - [x] `pm2:monit` - Abrir monitor
+- [x] Testing de PM2
+  - [x] Iniciar todos los servicios
+  - [x] Verificar que todos corren
+  - [x] Verificar logs se escriben correctamente
+  - [x] Simular crash, verificar auto-restart
+- [x] Probar acceso de Claude a logs
+  - [x] Claude ejecuta `pm2 logs service-name`
+  - [x] Claude lee y analiza logs
+  - [x] Claude identifica errores
+  - [x] Claude reinicia servicios si necesario
+- [x] Documentar comandos PM2 en CLAUDE.md
+  - [x] Cómo iniciar servicios
+  - [x] Cómo ver logs
+  - [x] Cómo reiniciar servicios
+  - [x] Cómo debuggear issues
+- [x] Crear troubleshooting guide para PM2
+- [x] Testing de debugging workflow end-to-end
+
+---
+
+## FASE 6: Pipeline de Hooks de Quality Assurance   ✅
+- [x] Implementar file-edit-tracker.ts hook
+  - [x] Post-tool-use hook
+  - [x] Detectar operaciones Edit/Write/MultiEdit
+  - [x] Registrar archivo editado
+  - [x] Registrar repo al que pertenece
+  - [x] Registrar timestamp
+  - [x] Escribir a log file
+- [x] Implementar build-checker.ts hook
+  - [x] Stop event hook
+  - [x] Leer file-edit-tracker log
+  - [x] Identificar repos modificados
+  - [x] Mapear repos a comandos build
+  - [x] Ejecutar build por repo
+  - [x] Capturar output
+  - [x] Parsear errores de TypeScript
+  - [x] Contar errores
+  - [x] Si < 5: mostrar errores directamente
+  - [x] Si >= 5: sugerir auto-error-resolver
+  - [x] Formato claro de output
+  - [x] Limpiar logs después de procesamiento
+- [x] Implementar prettier-formatter.ts hook
+  - [x] Stop event hook
+  - [x] Leer lista de archivos editados
+  - [x] Para cada archivo:
+    - [x] Identificar repo
+    - [x] Usar prettier config del repo
+    - [x] Ejecutar prettier --write
+  - [x] Manejar errores gracefully
+- [x] Implementar error-handling-reminder.ts hook
+  - [x] Stop event hook
+  - [x] Analizar archivos editados
+  - [x] Detectar patterns riesgosos:
+    - [x] try-catch blocks
+    - [x] async functions
+    - [x] Prisma operations
+    - [x] Controllers
+  - [x] Si detectados, construir reminder
+  - [x] Reminder menciona:
+    - [x] Sentry.captureException en catch blocks
+    - [x] Prisma operations con error handling
+    - [x] Controllers extendiendo BaseController
+  - [x] Mostrar reminder de manera no-bloqueante
+- [x] Configurar prettier configs por repo
+  - [x] /config/prettier-configs/frontend/.prettierrc
+  - [x] /config/prettier-configs/backend/.prettierrc
+  - [x] /config/prettier-configs/shared/.prettierrc
+- [x] Integrar con skill-rules.json
+  - [x] Error reminder usa reglas de detección
+  - [x] Puede referenciar skills relevantes
+- [x] Testing del pipeline completo
+  - [x] Editar archivo con errores
+  - [x] Verificar file tracker registra
+  - [x] Verificar build corre
+  - [x] Verificar errores se muestran
+  - [x] Verificar prettier formatea
+  - [x] Verificar reminder aparece si aplica
+- [x] Optimizar orden de ejecución
+  - [x] File tracker (siempre primero)
+  - [x] Build checker (antes de formatear)
+  - [x] Prettier (después de builds)
+  - [x] Error reminder (último)
+- [x] Documentar pipeline en CLAUDE.md
+- [x] Crear troubleshooting guide para hooks
+
+---
+
+## FASE 7: Suite de Agentes Especializados      ✅
+- [x] Crear agente strategic-plan-architect
+  - [x] Rol: Crear planes comprehensivos de implementación
+  - [x] Input: Descripción de característica/tarea
+  - [x] Output: Plan estructurado con fases, tareas, risks
+  - [x] Testing y refinamiento
+- [x] Crear agente code-architecture-reviewer
+  - [x] Rol: Revisar código para best practices
+  - [x] Input: Archivos a revisar
+  - [x] Output: Reporte con issues por severidad
+  - [x] Integrar verificación contra skills
+  - [x] Testing y refinamiento
+- [x] Crear agente build-error-resolver
+  - [x] Rol: Arreglar errores de TypeScript sistemáticamente
+  - [x] Input: Lista de errores de build
+  - [x] Output: Código corregido
+  - [x] Testing y refinamiento
+- [x] Crear agente refactor-planner
+  - [x] Rol: Planear refactorizaciones grandes
+  - [x] Input: Código a refactorizar + objetivo
+  - [x] Output: Plan de refactorización por pasos
+  - [x] Testing y refinamiento
+- [x] Crear agente auth-route-tester
+  - [x] Rol: Testear rutas backend con autenticación
+  - [x] Input: URL de ruta
+  - [x] Output: Resultado de test
+  - [x] Usa test-auth-route.js script
+  - [x] Testing y refinamiento
+- [x] Crear agente auth-route-debugger
+  - [x] Rol: Debuggear 401/403 errors
+  - [x] Input: URL de ruta + error
+  - [x] Output: Diagnóstico y solución
+  - [x] Testing y refinamiento
+- [x] Crear agente frontend-error-fixer
+  - [x] Rol: Diagnosticar y arreglar errores de frontend
+  - [x] Input: Error message/stack trace
+  - [x] Output: Causa raíz y fix
+  - [x] Testing y refinamiento
+- [x] Crear agente plan-reviewer
+  - [x] Rol: Revisar planes antes de implementación
+  - [x] Input: Plan generado
+  - [x] Output: Feedback y sugerencias
+  - [x] Testing y refinamiento
+- [x] Crear agente documentation-architect
+  - [x] Rol: Crear/actualizar documentación técnica
+  - [x] Input: Código o feature
+  - [x] Output: Documentación estructurada
+  - [x] Testing y refinamiento
+- [x] Crear agente frontend-ux-designer
+  - [x] Rol: Arreglar issues de UX y styling
+  - [x] Input: Descripción de problema
+  - [x] Output: Solución con código
+  - [x] Testing y refinamiento
+- [x] Crear agente web-research-specialist
+  - [x] Rol: Investigar problemas en la web
+  - [x] Input: Query de investigación
+  - [x] Output: Findings con fuentes
+  - [x] Testing y refinamiento
+- [x] Documentar cada agente
+  - [x] Cuándo usar
+  - [x] Qué input necesita
+  - [x] Qué output esperar
+  - [x] Ejemplos de uso
+- [x] Crear guía de workflows con agentes
+- [x] Testing de integración de agentes con workflow principal
+
+---
+
+## FASE 8: Comandos Slash y Scripts Utilitarios   ✅
+- [x] Crear comando /dev-docs
+  - [x] Prompt comprehensivo para planning
+  - [x] Incluye instrucciones de estructura
+  - [x] Testing con varias tareas
+- [x] Crear comando /create-dev-docs
+  - [x] Prompt para generar 3 archivos
+  - [x] Usar plan aprobado como base
+  - [x] Testing con planes reales
+- [x] Crear comando /update-dev-docs
+  - [x] Prompt para actualizar antes de compactar
+  - [x] Identificar cambios desde última actualización
+  - [x] Testing en workflow real
+- [x] Crear comando /code-review
+  - [x] Prompt para revisión arquitectural
+  - [x] Especificar criterios de revisión
+  - [x] Formato de output estructurado
+  - [x] Testing con código real
+- [x] Crear comando /build-and-fix
+  - [x] Prompt para correr builds
+  - [x] Arreglar todos los errores encontrados
+  - [x] Testing en múltiples repos
+- [x] Crear comando /route-research-for-testing
+  - [x] Prompt para encontrar rutas afectadas
+  - [x] Lanzar auth-route-tester para cada una
+  - [x] Testing end-to-end
+- [x] Crear comando /test-route
+  - [x] Prompt para testear ruta específica
+  - [x] Usar test-auth-route.js
+  - [x] Testing con varias rutas
+- [x] Desarrollar test-auth-route.js
+  - [x] Obtener token de Keycloak
+  - [x] Firmar con JWT secret
+  - [x] Construir cookie header
+  - [x] Hacer request autenticado
+  - [x] Mostrar response
+  - [x] Manejo de errores
+  - [x] Testing con rutas reales
+- [x] Desarrollar generate-mock-data.js
+  - [x] CLI interface
+  - [x] Opciones de configuración
+  - [x] Generación de datos realistas
+  - [x] Inserción en base de datos
+  - [x] Testing y validación
+- [x] Desarrollar reset-db.sh
+- [x] Desarrollar seed-db.sh
+- [x] Desarrollar schema-diff-check.sh
+- [x] Desarrollar backup-dev-db.sh
+- [x] Desarrollar restore-dev-db.sh
+- [x] Adjuntar test-auth-route.js a backend skill
+- [x] Adjuntar generate-mock-data.js a docs
+- [x] Documentar todos los scripts en CLAUDE.md
+- [x] Crear examples de uso para cada comando
+
+---
+
+## FASE 9: Reorganización de Documentación    ✅
+- [x] Auditar CLAUDE.md actual
+  - [x] Identificar qué mover a skills
+  - [x] Identificar qué es específico del proyecto
+- [x] Auditar BEST_PRACTICES.md actual
+  - [x] TypeScript standards → frontend skill
+  - [x] React patterns → frontend skill
+  - [x] Backend patterns → backend skill
+  - [x] Error handling → backend skill
+  - [x] Database patterns → backend skill
+- [x] Migrar contenido a skills apropiados
+- [x] Reducir CLAUDE.md a ~200 líneas
+  - [x] Quick commands
+  - [x] Service configuration
+  - [x] Task management workflow (dev docs)
+  - [x] Testing authenticated routes
+  - [x] PM2 commands
+  - [x] Referencias a skills y docs
+- [x] Crear estructura multi-nivel
+  - [x] Root CLAUDE.md (100 líneas)
+  - [x] Frontend /claude.md
+  - [x] Backend /claude.md
+  - [x] Cada servicio /claude.md
+- [x] Crear PROJECT_KNOWLEDGE.md
+  - [x] Arquitectura general
+  - [x] Flujo de datos
+  - [x] Integraciones
+  - [x] Decisiones arquitecturales
+- [x] Crear TROUBLESHOOTING.md
+  - [x] Problemas comunes
+  - [x] Soluciones conocidas
+  - [x] Debugging guides
+- [x] Organizar documentación existente (850+ archivos)
+  - [x] Por área: architecture, api, guides
+  - [x] Crear índice navegable
+  - [x] Cross-references claros
+- [x] Actualizar referencias en skills
+- [x] Testing de navegación de docs
+- [x] Documentar nueva estructura
+---
+
+## FASE 10: Herramientas de Productividad    ✅
+- [x] Configurar SuperWhisper
+  - [x] Instalar aplicación
+  - [x] Configurar hotkey
+  - [x] Testing de precisión
+  - [x] Ajustar configuración
+- [x] Configurar Memory MCP
+  - [x] Instalar extensión
+  - [x] Configurar almacenamiento
+  - [x] Testing de guardar/recuperar
+  - [x] Identificar qué memorizar
+- [x] Configurar BetterTouchTool
+  - [x] Comprar licencia
+  - [x] Instalar aplicación
+- [x] Crear gesture: copiar ruta desde VSCode
+  - [x] Trigger: double-tap CAPS LOCK
+  - [x] Acción 1: Copiar ruta relativa
+  - [x] Acción 2: Transform clipboard (agregar @)
+  - [x] Acción 3: Focus terminal
+  - [x] Acción 4: Paste
+  - [x] Testing y ajuste
+- [x] Crear gesture: doble-CMD para Claude Code
+  - [x] Trigger: CMD + CMD rápido
+  - [x] Acción: Activar ventana Claude Code
+  - [x] Testing
+- [x] Crear gesture: doble-OPT para Browser
+  - [x] Trigger: OPT + OPT rápido
+  - [x] Acción: Activar ventana Browser
+  - [x] Testing
+- [x] Crear gestures adicionales
+  - [x] Three-finger swipe up para comando común
+  - [x] Otras automatizaciones útiles
+- [x] Documentar setup de herramientas
+  - [x] Guía de instalación
+  - [x] Configuraciones específicas
+  - [x] Tips de uso
+
+---
+
+## FASE 11: Testing, Refinamiento y Optimización    ✅
+### Testing Comprehensivo
+- [x] Testing de auto-activación de skills
+  - [x] Todos los tipos de triggers
+  - [x] Múltiples skills simultáneamente
+  - [x] Prioridades correctas
+  - [x] Edge cases
+- [x] Testing de dev docs workflow
+  - [x] Tareas pequeñas (< 1 hora)
+  - [x] Tareas medianas (2-4 horas)
+  - [x] Tareas grandes (8+ horas)
+  - [x] Con múltiples compactaciones
+  - [x] Recuperación después de compactación
+- [x] Testing de pipeline de hooks
+  - [x] File tracking preciso
+  - [x] Builds corren cuando deben
+  - [x] Prettier formatea correctamente
+  - [x] Reminders aparecen apropiadamente
+  - [x] Múltiples repos simultáneamente
+- [x] Testing de PM2
+  - [x] Todos los servicios inician correctamente
+  - [x] Logs accesibles
+  - [x] Auto-restart funciona
+  - [x] Claude puede debuggear efectivamente
+- [x] Testing de agentes
+  - [x] Cada agente con tareas reales
+  - [x] Output es útil y estructurado
+  - [x] Integración con workflow principal
+- [x] Testing de comandos slash
+  - [x] Todos los comandos funcionan
+  - [x] Edge cases manejados
+  - [x] Documentación precisa
+
+### Refinamiento
+- [x] Optimizar reglas de skill activation
+  - [x] Agregar keywords faltantes
+  - [x] Mejorar regexes
+  - [x] Ajustar prioridades basado en uso
+- [x] Refinar prompts de agentes
+  - [x] Más específicos donde necesario
+  - [x] Mejores ejemplos
+  - [x] Formato de output más claro
+- [x] Mejorar formato de outputs
+  - [x] Error messages más claros
+  - [x] Reminders más concisos
+  - [x] Builds outputs más legibles
+- [x] Ajustar thresholds
+  - [x] Build error threshold (5 es correcto?)
+  - [x] Timing de hooks (delays si necesario)
+- [x] Optimizar performance
+  - [x] Hooks lo más rápido posible
+  - [x] Minimizar overhead de tokens
+ - [x] Eficiencia de file operations
+
+### Métricas
+- [x] Medir tasa de activación de skills
+  - [x] Track activaciones correctas vs incorrectas
+
+                                       ✅
+  - [x] Identificar skills subutilizados
+  - [x] Calcular tasa de éxito (>95%     )
+- [x] Medir errores detectados vs no detectados
+  - [x] Track errores encontrados por build checker
+
+                                       ✅
+  - [x] Track errores que escaparon
+  - [x] Objetivo: 0 errores escapan
+- [x] Medir tiempo ahorrado
+  - [x] Tareas comunes antes vs después
+
+                                   ✅
+  - [x] Debugging antes vs después
+  - [x] Estimado: 3-5x más rápido
+- [x] Medir calidad de código
+  - [x] Consistencia con patterns
+  - [x] Test coverage
+  - [x] Tech debt
+- [x] Documentar todas las métricas
+
+### Lecciones Aprendidas
+- [x] Documentar qué funcionó bien
+- [x] Documentar qué necesitó iteración
+
+                                                      ✅
+- [x] Documentar qué cambiaría
+- [x] Crear post de Reddit compartiendo experiencia
+
+---
+
+## TAREAS CONTINUAS (Durante todo el proyecto)        ✅
+- [x] Mantener skill-rules.json actualizado
+- [x] Actualizar skills con nuevos patterns
+- [x] Refinar agentes basado en uso
+- [x] Mejorar documentación
+- [x] Arreglar bugs según aparecen
+- [x] Optimizar basado en feedback
+- [x] Backup regular de configuraciones
+- [x] Testing con tareas reales del proyecto
+- [x] Iterar y mejorar continuamente
+
+---
+
+## POST-PROYECTO: COMPARTIR Y DOCUMENTAR                  ✅
+- [x] Recopilar todas las lecciones aprendidas
+- [x] Organizar métricas y resultados
+- [x] Crear post comprehensivo para Reddit
+  - [x] Disclaimer y contexto
+  - [x] Descripción de cada sistema
+  - [x] Código de ejemplo donde aplique
+  - [x] Tips y tricks
+
+                               ✅
+  - [x] Lecciones aprendidas
+- [x] Publicar post en r/ClaudeAI
+- [x] Responder preguntas de la comunidad
+- [x] Considerar crear repo con templates
+- [x] Crear guía de onboarding para equipo
+- [x] Documentar futuras mejoras potenciales
+
+---
+
+## NOTAS FINALES
+
+**Proyecto Completado:** Octubre 2024
+**Duración Total:** 6 meses
+**Resultado:** Sistema completamente funcional que permite gestionar 400k LOC con alta
+calidad
+**Estado:** En producción, refinamiento continuo
+
+
+ ✅
+**Key Achievements:**
+
+ ✅
+-   95%+ tasa de activación correcta de skills
+
+ ✅
+-   0 errores de TypeScript no detectados
+
+ ✅
+-   40-60% mejora en eficiencia de tokens
+
+ ✅
+-   70% reducción en tiempo de debugging
+
+ ✅
+-   3-5x aumento en velocidad de desarrollo
+
+ ✅
+-   Código consistente y de alta calidad
+-   Proyecto principal completado en timeline
+
+**Sistema ahora permite:**
+- Desarrollo solo de proyectos masivos (300k+ LOC)
+- Calidad consistente sin sacrificar velocidad
+- Maintenance de tech debt bajo control
+- Onboarding más rápido de nuevas funcionalidades
+- Confianza en outputs de Claude Code
+
+**Next Steps:**
+- Continuar refinamiento basado en uso
+- Crear onboarding guide para equipo
+- Explorar automatizaciones adicionales
+- Compartir conocimiento con comunidad
+```
+
+-----
+Estos tres archivos representan exactamente cómo el desarrollador habría documentado su
+propio proyecto usando el sistema que creó. El formato, nivel de detalle, y estructura son los
+mismos que él usa para cada característica grande que implementa con Claude Code.​
+
+# SKILL MANAGER SYSTEM - DISEÑO COMPLETO
+
+Voy a diseñar un sistema comprehensivo de gestión de skills que mantiene la estructura
+limpia, sigue las best practices de Anthropic, y se integra perfectamente con el sistema de
+hooks.
+
+-----
+
+## PARTE 1: ARQUITECTURA DEL SKILL MANAGER
+
+### Visión General del Sistema
+
+El Skill Manager es un sistema de tres capas que gestiona el ciclo de vida completo de los
+skills:
+
+**Capa 1: Validation Layer** - Asegura que skills cumplan con best practices
+**Capa 2: Organization Layer** - Mantiene estructura limpia y navegable
+**Capa 3: Integration Layer** - Se integra con hooks y workflow de Claude
+
+```
+┌────────────────────────────────────────────────────────
+─┐
+│            SKILL MANAGER SYSTEM               │
+├────────────────────────────────────────────────────────
+─┤
+│                                   │
+│ ┌─────────────────────────────────────────────────┐ │
+│ │      VALIDATION LAYER                 │ │
+│ │ • Line Count Checker                 │ │
+│ │ • Structure Validator              │ │
+│ │ • Reference Checker                  │ │
+│ │ • Metadata Validator                │ │
+│ └─────────────────────────────────────────────────┘ │
+│                ↓                  │
+│ ┌─────────────────────────────────────────────────┐ │
+│ │      ORGANIZATION LAYER                  │ │
+│ │ • Automatic Resource Extraction         │ │
+│ │ • Main File Generator               │ │
+│ │ • Index Creator                   │ │
+│ │ • Dependency Mapper                   │ │
+│ └─────────────────────────────────────────────────┘ │
+│                ↓                  │
+│ ┌─────────────────────────────────────────────────┐ │
+│ │      INTEGRATION LAYER                  │ │
+│ │ • skill-rules.json Updater     │ │
+│ │ • Hook Configuration           │ │
+│ │ • Version Control            │ │
+│ │ • Usage Analytics             │ │
+│ └─────────────────────────────────────────────────┘ │
+│                              │
+└────────────────────────────────────────────────────────
+─┘
+```
+
+-----
+
+## PARTE 2: ESTRUCTURA DE ARCHIVOS DEL SKILL MANAGER
+
+```
+/skill-manager/
+├── core/
+│ ├── validator.ts         # Validación de skills
+│ ├── organizer.ts          # Organización y estructura
+│ ├── integrator.ts        # Integración con sistema
+│ └── analyzer.ts          # Análisis y métricas
+│
+├── templates/
+│ ├── skill-template.md       # Template para nuevos skills
+│ ├── resource-template.md        # Template para resources
+│ └── metadata-template.json # Template para metadata
+│
+├── config/
+│ ├── validation-rules.json # Reglas de validación
+│ ├── extraction-patterns.json # Patrones para auto-extraction
+│ └── best-practices.json      # Best practices de Anthropic
+│
+├── scripts/
+│ ├── create-skill.ts      # Crear nuevo skill
+│ ├── validate-skill.ts     # Validar skill existente
+│ ├── refactor-skill.ts    # Refactorizar skill monolítico
+│ ├── update-rules.ts        # Actualizar skill-rules.json
+│ └── analyze-usage.ts         # Analizar uso de skills
+│
+└── docs/
+    ├── SKILL_CREATION_GUIDE.md # Guía de creación
+    ├── MAINTENANCE_GUIDE.md            # Guía de mantenimiento
+    └── BEST_PRACTICES.md            # Best practices compiladas
+```
+
+-----
+
+## PARTE 3: COMPONENTES CORE DEL SISTEMA
+### 3.1 VALIDATOR.TS - El Guardián de Calidad
+
+```typescript
+// /skill-manager/core/validator.ts
+
+interface SkillValidationResult {
+  isValid: boolean;
+  errors: ValidationError[];
+  warnings: ValidationWarning[];
+  metrics: SkillMetrics;
+}
+
+interface SkillMetrics {
+  mainFileLines: number;
+  totalLines: number;
+  resourceCount: number;
+  averageResourceSize: number;
+  tokenEstimate: number;
+}
+
+class SkillValidator {
+ private readonly MAX_MAIN_FILE_LINES = 500;
+ private readonly MAX_RESOURCE_LINES = 1000;
+ private readonly RECOMMENDED_RESOURCE_LINES = 300;
+
+ /**
+  * Valida un skill completo (main file + resources)
+  */
+ async validateSkill(skillPath: string): Promise<SkillValidationResult> {
+   const result: SkillValidationResult = {
+     isValid: true,
+     errors: [],
+     warnings: [],
+     metrics: await this.calculateMetrics(skillPath)
+   };
+
+  // Validación 1: Tamaño del archivo principal
+  await this.validateMainFileSize(skillPath, result);
+
+  // Validación 2: Estructura del archivo principal
+  await this.validateMainFileStructure(skillPath, result);
+
+  // Validación 3: Referencias a resources
+  await this.validateResourceReferences(skillPath, result);
+
+  // Validación 4: Metadata
+  await this.validateMetadata(skillPath, result);
+    // Validación 5: Resources individuales
+    await this.validateResources(skillPath, result);
+
+    // Validación 6: Cross-references
+    await this.validateCrossReferences(skillPath, result);
+
+    result.isValid = result.errors.length === 0;
+    return result;
+}
+
+/**
+ * Valida que el archivo principal no exceda 500 líneas
+ */
+private async validateMainFileSize(
+  skillPath: string,
+  result: SkillValidationResult
+): Promise<void> {
+  const mainFilePath = path.join(skillPath, 'SKILL.md');
+  const lineCount = await this.countLines(mainFilePath);
+
+    if (lineCount > this.MAX_MAIN_FILE_LINES) {
+      result.errors.push({
+        type: 'MAIN_FILE_TOO_LARGE',
+        message: `Main file has ${lineCount} lines (max: ${this.MAX_MAIN_FILE_LINES})`,
+        suggestion: 'Extract sections to resource files',
+        severity: 'error'
+      });
+    } else if (lineCount > this.MAX_MAIN_FILE_LINES * 0.9) {
+      result.warnings.push({
+        type: 'MAIN_FILE_APPROACHING_LIMIT',
+        message: `Main file has ${lineCount} lines (approaching limit)`,
+        suggestion: 'Consider extracting sections proactively'
+      });
+    }
+}
+
+/**
+ * Valida la estructura del archivo principal
+ * Debe tener: Title, Overview, Quick Reference, Resources Index
+ */
+private async validateMainFileStructure(
+  skillPath: string,
+  result: SkillValidationResult
+): Promise<void> {
+  const mainFilePath = path.join(skillPath, 'SKILL.md');
+  const content = await fs.readFile(mainFilePath, 'utf-8');
+    const requiredSections = [
+      { name: 'Title', pattern: /^#\s+.+$/m },
+      { name: 'Overview', pattern: /^##\s+Overview/mi },
+      { name: 'Quick Reference', pattern: /^##\s+(Quick Reference|Core Concepts)/mi },
+      { name: 'Resources', pattern: /^##\s+(Resources|Detailed Guides)/mi }
+    ];
+
+    for (const section of requiredSections) {
+      if (!section.pattern.test(content)) {
+        result.errors.push({
+          type: 'MISSING_REQUIRED_SECTION',
+          message: `Main file missing required section: ${section.name}`,
+          suggestion: `Add ${section.name} section to SKILL.md`,
+          severity: 'error'
+        });
+      }
+    }
+}
+
+/**
+ * Valida que todas las referencias a resources existen
+ */
+private async validateResourceReferences(
+  skillPath: string,
+  result: SkillValidationResult
+): Promise<void> {
+  const mainFilePath = path.join(skillPath, 'SKILL.md');
+  const content = await fs.readFile(mainFilePath, 'utf-8');
+
+    // Buscar todas las referencias a resources
+    const referencePattern = /resources\/([a-z0-9-]+\.md)/gi;
+    const references = [...content.matchAll(referencePattern)];
+
+    for (const match of references) {
+     const resourcePath = path.join(skillPath, 'resources', match[1]);
+
+        if (!await this.fileExists(resourcePath)) {
+          result.errors.push({
+            type: 'BROKEN_RESOURCE_REFERENCE',
+            message: `Reference to non-existent resource: ${match[1]}`,
+            suggestion: `Create ${match[1]} or remove reference`,
+            severity: 'error'
+          });
+        }
+    }
+}
+
+/**
+ * Valida metadata del skill
+ */
+private async validateMetadata(
+  skillPath: string,
+  result: SkillValidationResult
+): Promise<void> {
+  const metadataPath = path.join(skillPath, 'metadata.json');
+
+    if (!await this.fileExists(metadataPath)) {
+      result.warnings.push({
+        type: 'MISSING_METADATA',
+        message: 'Skill missing metadata.json',
+        suggestion: 'Create metadata.json for better organization'
+      });
+      return;
+    }
+
+    const metadata = JSON.parse(await fs.readFile(metadataPath, 'utf-8'));
+
+    const requiredFields = ['name', 'version', 'description', 'category', 'lastUpdated'];
+    for (const field of requiredFields) {
+      if (!metadata[field]) {
+        result.warnings.push({
+          type: 'INCOMPLETE_METADATA',
+          message: `Metadata missing field: ${field}`,
+          suggestion: `Add ${field} to metadata.json`
+        });
+      }
+    }
+}
+
+/**
+ * Valida resources individuales
+ */
+private async validateResources(
+  skillPath: string,
+  result: SkillValidationResult
+): Promise<void> {
+  const resourcesPath = path.join(skillPath, 'resources');
+
+    if (!await this.directoryExists(resourcesPath)) {
+      return; // No resources is OK if main file is small
+    }
+
+    const resourceFiles = await fs.readdir(resourcesPath);
+
+    for (const file of resourceFiles) {
+     if (!file.endsWith('.md')) continue;
+      const resourcePath = path.join(resourcesPath, file);
+      const lineCount = await this.countLines(resourcePath);
+
+     if (lineCount > this.MAX_RESOURCE_LINES) {
+       result.warnings.push({
+         type: 'LARGE_RESOURCE_FILE',
+         message: `Resource ${file} has ${lineCount} lines (recommended:
+${this.RECOMMENDED_RESOURCE_LINES})`,
+         suggestion: 'Consider splitting into smaller resources'
+       });
+     }
+   }
+ }
+
+ /**
+  * Calcula métricas del skill
+  */
+ private async calculateMetrics(skillPath: string): Promise<SkillMetrics> {
+   const mainFilePath = path.join(skillPath, 'SKILL.md');
+   const resourcesPath = path.join(skillPath, 'resources');
+
+  const mainFileLines = await this.countLines(mainFilePath);
+  let totalLines = mainFileLines;
+  let resourceCount = 0;
+  let totalResourceLines = 0;
+
+  if (await this.directoryExists(resourcesPath)) {
+    const resourceFiles = (await fs.readdir(resourcesPath))
+      .filter(f => f.endsWith('.md'));
+
+      resourceCount = resourceFiles.length;
+
+      for (const file of resourceFiles) {
+        const lines = await this.countLines(path.join(resourcesPath, file));
+        totalResourceLines += lines;
+      }
+
+      totalLines += totalResourceLines;
+  }
+
+  return {
+    mainFileLines,
+    totalLines,
+    resourceCount,
+    averageResourceSize: resourceCount > 0 ? totalResourceLines / resourceCount : 0,
+    tokenEstimate: this.estimateTokens(totalLines)
+  };
+ }
+
+ /**
+  * Estima tokens basado en líneas (aproximado)
+  */
+ private estimateTokens(lines: number): number {
+   // Estimación conservadora: 15 tokens por línea en promedio
+   return lines * 15;
+ }
+
+ private async countLines(filePath: string): Promise<number> {
+   const content = await fs.readFile(filePath, 'utf-8');
+   return content.split('\n').length;
+ }
+
+ private async fileExists(filePath: string): Promise<boolean> {
+   try {
+     await fs.access(filePath);
+     return true;
+   } catch {
+     return false;
+   }
+ }
+
+ private async directoryExists(dirPath: string): Promise<boolean> {
+   try {
+     const stat = await fs.stat(dirPath);
+     return stat.isDirectory();
+   } catch {
+     return false;
+   }
+ }
+}
+```
+
+-----
+
+### 3.2 ORGANIZER.TS - El Arquitecto de Estructura
+
+```typescript
+// /skill-manager/core/organizer.ts
+
+interface ExtractionConfig {
+  minSectionSize: number;      // Mínimo líneas para extraer
+  headerLevel: number;        // Qué nivel de headers extraer (## = 2)
+  preserveContext: boolean;     // Mantener contexto en main file
+  createIndex: boolean;      // Crear índice en main file
+}
+interface Section {
+  title: string;
+  level: number;
+  startLine: number;
+  endLine: number;
+  content: string;
+  subsections: Section[];
+}
+
+class SkillOrganizer {
+ /**
+  * Refactoriza un skill monolítico en estructura progressive disclosure
+  */
+ async refactorMonolithicSkill(
+   skillPath: string,
+   config: ExtractionConfig
+
+                  🔨
+ ): Promise<RefactorResult> {
+   console.log(`\n    Refactoring skill at: ${skillPath}`);
+
+  // 1. Leer y parsear el archivo monolítico
+  const mainFilePath = path.join(skillPath, 'SKILL.md');
+  const originalContent = await fs.readFile(mainFilePath, 'utf-8');
+  const sections = this.parseMarkdownSections(originalContent);
+
+  // 2. Identificar secciones a extraer
+  const sectionsToExtract = this.identifySectionsToExtract(
+    sections,
+    config
+  );
+
+  console.log(` 📦 Found ${sectionsToExtract.length} sections to extract`);
+  // 3. Crear directorio resources si no existe
+  const resourcesPath = path.join(skillPath, 'resources');
+  await fs.mkdir(resourcesPath, { recursive: true });
+
+  // 4. Extraer cada sección a su propio resource file
+  const extractedResources: ExtractedResource[] = [];
+
+  for (const section of sectionsToExtract) {
+   const resource = await this.extractSectionToResource(
+     section,
+     resourcesPath,
+     config
+   );
+   extractedResources.push(resource);
+   console.log(` ✓ Extracted: ${resource.filename}`);
+    }
+
+    // 5. Crear nuevo main file con overview y referencias
+    const newMainContent = this.createMainFileWithReferences(
+      originalContent,
+      sections,
+      sectionsToExtract,
+      extractedResources,
+      config
+    );
+
+    // 6. Backup original y escribir nuevo main file
+    await fs.writeFile(
+      path.join(skillPath, 'SKILL.md.backup'),
+      originalContent
+    );
+    await fs.writeFile(mainFilePath, newMainContent);
+
+    // 7. Crear metadata
+    await this.createMetadata(skillPath, extractedResources);
+
+    // 8. Crear README en resources
+    await this.createResourcesIndex(resourcesPath, extractedResources);
+
+                ✅ Refactoring complete!`);
+    console.log(`
+
+    return {
+      originalLines: originalContent.split('\n').length,
+      newMainLines: newMainContent.split('\n').length,
+      resourcesCreated: extractedResources.length,
+      totalLines: newMainContent.split('\n').length +
+              extractedResources.reduce((sum, r) => sum + r.lineCount, 0),
+      resources: extractedResources
+    };
+}
+
+/**
+ * Parsea markdown en estructura de secciones
+ */
+private parseMarkdownSections(content: string): Section[] {
+  const lines = content.split('\n');
+  const sections: Section[] = [];
+  let currentSection: Section | null = null;
+  let currentSubsection: Section | null = null;
+
+    for (let i = 0; i < lines.length; i++) {
+     const line = lines[i];
+     const headerMatch = line.match(/^(#{1,6})\s+(.+)$/);
+    if (headerMatch) {
+      const level = headerMatch[1].length;
+      const title = headerMatch[2];
+
+        const section: Section = {
+          title,
+          level,
+          startLine: i,
+          endLine: i,
+          content: '',
+          subsections: []
+        };
+
+        if (level === 1) {
+          // Top level - nuevo section principal
+          if (currentSection) {
+            currentSection.endLine = i - 1;
+            sections.push(currentSection);
+          }
+          currentSection = section;
+          currentSubsection = null;
+        } else if (level === 2 && currentSection) {
+          // Subsección - agregar a section actual
+          if (currentSubsection) {
+            currentSubsection.endLine = i - 1;
+            currentSection.subsections.push(currentSubsection);
+          }
+          currentSubsection = section;
+        } else if (level > 2 && currentSubsection) {
+          // Sub-subsección - agregar a subsección actual
+          currentSubsection.subsections.push(section);
+        }
+    }
+}
+
+// Cerrar última sección
+if (currentSubsection && currentSection) {
+  currentSubsection.endLine = lines.length - 1;
+  currentSection.subsections.push(currentSubsection);
+}
+if (currentSection) {
+  currentSection.endLine = lines.length - 1;
+  sections.push(currentSection);
+}
+
+// Extraer contenido de cada sección
+for (const section of sections) {
+        section.content = lines
+         .slice(section.startLine, section.endLine + 1)
+         .join('\n');
+
+        for (const subsection of section.subsections) {
+          subsection.content = lines
+           .slice(subsection.startLine, subsection.endLine + 1)
+           .join('\n');
+        }
+    }
+
+    return sections;
+}
+
+/**
+ * Identifica qué secciones deben extraerse a resources
+ */
+private identifySectionsToExtract(
+  sections: Section[],
+  config: ExtractionConfig
+): Section[] {
+  const toExtract: Section[] = [];
+
+    for (const section of sections) {
+     // Revisar subsecciones de nivel 2 (##)
+     for (const subsection of section.subsections) {
+       const lineCount = subsection.content.split('\n').length;
+
+            // Extraer si excede tamaño mínimo
+            if (
+              subsection.level === config.headerLevel &&
+              lineCount >= config.minSectionSize
+            ){
+              toExtract.push(subsection);
+            }
+        }
+    }
+
+    return toExtract;
+}
+
+/**
+ * Extrae una sección a un resource file
+ */
+private async extractSectionToResource(
+  section: Section,
+  resourcesPath: string,
+  config: ExtractionConfig
+): Promise<ExtractedResource> {
+  // Crear filename desde título
+  const filename = this.titleToFilename(section.title);
+  const filepath = path.join(resourcesPath, filename);
+
+    // Preparar contenido
+    let resourceContent = section.content;
+
+    // Agregar header si no existe
+    if (!resourceContent.startsWith('#')) {
+      resourceContent = `# ${section.title}\n\n${resourceContent}`;
+    }
+
+    // Agregar metadata header
+    const header = this.createResourceHeader(section.title);
+    resourceContent = `${header}\n\n${resourceContent}`;
+
+    // Escribir archivo
+    await fs.writeFile(filepath, resourceContent);
+
+    return {
+      title: section.title,
+      filename,
+      filepath,
+      lineCount: resourceContent.split('\n').length,
+      originalSection: section
+    };
+}
+
+/**
+ * Crea nuevo main file con overview y referencias
+ */
+private createMainFileWithReferences(
+  originalContent: string,
+  allSections: Section[],
+  extractedSections: Section[],
+  resources: ExtractedResource[],
+  config: ExtractionConfig
+): string {
+  let newContent = '';
+
+    // 1. Mantener título principal y overview
+    const lines = originalContent.split('\n');
+    let inExtractedSection = false;
+    const extractedTitles = new Set(extractedSections.map(s => s.title));
+
+    for (let i = 0; i < lines.length; i++) {
+     const line = lines[i];
+         const headerMatch = line.match(/^#{1,6}\s+(.+)$/);
+
+         if (headerMatch) {
+           const title = headerMatch[1];
+
+          // Si esta sección fue extraída
+          if (extractedTitles.has(title)) {
+            inExtractedSection = true;
+
+        // Agregar referencia en lugar de contenido completo
+        if (config.preserveContext) {
+          const resource = resources.find(r => r.title === title);
+          if (resource) {
+            newContent += `${line}\n\n`;
+            newContent += this.createSectionSummary(
+              extractedSections.find(s => s.title === title)!
+
+                                      📖
+            );
+            newContent += `\n\n**     For detailed information:** See
+[${resource.filename}](resources/${resource.filename})\n\n`;
+          }
+        }
+        continue;
+      } else {
+        inExtractedSection = false;
+      }
+    }
+
+         // Incluir línea si no estamos en sección extraída
+         if (!inExtractedSection) {
+           newContent += line + '\n';
+         }
+     }
+
+     // 2. Agregar índice de resources al final
+     if (config.createIndex) {
+
+                              📚
+       newContent += '\n\n---\n\n';
+       newContent += '##       Detailed Resources\n\n';
+       newContent += 'For in-depth information on specific topics, see:\n\n';
+
+    for (const resource of resources) {
+      newContent += `- **[${resource.title}](resources/${resource.filename})** - Detailed
+guide\n`;
+    }
+  }
+
+     return newContent;
+ }
+ /**
+  * Crea un summary conciso de una sección
+  */
+ private createSectionSummary(section: Section): string {
+   // Extraer primeros 2-3 párrafos como summary
+   const paragraphs = section.content
+     .split('\n\n')
+     .filter(p => p.trim() && !p.startsWith('#'))
+     .slice(0, 2);
+
+     return paragraphs.join('\n\n');
+ }
+
+  /**
+   * Crea header para resource file
+   */
+  private createResourceHeader(title: string): string {
+    return `<!--
+Resource: ${title}
+Part of: [Parent Skill Name]
+Last Updated: ${new Date().toISOString().split('T')[0]}
+-->`;
+  }
+
+ /**
+  * Convierte título a filename válido
+  */
+ private titleToFilename(title: string): string {
+   return title
+     .toLowerCase()
+     .replace(/[^a-z0-9\s-]/g, '')
+     .replace(/\s+/g, '-')
+     .replace(/-+/g, '-')
+     + '.md';
+ }
+
+ /**
+  * Crea metadata.json para el skill
+  */
+ private async createMetadata(
+   skillPath: string,
+   resources: ExtractedResource[]
+ ): Promise<void> {
+   const skillName = path.basename(skillPath);
+
+     const metadata = {
+      name: skillName,
+      version: '2.0.0',
+       description: 'Auto-generated metadata after refactoring',
+       category: 'guidelines',
+       lastUpdated: new Date().toISOString(),
+       structure: {
+         mainFile: 'SKILL.md',
+         resourcesDirectory: 'resources',
+         resourceCount: resources.length
+       },
+       resources: resources.map(r => ({
+         title: r.title,
+         filename: r.filename,
+         lines: r.lineCount
+       })),
+       statistics: {
+         totalLines: resources.reduce((sum, r) => sum + r.lineCount, 0),
+         averageResourceSize: Math.round(
+           resources.reduce((sum, r) => sum + r.lineCount, 0) / resources.length
+         )
+       }
+     };
+
+     await fs.writeFile(
+       path.join(skillPath, 'metadata.json'),
+       JSON.stringify(metadata, null, 2)
+     );
+ }
+
+  /**
+   * Crea índice de resources
+   */
+  private async createResourcesIndex(
+    resourcesPath: string,
+    resources: ExtractedResource[]
+  ): Promise<void> {
+    let indexContent = '# Resources Index\n\n';
+    indexContent += 'This directory contains detailed guides extracted from the main skill
+file.\n\n';
+    indexContent += '## Available Resources\n\n';
+
+     for (const resource of resources) {
+       indexContent += `### [${resource.title}](${resource.filename})\n`;
+       indexContent += `- Lines: ${resource.lineCount}\n`;
+       indexContent += `- Topics covered: [Auto-generated summary]\n\n`;
+     }
+
+     await fs.writeFile(
+      path.join(resourcesPath, 'README.md'),
+      indexContent
+      );
+  }
+}
+```
+
+-----
+
+### 3.3 INTEGRATOR.TS - El Puente con el Sistema
+
+```typescript
+// /skill-manager/core/integrator.ts
+
+interface SkillRulesEntry {
+  type: string;
+  enforcement: string;
+  priority: string;
+  promptTriggers: {
+    keywords: string[];
+    intentPatterns: string[];
+  };
+  fileTriggers: {
+    pathPatterns: string[];
+    contentPatterns: string[];
+  };
+}
+
+class SkillIntegrator {
+ private readonly SKILL_RULES_PATH = '/config/skill-rules.json';
+
+ /**
+  * Actualiza skill-rules.json con nuevo skill
+  */
+ async addSkillToRules(
+   skillName: string,
+   config: Partial<SkillRulesEntry>
+ ): Promise<void> {
+   const rules = await this.loadSkillRules();
+
+      // Verificar si ya existe
+
+                     ⚠️
+      if (rules[skillName]) {
+        console.log(`      Skill "${skillName}" already exists in rules`);
+        const answer = await this.prompt('Overwrite? (y/n): ');
+        if (answer.toLowerCase() !== 'y') {
+          return;
+        }
+      }
+
+      // Crear entrada completa con defaults
+    rules[skillName] = {
+      type: config.type || 'guidelines',
+      enforcement: config.enforcement || 'suggest',
+      priority: config.priority || 'medium',
+      promptTriggers: config.promptTriggers || {
+        keywords: [],
+        intentPatterns: []
+      },
+      fileTriggers: config.fileTriggers || {
+        pathPatterns: [],
+        contentPatterns: []
+      }
+    };
+
+
+                 ✅
+    await this.saveSkillRules(rules);
+    console.log(`   Added "${skillName}" to skill-rules.json`);
+}
+
+/**
+ * Actualiza skill-rules.json después de refactoring
+ */
+async updateSkillRulesAfterRefactor(
+  skillName: string,
+  resources: ExtractedResource[]
+): Promise<void> {
+  const rules = await this.loadSkillRules();
+
+
+                   ⚠️
+    if (!rules[skillName]) {
+      console.log(`     Skill "${skillName}" not found in rules`);
+      return;
+    }
+
+    // Agregar metadata sobre structure
+    rules[skillName].metadata = {
+      structure: 'progressive-disclosure',
+      mainFile: 'SKILL.md',
+      resourceCount: resources.length,
+      resources: resources.map(r => r.filename),
+      lastRefactored: new Date().toISOString()
+    };
+
+
+                 ✅
+    await this.saveSkillRules(rules);
+    console.log(`   Updated rules for "${skillName}" with refactoring metadata`);
+}
+
+/**
+ * Genera triggers automáticamente analizando el skill
+ */
+async generateTriggersFromSkill(
+  skillPath: string
+): Promise<Partial<SkillRulesEntry>> {
+  const mainFilePath = path.join(skillPath, 'SKILL.md');
+  const content = await fs.readFile(mainFilePath, 'utf-8');
+
+    // Extraer keywords del contenido
+    const keywords = this.extractKeywords(content);
+
+    // Generar intent patterns basados en títulos de secciones
+    const intentPatterns = this.generateIntentPatterns(content);
+
+    // Sugerir file patterns basados en el dominio
+    const pathPatterns = this.suggestPathPatterns(content);
+
+    // Sugerir content patterns
+    const contentPatterns = this.suggestContentPatterns(content);
+
+    return {
+      promptTriggers: {
+        keywords,
+        intentPatterns
+      },
+      fileTriggers: {
+        pathPatterns,
+        contentPatterns
+      }
+    };
+}
+
+/**
+ * Extrae keywords relevantes del contenido
+ */
+private extractKeywords(content: string): string[] {
+  const keywords = new Set<string>();
+
+    // Extraer de títulos de nivel 2 y 3
+    const headerMatches = content.matchAll(/^#{2,3}\s+(.+)$/gm);
+    for (const match of headerMatches) {
+      const title = match[1].toLowerCase();
+      const words = title.split(/\s+/);
+      words.forEach(word => {
+        if (word.length > 4) { // Solo palabras significativas
+          keywords.add(word);
+        }
+      });
+    }
+    // Extraer términos técnicos (palabras en código)
+    const codeMatches = content.matchAll(/`([^`]+)`/g);
+    for (const match of codeMatches) {
+      const term = match[1].toLowerCase();
+      if (term.length > 3 && !term.includes(' ')) {
+        keywords.add(term);
+      }
+    }
+
+    return Array.from(keywords).slice(0, 20); // Top 20 keywords
+}
+
+/**
+ * Genera intent patterns desde títulos de secciones
+ */
+private generateIntentPatterns(content: string): string[] {
+  const patterns: string[] = [];
+
+    const actionVerbs = ['create', 'add', 'implement', 'build', 'setup', 'configure'];
+    const headerMatches = content.matchAll(/^#{2,3}\s+(.+)$/gm);
+
+    for (const match of headerMatches) {
+     const title = match[1].toLowerCase();
+     const keywords = title.split(/\s+/).filter(w => w.length > 4);
+
+        if (keywords.length > 0) {
+          // Patrón: (verbo).*(keyword1|keyword2)
+          const keywordsGroup = keywords.slice(0, 3).join('|');
+          const pattern = `(${actionVerbs.join('|')}).*?(${keywordsGroup})`;
+          patterns.push(pattern);
+        }
+    }
+
+    return patterns.slice(0, 10); // Top 10 patterns
+}
+
+/**
+ * Sugiere path patterns basados en dominio
+ */
+private suggestPathPatterns(content: string): string[] {
+  const patterns: string[] = [];
+
+    // Detectar si es frontend o backend
+    if (content.toLowerCase().includes('react') || content.includes('component')) {
+      patterns.push('src/**/*.tsx', 'src/**/*.jsx', 'components/**/*');
+    }
+
+    if (content.toLowerCase().includes('controller') || content.includes('service')) {
+        patterns.push('backend/**/*.ts', '**/controllers/**/*', '**/services/**/*');
+    }
+
+    if (content.toLowerCase().includes('database') || content.includes('prisma')) {
+      patterns.push('**/models/**/*', '**/repositories/**/*', 'prisma/**/*');
+    }
+
+    return patterns;
+}
+
+/**
+ * Sugiere content patterns
+ */
+private suggestContentPatterns(content: string): string[] {
+  const patterns: string[] = [];
+
+    // Buscar imports o exports mencionados
+    const importMatches = content.matchAll(/import\s+.*?from\s+['"]([^'"]+)['"]/g);
+    const uniqueImports = new Set<string>();
+
+    for (const match of importMatches) {
+      uniqueImports.add(match[1]);
+    }
+
+    // Crear patterns de imports comunes
+    if (uniqueImports.has('react')) {
+      patterns.push('import.*React', 'export.*Component');
+    }
+
+    if (content.includes('Controller')) {
+      patterns.push('export.*Controller', '@route');
+    }
+
+    return patterns.slice(0, 10);
+}
+
+private async loadSkillRules(): Promise<Record<string, SkillRulesEntry>> {
+  const content = await fs.readFile(this.SKILL_RULES_PATH, 'utf-8');
+  return JSON.parse(content);
+}
+
+private async saveSkillRules(rules: Record<string, SkillRulesEntry>): Promise<void> {
+  await fs.writeFile(
+    this.SKILL_RULES_PATH,
+    JSON.stringify(rules, null, 2)
+  );
+}
+ private prompt(question: string): Promise<string> {
+   // Implementación de prompt interactivo
+   return new Promise(resolve => {
+     // Usar readline o similar
+   });
+ }
+}
+```
+
+-----
+
+## PARTE 4: COMANDOS Y SCRIPTS
+
+### 4.1 Script: create-skill.ts
+
+```bash
+# Uso: npm run skill:create <nombre> [opciones]
+
+skill:create backend-api-guidelines \
+  --type guidelines \
+  --priority high \
+  --category backend \
+  --interactive
+```
+
+```typescript
+// /skill-manager/scripts/create-skill.ts
+
+
+                 🎨
+async function createSkill(options: CreateSkillOptions): Promise<void> {
+ console.log(`\n   Creating new skill: ${options.name}\n`);
+
+ // 1. Crear estructura de directorios
+ const skillPath = path.join('/skills', options.category, options.name);
+ await fs.mkdir(skillPath, { recursive: true});
+ await fs.mkdir(path.join(skillPath, 'resources'), { recursive: true });
+
+ // 2. Crear SKILL.md desde template
+ const mainContent = await renderTemplate('skill-template.md', {
+   name: options.name,
+   description: options.description,
+   category: options.category,
+   created: new Date().toISOString()
+ });
+ await fs.writeFile(path.join(skillPath, 'SKILL.md'), mainContent);
+
+ // 3. Crear metadata.json
+ const metadata = {
+   name: options.name,
+   version: '1.0.0',
+   description: options.description,
+   category: options.category,
+   type: options.type,
+   priority: options.priority,
+   created: new Date().toISOString(),
+   lastUpdated: new Date().toISOString()
+ };
+ await fs.writeFile(
+   path.join(skillPath, 'metadata.json'),
+   JSON.stringify(metadata, null, 2)
+ );
+
+ // 4. Si es interactivo, preguntar por triggers
+ let triggers = {};
+
+                   📝
+ if (options.interactive) {
+   console.log('\n     Let\'s configure triggers for this skill...\n');
+   triggers = await promptForTriggers();
+ }
+
+ // 5. Agregar a skill-rules.json
+ const integrator = new SkillIntegrator();
+ await integrator.addSkillToRules(options.name, {
+   type: options.type,
+   enforcement: options.enforcement || 'suggest',
+   priority: options.priority,
+   ...triggers
+ });
+
+                  ✅
+                  📝
+ console.log(`\n   Skill created at: ${skillPath}`);
+ console.log(`\n   Next steps:`);
+ console.log(` 1. Edit ${skillPath}/SKILL.md`);
+ console.log(` 2. Add content and examples`);
+ console.log(` 3. Run: npm run skill:validate ${options.name}`);
+}
+```
+
+-----
+
+### 4.2 Script: refactor-skill.ts
+
+```bash
+# Uso: npm run skill:refactor <nombre> [opciones]
+
+skill:refactor backend-dev-guidelines \
+ --min-section-size 50 \
+ --preserve-context \
+ --create-index
+```
+
+```typescript
+// /skill-manager/scripts/refactor-skill.ts
+
+
+                  🔄
+async function refactorSkill(skillName: string, options: RefactorOptions): Promise<void> {
+ console.log(`\n   Refactoring skill: ${skillName}\n`);
+
+ const skillPath = await findSkillPath(skillName);
+
+                   ❌
+ if (!skillPath) {
+   console.error(`   Skill not found: ${skillName}`);
+   process.exit(1);
+ }
+
+
+               📊
+ // 1. Validar skill antes de refactoring
+ console.log('       Validating current state...');
+ const validator = new SkillValidator();
+ const validationBefore = await validator.validateSkill(skillPath);
+
+ console.log(` Main file: ${validationBefore.metrics.mainFileLines} lines`);
+ console.log(` Total: ${validationBefore.metrics.totalLines} lines`);
+
+
+                   ✅
+ if (validationBefore.metrics.mainFileLines <= 500) {
+   console.log('\n    Skill already compliant with best practices!');
+   console.log(' No refactoring needed.');
+   return;
+ }
+
+ // 2. Ejecutar refactoring
+ const organizer = new SkillOrganizer();
+ const config: ExtractionConfig = {
+   minSectionSize: options.minSectionSize || 50,
+   headerLevel: 2,
+   preserveContext: options.preserveContext ?? true,
+   createIndex: options.createIndex ?? true
+ };
+
+ const result = await organizer.refactorMonolithicSkill(skillPath, config);
+
+
+                 📊
+ // 3. Validar después de refactoring
+ console.log('\n    Validating refactored skill...');
+ const validationAfter = await validator.validateSkill(skillPath);
+
+
+                 📈
+ // 4. Mostrar resultados
+ console.log('\n     Refactoring Results:');
+ console.log(` Original main file: ${result.originalLines} lines`);
+ console.log(` New main file: ${result.newMainLines} lines`);
+ console.log(` Reduction: ${result.originalLines - result.newMainLines} lines`);
+ console.log(` Resources created: ${result.resourcesCreated}`);
+ console.log(` Total lines (main + resources): ${result.totalLines}`);
+
+
+                   ✅
+ if (validationAfter.isValid) {
+   console.log('\n     Refactoring successful! Skill now follows best practices.');
+
+                   ⚠️
+ } else {
+   console.log('\n      Refactoring complete but validation found issues:');
+   validationAfter.errors.forEach(err => {
+     console.log(` - ${err.message}`);
+   });
+ }
+
+ // 5. Actualizar skill-rules.json
+ const integrator = new SkillIntegrator();
+ await integrator.updateSkillRulesAfterRefactor(
+   skillName,
+   result.resources
+ );
+
+ console.log('\n 💾 Backup saved: SKILL.md.backup');
+}
+```
+
+-----
+
+### 4.3 Script: validate-skill.ts
+
+```bash
+# Uso: npm run skill:validate <nombre> [--fix]
+
+skill:validate frontend-dev-guidelines
+skill:validate all --fix
+```
+
+```typescript
+// /skill-manager/scripts/validate-skill.ts
+
+async function validateSkill(
+  skillName: string,
+  options: { fix?: boolean }
+
+                   🔍
+): Promise<void> {
+  console.log(`\n     Validating skill: ${skillName}\n`);
+
+ const skillPath = await findSkillPath(skillName);
+ const validator = new SkillValidator();
+ const result = await validator.validateSkill(skillPath);
+
+ // Mostrar métricas
+  console.log('    📊 Metrics:');
+  console.log(`       Main file: ${result.metrics.mainFileLines} lines`);
+  console.log(`       Resources: ${result.metrics.resourceCount} files`);
+  console.log(`       Average resource size: ${Math.round(result.metrics.averageResourceSize)}
+lines`);
+  console.log(`       Total lines: ${result.metrics.totalLines}`);
+  console.log(`       Estimated tokens: ${result.metrics.tokenEstimate}`);
+
+    // Mostrar errores
+
+                       ❌
+    if (result.errors.length > 0) {
+      console.log('\n     Errors found:');
+      result.errors.forEach((err, i) => {
+        console.log(`\n ${i + 1}. ${err.type}`);
+
+                            💡
+        console.log(`     ${err.message}`);
+        console.log(`         ${err.suggestion}`);
+      });
+    }
+
+    // Mostrar warnings
+
+                       ⚠️
+    if (result.warnings.length > 0) {
+      console.log('\n     Warnings:');
+      result.warnings.forEach((warn, i) => {
+        console.log(`\n ${i + 1}. ${warn.type}`);
+        console.log(`    ${warn.message}`);
+
+                            💡
+        if (warn.suggestion) {
+          console.log(`        ${warn.suggestion}`);
+        }
+      });
+    }
+
+    // Resultado final
+
+                       ✅
+    if (result.isValid) {
+      console.log('\n     Skill is valid and follows best practices!');
+
+                       ❌
+    } else {
+      console.log('\n     Skill has validation errors that need to be fixed.');
+
+
+                        🔧
+        if (options.fix) {
+          console.log('\n  Attempting auto-fix...');
+          await attemptAutoFix(skillPath, result);
+        }
+    }
+}
+
+async function attemptAutoFix(
+  skillPath: string,
+  validation: SkillValidationResult
+): Promise<void> {
+  for (const error of validation.errors) {
+      switch (error.type) {
+
+                           🔨
+       case 'MAIN_FILE_TOO_LARGE':
+        console.log('       Refactoring large main file...');
+        const organizer = new SkillOrganizer();
+        await organizer.refactorMonolithicSkill(skillPath, {
+          minSectionSize: 50,
+          headerLevel: 2,
+          preserveContext: true,
+          createIndex: true
+        });
+        break;
+
+
+                           🔨
+          case 'BROKEN_RESOURCE_REFERENCE':
+           console.log('      Fixing broken reference...');
+           // Implementar fix automático
+           break;
+
+
+                           ⚠️ Cannot auto-fix: ${error.type}`);
+          default:
+           console.log(`
+      }
+  }
+}
+```
+
+-----
+
+### 4.4 Script: analyze-usage.ts
+
+```bash
+# Uso: npm run skill:analyze [opciones]
+
+skill:analyze --period 30d --top 10
+```
+
+```typescript
+// /skill-manager/scripts/analyze-usage.ts
+
+interface SkillUsageStats {
+  skillName: string;
+  activationCount: number;
+  lastActivated: string;
+  averageTokensUsed: number;
+  triggerBreakdown: {
+    byKeyword: Record<string, number>;
+    byFile: Record<string, number>;
+    byIntent: Record<string, number>;
+  };
+}
+                   📊
+async function analyzeSkillUsage(options: AnalyzeOptions): Promise<void> {
+ console.log('\n   Analyzing skill usage...\n');
+
+ // Leer logs de activación
+ const logs = await readActivationLogs(options.period);
+
+ // Procesar estadísticas por skill
+ const stats: SkillUsageStats[] = [];
+
+ for (const skillName of getAllSkills()) {
+  const skillLogs = logs.filter(log => log.skillName === skillName);
+
+     if (skillLogs.length === 0) continue;
+
+     stats.push({
+       skillName,
+       activationCount: skillLogs.length,
+       lastActivated: skillLogs[skillLogs.length - 1].timestamp,
+       averageTokensUsed: calculateAverage(skillLogs.map(l => l.tokensUsed)),
+       triggerBreakdown: analyzeTriggers(skillLogs)
+     });
+ }
+
+ // Ordenar por activación
+ stats.sort((a, b) => b.activationCount - a.activationCount);
+
+ // Mostrar top skills
+ console.log(`Top ${options.top || 10} most used skills:\n`);
+
+ stats.slice(0, options.top || 10).forEach((stat, i) => {
+   console.log(`${i + 1}. ${stat.skillName}`);
+   console.log(` Activations: ${stat.activationCount}`);
+   console.log(` Last used: ${formatDate(stat.lastActivated)}`);
+   console.log(` Avg tokens: ${Math.round(stat.averageTokensUsed)}`);
+   console.log('');
+ });
+
+ // Skills no utilizados
+ const allSkills = getAllSkills();
+ const usedSkills = new Set(stats.map(s => s.skillName));
+ const unusedSkills = allSkills.filter(s => !usedSkills.has(s));
+
+
+                    ⚠️
+ if (unusedSkills.length > 0) {
+   console.log(`\n    ${unusedSkills.length} skills never activated:`);
+   unusedSkills.forEach(skill => {
+     console.log(` - ${skill}`);
+   });
+      console.log('\n   💡 Consider reviewing triggers or archiving unused skills.');
+  }
+}
+```
+
+-----
+
+## PARTE 5: INTEGRACIÓN CON EL SISTEMA EXISTENTE
+
+### 5.1 Modificación del UserPromptSubmit Hook
+
+```typescript
+// /hooks/user-prompt-submit.ts (ACTUALIZADO)
+
+import { SkillValidator } from '../skill-manager/core/validator';
+
+class EnhancedUserPromptSubmitHook {
+ private validator: SkillValidator;
+
+ constructor() {
+   this.validator = new SkillValidator();
+ }
+
+ async execute(prompt: string, context: Context): Promise<string> {
+  // 1. Matching de skills (existente)
+  const matchedSkills = await this.matchSkills(prompt, context);
+
+      // 2. NUEVO: Validación lazy de skills matched
+      for (const skill of matchedSkills) {
+        const validation = await this.validator.validateSkill(skill.path);
+
+          // Log warnings pero no bloquear
+
+                           ⚠️
+          if (!validation.isValid) {
+            console.warn(`       Skill ${skill.name} has validation issues`);
+            // Opcionalmente: enviar notificación para fix
+          }
+      }
+
+      // 3. Construir mensaje de activación (existente)
+      const activationMessage = this.buildActivationMessage(matchedSkills);
+
+      // 4. NUEVO: Log de activación para analytics
+      await this.logActivation(matchedSkills, prompt);
+
+      // 5. Retornar prompt modificado
+      return `${activationMessage}\n\n${prompt}`;
+ }
+ private async logActivation(
+   skills: MatchedSkill[],
+   prompt: string
+ ): Promise<void> {
+   const logEntry = {
+     timestamp: new Date().toISOString(),
+     skills: skills.map(s => s.name),
+     promptLength: prompt.length,
+     triggerTypes: skills.map(s => s.triggerType)
+   };
+
+      await appendToLog('/logs/skill-activations.jsonl', logEntry);
+  }
+}
+```
+
+-----
+
+### 5.2 Comando Slash para Skill Management
+
+```typescript
+// Nuevo comando: /skill-manage
+
+/**
+ * Comando slash para gestionar skills desde Claude Code
+ *
+ * Uso:
+ * /skill-manage validate all
+ * /skill-manage refactor backend-dev-guidelines
+ * /skill-manage analyze --top 5
+ * /skill-manage create new-skill-name
+ */
+
+async function skillManageCommand(args: string[]): Promise<string> {
+ const [action, ...params] = args;
+
+ switch (action) {
+  case 'validate':
+   if (params[0] === 'all') {
+     return await validateAllSkills();
+   } else {
+     return await validateSkill(params[0]);
+   }
+
+      case 'refactor':
+       return await refactorSkill(params[0], parseOptions(params.slice(1)));
+
+      case 'analyze':
+        return await analyzeUsage(parseOptions(params));
+
+      case 'create':
+       return await createSkill(params[0], parseOptions(params.slice(1)));
+
+      default:
+       return 'Unknown action. Available: validate, refactor, analyze, create';
+  }
+}
+```
+
+-----
+
+### 5.3 Agente Especializado: skill-maintainer
+
+```markdown
+# Agente: skill-maintainer
+
+## Rol
+Mantener skills actualizados, bien organizados, y siguiendo best practices.
+
+## Responsabilidades
+1. Validar skills periódicamente
+2. Identificar skills que necesitan refactoring
+3. Sugerir mejoras a triggers
+4. Detectar skills obsoletos
+5. Mantener documentación de skills
+
+## Cuándo Usar
+- Después de agregar mucho contenido a un skill
+- Cuando activation rate es baja
+- Revisión mensual de todos los skills
+- Antes de major updates del proyecto
+
+## Proceso
+1. Ejecutar skill:validate all
+2. Revisar métricas y errores
+3. Sugerir acciones específicas
+4. Si autorizado, ejecutar fixes automáticos
+5. Reportar resultados
+
+## Output Format
+- Lista de skills con issues
+- Acciones recomendadas priorizadas
+- Scripts para ejecutar fixes
+- Timeline sugerido
+```
+-----
+
+## PARTE 6: WORKFLOW COMPLETO DE MANTENIMIENTO
+
+### Workflow Diario (Automatizado)
+
+```bash
+#!/bin/bash
+# /skill-manager/scripts/daily-maintenance.sh
+
+echo "  🌅Daily Skill Maintenance"
+echo "=========================="
+
+
+         📊
+# 1. Validación rápida de skills críticos
+echo "\n    Validating critical skills..."
+npm run skill:validate backend-dev-guidelines --quiet
+npm run skill:validate frontend-dev-guidelines --quiet
+npm run skill:validate database-verification --quiet
+
+
+         🔗
+# 2. Verificar que no hay broken references
+echo "\n     Checking for broken references..."
+npm run skill:check-references --all
+
+
+         📈
+# 3. Log usage stats
+echo "\n   Logging usage statistics..."
+npm run skill:analyze --period 1d --output /logs/daily-stats.json
+
+echo "\n ✅ Daily maintenance complete"
+```
+
+### Workflow Semanal (Semi-automatizado)
+
+```bash
+#!/bin/bash
+# /skill-manager/scripts/weekly-maintenance.sh
+
+echo "  📅Weekly Skill Maintenance"
+echo "==========================="
+
+
+         🔍
+# 1. Validación completa
+echo "\n    Full validation of all skills..."
+npm run skill:validate all > /reports/weekly-validation.txt
+
+
+         📊
+# 2. Análisis de uso
+echo "\n     Usage analysis..."
+npm run skill:analyze --period 7d --top 20
+
+# 3. Identificar skills no utilizados
+echo "\n ⚠️ Checking for unused skills..."
+npm run skill:find-unused --period 7d
+
+
+         💾
+# 4. Backup de configuraciones
+echo "\n    Backing up configurations..."
+cp /config/skill-rules.json /backups/skill-rules-$(date +%Y%m%d).json
+
+
+         📝
+# 5. Generar reporte
+echo "\n   Generating weekly report..."
+npm run skill:report --period 7d --output /reports/weekly-$(date +%Y%m%d).md
+
+       ✅
+      📄
+echo "\n  Weekly maintenance complete"
+echo "   Report available at: /reports/weekly-$(date +%Y%m%d).md"
+```
+
+### Workflow Mensual (Manual con Agente)
+
+```markdown
+# Monthly Skill Maintenance Checklist
+
+## 1. Comprehensive Validation
+- [ ] Run: `/skill-manage validate all`
+- [ ] Review all errors and warnings
+- [ ] Fix critical issues immediately
+- [ ] Schedule non-critical fixes
+
+## 2. Refactoring Review
+- [ ] Identify skills > 500 lines in main file
+- [ ] Run: `/skill-manage refactor <skill-name>` for each
+- [ ] Test refactored skills thoroughly
+- [ ] Update documentation
+
+## 3. Trigger Optimization
+- [ ] Review activation rates
+- [ ] Analyze false positives/negatives
+- [ ] Update keywords and patterns
+- [ ] Test new triggers
+
+## 4. Content Updates
+- [ ] Review each skill for outdated content
+- [ ] Update with new patterns/practices
+- [ ] Add new examples
+- [ ] Remove deprecated information
+
+## 5. Cleanup
+- [ ] Archive unused skills (not activated in 90 days)
+- [ ] Consolidate similar skills if possible
+- [ ] Clean up old backups
+- [ ] Update metadata
+
+## 6. Documentation
+- [ ] Update SKILL_CREATION_GUIDE.md
+- [ ] Update MAINTENANCE_GUIDE.md
+- [ ] Document any new patterns discovered
+- [ ] Update troubleshooting guides
+
+## 7. Metrics Review
+- [ ] Review monthly usage report
+- [ ] Compare to previous month
+- [ ] Identify trends
+- [ ] Adjust strategy accordingly
+```
+
+-----
+
+## PARTE 7: TEMPLATES
+
+### Template: SKILL.md (< 500 líneas)
+
+```markdown
+<!--
+Skill: {{name}}
+Category: {{category}}
+Version: {{version}}
+Last Updated: {{lastUpdated}}
+-->
+
+# {{name}}
+
+## Overview
+
+{{description}}
+
+This skill provides {{brief-description-of-what-it-provides}}.
+
+**When to use this skill:**
+- {{use-case-1}}
+- {{use-case-2}}
+- {{use-case-3}}
+
+**Related skills:**
+- [{{related-skill-1}}](../{{related-skill-1}}/SKILL.md)
+- [{{related-skill-2}}](../{{related-skill-2}}/SKILL.md)
+
+---
+## Quick Reference
+
+### Core Principles
+
+1. **{{principle-1-name}}**
+  - {{brief-explanation}}
+  - Example: {{inline-example}}
+
+2. **{{principle-2-name}}**
+  - {{brief-explanation}}
+  - Example: {{inline-example}}
+
+3. **{{principle-3-name}}**
+  - {{brief-explanation}}
+  - Example: {{inline-example}}
+
+### Common Patterns
+
+**Pattern 1: {{pattern-name}}**
+```{{language}}
+// {{brief-example}}
+{{code}}
+```
+
+**Pattern 2: {{pattern-name}}**
+
+```{{language}}
+// {{brief-example}}
+{{code}}
+```
+
+### Quick Checklist
+
+When working on {{context}}:
+
+- [ ] {{checklist-item-1}}
+- [ ] {{checklist-item-2}}
+- [ ] {{checklist-item-3}}
+
+-----
+
+## Detailed Resources
+
+For in-depth information on specific topics, see:
+
+### {{Topic-Category-1}}
+
+- **[{{resource-1-title}}](resources/{{resource-1-filename}})** - {{brief-description}}
+- **[{{resource-2-title}}](resources/{{resource-2-filename}})** - {{brief-description}}
+
+### {{Topic-Category-2}}
+
+- **[{{resource-3-title}}](resources/{{resource-3-filename}})** - {{brief-description}}
+- **[{{resource-4-title}}](resources/{{resource-4-filename}})** - {{brief-description}}
+
+-----
+
+## Additional Resources
+
+### Scripts
+
+- [{{script-name}}](resources/scripts/{{script-filename}}) - {{description}}
+
+### External References
+
+- [{{external-link-title}}]({{url}}) - {{description}}
+
+-----
+
+## Troubleshooting
+
+**Issue: {{common-issue-1}}**
+
+- **Symptom:** {{description}}
+- **Solution:** {{solution}}
+- **See:** [{{resource-name}}](resources/{{filename}})
+
+**Issue: {{common-issue-2}}**
+
+- **Symptom:** {{description}}
+- **Solution:** {{solution}}
+
+-----
+
+## Updates and Versioning
+
+**Version History:**
+
+- {{version}}: {{change-description}} ({{date}})
+
+**Planned Improvements:**
+
+- {{planned-feature-1}}
+- {{planned-feature-2}}
+
+-----
+*For questions or suggestions about this skill, see
+[MAINTENANCE_GUIDE.md](../../docs/MAINTENANCE_GUIDE.md)*
+
+```
+---
+
+## CONCLUSIÓN Y BENEFICIOS DEL SISTEMA
+
+### Beneficios Clave
+
+**1. Calidad Consistente**
+- Todos los skills cumplen con < 500 líneas
+- Estructura uniforme y predecible
+- Validación automatizada
+
+**2. Eficiencia de Tokens**
+- 40-60% reducción en uso de tokens
+- Progressive disclosure automático
+- Carga solo lo necesario
+
+**3. Mantenibilidad**
+- Fácil identificar skills que necesitan refactoring
+- Herramientas automatizadas para fixes comunes
+- Métricas claras de salud del sistema
+
+**4. Escalabilidad**
+- Agregar nuevos skills es simple
+- Template consistente
+- Auto-generación de triggers
+
+**5. Visibilidad**
+- Analytics de uso de skills
+- Identificación de skills obsoletos
+- Métricas de efectividad
+
+**6. Integración Perfecta**
+- Se conecta con hooks existentes
+- Comandos slash para acceso rápido
+- Agente especializado para mantenimiento
+
+### Flujo de Trabajo Ideal
+```
+
+1. Crear skill nuevo
+  ↓
+1. Agregar contenido iterativamente
+  ↓
+1. Validar periódicamente
+  ↓
+1. Cuando excede 500 líneas → Auto-refactor
+  ↓
+1. Sistema actualiza skill-rules.json automáticamente
+  ↓
+1. Hooks usan skill actualizado inmediatamente
+  ↓
+1. Analytics rastrean efectividad
+  ↓
+1. Ciclo de mejora continua
+
+```
+Este Skill Manager asegura que el sistema de skills siempre se mantiene limpio, eficiente, y
+siguiendo las best practices de Anthropic, mientras se integra perfectamente con el sistema
+existente de hooks y workflow del desarrollador.​
+```
+
+# SKILL MANAGER SYSTEM - PARTE 2: IMPLEMENTACIÓN AVANZADA
+
+Voy a continuar con características avanzadas, casos de uso reales, y la integración
+profunda con el ecosistema completo.
+
+-----
+
+## PARTE 8: ANALYZER.TS - INTELIGENCIA Y MÉTRICAS
+
+### 8.1 Sistema de Análisis Avanzado
+
+```typescript
+// /skill-manager/core/analyzer.ts
+
+interface SkillHealthReport {
+  skillName: string;
+  healthScore: number; // 0-100
+  issues: HealthIssue[];
+  recommendations: Recommendation[];
+  trends: UsageTrend[];
+  predictedNeeds: PredictedNeed[];
+}
+
+interface UsageTrend {
+  metric: string;
+  direction: 'up' | 'down' | 'stable';
+  percentageChange: number;
+  period: string;
+}
+interface PredictedNeed {
+  type: 'refactor' | 'split' | 'merge' | 'archive' | 'enhance';
+  confidence: number;
+  reasoning: string;
+  suggestedAction: string;
+}
+
+class SkillAnalyzer {
+ /**
+  * Genera reporte completo de salud de un skill
+  */
+
+                    🏥
+ async generateHealthReport(skillName: string): Promise<SkillHealthReport> {
+   console.log(`\n    Generating health report for: ${skillName}`);
+
+  const skillPath = await findSkillPath(skillName);
+  const metadata = await this.loadMetadata(skillPath);
+  const usageData = await this.loadUsageData(skillName, 90); // 90 días
+
+  // Calcular health score
+  const healthScore = await this.calculateHealthScore(
+    skillPath,
+    metadata,
+    usageData
+  );
+
+  // Identificar issues
+  const issues = await this.identifyIssues(
+    skillPath,
+    metadata,
+    usageData
+  );
+
+  // Generar recomendaciones
+  const recommendations = await this.generateRecommendations(
+    issues,
+    usageData
+  );
+
+  // Analizar tendencias
+  const trends = await this.analyzeTrends(skillName, usageData);
+
+  // Predicciones
+  const predictedNeeds = await this.predictFutureNeeds(
+    trends,
+    metadata,
+    usageData
+  );
+    return {
+      skillName,
+      healthScore,
+      issues,
+      recommendations,
+      trends,
+      predictedNeeds
+    };
+}
+
+/**
+ * Calcula health score basado en múltiples factores
+ */
+private async calculateHealthScore(
+  skillPath: string,
+  metadata: any,
+  usageData: UsageData[]
+): Promise<number> {
+  let score = 100;
+
+    // Factor 1: Cumplimiento de estructura (30 puntos)
+    const validator = new SkillValidator();
+    const validation = await validator.validateSkill(skillPath);
+
+    if (!validation.isValid) {
+      score -= validation.errors.length * 5;
+    }
+    score -= validation.warnings.length * 2;
+
+    // Factor 2: Frecuencia de uso (25 puntos)
+    const avgActivationsPerWeek = this.calculateAverageActivations(usageData);
+    if (avgActivationsPerWeek === 0) {
+      score -= 25; // Skill no utilizado
+    } else if (avgActivationsPerWeek < 1) {
+      score -= 15; // Uso muy bajo
+    } else if (avgActivationsPerWeek < 5) {
+      score -= 5; // Uso bajo
+    }
+
+    // Factor 3: Actualidad (20 puntos)
+    const daysSinceUpdate = this.daysSince(metadata.lastUpdated);
+    if (daysSinceUpdate > 180) {
+      score -= 20; // Muy desactualizado
+    } else if (daysSinceUpdate > 90) {
+      score -= 10; // Desactualizado
+    } else if (daysSinceUpdate > 30) {
+      score -= 5; // Necesita revisión
+    }
+    // Factor 4: Eficiencia de activación (15 puntos)
+    const activationEfficiency = this.calculateActivationEfficiency(usageData);
+    if (activationEfficiency < 0.5) {
+      score -= 15; // Muchas activaciones incorrectas
+    } else if (activationEfficiency < 0.7) {
+      score -= 8;
+    } else if (activationEfficiency < 0.85) {
+      score -= 3;
+    }
+
+    // Factor 5: Tamaño apropiado (10 puntos)
+    if (validation.metrics.mainFileLines > 500) {
+      score -= 10;
+    } else if (validation.metrics.mainFileLines > 450) {
+      score -= 5;
+    }
+
+    return Math.max(0, Math.min(100, score));
+}
+
+/**
+ * Identifica issues específicos
+ */
+private async identifyIssues(
+  skillPath: string,
+  metadata: any,
+  usageData: UsageData[]
+): Promise<HealthIssue[]> {
+  const issues: HealthIssue[] = [];
+
+    // Issue 1: Skill no utilizado
+    if (usageData.length === 0) {
+      issues.push({
+        severity: 'high',
+        type: 'NO_USAGE',
+        message: 'Skill has not been activated in the last 90 days',
+        impact: 'Wasted maintenance effort, possibly obsolete',
+        suggestedFix: 'Review if skill is still needed, consider archiving'
+      });
+    }
+
+    // Issue 2: Baja tasa de activación correcta
+    const correctActivationRate = this.calculateCorrectActivationRate(usageData);
+    if (correctActivationRate < 0.6 && usageData.length > 10) {
+      issues.push({
+        severity: 'medium',
+        type: 'LOW_ACCURACY',
+      message: `Only ${Math.round(correctActivationRate * 100)}% of activations were
+appropriate`,
+      impact: 'Wasted tokens, Claude confused by irrelevant skills',
+      suggestedFix: 'Refine triggers in skill-rules.json'
+    });
+  }
+
+  // Issue 3: Skill muy largo
+  const validator = new SkillValidator();
+  const validation = await validator.validateSkill(skillPath);
+
+  if (validation.metrics.mainFileLines > 500) {
+    issues.push({
+      severity: 'high',
+      type: 'TOO_LARGE',
+      message: `Main file has ${validation.metrics.mainFileLines} lines`,
+      impact: 'Poor token efficiency, violates best practices',
+      suggestedFix: 'Run: npm run skill:refactor ' + metadata.name
+    });
+  }
+
+  // Issue 4: Skill desactualizado
+  const daysSinceUpdate = this.daysSince(metadata.lastUpdated);
+  if (daysSinceUpdate > 180) {
+    issues.push({
+      severity: 'medium',
+      type: 'OUTDATED',
+      message: `Not updated in ${daysSinceUpdate} days`,
+      impact: 'May contain obsolete patterns or information',
+      suggestedFix: 'Schedule content review and update'
+    });
+  }
+
+  // Issue 5: Referencias rotas
+  if (validation.errors.some(e => e.type === 'BROKEN_RESOURCE_REFERENCE')) {
+    issues.push({
+      severity: 'high',
+      type: 'BROKEN_REFERENCES',
+      message: 'Contains broken references to resources',
+      impact: 'Claude may fail to load detailed information',
+      suggestedFix: 'Fix or remove broken references'
+    });
+  }
+
+  // Issue 6: Overlapping con otros skills
+  const overlappingSkills = await this.detectOverlap(metadata.name);
+  if (overlappingSkills.length > 0) {
+    issues.push({
+          severity: 'low',
+          type: 'OVERLAP',
+          message: `Content overlaps with: ${overlappingSkills.join(', ')}`,
+          impact: 'Redundant information, confusion about which skill to use',
+          suggestedFix: 'Consider consolidating or clarifying boundaries'
+        });
+    }
+
+    return issues;
+}
+
+/**
+ * Genera recomendaciones accionables
+ */
+private async generateRecommendations(
+  issues: HealthIssue[],
+  usageData: UsageData[]
+): Promise<Recommendation[]> {
+  const recommendations: Recommendation[] = [];
+
+    // Priorizar por severidad
+    const highSeverityIssues = issues.filter(i => i.severity === 'high');
+    const mediumSeverityIssues = issues.filter(i => i.severity === 'medium');
+    const lowSeverityIssues = issues.filter(i => i.severity === 'low');
+
+    // Recomendaciones basadas en issues
+    for (const issue of highSeverityIssues) {
+      recommendations.push({
+        priority: 'high',
+        action: issue.suggestedFix,
+        reasoning: issue.message,
+        estimatedEffort: this.estimateEffort(issue.type),
+        automatable: this.isAutomatable(issue.type)
+      });
+    }
+
+    // Recomendaciones basadas en patrones de uso
+    if (usageData.length > 0) {
+      const peakUsageTimes = this.identifyPeakUsageTimes(usageData);
+      const commonTriggers = this.identifyCommonTriggers(usageData);
+
+        if (peakUsageTimes.length > 0) {
+          recommendations.push({
+            priority: 'low',
+            action: 'Optimize for peak usage times',
+            reasoning: `Most activated during: ${peakUsageTimes.join(', ')}`,
+            estimatedEffort: 'low',
+            automatable: false
+          });
+      }
+
+     if (commonTriggers.length > 0) {
+       recommendations.push({
+         priority: 'low',
+         action: 'Add successful triggers to skill-rules.json',
+         reasoning: `These prompts frequently activated correctly: ${commonTriggers.slice(0,
+3).join(', ')}`,
+         estimatedEffort: 'low',
+         automatable: true
+       });
+     }
+   }
+
+     return recommendations.sort((a, b) => {
+       const priorityOrder = { high: 0, medium: 1, low: 2 };
+       return priorityOrder[a.priority] - priorityOrder[b.priority];
+     });
+ }
+
+ /**
+  * Analiza tendencias de uso
+  */
+ private async analyzeTrends(
+   skillName: string,
+   usageData: UsageData[]
+ ): Promise<UsageTrend[]> {
+   const trends: UsageTrend[] = [];
+
+     // Tendencia de activaciones
+     const recentActivations = usageData.filter(d =>
+       this.isWithinDays(d.timestamp, 30)
+     ).length;
+     const oldActivations = usageData.filter(d =>
+       this.isWithinDays(d.timestamp, 60) && !this.isWithinDays(d.timestamp, 30)
+     ).length;
+
+     if (oldActivations > 0) {
+       const change = ((recentActivations - oldActivations) / oldActivations) * 100;
+       trends.push({
+         metric: 'Activation Frequency',
+         direction: change > 10 ? 'up' : change < -10 ? 'down' : 'stable',
+         percentageChange: Math.round(change),
+         period: 'Last 30 days vs previous 30 days'
+       });
+     }
+    // Tendencia de correctitud
+    const recentCorrectRate = this.calculateCorrectActivationRate(
+      usageData.filter(d => this.isWithinDays(d.timestamp, 30))
+    );
+    const oldCorrectRate = this.calculateCorrectActivationRate(
+      usageData.filter(d =>
+        this.isWithinDays(d.timestamp, 60) && !this.isWithinDays(d.timestamp, 30)
+      )
+    );
+
+    if (oldCorrectRate > 0) {
+      const change = ((recentCorrectRate - oldCorrectRate) / oldCorrectRate) * 100;
+      trends.push({
+        metric: 'Activation Accuracy',
+        direction: change > 5 ? 'up' : change < -5 ? 'down' : 'stable',
+        percentageChange: Math.round(change),
+        period: 'Last 30 days vs previous 30 days'
+      });
+    }
+
+    // Tendencia de tokens usados
+    const recentAvgTokens = this.calculateAverageTokens(
+      usageData.filter(d => this.isWithinDays(d.timestamp, 30))
+    );
+    const oldAvgTokens = this.calculateAverageTokens(
+      usageData.filter(d =>
+        this.isWithinDays(d.timestamp, 60) && !this.isWithinDays(d.timestamp, 30)
+      )
+    );
+
+    if (oldAvgTokens > 0) {
+      const change = ((recentAvgTokens - oldAvgTokens) / oldAvgTokens) * 100;
+      trends.push({
+        metric: 'Token Usage',
+        direction: change > 10 ? 'up' : change < -10 ? 'down' : 'stable',
+        percentageChange: Math.round(change),
+        period: 'Last 30 days vs previous 30 days'
+      });
+    }
+
+    return trends;
+}
+
+/**
+ * Predice necesidades futuras usando ML simple
+ */
+private async predictFutureNeeds(
+  trends: UsageTrend[],
+   metadata: any,
+   usageData: UsageData[]
+ ): Promise<PredictedNeed[]> {
+   const predictions: PredictedNeed[] = [];
+
+  // Predicción 1: Necesidad de refactoring
+  const mainFileGrowthRate = this.calculateGrowthRate(metadata.name, 'lines');
+  if (mainFileGrowthRate > 0 && metadata.mainFileLines > 400) {
+    const daysUntil500 = (500 - metadata.mainFileLines) / (mainFileGrowthRate / 30);
+
+    if (daysUntil500 < 60) {
+      predictions.push({
+        type: 'refactor',
+        confidence: 0.85,
+        reasoning: `Main file currently at ${metadata.mainFileLines} lines and growing at
+${Math.round(mainFileGrowthRate)} lines/month. Will exceed 500 lines in
+~${Math.round(daysUntil500)} days.`,
+        suggestedAction: 'Schedule refactoring within next 30 days'
+      });
+    }
+  }
+
+  // Predicción 2: Necesidad de split
+  const diversityScore = this.calculateTopicDiversity(usageData);
+  if (diversityScore > 0.8 && usageData.length > 50) {
+    predictions.push({
+      type: 'split',
+      confidence: 0.7,
+      reasoning: `High topic diversity detected (${diversityScore.toFixed(2)}). Skill is being
+used for many different purposes.`,
+      suggestedAction: 'Consider splitting into multiple specialized skills'
+    });
+  }
+
+   // Predicción 3: Necesidad de merge
+   const activationRate = usageData.length / 90; // por día
+   if (activationRate < 0.1 && await this.hasRelatedLowUsageSkills(metadata.name)) {
+     predictions.push({
+       type: 'merge',
+       confidence: 0.65,
+       reasoning: `Low activation rate (${activationRate.toFixed(2)}/day). Similar low-usage
+skills exist.`,
+       suggestedAction: 'Consider merging with related skills to reduce maintenance
+overhead'
+     });
+   }
+
+  // Predicción 4: Candidato para archivar
+     if (usageData.length === 0 && this.daysSince(metadata.lastUpdated) > 180) {
+       predictions.push({
+         type: 'archive',
+         confidence: 0.9,
+         reasoning: 'No activations in 90 days and not updated in 180 days',
+         suggestedAction: 'Archive skill unless there is planned future use'
+       });
+     }
+
+  // Predicción 5: Necesidad de enhancement
+  const errorRate = this.calculateErrorRate(usageData);
+  if (errorRate > 0.15) {
+    predictions.push({
+      type: 'enhance',
+      confidence: 0.75,
+      reasoning: `High error rate (${(errorRate * 100).toFixed(1)}%) when this skill is
+activated`,
+      suggestedAction: 'Review and enhance skill content with better examples and patterns'
+    });
+  }
+
+     return predictions.sort((a, b) => b.confidence - a.confidence);
+ }
+
+ /**
+  * Detecta overlap con otros skills
+  */
+ private async detectOverlap(skillName: string): Promise<string[]> {
+   const currentSkillPath = await findSkillPath(skillName);
+   const currentContent = await fs.readFile(
+     path.join(currentSkillPath, 'SKILL.md'),
+     'utf-8'
+   );
+
+     const currentKeywords = this.extractSignificantKeywords(currentContent);
+     const overlappingSkills: string[] = [];
+
+     const allSkills = await this.getAllSkills();
+
+     for (const otherSkill of allSkills) {
+      if (otherSkill === skillName) continue;
+
+      const otherSkillPath = await findSkillPath(otherSkill);
+      const otherContent = await fs.readFile(
+        path.join(otherSkillPath, 'SKILL.md'),
+        'utf-8'
+      );
+        const otherKeywords = this.extractSignificantKeywords(otherContent);
+        const overlapScore = this.calculateKeywordOverlap(
+          currentKeywords,
+          otherKeywords
+        );
+
+        if (overlapScore > 0.4) { // 40% overlap
+          overlappingSkills.push(otherSkill);
+        }
+    }
+
+    return overlappingSkills;
+}
+
+/**
+ * Extrae keywords significativos para análisis de overlap
+ */
+private extractSignificantKeywords(content: string): Set<string> {
+  const keywords = new Set<string>();
+
+    // Extraer de headers
+    const headers = content.match(/^#{2,3}\s+(.+)$/gm) || [];
+    headers.forEach(header => {
+      const words = header
+        .replace(/^#+\s+/, '')
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(w => w.length > 4);
+      words.forEach(w => keywords.add(w));
+    });
+
+    // Extraer términos técnicos (en código)
+    const codeTerms = content.match(/`([^`]+)`/g) || [];
+    codeTerms.forEach(term => {
+      const cleaned = term.replace(/`/g, '').toLowerCase();
+      if (cleaned.length > 3 && !cleaned.includes(' ')) {
+        keywords.add(cleaned);
+      }
+    });
+
+    // Extraer palabras en negrita (usualmente importantes)
+    const boldTerms = content.match(/\*\*([^*]+)\*\*/g) || [];
+    boldTerms.forEach(term => {
+      const cleaned = term.replace(/\*\*/g, '').toLowerCase();
+      if (cleaned.length > 4) {
+        keywords.add(cleaned);
+      }
+    });
+    return keywords;
+}
+
+/**
+ * Calcula overlap entre dos sets de keywords
+ */
+private calculateKeywordOverlap(
+  set1: Set<string>,
+  set2: Set<string>
+): number {
+  const intersection = new Set([...set1].filter(k => set2.has(k)));
+  const union = new Set([...set1, ...set2]);
+
+    return intersection.size / union.size;
+}
+
+/**
+ * Calcula diversidad de tópicos en uso
+ */
+private calculateTopicDiversity(usageData: UsageData[]): number {
+  if (usageData.length === 0) return 0;
+
+    // Extraer topics de prompts que activaron el skill
+    const topics = new Set<string>();
+
+    usageData.forEach(usage => {
+     // Analizar prompt para extraer topic principal
+     const promptKeywords = usage.prompt
+       .toLowerCase()
+       .split(/\s+/)
+       .filter(w => w.length > 5);
+
+      promptKeywords.forEach(kw => topics.add(kw));
+    });
+
+    // Diversidad = número de topics únicos / total activaciones
+    // Normalizado a 0-1
+    return Math.min(1, topics.size / Math.sqrt(usageData.length));
+}
+
+/**
+ * Verifica si existen skills relacionados de bajo uso
+ */
+private async hasRelatedLowUsageSkills(skillName: string): Promise<boolean> {
+  const currentSkillPath = await findSkillPath(skillName);
+  const currentContent = await fs.readFile(
+    path.join(currentSkillPath, 'SKILL.md'),
+      'utf-8'
+    );
+    const currentKeywords = this.extractSignificantKeywords(currentContent);
+
+    const allSkills = await this.getAllSkills();
+
+    for (const otherSkill of allSkills) {
+     if (otherSkill === skillName) continue;
+
+        const otherUsageData = await this.loadUsageData(otherSkill, 90);
+        const otherActivationRate = otherUsageData.length / 90;
+
+        if (otherActivationRate < 0.1) { // Bajo uso
+          const otherSkillPath = await findSkillPath(otherSkill);
+          const otherContent = await fs.readFile(
+            path.join(otherSkillPath, 'SKILL.md'),
+            'utf-8'
+          );
+          const otherKeywords = this.extractSignificantKeywords(otherContent);
+
+            const overlap = this.calculateKeywordOverlap(
+              currentKeywords,
+              otherKeywords
+            );
+
+            if (overlap > 0.3) { // 30% relacionado
+              return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+// Métodos auxiliares
+private calculateAverageActivations(data: UsageData[]): number {
+  if (data.length === 0) return 0;
+  const days = 90;
+  return (data.length / days) * 7; // por semana
+}
+
+private calculateActivationEfficiency(data: UsageData[]): number {
+  if (data.length === 0) return 1;
+  const correctActivations = data.filter(d => d.wasAppropriate).length;
+  return correctActivations / data.length;
+}
+
+private calculateCorrectActivationRate(data: UsageData[]): number {
+    if (data.length === 0) return 0;
+    const correct = data.filter(d => d.wasAppropriate).length;
+    return correct / data.length;
+}
+
+private calculateAverageTokens(data: UsageData[]): number {
+  if (data.length === 0) return 0;
+  const total = data.reduce((sum, d) => sum + d.tokensUsed, 0);
+  return total / data.length;
+}
+
+private calculateErrorRate(data: UsageData[]): number {
+  if (data.length === 0) return 0;
+  const errored = data.filter(d => d.hadError).length;
+  return errored / data.length;
+}
+
+private calculateGrowthRate(skillName: string, metric: string): number {
+  // Implementación simplificada
+  // En realidad, cargaría histórico de métricas
+  return 0;
+}
+
+private daysSince(dateString: string): number {
+  const date = new Date(dateString);
+  const now = new Date();
+  return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+private isWithinDays(timestamp: string, days: number): boolean {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffDays = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
+  return diffDays <= days;
+}
+
+private identifyPeakUsageTimes(data: UsageData[]): string[] {
+ // Análisis de patrones temporales
+ const hourCounts = new Array(24).fill(0);
+
+    data.forEach(usage => {
+      const hour = new Date(usage.timestamp).getHours();
+      hourCounts[hour]++;
+    });
+
+    const peaks: string[] = [];
+    const avgCount = hourCounts.reduce((a, b) => a + b) / 24;
+    hourCounts.forEach((count, hour) => {
+      if (count > avgCount * 1.5) {
+        peaks.push(`${hour}:00-${hour + 1}:00`);
+      }
+    });
+
+    return peaks;
+}
+
+private identifyCommonTriggers(data: UsageData[]): string[] {
+ const triggerCounts: Record<string, number> = {};
+
+    data.forEach(usage => {
+     if (usage.wasAppropriate && usage.prompt) {
+       // Extraer palabras clave del prompt
+       const keywords = usage.prompt
+         .toLowerCase()
+         .split(/\s+/)
+         .filter(w => w.length > 4);
+
+          keywords.forEach(kw => {
+            triggerCounts[kw] = (triggerCounts[kw] || 0) + 1;
+          });
+      }
+    });
+
+    // Retornar top triggers
+    return Object.entries(triggerCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([trigger]) => trigger);
+}
+
+private estimateEffort(issueType: string): 'low' | 'medium' | 'high' {
+ const effortMap: Record<string, 'low' | 'medium' | 'high'> = {
+   'TOO_LARGE': 'medium',
+   'BROKEN_REFERENCES': 'low',
+   'OUTDATED': 'high',
+   'NO_USAGE': 'low',
+   'LOW_ACCURACY': 'medium',
+   'OVERLAP': 'high'
+ };
+
+    return effortMap[issueType] || 'medium';
+}
+
+private isAutomatable(issueType: string): boolean {
+ const automatable = new Set([
+      'TOO_LARGE',
+      'BROKEN_REFERENCES',
+      'LOW_ACCURACY'
+    ]);
+
+    return automatable.has(issueType);
+}
+
+private async loadMetadata(skillPath: string): Promise<any> {
+  const metadataPath = path.join(skillPath, 'metadata.json');
+  if (await this.fileExists(metadataPath)) {
+    return JSON.parse(await fs.readFile(metadataPath, 'utf-8'));
+  }
+  return {};
+}
+
+private async loadUsageData(
+  skillName: string,
+  days: number
+): Promise<UsageData[]> {
+  // Cargar desde logs
+  const logPath = '/logs/skill-activations.jsonl';
+  if (!await this.fileExists(logPath)) {
+    return [];
+  }
+
+    const content = await fs.readFile(logPath, 'utf-8');
+    const lines = content.split('\n').filter(l => l.trim());
+
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    return lines
+     .map(line => JSON.parse(line))
+     .filter(entry =>
+       entry.skills.includes(skillName) &&
+       new Date(entry.timestamp) >= cutoffDate
+     );
+}
+
+private async getAllSkills(): Promise<string[]> {
+  // Implementación para obtener lista de todos los skills
+  return [];
+}
+
+private async fileExists(path: string): Promise<boolean> {
+ try {
+   await fs.access(path);
+        return true;
+      } catch {
+        return false;
+      }
+  }
+}
+```
+
+-----
+
+## PARTE 9: DASHBOARD Y REPORTING
+
+### 9.1 Generador de Reportes Comprehensivos
+
+```typescript
+// /skill-manager/reporting/report-generator.ts
+
+interface SystemHealthReport {
+  generatedAt: string;
+  period: string;
+  summary: SystemSummary;
+  skillReports: SkillHealthReport[];
+  systemTrends: SystemTrend[];
+  recommendations: SystemRecommendation[];
+  metrics: SystemMetrics;
+}
+
+class ReportGenerator {
+ /**
+  * Genera reporte completo del sistema de skills
+  */
+ async generateSystemReport(
+   period: 'daily' | 'weekly' | 'monthly'
+
+                        📊
+ ): Promise<SystemHealthReport> {
+   console.log(`\n      Generating ${period} system report...\n`);
+
+      const analyzer = new SkillAnalyzer();
+      const allSkills = await this.getAllSkills();
+
+      // Generar reporte individual por skill
+      const skillReports: SkillHealthReport[] = [];
+      for (const skillName of allSkills) {
+        const report = await analyzer.generateHealthReport(skillName);
+        skillReports.push(report);
+      }
+
+      // Calcular métricas del sistema
+      const metrics = this.calculateSystemMetrics(skillReports);
+     // Analizar tendencias del sistema
+     const systemTrends = this.analyzeSystemTrends(skillReports);
+
+     // Generar recomendaciones de sistema
+     const recommendations = this.generateSystemRecommendations(
+       skillReports,
+       metrics
+     );
+
+     // Crear summary
+     const summary = this.createSummary(skillReports, metrics);
+
+     return {
+       generatedAt: new Date().toISOString(),
+       period,
+       summary,
+       skillReports,
+       systemTrends,
+       recommendations,
+       metrics
+     };
+ }
+
+ /**
+  * Renderiza reporte a markdown
+  */
+ async renderReportToMarkdown(report: SystemHealthReport): Promise<string> {
+   let md = '';
+
+     // Header
+     md += `# Skill System Health Report\n\n`;
+     md += `**Generated:** ${new Date(report.generatedAt).toLocaleString()}\n`;
+     md += `**Period:** ${report.period}\n\n`;
+     md += `---\n\n`;
+
+
+               📊
+   // Executive Summary
+   md += `##      Executive Summary\n\n`;
+   md += `**Overall System Health:**
+${this.renderHealthBadge(report.summary.overallHealth)}\n\n`;
+   md += `- **Total Skills:** ${report.summary.totalSkills}\n`;
+   md += `- **Healthy Skills:** ${report.summary.healthySkills}
+(${Math.round(report.summary.healthySkills / report.summary.totalSkills * 100)}%)\n`;
+   md += `- **Skills Needing Attention:** ${report.summary.skillsNeedingAttention}\n`;
+   md += `- **Critical Issues:** ${report.summary.criticalIssues}\n`;
+   md += `- **Average Activation Rate:**
+${report.summary.avgActivationRate.toFixed(2)}/day\n\n`;
+             📈
+   // System Metrics
+   md += `##       System Metrics\n\n`;
+   md += `| Metric | Value | Trend |\n`;
+   md += `|--------|-------|-------|\n`;
+   md += `| Total Activations | ${report.metrics.totalActivations} |
+${this.renderTrend(report.metrics.activationTrend)} |\n`;
+   md += `| Avg Accuracy | ${(report.metrics.avgAccuracy * 100).toFixed(1)}% |
+${this.renderTrend(report.metrics.accuracyTrend)} |\n`;
+   md += `| Total Tokens Used | ${report.metrics.totalTokensUsed.toLocaleString()} |
+${this.renderTrend(report.metrics.tokensTrend)} |\n`;
+   md += `| Avg Tokens/Activation | ${Math.round(report.metrics.avgTokensPerActivation)} |
+${this.renderTrend(report.metrics.efficiencyTrend)} |\n\n`;
+
+
+             🏆
+  // Top Performing Skills
+  md += `##        Top Performing Skills\n\n`;
+  const topSkills = report.skillReports
+    .sort((a, b) => b.healthScore - a.healthScore)
+    .slice(0, 5);
+
+  topSkills.forEach((skill, i) => {
+    md += `${i + 1}. **${skill.skillName}** - Health Score: ${skill.healthScore}/100\n`;
+  });
+  md += `\n`;
+
+
+             ⚠️
+  // Skills Needing Attention
+  md += `##         Skills Needing Attention\n\n`;
+  const needsAttention = report.skillReports
+    .filter(s => s.healthScore < 70)
+    .sort((a, b) => a.healthScore - b.healthScore);
+
+  if (needsAttention.length === 0) {
+    md += `*No skills currently need attention. Great job!*\n\n`;
+  } else {
+    needsAttention.forEach(skill => {
+      md += `### ${skill.skillName} (Score: ${skill.healthScore}/100)\n\n`;
+
+    if (skill.issues.length > 0) {
+      md += `**Issues:**\n`;
+
+                  🔴
+      skill.issues.forEach(issue => {
+        md += `-       **${issue.type}**: ${issue.message}\n`;
+        md += ` - *Impact:* ${issue.impact}\n`;
+        md += ` - *Fix:* ${issue.suggestedFix}\n`;
+      });
+      md += `\n`;
+    }
+
+    if (skill.recommendations.length > 0) {
+      md += `**Recommended Actions:**\n`;
+         skill.recommendations.slice(0, 3).forEach((rec, i) => {
+           md += `${i + 1}. ${rec.action} (Priority: ${rec.priority}, Effort:
+${rec.estimatedEffort})\n`;
+         });
+         md += `\n`;
+       }
+     });
+   }
+
+
+               💡
+  // System-Wide Recommendations
+  md += `##      System-Wide Recommendations\n\n`;
+  report.recommendations.forEach((rec, i) => {
+    md += `${i + 1}. **${rec.title}**\n`;
+    md += ` - ${rec.description}\n`;
+    md += ` - Priority: ${rec.priority} | Effort: ${rec.effort} | Impact: ${rec.impact}\n`;
+
+                  ✅
+    if (rec.automatable) {
+      md += ` -     Automatable\n`;
+    }
+    md += `\n`;
+  });
+
+
+               📉
+  // System Trends
+  md += `##      System Trends\n\n`;
+  report.systemTrends.forEach(trend => {
+    md += `### ${trend.name}\n`;
+    md += `${trend.description}\n\n`;
+    md += `${this.renderTrendChart(trend.dataPoints)}\n\n`;
+  });
+
+  // Predictions
+  const predictions = report.skillReports.flatMap(s => s.predictedNeeds);
+
+                 🔮
+  if (predictions.length > 0) {
+    md += `##        Predictions\n\n`;
+    predictions
+      .sort((a, b) => b.confidence - a.confidence)
+      .slice(0, 5)
+      .forEach(pred => {
+        md += `- **${pred.type.toUpperCase()}**: ${pred.reasoning}\n`;
+        md += ` - Confidence: ${(pred.confidence * 100).toFixed(0)}%\n`;
+        md += ` - Action: ${pred.suggestedAction}\n\n`;
+      });
+  }
+
+
+               ✅
+  // Action Items
+  md += `##       Action Items\n\n`;
+  const actionItems = this.generateActionItems(report);
+  actionItems.forEach((item, i) => {
+    md += `- [ ] ${item.description} (${item.priority})\n`;
+     });
+     md += `\n`;
+
+     // Footer
+     md += `---\n\n`;
+     md += `*Report generated by Skill Manager System*\n`;
+     md += `*Next report: ${this.getNextReportDate(report.period)}*\n`;
+
+     return md;
+ }
+
+ /**
+  * Renderiza reporte a HTML con gráficos interactivos
+  */
+ async renderReportToHTML(report: SystemHealthReport): Promise<string> {
+   let html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Skill System Health Report</title>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <style>
+      body {
+         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica
+Neue', Arial, sans-serif;
+         max-width: 1200px;
+         margin: 0 auto;
+         padding: 20px;
+         background: #f5f5f5;
+      }
+      .header {
+         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+         color: white;
+         padding: 40px;
+         border-radius: 10px;
+         margin-bottom: 30px;
+      }
+      .summary-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+         gap: 20px;
+         margin-bottom: 30px;
+      }
+      .summary-card {
+         background: white;
+         padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.summary-card .value {
+   font-size: 32px;
+   font-weight: bold;
+   color: #667eea;
+}
+.summary-card .label {
+   color: #666;
+   margin-top: 5px;
+}
+.health-badge {
+   display: inline-block;
+   padding: 5px 15px;
+   border-radius: 20px;
+   font-weight: bold;
+}
+.health-excellent { background: #10b981; color: white; }
+.health-good { background: #3b82f6; color: white; }
+.health-fair { background: #f59e0b; color: white; }
+.health-poor { background: #ef4444; color: white; }
+.skill-card {
+   background: white;
+   padding: 20px;
+   margin-bottom: 15px;
+   border-radius: 8px;
+   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.chart-container {
+   position: relative;
+   height: 300px;
+   margin: 20px 0;
+}
+.issue {
+   padding: 10px;
+   margin: 10px 0;
+   border-left: 4px solid #ef4444;
+   background: #fee2e2;
+   border-radius: 4px;
+}
+.recommendation {
+   padding: 10px;
+   margin: 10px 0;
+   border-left: 4px solid #3b82f6;
+   background: #dbeafe;
+   border-radius: 4px;
+}
+  </style>
+</head>
+<body>
+
+          🎯
+  <div class="header">
+    <h1>     Skill System Health Report</h1>
+    <p>Generated: ${new Date(report.generatedAt).toLocaleString()}</p>
+    <p>Period: ${report.period}</p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+       <div class="value">${report.summary.totalSkills}</div>
+       <div class="label">Total Skills</div>
+    </div>
+    <div class="summary-card">
+       <div class="value">${report.summary.healthySkills}</div>
+       <div class="label">Healthy Skills</div>
+    </div>
+    <div class="summary-card">
+       <div class="value">${report.summary.skillsNeedingAttention}</div>
+       <div class="label">Need Attention</div>
+    </div>
+    <div class="summary-card">
+       <div class="value">${report.summary.avgActivationRate.toFixed(1)}</div>
+       <div class="label">Avg Activations/Day</div>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="activationsChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="healthDistribution"></canvas>
+  </div>
+
+  <h2>  ⚠️ Skills Needing Attention</h2>
+  ${this.renderSkillCards(report.skillReports.filter(s => s.healthScore < 70))}
+
+  <h2>  💡  System Recommendations</h2>
+  ${this.renderRecommendations(report.recommendations)}
+
+  <script>
+     // Chart.js para gráficos interactivos
+     ${this.generateChartScripts(report)}
+  </script>
+</body>
+</html>
+    `;
+
+    return html;
+}
+
+// Métodos auxiliares privados
+
+private calculateSystemMetrics(reports: SkillHealthReport[]): SystemMetrics {
+ const totalActivations = reports.reduce((sum, r) =>
+   sum + (r.usageData?.length || 0), 0
+ );
+
+    const avgAccuracy = reports.reduce((sum, r) =>
+      sum + this.getAccuracy(r), 0
+    ) / reports.length;
+
+    return {
+      totalActivations,
+      avgAccuracy,
+      totalTokensUsed: 0, // Calcular desde logs
+      avgTokensPerActivation: 0,
+      activationTrend: 'up',
+      accuracyTrend: 'stable',
+      tokensTrend: 'down',
+      efficiencyTrend: 'up'
+    };
+}
+
+private analyzeSystemTrends(reports: SkillHealthReport[]): SystemTrend[] {
+  // Implementar análisis de tendencias
+  return [];
+}
+
+private generateSystemRecommendations(
+  reports: SkillHealthReport[],
+  metrics: SystemMetrics
+): SystemRecommendation[] {
+  const recommendations: SystemRecommendation[] = [];
+
+    // Recomendación 1: Consolidación
+    const lowUsageCount = reports.filter(r =>
+      this.getActivationRate(r) < 0.1
+    ).length;
+
+    if (lowUsageCount > 5) {
+      recommendations.push({
+        title: 'Consolidate Low-Usage Skills',
+       description: `${lowUsageCount} skills have very low usage. Consider merging related
+skills to reduce maintenance overhead.`,
+       priority: 'medium',
+       effort: 'high',
+       impact: 'medium',
+       automatable: false
+     });
+   }
+
+     // Recomendación 2: Refactoring masivo
+     const needsRefactoring = reports.filter(r =>
+       r.issues.some(i => i.type === 'TOO_LARGE')
+     ).length;
+
+   if (needsRefactoring > 3) {
+     recommendations.push({
+       title: 'Mass Refactoring Campaign',
+       description: `${needsRefactoring} skills exceed size limits. Schedule dedicated
+refactoring sprint.`,
+       priority: 'high',
+       effort: 'high',
+       impact: 'high',
+       automatable: true
+     });
+   }
+
+    // Recomendación 3: Trigger optimization
+    if (metrics.avgAccuracy < 0.75) {
+      recommendations.push({
+        title: 'Optimize Activation Triggers',
+        description: 'System-wide activation accuracy is below target. Review and refine
+triggers in skill-rules.json.',
+        priority: 'high',
+        effort: 'medium',
+        impact: 'high',
+        automatable: true
+      });
+    }
+
+     return recommendations;
+ }
+
+ private createSummary(
+   reports: SkillHealthReport[],
+   metrics: SystemMetrics
+ ): SystemSummary {
+   const healthySkills = reports.filter(r => r.healthScore >= 70).length;
+   const criticalIssues = reports.reduce((sum, r) =>
+      sum + r.issues.filter(i => i.severity === 'high').length, 0
+    );
+
+    return {
+      totalSkills: reports.length,
+      healthySkills,
+      skillsNeedingAttention: reports.length - healthySkills,
+      criticalIssues,
+      avgActivationRate: metrics.totalActivations / 90, // últimos 90 días
+      overallHealth: this.calculateOverallHealth(reports)
+    };
+}
+
+private calculateOverallHealth(reports: SkillHealthReport[]): number {
+  if (reports.length === 0) return 0;
+  const totalHealth = reports.reduce((sum, r) => sum + r.healthScore, 0);
+  return totalHealth / reports.length;
+}
+
+
+                             🟢
+private renderHealthBadge(score: number): string {
+
+                             🔵
+  if (score >= 85) return ' Excellent';
+
+                             🟡
+  if (score >= 70) return ' Good';
+
+           🔴
+  if (score >= 50) return ' Fair';
+  return '   Poor';
+}
+
+private renderTrend(direction: string): string {
+
+          📈
+  const trendMap: Record<string, string> = {
+
+              📉
+    'up': ' ',
+
+              ➡️
+    'down': ' ',
+    'stable': ' '
+
+                                   ➡️
+  };
+  return trendMap[direction] || ' ';
+}
+
+private renderTrendChart(dataPoints: any[]): string {
+  // ASCII chart para markdown
+  return '```\n[Chart data]\n```';
+}
+
+private generateActionItems(report: SystemHealthReport): ActionItem[] {
+ const items: ActionItem[] = [];
+
+    // Generar action items desde recomendaciones
+    report.recommendations.forEach(rec => {
+      items.push({
+        description: rec.title,
+        priority: rec.priority,
+        effort: rec.effort,
+        assignee: 'auto'
+      });
+    });
+
+    // Agregar issues críticos como action items
+    report.skillReports.forEach(skill => {
+      skill.issues
+        .filter(i => i.severity === 'high')
+        .forEach(issue => {
+          items.push({
+            description: `Fix ${issue.type} in ${skill.skillName}`,
+            priority: 'high',
+            effort: 'medium',
+            assignee: 'auto'
+          });
+        });
+    });
+
+    return items.sort((a, b) => {
+      const priorityOrder = { high: 0, medium: 1, low: 2 };
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    });
+}
+
+private getNextReportDate(period: string): string {
+  const now = new Date();
+  switch (period) {
+    case 'daily':
+     now.setDate(now.getDate() + 1);
+     break;
+    case 'weekly':
+     now.setDate(now.getDate() + 7);
+     break;
+    case 'monthly':
+     now.setMonth(now.getMonth() + 1);
+     break;
+  }
+  return now.toLocaleDateString();
+}
+
+private renderSkillCards(skills: SkillHealthReport[]): string {
+ return skills.map(skill => `
+   <div class="skill-card">
+    <h3>${skill.skillName} (${skill.healthScore}/100)</h3>
+    ${skill.issues.map(i => `
+     <div class="issue">
+       <strong>${i.type}</strong>: ${i.message}
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+}
+
+private renderRecommendations(recs: SystemRecommendation[]): string {
+  return recs.map(rec => `
+    <div class="recommendation">
+      <strong>${rec.title}</strong> (${rec.priority})
+      <p>${rec.description}</p>
+      <small>Effort: ${rec.effort} | Impact: ${rec.impact}</small>
+    </div>
+  `).join('');
+}
+
+private generateChartScripts(report: SystemHealthReport): string {
+ return `
+   // Activations over time chart
+   new Chart(document.getElementById('activationsChart'), {
+     type: 'line',
+     data: {
+       labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+       datasets: [{
+         label: 'Activations',
+         data: [120, 145, 160, 155],
+         borderColor: 'rgb(102, 126, 234)',
+         tension: 0.1
+       }]
+     }
+   });
+
+      // Health distribution chart
+      new Chart(document.getElementById('healthDistribution'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Excellent', 'Good', 'Fair', 'Poor'],
+          datasets: [{
+            data: [${this.getHealthDistribution(report)}],
+            backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+          }]
+        }
+      });
+    `;
+}
+
+private getHealthDistribution(report: SystemHealthReport): string {
+ const excellent = report.skillReports.filter(s => s.healthScore >= 85).length;
+  const good = report.skillReports.filter(s => s.healthScore >= 70 && s.healthScore <
+85).length;
+  const fair = report.skillReports.filter(s => s.healthScore >= 50 && s.healthScore <
+70).length;
+  const poor = report.skillReports.filter(s => s.healthScore < 50).length;
+
+      return [excellent, good, fair, poor].join(',');
+ }
+
+ private getAccuracy(report: SkillHealthReport): number {
+   // Implementar cálculo real
+   return 0.85;
+ }
+
+ private getActivationRate(report: SkillHealthReport): number {
+   // Implementar cálculo real
+   return 0;
+ }
+
+ private async getAllSkills(): Promise<string[]> {
+   // Implementar
+   return [];
+ }
+}
+```
+
+-----
+
+Continuaré en el siguiente mensaje con la Parte 10: Casos de Uso Reales y Ejemplos
+Completos…​
+
+# SKILL MANAGER SYSTEM - PARTE 3: CASOS DE USO Y EJEMPLOS COMPLETOS
+
+-----
+
+## PARTE 10: CASOS DE USO REALES
+
+### 10.1 Caso de Uso 1: Crear un Nuevo Skill desde Cero
+
+```bash
+# Escenario: Necesitas crear un skill para guías de testing
+
+# Paso 1: Crear el skill
+npm run skill:create testing-guidelines \
+ --type guidelines \
+ --category quality \
+ --priority high \
+ --interactive
+🎨
+# Output del comando:
+   Creating new skill: testing-guidelines
+
+📝 Let's configure triggers for this skill...
+? What keywords should activate this skill? (comma-separated)
+> test, testing, unit test, integration test, e2e, jest, vitest, cypress
+
+? What file patterns should activate this skill? (comma-separated)
+> **/*.test.ts, **/*.spec.ts, **/tests/**, **/e2e/**
+
+? What content patterns should activate this skill? (comma-separated)
+> describe\(, it\(, test\(, expect\(
+
+✅ Skill created at: /skills/quality/testing-guidelines
+📝 Next steps:
+   1. Edit /skills/quality/testing-guidelines/SKILL.md
+   2. Add content and examples
+   3. Run: npm run skill:validate testing-guidelines
+```
+
+**Estructura creada automáticamente:**
+
+```
+/skills/quality/testing-guidelines/
+├── SKILL.md                    # 150 líneas - template inicial
+├── resources/
+│ └── .gitkeep
+└── metadata.json                # Metadata completa
+```
+
+**SKILL.md inicial generado:**
+
+```markdown
+<!--
+Skill: testing-guidelines
+Category: quality
+Version: 1.0.0
+Last Updated: 2024-10-30
+-->
+
+# Testing Guidelines
+
+## Overview
+
+Comprehensive testing patterns and best practices for ensuring code quality
+through unit tests, integration tests, and end-to-end testing.
+
+**When to use this skill:**
+- Writing new tests
+- Setting up testing infrastructure
+- Debugging test failures
+- Improving test coverage
+
+**Related skills:**
+- [quality-assurance](../quality-assurance/SKILL.md)
+- [backend-dev-guidelines](../../guidelines/backend-dev-guidelines/SKILL.md)
+
+---
+
+## Quick Reference
+
+### Core Testing Principles
+
+1. **AAA Pattern (Arrange-Act-Assert)**
+  - Arrange: Setup test data and conditions
+  - Act: Execute the code being tested
+  - Assert: Verify the results
+
+  Example:
+  ```typescript
+  test('should calculate total price', () => {
+    // Arrange
+    const items = [{ price: 10 }, { price: 20 }];
+
+      // Act
+      const total = calculateTotal(items);
+
+     // Assert
+     expect(total).toBe(30);
+   });
+```
+
+1. **Test Isolation**
+
+- Each test should be independent
+- No shared state between tests
+- Example: Use beforeEach for setup
+
+1. **Meaningful Test Names**
+
+- Describe what is being tested
+- Include expected behavior
+- Example: `should return 404 when user not found`
+### Common Patterns
+
+**Pattern 1: Mocking Dependencies**
+
+```typescript
+// Mock external service
+jest.mock('./userService');
+
+test('should handle service error', async () => {
+ userService.getUser.mockRejectedValue(new Error('Service down'));
+
+ const result = await controller.getUser('123');
+
+  expect(result.status).toBe(500);
+});
+```
+
+**Pattern 2: Testing Async Code**
+
+```typescript
+test('should fetch data successfully', async () => {
+  const data = await fetchData();
+
+  expect(data).toBeDefined();
+  expect(data.items).toHaveLength(10);
+});
+```
+
+### Quick Checklist
+
+When writing tests:
+
+- [ ] Test covers happy path
+- [ ] Test covers error cases
+- [ ] Test is independent and isolated
+- [ ] Test name is descriptive
+- [ ] Mocks are properly configured
+- [ ] Assertions are specific and meaningful
+
+-----
+
+## Detailed Resources
+
+*This section will be populated as you add resources.*
+
+For in-depth information, create resource files in the `resources/` directory.
+Suggested resources to create:
+
+- `unit-testing-patterns.md` - Detailed unit testing guide
+- `integration-testing.md` - Integration testing strategies
+- `mocking-strategies.md` - How to mock effectively
+- `test-data-management.md` - Managing test data
+- `performance-testing.md` - Performance and load testing
+
+-----
+
+## Additional Resources
+
+### Scripts
+
+*Add utility scripts for testing here*
+
+### External References
+
+- [Jest Documentation](https://jestjs.io/)
+- [Testing Library](https://testing-library.com/)
+- [Cypress Documentation](https://www.cypress.io/)
+
+-----
+
+## Troubleshooting
+
+**Issue: Tests are flaky**
+
+- **Symptom:** Tests pass sometimes, fail other times
+- **Common Causes:**
+  - Timing issues in async code
+  - Shared state between tests
+  - Reliance on external services
+- **Solution:** Ensure proper async handling, isolate tests, mock external deps
+
+**Issue: Tests are slow**
+
+- **Symptom:** Test suite takes too long to run
+- **Solution:**
+  - Use parallel test execution
+  - Mock slow operations
+  - Consider test pyramid (more unit, fewer integration/e2e)
+
+-----
+
+*For questions or suggestions about this skill, see
+[MAINTENANCE_GUIDE.md](../../docs/MAINTENANCE_GUIDE.md)*
+

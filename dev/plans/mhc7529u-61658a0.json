@@ -1,0 +1,20 @@
+{
+  "id": "mhc7529u-61658a0",
+  "task": "Implementar sistema de notificaciones push",
+  "status": "APPROVED",
+  "phases": [
+    {
+      "name": "Fase inicial",
+      "steps": [
+        "Editar este plan y agregar pasos específicos"
+      ],
+      "dependencies": []
+    }
+  ],
+  "risks": [],
+  "metrics": {},
+  "created": "2025-10-29T16:14:57.474Z",
+  "updated": "2025-10-29T16:19:54.638Z",
+  "approvedBy": "user",
+  "approvedAt": "2025-10-29T16:19:54.638Z"
+}

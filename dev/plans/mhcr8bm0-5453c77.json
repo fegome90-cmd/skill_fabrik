@@ -1,0 +1,20 @@
+{
+  "id": "mhcr8bm0-5453c77",
+  "task": "Plan post-estudio operacional",
+  "status": "APPROVED",
+  "phases": [
+    {
+      "name": "Fase inicial",
+      "steps": [
+        "Editar este plan y agregar pasos específicos"
+      ],
+      "dependencies": []
+    }
+  ],
+  "risks": [],
+  "metrics": {},
+  "created": "2025-10-30T01:37:21.865Z",
+  "updated": "2025-10-30T01:38:21.849Z",
+  "approvedBy": "user",
+  "approvedAt": "2025-10-30T01:38:21.849Z"
+}

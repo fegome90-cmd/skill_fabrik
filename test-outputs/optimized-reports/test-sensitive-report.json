@@ -1,0 +1,23 @@
+{
+  "timestamp": 1761966693983,
+  "credentials": {
+    "password": "super-secret-password-123",
+    "apiKey": "sk_live_1234567890abcdef",
+    "secretToken": "secret-token-value",
+    "connectionString": "postgresql://user:password@localhost:5432/db"
+  },
+  "findings": [
+    {
+      "id": "sensitive-1",
+      "message": "Found hardcoded password: password=\"admin123\"",
+      "evidence": "Database credentials discovered in config file"
+    }
+  ],
+  "logs": [
+    {
+      "timestamp": 1761966693983,
+      "message": "Authentication successful with bearer token sk_test_1234567890",
+      "level": "info"
+    }
+  ]
+}

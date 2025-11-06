@@ -1,0 +1,20 @@
+{
+  "day": "2025-10-30",
+  "total": 190,
+  "bySkill": {
+    "repo-auditor": 13,
+    "repo-auditor-deny": 2,
+    "n/a": 64,
+    "plan-save-workflow": 3,
+    "policy-s1": 88,
+    "policy-s2": 5,
+    "policy-net": 5,
+    "lint-fast": 4,
+    "secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config": 1,
+    "secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config,secrets-and-config": 1,
+    "secrets-and-config,secrets-and-config": 2,
+    "": 2
+  },
+  "errors_ts_sum": 0,
+  "zero_ok_rate": 0.010526315789473684
+}

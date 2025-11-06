@@ -7,6 +7,22 @@
 
 ---
 
+## Resumen Operativo (Conclusión / Impacto / Sostenibilidad)
+
+**Conclusión**: Ejecutable hoy. La arquitectura mínima, contratos y hooks están listos; el plan fue aprobado y el workflow activado.
+
+**Impacto**:
+- Activa skills clave (plan-architect, plan-save-workflow).
+- Genera tríada dev-docs y KPIs (obs/kpi/events.jsonl) automáticamente.
+- Reduce drift con pre/post hooks v2 (auditoría 4D y TAGs ≥60%).
+
+**Sostenibilidad**:
+- Template v1.1.0 (8/8) + handoff v2.0-PAE.
+- TAGs system integrado (≥60%) y Score 4D objetivo ≥7.5.
+- Persistencia canónica y snapshots MemTech L1 para planes aprobados.
+
+---
+
 ## CLOOP: Clarify (Clarificar)
 
 ### Objetivo SMART
@@ -283,6 +299,231 @@ interface Plan {
 **Gate GO:** Pre-invoke muestra "🎯 Skill Activation Check", stop hook formatea y compila correctamente
 
 ---
+
+### Starter Pack ejecutable (Fase 0 listo para copiar/pegar)
+
+#### 1) Estructura base (workspaces + paquetes + contratos)
+
+```
+skill-fabric/
+├─ package.json
+├─ pnpm-workspace.yaml
+├─ tsconfig.base.json
+├─ .gitignore
+├─ configs/
+│  ├─ skill-rules.schema.json
+│  └─ SKILL.template.md
+├─ packages/
+│  ├─ skills-cli/
+│  │  ├─ package.json
+│  │  ├─ tsconfig.json
+│  │  └─ src/
+│  │     ├─ cli.ts
+│  │     ├─ commands/
+│  │     │  ├─ plan-create.ts
+│  │     │  ├─ plan-save.ts
+│  │     │  └─ lint.ts
+│  │     └─ utils/
+│  │        └─ fs.ts
+│  ├─ router/
+│  │  ├─ package.json
+│  │  ├─ tsconfig.json
+│  │  └─ src/
+│  │     ├─ index.ts
+│  │     ├─ runHooks.ts
+│  │     ├─ types.ts
+│  │     ├─ pre-invoke.ts
+│  │     ├─ stop.ts
+│  │     └─ detectors.ts
+│  └─ kpi/
+│     ├─ package.json
+│     ├─ tsconfig.json
+│     └─ src/emitter.ts
+├─ skills/
+│  ├─ guidelines/backend-dev-guidelines/SKILL.md
+│  ├─ guidelines/frontend-dev-guidelines/SKILL.md
+│  ├─ guardrails/database-verification/SKILL.md
+│  ├─ generators/plan-architect/SKILL.md
+│  └─ workflows/plan-save-workflow/SKILL.md
+├─ registry/
+│  └─ .keep
+├─ obs/kpi/
+│  └─ events.jsonl
+├─ scripts/pm2/
+│  └─ ecosystem.config.cjs
+└─ docs/contracts/
+   └─ README.md
+```
+
+#### 2) Raíz (workspaces + TS base)
+
+package.json
+```json
+{
+  "name": "skill-fabric",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r --filter ./packages... run build",
+    "dev": "pnpm -r --filter ./packages... run dev",
+    "lint": "pnpm -r --filter ./packages... run lint",
+    "skills:lint": "pnpm -F @skill-fabric/skills-cli run lint"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/node": "^22.7.5"
+  }
+}
+```
+
+pnpm-workspace.yaml
+```yaml
+packages:
+  - "packages/*"
+```
+
+tsconfig.base.json
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  }
+}
+```
+
+.gitignore
+```
+node_modules
+dist
+.DS_Store
+*.log
+registry/*
+!registry/.keep
+```
+
+#### 3) Contratos y plantillas mínimas
+
+configs/skill-rules.schema.json
+```json
+{
+  "$id": "skill-rules.schema.json",
+  "type": "object",
+  "patternProperties": {
+    "^[a-z0-9-]{1,64}$": {
+      "type": "object",
+      "required": ["type", "enforcement", "priority", "promptTriggers", "fileTriggers"],
+      "properties": {
+        "type": { "enum": ["guideline", "guardrail", "workflow", "analyst", "generator"] },
+        "enforcement": { "enum": ["suggest", "require", "block"] },
+        "priority": { "enum": ["critical", "high", "normal", "low"] },
+        "promptTriggers": {
+          "type": "object",
+          "properties": {
+            "keywords": { "type": "array", "items": { "type": "string" } },
+            "intentPatterns": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": false
+        },
+        "fileTriggers": {
+          "type": "object",
+          "properties": {
+            "pathPatterns": { "type": "array", "items": { "type": "string" } },
+            "contentPatterns": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": false
+        },
+        "resources": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+```
+
+configs/SKILL.template.md (≤400 líneas)
+```md
+---
+name: <skill-id>
+description: >-
+  Descripción orientada a acción:
+  - Cuándo usar
+  - Cuándo NO usar
+type: guideline|guardrail|workflow|analyst|generator
+enforcement: suggest|require|block
+version: 0.1.0
+---
+
+# Objetivo
+Qué resuelve, por qué existe, resultados esperados.
+
+# Procedimiento mínimo (pasos)
+1) ...
+2) ...
+3) ...
+
+# Checklist (DoD)
+- [ ] Cumple entrada/salida mínimas
+- [ ] Registra eventos KPI
+- [ ] No afecta otras rutas (safe-by-default)
+
+# Scripts
+- `scripts/run.sh` – ejecución mínima
+- `scripts/validate.sh` – validaciones
+
+# Ejemplos (bien/mal)
+**Bien:** …
+**Mal:** …
+
+# Recursos (on-demand)
+- resources/…
+```
+
+#### 4) Paquetes mínimos (CLI / Router / KPI)
+
+Incluye CLI con `plan create/save/lint`, Router con `pre-invoke/stop` y emisor KPI simple.
+
+> Sugerencia: copia los fragmentos exactos del anexo “🧰 Paquetes” de este plan (sección 5/6/7) tal cual.
+
+#### 5) Comandos para levantar todo
+
+```bash
+# 1) Instalar
+pnpm i
+
+# 2) Build de paquetes
+pnpm -w build
+
+# 3) (Opcional) Link CLI global
+pnpm -w link --global @skill-fabric/skills-cli
+which skills
+
+# 4) Crear plan MVP
+mkdir -p dev/plans dev/active
+skills plan create --id post-estudio-operacional-20251029 --title "Plan post-estudio operacional" --desc "Operacionalizar patrones y hooks"
+skills plan save post-estudio-operacional-20251029 --approve
+
+# 5) Probar hooks (simulación mínima)
+node -e "import('./packages/router/dist/index.js').then(m=>m.Hooks.preInvoke({prompt:'crear controlador /api/users',openFiles:['services/api/src/controllers/user.ts'],activeFileContent:'export const ctrl = {}',cwd:process.cwd()})).then(r=>console.log(r))"
+
+# 6) Emitir KPI de prueba
+node -e "import('./packages/kpi/dist/emitter.js').then(({emitKPI})=>emitKPI({ts:new Date().toISOString(),event:'smoke',ok:true}))"
+```
+
+#### 6) Gate GO Fase 0 (checklist)
+
+- skills plan create/save escribe en `dev/plans/…` y `dev/active/…`
+- Hooks.preInvoke() devuelve 🎯 Skill Activation Check cuando corresponde
+- Hooks.stop() produce objeto con `zero_errors_left_behind: true` (MVP)
+- `obs/kpi/events.jsonl` acumula eventos
+
 
 ### Fase 1: Skills Base con Divulgación Progresiva (2-3 días)
 
@@ -781,3 +1022,21 @@ Al finalizar implementación, ejecutar presprint con:
 **Status**: 📋 PLAN ACTIVO  
 **Siguiente Acción**: Iniciar Fase 0 (Bootstrap)  
 **Revisión**: Al finalizar cada fase según CLOOP Reflect
+
+---
+
+## Cierre del Plan (Post-Estudio Operacional)
+
+**Estado:** Cierre documentado y handoff emitido  
+**Handoff:** docs/HANDOFF-POST-ESTUDIO-OPERACIONAL.md  
+**Lecciones:** docs/LECCIONES-APRENDIDAS-EJECUCION-PRACTICA.md  
+
+### Resumen de Cierre
+- Auditoría 4D ≥ 8 (PASS) y PAE validado (G1–G5)
+- Tríada dev-docs y evidencias completas en dev/active/ y docs/
+- Integración de skills y hooks v2 comprobada en ejecución
+
+### Próximos Pasos Sugeridos
+- Instanciar nuevo ciclo/plan a partir de esta base (baseline reutilizable)
+- Automatizar registro de KPIs de transición y dashboards
+- Programar revisión trimestral de reglas y plantillas (anti “skill rot”)

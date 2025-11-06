@@ -1,0 +1,12 @@
+{
+  "userPromptSubmit": {
+    "enabled": true,
+    "skillRulesPath": "registry/index.json"
+  },
+  "stop": {
+    "enabled": true,
+    "buildCheck": true,
+    "prettier": true,
+    "kpiEmit": true
+  }
+}

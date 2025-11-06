@@ -1,0 +1,207 @@
+{
+  "test_metadata": {
+    "created": "2025-10-31T00:00:00.000Z",
+    "version": "1.0.0",
+    "environment": "development",
+    "cli_version": "0.1.0",
+    "system_info": {
+      "node_version": ">=18.0.0",
+      "platform": "darwin/linux/windows",
+      "memory_min": "4GB",
+      "cpu_min": "2 cores"
+    }
+  },
+  "performance_targets": {
+    "response_time": {
+      "health_check": {
+        "p50": "< 50ms",
+        "p95": "< 100ms",
+        "p99": "< 200ms",
+        "max": "< 500ms"
+      },
+      "skill_activation": {
+        "p50": "< 200ms",
+        "p95": "< 500ms",
+        "p99": "< 1000ms",
+        "max": "< 2000ms"
+      },
+      "plan_generation": {
+        "p50": "< 500ms",
+        "p95": "< 1000ms",
+        "p99": "< 2000ms",
+        "max": "< 5000ms"
+      },
+      "large_operations": {
+        "p50": "< 1000ms",
+        "p95": "< 2000ms",
+        "p99": "< 5000ms",
+        "max": "< 10000ms"
+      }
+    },
+    "throughput": {
+      "concurrent_users": {
+        "light": 10,
+        "moderate": 50,
+        "heavy": 100,
+        "peak": 200
+      },
+      "requests_per_second": {
+        "health_check": 100,
+        "skill_activation": 50,
+        "plan_generation": 20,
+        "mixed_operations": 30
+      }
+    },
+    "resource_usage": {
+      "memory": {
+        "baseline": "< 100MB",
+        "moderate_load": "< 250MB",
+        "heavy_load": "< 500MB",
+        "peak_load": "< 1GB"
+      },
+      "cpu": {
+        "idle": "< 10%",
+        "normal_load": "< 30%",
+        "heavy_load": "< 60%",
+        "peak_load": "< 80%"
+      }
+    },
+    "error_rates": {
+      "normal_conditions": "< 0.1%",
+      "moderate_load": "< 1%",
+      "heavy_load": "< 5%",
+      "peak_load": "< 10%"
+    }
+  },
+  "test_scenarios": {
+    "basic_load_test": {
+      "description": "Normal operational load testing",
+      "duration": "16 minutes",
+      "max_users": 50,
+      "success_criteria": {
+        "error_rate": "< 0.1%",
+        "p95_response_time": "< 500ms",
+        "memory_stable": true
+      }
+    },
+    "stress_test": {
+      "description": "Find system breaking points",
+      "duration": "19 minutes",
+      "max_users": 1000,
+      "success_criteria": {
+        "error_rate": "< 30%",
+        "system_recovers": true,
+        "no_crashes": true
+      }
+    },
+    "memory_leak_test": {
+      "description": "Long-running memory stability",
+      "duration": "80 minutes",
+      "max_users": 20,
+      "success_criteria": {
+        "memory_increase": "< 50MB",
+        "error_rate": "< 5%",
+        "stable_performance": true
+      }
+    }
+  },
+  "baseline_measurements": {
+    "health_check": {
+      "p50": 25,
+      "p95": 75,
+      "p99": 150,
+      "max": 300,
+      "throughput": 100
+    },
+    "skill_activation": {
+      "simple": {
+        "p50": 150,
+        "p95": 350,
+        "p99": 800,
+        "max": 1500,
+        "throughput": 50
+      },
+      "complex": {
+        "p50": 300,
+        "p95": 700,
+        "p99": 1500,
+        "max": 2500,
+        "throughput": 30
+      }
+    },
+    "plan_generation": {
+      "simple": {
+        "p50": 400,
+        "p95": 900,
+        "p99": 1800,
+        "max": 4000,
+        "throughput": 25
+      },
+      "complex": {
+        "p50": 800,
+        "p95": 1800,
+        "p99": 3500,
+        "max": 7000,
+        "throughput": 15
+      }
+    },
+    "resource_baseline": {
+      "memory_idle": 45000000,
+      "memory_normal": 125000000,
+      "memory_heavy": 350000000,
+      "cpu_idle": 5,
+      "cpu_normal": 25,
+      "cpu_heavy": 55
+    }
+  },
+  "performance_regression_thresholds": {
+    "response_time_regression": 20,
+    "throughput_regression": 15,
+    "memory_regression": 25,
+    "error_rate_increase": 50
+  },
+  "alerting_rules": {
+    "critical": {
+      "response_time_p95": "> 2000ms",
+      "error_rate": "> 5%",
+      "memory_usage": "> 1GB",
+      "cpu_usage": "> 80%"
+    },
+    "warning": {
+      "response_time_p95": "> 1000ms",
+      "error_rate": "> 1%",
+      "memory_usage": "> 500MB",
+      "cpu_usage": "> 60%"
+    },
+    "info": {
+      "response_time_p95": "> 500ms",
+      "error_rate": "> 0.5%",
+      "memory_usage": "> 250MB",
+      "cpu_usage": "> 40%"
+    }
+  },
+  "reporting": {
+    "metrics_to_track": [
+      "http_req_duration",
+      "http_req_failed",
+      "errors",
+      "response_time",
+      "memory_usage",
+      "active_connections",
+      "gc_pressure"
+    ],
+    "dashboard_requirements": [
+      "Real-time response time charts",
+      "Error rate trending",
+      "Memory usage over time",
+      "Concurrent user load",
+      "Throughput metrics"
+    ],
+    "report_frequency": {
+      "real_time": "dashboard",
+      "daily": "summary_report",
+      "weekly": "trend_analysis",
+      "regression": "on_failure"
+    }
+  }
+}

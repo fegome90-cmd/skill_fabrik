@@ -1,0 +1,68 @@
+{
+  "name": "@skills-fabrik/universal",
+  "version": "1.0.0",
+  "description": "Skills Fabric Universal - Portable development assistant for any project",
+  "main": "dist/index.js",
+  "bin": {
+    "skills-fabrik": "dist/cli.js",
+    "sf": "dist/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test dist/**/*.spec.js",
+    "lint": "eslint src --ext .ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "development",
+    "automation",
+    "skills",
+    "ai",
+    "code-quality",
+    "productivity"
+  ],
+  "author": "Skills Fabric Team",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.10",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1",
+    "semver": "^7.5.4"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^20.8.0",
+    "@types/ora": "^3.2.0",
+    "@types/semver": "^7.5.5",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "rollup": "^4.52.5",
+    "rollup-plugin-dts": "^6.2.3",
+    "typescript": "^5.2.2"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skills-fabrik/universal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skills-fabrik/universal/issues"
+  },
+  "homepage": "https://skills-fabrik.com"
+}

@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-11-01T03:11:33.699Z",
+  "summary": {
+    "totalOriginalSize": 0,
+    "totalOptimizedSize": 0,
+    "totalCompressionRatio": 0,
+    "targetSize": 104857600,
+    "targetAchieved": true
+  },
+  "details": [
+    {
+      "file": "security-report-2025-11-01.json",
+      "success": false,
+      "error": "Assignment to constant variable."
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "MEDIUM",
+      "type": "COMPRESSION",
+      "message": "Low compression ratio achieved. Consider more aggressive optimization strategies.",
+      "actionItems": [
+        "Implement data deduplication",
+        "Use binary compression for large objects",
+        "Remove unnecessary metadata"
+      ]
+    }
+  ]
+}

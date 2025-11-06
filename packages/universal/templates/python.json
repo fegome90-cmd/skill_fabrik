@@ -1,0 +1,159 @@
+{
+  "type": "python",
+  "language": "Python",
+  "framework": "Django/FastAPI",
+  "description": "Python web application with Django/FastAPI and modern tooling",
+  "skills": [
+    "python-patterns",
+    "testing-best-practices",
+    "django-patterns",
+    "fastapi-patterns",
+    "database-orm",
+    "security-testing"
+  ],
+  "config": {
+    "strict": true,
+    "dashboard": true,
+    "pythonVersion": "3.11",
+    "testing": ["pytest", "unittest", "factory-boy"],
+    "frameworks": ["django", "fastapi", "flask"],
+    "features": {
+      "venv": true,
+      "requirements": true,
+      "type-checking": true,
+      "formatting": true
+    }
+  },
+  "qualityGates": {
+    "build": {
+      "enabled": true,
+      "command": "python manage.py check || pytest --collect-only",
+      "action": "block"
+    },
+    "lint": {
+      "enabled": true,
+      "command": "flake8 . || ruff check .",
+      "action": "warn"
+    },
+    "format": {
+      "enabled": true,
+      "command": "black --check . || isort --check-only .",
+      "action": "warn"
+    },
+    "typecheck": {
+      "enabled": true,
+      "command": "mypy .",
+      "action": "warn"
+    },
+    "test": {
+      "enabled": true,
+      "command": "pytest",
+      "action": "warn",
+      "coverage": true
+    }
+  },
+  "skills": {
+    "autoIndex": true,
+    "activationThreshold": 0.3,
+    "maxSkillsPerRequest": 5,
+    "fuzzyMatching": true,
+    "contextualBoost": true,
+    "recommendedSkills": [
+      {
+        "id": "python-patterns",
+        "name": "Python Best Practices",
+        "description": "PEP 8, type hints, context managers, decorators",
+        "keywords": ["python", "pep8", "type", "decorator", "context"],
+        "priority": 1
+      },
+      {
+        "id": "testing-best-practices",
+        "name": "Python Testing",
+        "description": "pytest patterns, fixtures, parametrized tests",
+        "keywords": ["test", "pytest", "fixture", "mock", "assert"],
+        "priority": 1
+      },
+      {
+        "id": "django-patterns",
+        "name": "Django Patterns",
+        "description": "Models, views, serializers, middleware patterns",
+        "keywords": ["django", "model", "view", "serializer", "middleware"],
+        "priority": 2
+      },
+      {
+        "id": "fastapi-patterns",
+        "name": "FastAPI Patterns",
+        "description": "Pydantic models, dependency injection, async patterns",
+        "keywords": ["fastapi", "pydantic", "async", "dependency", "endpoint"],
+        "priority": 2
+      }
+    ]
+  },
+  "services": {
+    "daemon": {
+      "enabled": true,
+      "autoStart": true,
+      "environment": {
+        "PYTHONPATH": ".",
+        "DJANGO_SETTINGS_MODULE": "myproject.settings"
+      }
+    },
+    "router": {
+      "enabled": true,
+      "autoStart": true,
+      "environment": {
+        "PYTHON_ROUTER": "true"
+      }
+    },
+    "discovery": {
+      "enabled": true,
+      "autoStart": true
+    },
+    "dashboard": {
+      "enabled": true,
+      "autoStart": false,
+      "features": ["django-admin", "api-docs", "task-monitoring"]
+    }
+  },
+  "hooks": {
+    "preInvoke": true,
+    "postInvoke": true,
+    "planDetection": true,
+    "ideIntegration": true,
+    "supportedIDEs": ["cursor", "vscode", "pycharm", "intellij"]
+  },
+  "filePatterns": {
+    "include": ["**/*.py", "requirements*.txt", "pyproject.toml", "setup.py"],
+    "exclude": ["venv/**", "env/**", "__pycache__/**", "*.pyc", ".pytest_cache/**"],
+    "watch": ["**/*.py", "requirements*.txt"]
+  },
+  "python": {
+    "venv": {
+      "name": "venv",
+      "python": "python3.11",
+      "requirements": "requirements.txt",
+      "devRequirements": "requirements-dev.txt"
+    },
+    "tools": {
+      "linter": "flake8",
+      "formatter": "black",
+      "importSorter": "isort",
+      "typeChecker": "mypy",
+      "tester": "pytest"
+    }
+  },
+  "frameworks": {
+    "django": {
+      "settingsModule": "myproject.settings",
+      "managePy": "python manage.py",
+      "appsDir": "apps",
+      "templatesDir": "templates"
+    },
+    "fastapi": {
+      "mainFile": "main.py",
+      "routerFile": "routers/",
+      "modelsFile": "models/",
+      "schemasFile": "schemas/"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "偏好设置": {
+    "本地化": "zh-CN",
+    "字幕": true,
+    "偏好模型": "opus"
+  },
+  "mcpServers": {
+    "skills-fabric": {
+      "command": "node",
+      "args": ["/ruta/completa/a/skills-fabrik/mcp-server/index.mjs"],
+      "env": {
+        "MCP_TRANSPORT": "websocket",
+        "MCP_WEBSOCKET_PORT": "3001"
+      }
+    }
+  },
+  "claudeCode": {
+    "enabled": true,
+    "useLocalMcp": true,
+    "mcpServers": {
+      "skills-fabric": {
+        "command": "node",
+        "args": ["/ruta/completa/a/skills-fabrik/mcp-server/index.mjs"],
+        "env": {
+          "MCP_TRANSPORT": "stdio"
+        }
+      }
+    }
+  }
+}

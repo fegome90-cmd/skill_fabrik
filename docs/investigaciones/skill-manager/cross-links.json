@@ -1,0 +1,71 @@
+{
+  "concepts": [
+    {
+      "name": "keywordMatch (fuzzy Levenshtein)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "links": [
+        "original:Panorama inicial",
+        "original:Cuerpo intermedio",
+        "original:Desarrollo avanzado",
+        "original:Sección final"
+      ],
+      "impact": ["Router de activación", "Guardrails", "Skills CLI"]
+    },
+    {
+      "name": "intentMatch (regex con captura)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "impact": ["Router de activación", "skills rules", "plan-generator"]
+    },
+    {
+      "name": "filePathMatch (glob→regex, especificidad)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "impact": ["Router", "CLI context", "IDE hooks"]
+    },
+    {
+      "name": "contentMatch (conteo de matches)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "impact": ["Router", "Analyzer", "Guardrails"]
+    },
+    {
+      "name": "recentActivity (activaciones recientes)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "impact": ["KPI", "Memtech", "Router"]
+    },
+    {
+      "name": "contextRelevance (open files, git diff, tipo proyecto)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "impact": ["CLI core", "MCP adapters (git, fs)", "IDE hooks"]
+    },
+    {
+      "name": "historicalAccuracy",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [252, 271],
+      "impact": ["KPI", "Memtech store", "Router weights"]
+    },
+    {
+      "name": "threshold / allowList / denyList",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [258, 260],
+      "impact": ["configs/skill-rules.json", "Router", "CLI flags"]
+    },
+    {
+      "name": "confidence (consistencia, histórico, accuracy)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [262, 265],
+      "impact": ["KPI dashboard", "Router"]
+    },
+    {
+      "name": "reasoning (señales fuertes/débiles, score)",
+      "source": "Copia de Skill manager.pdf",
+      "pages": [266, 268],
+      "impact": ["CLI UX", "Logs", "Explainability"]
+    }
+  ]
+}
+

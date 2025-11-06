@@ -1,0 +1,42 @@
+{
+  "id": "mhce05nu-742954f",
+  "task": "Configurar sistema de skills con planning mode activado - Verificar activación de skills y hooks de Cursor",
+  "status": "APPROVED",
+  "phases": [
+    {
+      "name": "Preparar entorno y CLI",
+      "steps": [
+        "Ejecutar pnpm install y pnpm -w build para asegurar la última build del CLI.",
+        "Ejecutar node packages/skills-cli/dist/index.js hooks setup para reinstalar hooks de Cursor.",
+        "Validar que .cursor/hooks contenga userPromptSubmit.mjs, stop.mjs y hooks-config.json."
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "Revisar configuración de skills",
+      "steps": [
+        "Revisar configs/skill-rules.json y confirmar que las reglas clave sigan habilitadas.",
+        "Ejecutar node packages/skills-cli/dist/index.js skills lint ./skills --strict.",
+        "Regenerar el índice con node packages/skills-cli/dist/index.js skills index ./skills --out ./registry/index.json.",
+        "Documentar hallazgos en dev/active/configurar-sistema-de-skills-con-planning-mode-activado-verificar-activaci-n-de-skills-y-hooks-de-cursor/tasks.md."
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "Verificar activación en Cursor",
+      "steps": [
+        "Abrir Cursor con el plan aprobado y confirmar que el pre-hook reconoce el plan activo.",
+        "Lanzar prompts que activen backend-dev-guidelines y database-verification-* y registrar evidencias.",
+        "Si alguna skill falla, ajustar reglas o thresholds y repetir verificación.",
+        "Actualizar dev/active/configurar-sistema-de-skills-con-planning-mode-activado-verificar-activaci-n-de-skills-y-hooks-de-cursor/tasks.md con los resultados finales y preparar cierre del plan."
+      ],
+      "dependencies": []
+    }
+  ],
+  "risks": [],
+  "metrics": {},
+  "created": "2025-10-29T19:27:05.899Z",
+  "updated": "2025-10-29T19:27:24.414Z",
+  "approvedBy": "user",
+  "approvedAt": "2025-10-29T19:27:24.414Z"
+}

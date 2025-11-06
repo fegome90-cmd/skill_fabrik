@@ -1,25 +1,28 @@
----
-# /plan-start - Template de Planeación (CLOOP)
+# Plan Start – Siguiente etapa post-estudio
 
-## 1) Clarify
-- Objetivo SMART:
-- Hipótesis:
-- Criterios de éxito:
+## Objetivo
+Planificar y ejecutar la siguiente etapa post-estudio aplicando Template v1.1.0, activando `plan-save-workflow` y generando la tríada dev-docs.
 
-## 2) Layout (MVP ejecutable)
-- Arquitectura mínima:
-- Interfaces/Contratos:
-- Métricas a recolectar:
-- Plan de pruebas (inputs/outputs):
+## Conclusión
+Ejecutable hoy: la arquitectura mínima, contratos y hooks están listos en el repo. El plan se aprueba y se activa el workflow.
 
-## 3) Operate (Plan de ejecución)
-- Tareas concretas (checklist):
+## Impacto
+- Activa skills (plan-architect, plan-save-workflow)
+- Genera tríada dev-docs y KPIs
+- Reduce drift con pre/post hooks v2
 
-## 4) Observe (Métricas/Evidencia)
-- Métricas esperadas y umbrales:
-- Evidencia a recolectar:
+## Sostenibilidad
+- Template v1.1.0 (8/8) + handoff v2.0-PAE
+- TAGs ≥60%, auditoría 4D integrada
+- Registro en `obs/kpi/events.jsonl`
 
-## 5) Reflect (Riesgos/Lecciones)
-- Riesgos/mitigaciones:
-- Señales de stop/go:
----
+## Próximos pasos (HOY)
+- Verificar tríada: dev/active/plan-post-estudio-operacional/{plan.md, context.md, tasks.md}
+- Completar secciones de plan y contexto con referencias clave
+- Ejecutar prompt-builder v2 (dev/prompt-builder/v2-complete/) y revisar bloque de auditoría (≥7.5)
+- Registrar KPI final de ejecución de etapa
+
+## Referencias
+- docs/ESTADO-FINAL-CONSOLIDADO.md
+- docs/SINTESIS-FINAL-PLAN-POST-ESTUDIO.md
+- documentos/plan-skill-fabric-cloop.md

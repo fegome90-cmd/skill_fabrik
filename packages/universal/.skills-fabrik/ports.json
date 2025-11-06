@@ -1,0 +1,12 @@
+{
+  "projectId": "2e",
+  "ports": {
+    "daemon": 7727,
+    "router": 3000,
+    "discovery": 8877,
+    "dashboard": 8888,
+    "dashboardWs": 8890
+  },
+  "createdAt": "2025-11-03T18:33:36.899Z",
+  "lastAccessed": "2025-11-03T18:33:36.900Z"
+}

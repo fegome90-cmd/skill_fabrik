@@ -1,0 +1,32 @@
+[
+  {
+    "key": "ctrl+alt+a",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "node packages/skills-cli/dist/index.js skills activate --intent \"${selectedText}\" --json\u000D" }
+  },
+  {
+    "key": "ctrl+alt+e",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "node packages/skills-cli/dist/index.js skills execute --skill-id auto --dry-run --json\u000D" }
+  },
+  {
+    "key": "ctrl+alt+p",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "node packages/skills-cli/dist/index.js plan save mhce05nu-742954f --approve\u000D" }
+  },
+  {
+    "key": "ctrl+alt+t",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "pnpm triada:update\u000D" }
+  },
+  {
+    "key": "ctrl+alt+g",
+    "command": "workbench.action.tasks.runTask",
+    "args": "SF: F1 Gate"
+  },
+  {
+    "key": "ctrl+alt+f",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "pnpm f2:close\u000D" }
+  }
+]

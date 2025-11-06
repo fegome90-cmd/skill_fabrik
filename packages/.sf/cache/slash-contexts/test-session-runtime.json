@@ -1,0 +1,28 @@
+{
+  "id": "test-session-runtime",
+  "sessionId": "test-session-runtime",
+  "command": "build-and-fix",
+  "state": {},
+  "workspaceSnapshot": {
+    "root": "/Users/felipe/Developer/skills-fabrik",
+    "gitStatus": {
+      "branch": "main",
+      "commit": "abc123",
+      "clean": false,
+      "modified": [
+        "src/file1.ts",
+        "src/file2.ts"
+      ],
+      "staged": [
+        "src/file3.ts"
+      ],
+      "untracked": [
+        "new-file.ts"
+      ]
+    }
+  },
+  "memtechL1Key": "slash:context:test-session-runtime",
+  "createdAt": "2025-11-01T13:15:14.621Z",
+  "updatedAt": "2025-11-01T13:15:14.621Z",
+  "expiresAt": "2025-11-02T13:15:14.622Z"
+}

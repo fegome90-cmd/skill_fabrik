@@ -1,0 +1,146 @@
+================================================================================
+                        🚀 PRUEBA RÁPIDA - EJECUTAR AHORA
+================================================================================
+
+OPCIÓN 1: Script Automático (MÁS FÁCIL)
+================================================================================
+
+Ejecuta esto en tu terminal:
+
+    cd /Users/felipe/Developer/skills-fabrik/mcp-prompt-builder
+    ./run-test.sh
+
+¡Eso es todo! El script:
+✅ Verifica Node.js
+✅ Instala dependencias si es necesario
+✅ Ejecuta la prueba
+✅ Muestra los resultados
+
+--------------------------------------------------------------------------------
+
+OPCIÓN 2: Comando Directo
+================================================================================
+
+Si tienes Node.js >= 18 y @skills-fabrik/skills-cli instalado:
+
+    node -e "
+    const { buildOptimizedPromptV2 } = require('@skills-fabrik/skills-cli');
+    buildOptimizedPromptV2({
+      description: 'Create JWT authentication system',
+      skillIds: ['backend-architecture-patterns', 'security-patterns'],
+      includeTemplate: true,
+      includeTags: true
+    }).then(r => console.log(JSON.stringify(r, null, 2)));
+    "
+
+--------------------------------------------------------------------------------
+
+OPCIÓN 3: Ver Ejemplo Completo
+================================================================================
+
+Lee el archivo: HOW-TO-RUN-TEST.md
+Contiene ejemplos detallados y troubleshooting
+
+--------------------------------------------------------------------------------
+
+LO QUE VERÁS
+================================================================================
+
+📋 OPTIMIZED PROMPT
+C1: CSE_Completo ✅
+[Prompt estructurado con Template v1.1.0]
+
+📊 METRICS
+Expected Score: 0.95/1.0 (95%)
+Skills Activated: 3
+
+🎯 Skills:
+  • backend-architecture-patterns (95%)
+  • security-patterns (88%)
+  • database-verification (82%)
+
+🏷️  TAGs:
+  • [K:SECURITY-PATTERNS]
+  • [C:CONFIGURATION-MANAGEMENT]
+  • [U:DEVELOPER-WORKFLOW]
+
+💡 Recommendations:
+  1. Include password hashing library
+  2. Add rate limiting
+  3. Implement JWT refresh tokens
+  [... más recomendaciones]
+
+================================================================================
+
+¿QUÉ ES ESTA PRUEBA?
+================================================================================
+
+Tarea: Sistema completo de autenticación JWT
+
+Lo que incluye:
+- Registro y login de usuarios
+- Tokens JWT de acceso y refresh
+- Password hashing con bcrypt
+- Base de datos PostgreSQL
+- Middleware de autenticación
+- Rate limiting
+
+Skills activados:
+✅ backend-architecture-patterns
+✅ security-patterns
+✅ database-verification
+
+Lo que demuestra:
+✅ Template v1.1.0 (C1-C8)
+✅ TAGs system
+✅ Multi-skill activation
+✅ Smart file detection
+✅ Performance optimization
+✅ Actionable recommendations
+
+================================================================================
+
+RESULTADO ESPERADO
+================================================================================
+
+Score: 0.90 - 0.98 (muy alto)
+Skills: 3 activados
+TAGs: 6-8 generados
+Latency: < 100ms
+Template: 100% aplicado
+
+Si ves esto, ¡la integración funciona perfectamente! 🎉
+
+================================================================================
+
+SI HAY ERRORES
+================================================================================
+
+Error: Module not found
+→ Instalar: npm install @skills-fabrik/skills-cli
+
+Error: Cannot find package
+→ Verificar: npm list @skills-fabrik/skills-cli
+
+Error: SyntaxError
+→ Usar: node --version (debe ser >= 18)
+
+Ver troubleshooting completo en: HOW-TO-RUN-TEST.md
+
+================================================================================
+
+DESPUÉS DE LA PRUEBA
+================================================================================
+
+1. ✅ Funciona → Lee AGENT-SDK-GUIDE.md para uso en producción
+2. ✅ Funciona → Ve agent-sdk-example.ts para código completo
+3. ✅ Funciona → Explora QUICKSTART.md para MCP Server
+
+================================================================================
+
+¡EJECUTA LA PRUEBA AHORA!
+================================================================================
+
+ cd /Users/felipe/Developer/skills-fabrik/mcp-prompt-builder && ./run-test.sh
+
+================================================================================

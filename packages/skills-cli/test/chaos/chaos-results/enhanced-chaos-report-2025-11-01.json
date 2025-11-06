@@ -1,0 +1,153 @@
+{
+  "testMetadata": {
+    "name": "Enhanced Chaos Engineering with Auto-Recovery",
+    "version": "2.0.0",
+    "timestamp": "2025-11-01T02:52:21.657Z",
+    "duration": 52327,
+    "targetRecoveryRate": 80
+  },
+  "summary": {
+    "totalTests": 5,
+    "successfulRecoveries": 5,
+    "finalRecoveryRate": 100,
+    "targetRecoveryRate": 80
+  },
+  "systemImpact": {
+    "memoryBefore": {
+      "rss": 34070528,
+      "heapTotal": 4890624,
+      "heapUsed": 4515424,
+      "external": 1645653,
+      "arrayBuffers": 10519
+    },
+    "memoryAfter": {
+      "rss": 34250752,
+      "heapTotal": 5152768,
+      "heapUsed": 4500592,
+      "external": 525933870,
+      "arrayBuffers": 524299878
+    },
+    "memoryDelta": {
+      "rss": 180224,
+      "heapUsed": -14832
+    }
+  },
+  "testResults": [
+    {
+      "scenario": "Database Connection Failure with Auto-Recovery",
+      "category": "database",
+      "severity": "high",
+      "recovered": true,
+      "recoveryTime": 129,
+      "expectedRecoveryTime": 10000,
+      "targetRecoveryRate": 95
+    },
+    {
+      "scenario": "Service Crash with Circuit Breaker Recovery",
+      "category": "service",
+      "severity": "high",
+      "recovered": true,
+      "recoveryTime": 179,
+      "expectedRecoveryTime": 8000,
+      "targetRecoveryRate": 90
+    },
+    {
+      "scenario": "Memory Exhaustion with Auto-Healing",
+      "category": "memory",
+      "severity": "medium",
+      "recovered": true,
+      "recoveryTime": 1,
+      "expectedRecoveryTime": 15000,
+      "targetRecoveryRate": 85
+    },
+    {
+      "scenario": "Network Partition with Auto-Reconnection",
+      "category": "network",
+      "severity": "medium",
+      "recovered": true,
+      "recoveryTime": 179,
+      "expectedRecoveryTime": 12000,
+      "targetRecoveryRate": 80
+    },
+    {
+      "scenario": "Cascading Failures with Graceful Degradation",
+      "category": "cascading",
+      "severity": "critical",
+      "recovered": true,
+      "recoveryTime": 286,
+      "expectedRecoveryTime": 20000,
+      "targetRecoveryRate": 75
+    }
+  ],
+  "performanceMetrics": {
+    "averageRecoveryTime": 154.8,
+    "fastestRecovery": 1,
+    "slowestRecovery": 286
+  },
+  "circuitBreakerActivity": {
+    "database": {
+      "state": "CLOSED",
+      "failureCount": 0,
+      "failureThreshold": 5,
+      "recoveryTimeout": 30000,
+      "lastFailureTime": null,
+      "successCount": 0,
+      "successThreshold": 3
+    },
+    "service": {
+      "state": "CLOSED",
+      "failureCount": 0,
+      "failureThreshold": 3,
+      "recoveryTimeout": 15000,
+      "lastFailureTime": null,
+      "successCount": 0,
+      "successThreshold": 2
+    },
+    "external-api": {
+      "state": "CLOSED",
+      "failureCount": 0,
+      "failureThreshold": 4,
+      "recoveryTimeout": 20000,
+      "lastFailureTime": null,
+      "successCount": 0,
+      "successThreshold": 3
+    }
+  },
+  "recommendations": [],
+  "autoRecoveryStats": {
+    "totalAttempts": 0,
+    "successfulRecoveries": 0,
+    "recoveryRate": 0,
+    "targetRate": 80,
+    "circuitBreakers": {
+      "database": {
+        "state": "CLOSED",
+        "failureCount": 0,
+        "failureThreshold": 5,
+        "recoveryTimeout": 30000,
+        "lastFailureTime": null,
+        "successCount": 0,
+        "successThreshold": 3
+      },
+      "service": {
+        "state": "CLOSED",
+        "failureCount": 0,
+        "failureThreshold": 3,
+        "recoveryTimeout": 15000,
+        "lastFailureTime": null,
+        "successCount": 0,
+        "successThreshold": 2
+      },
+      "external-api": {
+        "state": "CLOSED",
+        "failureCount": 0,
+        "failureThreshold": 4,
+        "recoveryTimeout": 20000,
+        "lastFailureTime": null,
+        "successCount": 0,
+        "successThreshold": 3
+      }
+    },
+    "healthChecks": {}
+  }
+}

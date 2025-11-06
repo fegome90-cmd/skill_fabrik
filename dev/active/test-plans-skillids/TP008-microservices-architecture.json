@@ -1,0 +1,45 @@
+{
+  "id": "TP008",
+  "name": "Microservices Architecture",
+  "task": "Design and implement microservice for user management",
+  "skillId": "backend-architecture-patterns",
+  "description": "Diseñar e implementar microservicio de gestión de usuarios con API Gateway, service discovery, circuit breaker pattern y database per service.",
+  "phases": [
+    {
+      "name": "Clarify",
+      "description": "Definir bounded contexts y responsabilidades"
+    },
+    {
+      "name": "Layout",
+      "description": "Diseñar arquitectura de microservicios"
+    },
+    {
+      "name": "Operate",
+      "description": "Implementar servicios y patrones"
+    },
+    {
+      "name": "Observe",
+      "description": "Validar comunicación entre servicios"
+    },
+    {
+      "name": "Reflect",
+      "description": "Optimizar patterns y monitoring"
+    }
+  ],
+  "expectedDuration": "8-10 horas",
+  "complexity": "very-high",
+  "keywords": [
+    "microservices",
+    "api gateway",
+    "circuit breaker",
+    "ddd",
+    "bounded context"
+  ],
+  "metadata": {
+    "version": "2.0.0",
+    "created": "2025-11-03T16:23:50.451Z",
+    "skillId": "backend-architecture-patterns",
+    "category": "backend",
+    "testType": "pbv2_activation"
+  }
+}

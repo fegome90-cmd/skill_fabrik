@@ -1,0 +1,19 @@
+{
+  "id": "c73ab97ee475",
+  "timestamp": "2025-11-03T15:06:07.781Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan:\n1. Diseñar backend\n2. Implementar API\n3. Testing",
+  "optimizedPrompt": "[Layout] Plan:\n1. Diseñar backend\n2. Implementar API\n3. Testing",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "1e6d8e111a026946965e3c448c5b2ecb03eb95e8263daff644892af4cfb41f5b",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 0,
+    "success": false,
+    "error": "resolvePBv2Path is not defined"
+  }
+}

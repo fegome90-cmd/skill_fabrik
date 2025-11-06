@@ -1,0 +1,14 @@
+{
+  "id": "test-af98eaecd5e95865",
+  "command": "test",
+  "args": [
+    "--help"
+  ],
+  "output": "test output",
+  "metadata": {
+    "timestamp": 1761960904669,
+    "platform": "darwin",
+    "nodeVersion": "v20.10.0"
+  },
+  "hash": "4d2df24baeae7311a775ad69fc0ed507"
+}

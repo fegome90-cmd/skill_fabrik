@@ -1,0 +1,19 @@
+{
+  "id": "2f400ad19ff1",
+  "timestamp": "2025-11-03T14:57:57.112Z",
+  "source": "claude-code-stop-hook",
+  "rawPlan": "[Layout] Plan:\n1. Task 1\n2. Task 2",
+  "optimizedPrompt": "[Layout] Plan:\n1. Task 1\n2. Task 2",
+  "skillsSuggested": [],
+  "skillsActivated": [],
+  "project": "/Users/felipe/Developer/skills-fabrik",
+  "planHash": "fa637c41c0a88cde108c7784d98dc897797db386830a5b8f28214ca1bfdef0e9",
+  "confidence": 0.95,
+  "pbv2Result": {
+    "templateApplied": false,
+    "tagsGenerated": 0,
+    "latency_ms": 100,
+    "success": false,
+    "error": "Test error"
+  }
+}

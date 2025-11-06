@@ -1,0 +1,1 @@
+{"version":3,"file":"file-tracker.d.ts","sourceRoot":"","sources":["../../src/utils/file-tracker.ts"],"names":[],"mappings":"AAIA,MAAM,WAAW,OAAO;IACtB,IAAI,EAAE,MAAM,CAAC;IACb,IAAI,EAAE,MAAM,CAAC;IACb,SAAS,EAAE,MAAM,CAAC;CACnB;AAED,wBAAsB,UAAU,IAAI,OAAO,CAAC,OAAO,EAAE,CAAC,CA2BrD;AAED,wBAAgB,WAAW,CAAC,KAAK,EAAE,OAAO,EAAE,GAAG,MAAM,EAAE,CAQtD"}
