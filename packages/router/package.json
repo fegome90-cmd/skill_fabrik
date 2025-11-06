@@ -7,25 +7,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
-    "test:unit": "vitest run __tests__/**/unit.test.ts",
-    "test:integration": "vitest run __tests__/**/integration.test.ts",
-    "test:e2e": "vitest run __tests__/**/e2e.test.ts",
-    "test:security": "vitest run __tests__/**/security.test.ts && pnpm audit",
-    "test:performance": "vitest run __tests__/**/performance.test.ts",
-    "test:all": "pnpm test:unit && pnpm test:integration && pnpm test:e2e && pnpm test:security && pnpm test:performance",
-    "test:guardrails": "vitest run __tests__/guardrails",
-    "test:bash-validator": "vitest run __tests__/bash-validator",
-    "test:eslint": "vitest run __tests__/eslint",
-    "test:build-check": "vitest run __tests__/build-check",
-    "test:nmlb": "vitest run __tests__/nmlb",
-    "test:daemon-integration": "vitest run __tests__/daemon-integration",
-    "lint": "eslint src --fix",
-    "format": "prettier --write \"src/**/*.ts\" \"__tests__/**/*.ts\"",
-    "typecheck": "tsc --noEmit"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "skills",
@@ -37,39 +19,23 @@
   "author": "Skills Fabrik Team",
   "license": "MIT",
   "dependencies": {
-    "@fastify/compress": "^8.1.0",
-    "@fastify/cors": "^8.4.0",
-    "@fastify/rate-limit": "^10.3.0",
-    "@skills-fabrik/mcp-adapters": "workspace:*",
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "execa": "^8.0.1",
-    "fastify": "^4.28.1",
-    "glob": "^10.3.10",
-    "pino": "^8.16.2",
-    "pino-pretty": "^10.2.0",
+    "glob": "^11.0.3",
     "yaml": "^2.4.1",
-    "zod": "^3.22.4"
+    "execa": "^9.6.0"
   },
   "devDependencies": {
     "@types/node": "^24.9.2",
-    "@types/jest": "^29.5.0",
+    "@types/jest": "^30.0.0",
     "@jest/globals": "^29.7.0",
-    "@types/jest": "^29.5.0",
-    "@types/node": "^20.11.0",
-    "@vitest/coverage-v8": "^4.0.6",
-    "@vitest/ui": "^4.0.6",
-    "autocannon": "^8.0.0",
-    "clinic": "^13.0.0",
-    "jest": "^29.7.0",
-    "msw": "^2.11.6",
-    "npm-audit-resolver": "3.0.0-RC.0",
-    "playwright": "^1.56.1",
-    "snyk": "^1.1300.2",
-    "supertest": "^7.1.4",
+    "jest": "^30.2.0",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.3.3",
-    "vitest": "^4.0.6"
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "engines": {
     "node": ">=18.0.0"
