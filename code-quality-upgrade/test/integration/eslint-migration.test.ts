@@ -76,7 +76,7 @@ describe('ESLint Migration Integration', () => {
     // STRUCTURE-ONLY: Full execution testing after T1.1.7 portability refactor
   });
 
-  it('should validate portable script structure and dependencies - T1.1.7', () => {
+  it('should validate portable script structure and dependencies - T1.1.9', () => {
     // Validate: Portable script exists and has expected structure
     const portableScriptPath = path.join(
       process.cwd(),
@@ -106,7 +106,7 @@ describe('ESLint Migration Integration', () => {
 
     // Validate cross-platform improvements
     expect(scriptContent).toContain('PROJECT_ROOT');
-    expect(scriptContent).toContain('Portable v1.7');
+    expect(scriptContent).toContain('Portable v1.9.0');
 
     // Full script testing in T1.1.8
   });
