@@ -1,16 +1,168 @@
 #!/bin/bash
 # ESLint Migration Script - Portable Version
-# T1.1.7 - Improved cross-platform compatibility and path handling
+# T1.1.8 - Configuration options support
 
 set -e
+
+# Default configuration options
+MIGRATION_OPTIONS=""
+CUSTOM_RULES_FILE=""
+BACKUP_ENABLED="true"
+DRY_RUN="false"
+VERBOSE="false"
+PRESERVE_CUSTOM_RULES="true"
+PRETTIER_INTEGRATION="true"
 
 # Load portability utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/utils/portability.sh"
 
-echo "🔄 ESLint Migration Script starting (Portable v1.7)..."
+# Function to display usage information
+show_usage() {
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "ESLint Migration Script - Portable Version v1.8.0"
+    echo "Migrates fragmented ESLint configuration to unified format"
+    echo ""
+    echo "OPTIONS:"
+    echo "  --preserver-custom-rules    Preserve custom rules from original config (default: true)"
+    echo "  --no-preserver-custom-rules Don't preserve custom rules"
+    echo "  --prettier-integration      Enable Prettier integration (default: true)"
+    echo "  --no-prettier-integration   Disable Prettier integration"
+    echo "  --custom-rules FILE         Path to custom rules JSON file"
+    echo "  --no-backup                 Skip backup of original configuration"
+    echo "  --dry-run                   Show what would be done without making changes"
+    echo "  --verbose                   Enable verbose output"
+    echo "  --help                      Show this help message"
+    echo ""
+    echo "EXAMPLES:"
+    echo "  $0 --no-backup --dry-run"
+    echo "  $0 --custom-rules ./my-rules.json --verbose"
+    echo "  $0 --no-prettier-integration"
+}
 
-# Validate dependencies first
+# Function to parse command line arguments
+parse_arguments() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --preserver-custom-rules)
+                PRESERVE_CUSTOM_RULES="true"
+                shift
+                ;;
+            --no-preserver-custom-rules)
+                PRESERVE_CUSTOM_RULES="false"
+                shift
+                ;;
+            --prettier-integration)
+                PRETTIER_INTEGRATION="true"
+                shift
+                ;;
+            --no-prettier-integration)
+                PRETTIER_INTEGRATION="false"
+                shift
+                ;;
+            --custom-rules)
+                CUSTOM_RULES_FILE="$2"
+                if [[ ! -f "$CUSTOM_RULES_FILE" ]]; then
+                    echo "❌ Error: Custom rules file not found: $CUSTOM_RULES_FILE"
+                    exit 1
+                fi
+                shift 2
+                ;;
+            --no-backup)
+                BACKUP_ENABLED="false"
+                shift
+                ;;
+            --dry-run)
+                DRY_RUN="true"
+                shift
+                ;;
+            --verbose)
+                VERBOSE="true"
+                shift
+                ;;
+            --help)
+                show_usage
+                exit 0
+                ;;
+            *)
+                echo "❌ Error: Unknown option: $1"
+                echo "Use --help for usage information"
+                exit 1
+                ;;
+        esac
+    done
+}
+
+# Function to validate configuration
+validate_configuration() {
+    echo "🔍 Validating migration configuration..."
+    
+    local validation_errors=0
+    
+    # Validate custom rules file if provided
+    if [[ -n "$CUSTOM_RULES_FILE" ]]; then
+        if [[ "$VERBOSE" == "true" ]]; then
+            echo "   • Custom rules file: $CUSTOM_RULES_FILE"
+        fi
+        
+        # Basic JSON validation
+        if ! jq empty "$CUSTOM_RULES_FILE" 2>/dev/null; then
+            echo "❌ Error: Custom rules file is not valid JSON: $CUSTOM_RULES_FILE"
+            validation_errors=$((validation_errors + 1))
+        fi
+    fi
+    
+    # Show configuration if verbose
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "   • Preserve custom rules: $PRESERVE_CUSTOM_RULES"
+        echo "   • Prettier integration: $PRETTIER_INTEGRATION"
+        echo "   • Backup enabled: $BACKUP_ENABLED"
+        echo "   • Dry run: $DRY_RUN"
+    fi
+    
+    if [[ $validation_errors -gt 0 ]]; then
+        echo "❌ Configuration validation failed with $validation_errors error(s)"
+        exit 1
+    fi
+    
+    echo "✅ Configuration validation passed"
+}
+
+# Function to build migration options
+build_migration_options() {
+    MIGRATION_OPTIONS=""
+    
+    if [[ "$PRESERVE_CUSTOM_RULES" == "true" ]]; then
+        MIGRATION_OPTIONS="$MIGRATION_OPTIONS --preserve-custom-rules"
+    fi
+    
+    if [[ "$PRETTIER_INTEGRATION" == "true" ]]; then
+        MIGRATION_OPTIONS="$MIGRATION_OPTIONS --prettier-integration"
+    fi
+    
+    if [[ -n "$CUSTOM_RULES_FILE" ]]; then
+        MIGRATION_OPTIONS="$MIGRATION_OPTIONS --custom-rules $CUSTOM_RULES_FILE"
+    fi
+    
+    if [[ "$DRY_RUN" == "true" ]]; then
+        MIGRATION_OPTIONS="$MIGRATION_OPTIONS --dry-run"
+    fi
+    
+    if [[ "$VERBOSE" == "true" ]]; then
+        MIGRATION_OPTIONS="$MIGRATION_OPTIONS --verbose"
+    fi
+}
+
+# Parse command line arguments
+parse_arguments "$@"
+
+echo "🔄 ESLint Migration Script starting (Portable v1.8.0)..."
+
+# Validate configuration first
+validate_configuration
+
+# Validate dependencies
 if ! check_dependencies; then
     echo "❌ Dependency check failed. Please install missing dependencies."
     exit 1
@@ -39,17 +191,29 @@ echo "   • Source config: $ORIGINAL_CONFIG"
 echo "   • ESLint module: $ESLINT_CONFIG_MODULE"
 echo "   • Dist directory: $DIST_DIR"
 
-# Backup current configuration
-if [[ -f "$ORIGINAL_CONFIG" ]]; then
+# Build migration options
+build_migration_options
+
+if [[ "$VERBOSE" == "true" ]]; then
+    echo "   • Migration options: $MIGRATION_OPTIONS"
+fi
+
+# Backup current configuration (if enabled)
+if [[ "$BACKUP_ENABLED" == "true" ]] && [[ -f "$ORIGINAL_CONFIG" ]]; then
     echo "💾 Creating backup..."
     
-    if ! safe_copy "$ORIGINAL_CONFIG" "$BACKUP_FILE"; then
-        echo "❌ Failed to create backup file"
-        exit 1
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "   [DRY RUN] Would backup: $ORIGINAL_CONFIG -> $BACKUP_FILE"
+    else
+        if ! safe_copy "$ORIGINAL_CONFIG" "$BACKUP_FILE"; then
+            echo "❌ Failed to create backup file"
+            exit 1
+        fi
+        echo "✅ Backed up to: $BACKUP_FILE"
     fi
-    
-    echo "✅ Backed up to: $BACKUP_FILE"
-else
+elif [[ "$BACKUP_ENABLED" == "false" ]] && [[ -f "$ORIGINAL_CONFIG" ]]; then
+    echo "⚠️  Warning: Backup is disabled. Original config will be overwritten."
+elif [[ ! -f "$ORIGINAL_CONFIG" ]]; then
     echo "ℹ️  No existing .eslintrc.json found, creating new unified configuration"
 fi
 
@@ -106,24 +270,91 @@ try {
         console.log('ℹ️  No original config found, using empty template');
     }
     
-    // Generate unified configuration
-    const unifiedConfig = createESLintConfigSync({
+    // Load custom rules if provided
+    let customRules = {};
+    try {
+        const customRulesPath = '$CUSTOM_RULES_FILE';
+        if (customRulesPath && customRulesPath !== '') {
+            const customRulesContent = fs.readFileSync(customRulesPath, 'utf8');
+            customRules = JSON.parse(customRulesContent);
+            console.log('🔍 Custom rules loaded successfully');
+        }
+    } catch (e) {
+        console.log('⚠️  Warning: Could not load custom rules, proceeding without them');
+    }
+    
+    // Build configuration options
+    const configOptions = {
         projectPath: '$PROJECT_ROOT',
-        preserveCustomRules: true,
+        preserveCustomRules: $PRESERVE_CUSTOM_RULES,
         originalConfig: originalConfig
-    });
+    };
+    
+    // Add custom rules if provided
+    if (Object.keys(customRules).length > 0) {
+        configOptions.customRules = customRules;
+        console.log('🔍 Custom rules applied:', Object.keys(customRules).length, 'rules');
+    }
+    
+    // Generate unified configuration
+    const unifiedConfig = createESLintConfigSync(configOptions);
+    
+    // Add Prettier integration if enabled
+    const prettierEnabled = '$PRETTIER_INTEGRATION' === 'true';
+    if (prettierEnabled) {
+        console.log('🔧 Adding Prettier integration...');
+        
+        // Ensure plugins array exists
+        if (!unifiedConfig.plugins) {
+            unifiedConfig.plugins = [];
+        }
+        
+        // Add prettier plugin if not present
+        if (!unifiedConfig.plugins.includes('prettier')) {
+            unifiedConfig.plugins.push('prettier');
+        }
+        
+        // Ensure extends array exists
+        if (!unifiedConfig.extends) {
+            unifiedConfig.extends = [];
+        }
+        
+        // Add prettier config if not present
+        if (!unifiedConfig.extends.includes('prettier')) {
+            unifiedConfig.extends.push('prettier');
+        }
+        
+        // Add prettier rule
+        if (!unifiedConfig.rules) {
+            unifiedConfig.rules = {};
+        }
+        unifiedConfig.rules['prettier/prettier'] = 'error';
+        
+        console.log('✅ Prettier integration added');
+    }
     
     // Validate generated configuration
     if (!unifiedConfig || typeof unifiedConfig !== 'object') {
         throw new Error('Invalid configuration generated');
     }
     
-    // Write the unified configuration
-    fs.writeFileSync('$ORIGINAL_CONFIG', JSON.stringify(unifiedConfig, null, 2));
+    // Write the unified configuration (unless dry run)
+    const isDryRun = '$DRY_RUN' === 'true';
+    if (isDryRun) {
+        console.log('[DRY RUN] Would write configuration to:', '$ORIGINAL_CONFIG');
+        console.log('[DRY RUN] Configuration preview:');
+        console.log(JSON.stringify(unifiedConfig, null, 2));
+    } else {
+        fs.writeFileSync('$ORIGINAL_CONFIG', JSON.stringify(unifiedConfig, null, 2));
+        console.log('✅ Configuration written to:', '$ORIGINAL_CONFIG');
+    }
     
     console.log('✅ Generated unified config');
     console.log('   • Parser:', unifiedConfig.parser || 'undefined');
-    console.log('   • Plugins:', unifiedConfig.plugins ? Object.keys(unifiedConfig.plugins) : 'none');
+    console.log('   • Plugins:', unifiedConfig.plugins ? unifiedConfig.plugins.length : 'none');
+    if (prettierEnabled) {
+        console.log('   • Prettier integration: enabled');
+    }
     console.log('   • Rules count:', unifiedConfig.rules ? Object.keys(unifiedConfig.rules).length : 0);
     console.log('✅ Saved to: $ORIGINAL_CONFIG');
     
