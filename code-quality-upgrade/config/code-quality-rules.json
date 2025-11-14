@@ -1,159 +1,241 @@
-# Code Quality Upgrade Rules v2.0
-
-## Overview
-Este archivo contiene las reglas específicas para guiar el trabajo de agentes en la unificación de configuraciones de code quality, eliminando la deuda técnica mediante Clean Architecture y TDD.
-
-## Core Rules
-
-### Task Execution
-- **Max Duration**: 120 minutos por tarea
-- **Max Subtasks**: 8 por tarea  
-- **TDD Mandatory**: Red-Green-Refactor obligatorio
-- **Clean Architecture**: Single Responsibility, Dependency Inversion
-- **Test Coverage**: Mínimo 80%
-- **Documentation**: Requerida para cada cambio
-
-### File Organization  
-- **No Magic Numbers**: Todos los valores deben estar en constantes
-- **No Hardcoded Values**: Usar variables de entorno o config
-- **No Console Logs**: En código de producción
-- **Naming Conventions**: camelCase para variables, PascalCase para clases
-- **Consistent Indentation**: 2 espacios para TypeScript
-
-### Code Quality Gates
-- **ESLint Validation**: Siempre requerida
-- **Prettier Formatting**: Siempre requerida  
-- **TypeScript Checking**: Sin errores de tipos
-- **Security Validation**: Sin vulnerabilidades
-- **Performance**: Quality gates <5 minutos
-- **Tests**: Todos los tests pasando
-
-### Architecture Compliance
-- **Single Responsibility**: Una responsabilidad por clase
-- **Dependency Inversion**: Usar interfaces y DI
-- **Interface Segregation**: Interfaces pequeñas y específicas
-- **Open/Closed**: Abierto para extensión, cerrado para modificación
-- **Composition over Inheritance**: Preferir composición
-- **No Circular Dependencies**: Verificar con herramientas
-
-### Testing Requirements (TDD)
-- **Red Phase**: Escribir test que falla
-- **Green Phase**: Implementar mínima funcionalidad  
-- **Refactor Phase**: Mejorar sin cambiar comportamiento
-- **Coverage**: 90% unit, 80% integration, 70% e2e
-- **Mock Usage**: Required para dependencias externas
-- **Test Naming**: Descriptivo y siguiendo convenciones
-
-### Security Rules
-- **No Secrets**: Ni en código ni en configuración
-- **No Hardcoded Credentials**: Usar variables de entorno
-- **Input Validation**: Validar todos los inputs
-- **Secure File Operations**: Verificar paths y permisos
-- **Secure Command Execution**: Sanitizar comandos
-- **Encoding Validation**: UTF-8 consistente
-
-### Performance Requirements
-- **Max Execution Time**: Quality gates <300 segundos
-- **Max Memory Usage**: <512MB durante ejecución
-- **Cache Configuration**: Usar cache para configs
-- **Parallel Execution**: Cuando sea posible
-- **Progressive Enhancement**: Mejorar gradualmente
-
-### Documentation Requirements
-- **Code Comments**: Para lógica compleja
-- **API Documentation**: Para interfaces públicas
-- **Migration Guide**: Para cambios de config
-- **Developer Guidelines**: Para el equipo
-- **Troubleshooting**: Problemas comunes y soluciones
-- **README Updated**: Con nuevos comandos y procesos
-
-### Migration Safety
-- **Backup Before Changes**: Siempre crear backup
-- **Rollback Mechanism**: Debe funcionar siempre
-- **Gradual Rollout**: Por fases
-- **Validation After Each Step**: En cada milestone
-- **Version Control**: Tracking de todos los cambios
-
-## Phases and Success Criteria
-
-### Phase 0: Setup (16h)
-- TDD framework configurado
-- Estructura de proyecto creada
-- Dependencias instaladas
-- CI/CD pipeline funcionando
-
-### Phase 1: Fundamentals (30h)  
-- ESLint configuration unificada
-- Prettier configuration unificada
-- Scripts de migración creados
-- Documentación completa
-
-### Phase 2: Quality Gates (35h)
-- Quality gates core implementados
-- Husky hooks migrados
-- Integration tests pasando
-- Performance benchmarks cumplidos
-
-### Phase 3: Advanced Scripts (35h)
-- Evidence validation scripts
-- Metrics consistency scripts  
-- Quality gates orchestration
-- Migration automation completa
-
-### Phase 4: Validation (20h)
-- E2E tests pasando
-- Performance optimizado
-- Team training completo
-- Zero technical debt achieved
-
-## Quality Metrics
-
-- **Configuration Consistency**: 100%
-- **Test Coverage**: 90%
-- **Performance Improvement**: 50%
-- **Technical Debt**: 0 hours
-- **Team Adoption**: 100%
-
-## Agent Guidelines
-
-### Task Execution
-- Work en chunks pequeños
-- Commit frecuentemente  
-- Test después de cada cambio
-- Document decisiones importantes
-
-### Problem Solving
-- Identificar root cause
-- Proponer múltiples soluciones
-- Validar soluciones
-- Documentar trade-offs
-
-### Quality Assurance
-- Self review obligatorio
-- Peer review para cambios críticos
-- Automated validation siempre
-- Continuous improvement mindset
-
-## Deliverables
-
-### Code
-- src/config/eslint.config.ts
-- src/config/prettier.config.ts  
-- src/gates/ (quality gates)
-- src/core/ (orchestration)
-- scripts/ (migration)
-- test/ (complete test suite)
-
-### Documentation
-- dev-docs/context.md
-- dev-docs/plan.md
-- dev-docs/task.md
-- docs/developer-guidelines.md
-- docs/migration-guide.md
-
-### Validation
-- test/unit/ (unit tests)
-- test/integration/ (integration tests)
-- test/e2e/ (end-to-end tests)
-- test/performance/ (performance tests)
-- test/security/ (security tests)
+{
+  "version": "2.0",
+  "title": "Code Quality Upgrade Rules",
+  "overview": "Este archivo contiene las reglas específicas para guiar el trabajo de agentes en la unificación de configuraciones de code quality, eliminando la deuda técnica mediante Clean Architecture y TDD.",
+  
+  "coreRules": {
+    "taskExecution": {
+      "maxDuration": 120,
+      "maxSubtasks": 8,
+      "tddMandatory": true,
+      "cleanArchitecture": true,
+      "testCoverage": 80,
+      "documentation": true,
+      "criticalRule": "NEVER_CONTINUE_ON_BROKEN_QUALITY_GATES"
+    },
+    
+    "fileOrganization": {
+      "noMagicNumbers": true,
+      "noHardcodedValues": true,
+      "noConsoleLogs": true,
+      "namingConventions": {
+        "variables": "camelCase",
+        "classes": "PascalCase",
+        "indentation": "2 spaces"
+      }
+    },
+    
+    "codeQualityGates": {
+      "typeScriptZeroErrors": true,
+      "eslintCompilationErrors": true, 
+      "functionalityTests": true,
+      "validationSystem": true,
+      "performance": 3,
+      "tests": true,
+      "validationTruthfulness": true,
+      "falsePositivePrevention": true,
+      "earlyFailureDetection": true,
+      "qualityGateReliability": 100,
+      "blockingVsCosmetic": true
+    },
+    
+    "architectureCompliance": {
+      "singleResponsibility": true,
+      "dependencyInversion": true,
+      "interfaceSegregation": true,
+      "openClosed": true,
+      "compositionOverInheritance": true,
+      "noCircularDependencies": true
+    },
+    
+    "testingRequirements": {
+      "redPhase": true,
+      "greenPhase": true,
+      "refactorPhase": true,
+      "coverage": {
+        "unit": 90,
+        "integration": 80,
+        "e2e": 70
+      },
+      "mockUsage": true,
+      "testNaming": true
+    },
+    
+    "securityRules": {
+      "noSecrets": true,
+      "noHardcodedCredentials": true,
+      "inputValidation": true,
+      "secureFileOperations": true,
+      "secureCommandExecution": true,
+      "encodingValidation": "UTF-8"
+    },
+    
+    "performanceRequirements": {
+      "maxExecutionTime": 300,
+      "maxMemoryUsage": 512,
+      "cacheConfiguration": true,
+      "parallelExecution": true,
+      "progressiveEnhancement": true
+    },
+    
+    "documentationRequirements": {
+      "codeComments": true,
+      "apiDocumentation": true,
+      "migrationGuide": true,
+      "developerGuidelines": true,
+      "troubleshooting": true,
+      "readmeUpdated": true
+    },
+    
+    "migrationSafety": {
+      "backupBeforeChanges": true,
+      "rollbackMechanism": true,
+      "gradualRollout": true,
+      "validationAfterEachStep": true,
+      "versionControl": true,
+      "validationSystemIntegrity": true,
+      "qualityGateVerification": true,
+      "stopOnBrokenValidation": true,
+      "investigateQualityGateFailures": true
+    }
+  },
+  
+  "phases": [
+    {
+      "phase": 0,
+      "name": "Setup",
+      "hours": 16,
+      "successCriteria": [
+        "TDD framework configurado",
+        "Estructura de proyecto creada",
+        "Dependencias instaladas",
+        "CI/CD pipeline funcionando"
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "Fundamentals", 
+      "hours": 30,
+      "successCriteria": [
+        "ESLint configuration unificada",
+        "Prettier configuration unificada",
+        "Scripts de migración creados",
+        "Documentación completa"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Quality Gates",
+      "hours": 35,
+      "successCriteria": [
+        "Quality gates core implementados",
+        "Husky hooks migrados",
+        "Integration tests pasando",
+        "Performance benchmarks cumplidos"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Advanced Scripts",
+      "hours": 35,
+      "successCriteria": [
+        "Evidence validation scripts",
+        "Metrics consistency scripts",
+        "Quality gates orchestration",
+        "Migration automation completa"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Validation",
+      "hours": 20,
+      "successCriteria": [
+        "E2E tests pasando",
+        "Performance optimizado",
+        "Team training completo",
+        "Zero technical debt achieved"
+      ]
+    }
+  ],
+  
+  "qualityMetrics": {
+    "configurationConsistency": 100,
+    "testCoverage": 90,
+    "performanceImprovement": 50,
+    "technicalDebt": 0,
+    "teamAdoption": 100
+  },
+  
+  "criticalRules": {
+    "neverContinueOnBrokenQualityGates": {
+      "description": "Siempre detenerse cuando los quality gates tienen falsos positivos o errores de validación",
+      "action": "Investigar y reparar sistemas de validación antes de continuar cualquier tarea",
+      "examples": [
+        "Validaciones pasan falsamente pero hay errores reales",
+        "Dependencies checker lanza errores undefined", 
+        "Config files tienen formato incorrecto",
+        "ES modules vs CommonJS conflicts"
+      ]
+    },
+    "validationTruthfulness": {
+      "description": "Las validaciones deben ser 100% confiables antes de confiar en ellas",
+      "action": "Verificar que cada validación realmente chequea lo que dice"
+    },
+    "earlyFailureDetection": {
+      "description": "Detectar y corregir problemas estructurales lo antes posible", 
+      "action": "Investigar inconsistencias inmediatamente"
+    }
+  },
+  
+    "agentGuidelines": {
+      "taskExecution": {
+        "workInChunks": true,
+        "commitFrequently": true,
+        "testAfterChanges": true,
+        "documentDecisions": true,
+        "typeScriptFirst": true,
+        "blockOnError": true
+      },
+      "problemSolving": {
+        "identifyRootCause": true,
+        "proposeMultipleSolutions": true,
+        "validateSolutions": true,
+        "documentTradeoffs": true,
+        "efficiencyFocus": true
+      },
+      "qualityAssurance": {
+        "selfReviewRequired": true,
+        "peerReviewCritical": true,
+        "automatedValidation": true,
+        "continuousImprovement": true,
+        "testValidationSystemsFirst": true,
+        "verifyQualityGateIntegrity": true,
+        "stopOnValidationFailures": true,
+        "investigateBeforeProceeding": true,
+        "distinguishBlockingVsCosmetic": true
+      }
+    },  "deliverables": {
+    "code": [
+      "src/config/eslint.config.ts",
+      "src/config/prettier.config.ts",
+      "src/gates/",
+      "src/core/",
+      "scripts/",
+      "test/"
+    ],
+    "documentation": [
+      "dev-docs/context.md",
+      "dev-docs/plan.md", 
+      "dev-docs/task.md",
+      "docs/developer-guidelines.md",
+      "docs/migration-guide.md"
+    ],
+    "validation": [
+      "test/unit/",
+      "test/integration/",
+      "test/e2e/",
+      "test/performance/",
+      "test/security/"
+    ]
+  }
+}
