@@ -1,42 +1,75 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Monorepo managed by pnpm. Runtime code in `packages/`:
-  - `packages/skills-cli` (CLI), `packages/daemon` (activation engine), `packages/router` (TS router + e2e harness), `packages/shared` (utilities).
-- Skills live in `skills/`, adapters in `adapters/`, and agent prompts in `agents/`.
-- Automation scripts: `scripts/*.mjs`. Schemas: `configs/`. Generated assets: `registry/`.
-- Tests sit beside sources (e.g., `packages/*/test`, `packages/router/src/__tests__/`). System scenarios: `test-guardrails/`.
-- Environment templates: `dev/`. Seed data: `db/`. Never commit secrets.
+
+The monorepo is driven by pnpm workspaces. Runtime packages live in `packages/` (`skills-cli`, `daemon`, `router`, `shared`). Skills belong in `skills/`, adapters in `adapters/`, and agent prompt assets in `agents/`. Automation scripts sit in `scripts/*.mjs`, schemas in `configs/`, generated registries in `registry/`, and seed data in `db/`. Tests stay close to their sources (`packages/*/test`, `packages/router/src/__tests__/`, system stories in `test-guardrails/`). Environment templates are versioned under `dev/`; copy them locally instead of committing secrets.
+
+### Code Quality Infrastructure (2025Q4 Upgrade)
+
+- **Location**: `code-quality-upgrade/` directory with unified ESLint/Prettier configuration
+- **Quality Gates**: Pre-commit validation system with 8 comprehensive checks
+- **TDD Framework**: Jest-based testing with TypeScript support
+- **Documentation**: Complete implementation plan in `code-quality-upgrade/dev-docs/task.md` (89 tareas granulares)
 
 ## Build, Test, and Development Commands
-- `pnpm install --frozen-lockfile` — reproducible installs.
-- `pnpm dev` — start the CLI in watch mode.
-- `pnpm build` — compile CLI and daemon bundles (required before publishing/artifacts).
-- `pnpm test` — run the skills CLI suite.
-- `pnpm test:phase3-quick` — minimal release gate (build, lint, schema guard).
-- `pnpm lint` / `pnpm lint:fix` — Prettier + ESLint (fix issues automatically with `:fix`).
-- `pnpm skills:lint --strict` — validate all skill manifests.
+
+- `pnpm install --frozen-lockfile` keeps dependency graphs reproducible.
+- `pnpm dev` runs the CLI in watch mode for rapid iteration.
+- `pnpm build` emits production bundles for the CLI and daemon, required before releasing artifacts.
+- `pnpm test` executes the primary skills CLI suite; `pnpm test:phase3-quick` is the lightweight gate that chains build, lint, and schema verification.
+- `pnpm lint` / `pnpm lint:fix` apply ESLint + Prettier; run the fix variant only when you are ready to accept formatting updates.
+- `pnpm skills:lint --strict` validates every skill manifest before publishing to the registry.
+
+### Code Quality Commands (from code-quality-upgrade/)
+
+- `npm run qa:validate` - Execute 8 pre-task validations
+- `npm run lint` - ESLint with TypeScript v8.46.4 support
+- `npm run format` - Prettier v3.0.0 formatting
+- `npm run test` - Jest TDD with 100% coverage thresholds
+- `npm run build` - TypeScript compilation with strict mode
 
 ## Coding Style & Naming Conventions
-- Language: TypeScript + ESM; use 2-space indents. Let Prettier format everything.
-- Lint with ESLint; run `pnpm lint` before pushing.
-- Filenames: kebab-case (e.g., `prompt-builder.ts`). Classes: PascalCase. Functions/commands: verbs (e.g., `activateSkill`).
-- Keep configuration JSON deterministically sorted. Limit inline comments to parsers that allow them.
-- New automation lives in `scripts/` as `.mjs` files.
+
+Author TypeScript + ESM with 2-space indentation and rely on Prettier for formatting. ESLint enforces import hygiene and unused code rules; never suppress errors unless justified. Use kebab-case filenames (`prompt-builder.ts`), PascalCase classes, camelCase variables, and verb-based function names (`activateSkill`). Keep JSON configs deterministically sorted and place new automation logic in `scripts/` as `.mjs` modules.
+
+### Quality Standards (2025Q4)
+
+- **TypeScript**: v5.9.3 with strict mode enabled
+- **ESLint**: v8.57.1 with TypeScript ESLint v8.46.4
+- **Prettier**: v3.0.0 with unified configuration
+- **Testing**: Jest v29.5.0 with 80% coverage minimum
+- **Pre-commit**: 8 validation checks (rules, paths, config, environment, dependencies, workspace, backup, rollback)
 
 ## Testing Guidelines
-- Prefer Node’s built-in test runner with `*.spec.mjs` colocated with code.
-- Router logic uses Jest under `packages/router/src/__tests__/`.
-- When touching daemon or router flows, update those suites and any e2e stories in `test-guardrails/`.
-- Before opening a PR: `pnpm build && pnpm lint && pnpm test && pnpm skills:lint --strict`.
+
+Prefer Node's built-in test runner with colocated `*.spec.mjs` files. Router behavior relies on Jest specs in `packages/router/src/__tests__/`, and daemon flows often require parallel updates in `test-guardrails/` scenarios. When touching shared APIs, mirror coverage in each dependent package and rerun `pnpm build && pnpm lint && pnpm test && pnpm skills:lint --strict` before raising a PR.
+
+### TDD Implementation (2025Q4)
+
+- **Unit Tests**: All code must have corresponding `.test.ts` files
+- **Coverage**: Minimum 80% across branches, functions, lines, statements
+- **Test Structure**: Given-When-Then pattern with descriptive test names
+- **Mock Strategy**: use `@jest/globals` and `jest.mock()` for external dependencies
 
 ## Commit & Pull Request Guidelines
-- Conventional Commits enforced by Husky + commitlint (e.g., `feat:`, `fix:`, `chore:`). Squash unrelated work; avoid WIP language.
-- PRs include: concise summary, linked issues, exact commands executed, and CLI output/screenshots for behavior changes.
-- Use `pnpm pr` if you want a scaffolded PR template.
+
+Use Conventional Commits (`feat:`, `fix:`, `chore:`) enforced by Husky + commitlint; combine related work and avoid "WIP" prefixes. Each PR should summarize the change, link tracking issues, list the exact commands executed (with results), and include CLI output or screenshots for behavioral shifts. `pnpm pr` scaffolds the template if you prefer a guided flow.
+
+### Quality Gate Compliance (2025Q4)
+
+- **Pre-commit Validation**: All commits must pass 8 validation checks
+- **No Bypass**: Never use `git commit --no-verify` - violates quality standards
+- **Documentation Files**: Excluded from ESLint (`dev-docs/**/*`, `config/**/*`)
+- **Rollback Available**: All configuration changes have automated rollback capability
 
 ## Security & Configuration Tips
-- Do not commit secrets. Copy from `dev/` templates into local `.env` files.
-- Put schema configs in `configs/`; generated registry artifacts in `registry/`; database fixtures in `db/`.
-- Review diffs for accidental credentials before pushing.
 
+Never commit credentials. Populate `.env` files by copying from `dev/` templates, keep schema definitions inside `configs/`, and ensure any generated data lands in `registry/` or `db/` as appropriate. Always review diffs for secrets before pushing.
+
+### Quality System Status (14 Nov 2025)
+
+- **FASE 0**: ✅ Completed (12/12 tasks) - Environment setup and validation system
+- **FASE 1**: 🔄 Ready to start - TypeScript interfaces for ESLint integration
+- **Quality Gates**: ✅ All 8 validations passing
+- **Test Coverage**: ✅ 9 tests passing, 80% coverage threshold active
+- **Configuration**: ✅ ESLint v8.46.4 + TypeScript v5.9.3 compatibility resolved
