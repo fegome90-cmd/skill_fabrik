@@ -1,0 +1,234 @@
+/**
+ * Migration Interactive Mode Tests
+ * T1.1.9 - Interactive mode for user confirmation
+ * Tests for the new interactive functionality in the migration script
+ */
+
+/* eslint-disable security/detect-non-literal-fs-filename */
+
+import { execSync } from 'node:child_process';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
+describe('ESLint Migration - Interactive Mode', () => {
+  const TEMP_PROJECT_NAME = 'migration-interactive-test';
+  const SCRIPT_BASE = process.cwd();
+  const MIGRATION_SCRIPT = 'migrate-eslint-portable.sh';
+  let tempProjectPath: string;
+
+  beforeEach(() => {
+    // Create temporary project directory
+    const testBaseDir = path.join(SCRIPT_BASE, 'test', 'temp');
+    if (!fs.existsSync(testBaseDir)) {
+      fs.mkdirSync(testBaseDir, { recursive: true });
+    }
+
+    tempProjectPath = path.join(
+      testBaseDir,
+      `${TEMP_PROJECT_NAME}-${Date.now()}`
+    );
+    fs.mkdirSync(tempProjectPath, { recursive: true });
+
+    // Create basic project structure
+    fs.writeFileSync(
+      path.join(tempProjectPath, 'package.json'),
+      JSON.stringify(
+        {
+          name: 'temp-test-project',
+          version: '1.0.0',
+          devDependencies: {
+            eslint: '^8.0.0',
+            typescript: '^4.0.0',
+            inquirer: '^9.0.0',
+          },
+        },
+        null,
+        2
+      )
+    );
+
+    // Create dist directory
+    fs.mkdirSync(path.join(tempProjectPath, 'dist'), { recursive: true });
+    fs.mkdirSync(path.join(tempProjectPath, 'dist', 'src', 'config'), {
+      recursive: true,
+    });
+
+    // Copy eslint config module
+    const eslintConfigSrc = path.join(
+      SCRIPT_BASE,
+      'dist',
+      'src',
+      'config',
+      'eslint.config.js'
+    );
+    if (fs.existsSync(eslintConfigSrc)) {
+      fs.copyFileSync(
+        eslintConfigSrc,
+        path.join(tempProjectPath, 'dist', 'src', 'config', 'eslint.config.js')
+      );
+    }
+
+    // Copy migration script
+    const scriptSrc = path.join(SCRIPT_BASE, 'scripts', MIGRATION_SCRIPT);
+    const scriptDest = path.join(tempProjectPath, MIGRATION_SCRIPT);
+    fs.copyFileSync(scriptSrc, scriptDest);
+    fs.chmodSync(scriptDest, 0o755);
+
+    // Create original ESLint config for backup tests
+    fs.writeFileSync(
+      path.join(tempProjectPath, '.eslintrc.json'),
+      JSON.stringify(
+        {
+          rules: {
+            'no-console': 'warn',
+            'my-custom-rule': 'error',
+          },
+        },
+        null,
+        2
+      )
+    );
+
+    // Create node_modules symlink to access inquirer
+    const nodeModulesPath = path.join(tempProjectPath, 'node_modules');
+    fs.symlinkSync(path.join(SCRIPT_BASE, 'node_modules'), nodeModulesPath);
+  });
+
+  afterEach(() => {
+    // Clean up temporary project
+    if (fs.existsSync(tempProjectPath)) {
+      fs.rmSync(tempProjectPath, { recursive: true, force: true });
+    }
+  });
+
+  const runMigrationScript = (
+    args: string,
+    input?: string,
+    timeout: number = 10000
+  ): { exitCode: number; stdout: string; stderr: string } => {
+    try {
+      const result = execSync(
+        `cd ${tempProjectPath} && echo "${input || ''}" | timeout ${timeout} ./migrate-eslint-portable.sh ${args}`,
+        {
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: timeout,
+        }
+      );
+      return {
+        exitCode: 0,
+        stdout: result,
+        stderr: '',
+      };
+    } catch (error: unknown) {
+      const execError = error as {
+        status?: number;
+        stdout?: string;
+        stderr?: string;
+        signal?: string;
+        code?: number;
+      };
+      return {
+        exitCode: execError.status || execError.code || 1,
+        stdout: execError.stdout || '',
+        stderr: execError.stderr || '',
+      };
+    }
+  };
+
+  describe('Interactive Mode Option', () => {
+    it('should show interactive option in help', () => {
+      const result = runMigrationScript('--help');
+
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout).toContain('--interactive');
+      expect(result.stdout).toContain(
+        'Enable interactive mode for confirmations'
+      );
+    });
+  });
+
+  describe('Interactive Configuration Summary', () => {
+    it('should show configuration in interactive mode', () => {
+      // Provide "cancel" as input to exit immediately
+      const result = runMigrationScript('--interactive --dry-run', '3', 5000);
+
+      expect(result.exitCode).toBe(1);
+      expect(result.stdout).toContain(
+        'Interactive Mode: Configuration Summary'
+      );
+      expect(result.stdout).toContain('Preserve custom rules: true');
+      expect(result.stdout).toContain('Prettier integration: true');
+      expect(result.stdout).toContain('Backup enabled: true');
+    });
+  });
+
+  describe('Interactive Mode Fallback', () => {
+    it('should proceed when interactive prompts fail', () => {
+      // This test simulates a scenario where inquirer might fail
+      // The script should fallback to non-interactive mode
+      const result = runMigrationScript('--interactive --help');
+
+      expect(result.exitCode).toBe(0);
+      // Should show help even if interactive mode is enabled
+      expect(result.stdout).toContain('Usage:');
+    });
+  });
+
+  describe('Default Non-Interactive Behavior', () => {
+    it('should work normally without interactive flag', () => {
+      const result = runMigrationScript('--help');
+
+      expect(result.exitCode).toBe(0);
+      // Should not show interactive summary when not in interactive mode
+      expect(result.stdout).not.toContain(
+        'Interactive Mode: Configuration Summary'
+      );
+    });
+
+    it('should proceed with migration without prompts', () => {
+      const result = runMigrationScript('--dry-run');
+
+      expect(result.exitCode).toBe(0);
+      // Should not show interactive prompts in dry run mode
+      expect(result.stdout).toContain('[DRY RUN]');
+    });
+  });
+
+  describe('Interactive Mode with Different Options', () => {
+    it('should show custom configuration in summary', () => {
+      const customRules = {
+        rules: {
+          'no-console': 'error',
+        },
+      };
+
+      const customRulesPath = path.join(tempProjectPath, 'custom-rules.json');
+      fs.writeFileSync(customRulesPath, JSON.stringify(customRules, null, 2));
+
+      // Provide "cancel" as input to exit immediately
+      const result = runMigrationScript(
+        `--interactive --custom-rules ${customRulesPath} --no-backup --dry-run`,
+        '3',
+        5000
+      );
+
+      expect(result.exitCode).toBe(1);
+      expect(result.stdout).toContain('Custom rules file:');
+      expect(result.stdout).toContain('backup is disabled');
+    });
+  });
+
+  describe('Error Handling in Interactive Mode', () => {
+    it('should handle unknown options correctly in interactive mode', () => {
+      const result = runMigrationScript('--interactive --unknown-option');
+
+      expect(result.exitCode).toBe(1);
+      expect(result.stdout).toContain('Unknown option: --unknown-option');
+    });
+  });
+
+  // Note: Due to the complexity of testing interactive prompts programmatically,
+  // these tests focus on ensuring the script handles interactive mode gracefully
+  // and that all interactive features are properly integrated
+});

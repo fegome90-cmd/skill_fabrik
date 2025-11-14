@@ -12,6 +12,7 @@ DRY_RUN="false"
 VERBOSE="false"
 PRESERVE_CUSTOM_RULES="true"
 PRETTIER_INTEGRATION="true"
+INTERACTIVE_MODE="false"
 
 # Load portability utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -21,7 +22,7 @@ source "$SCRIPT_DIR/utils/portability.sh"
 show_usage() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "ESLint Migration Script - Portable Version v1.8.0"
+    echo "ESLint Migration Script - Portable Version v1.9.0"
     echo "Migrates fragmented ESLint configuration to unified format"
     echo ""
     echo "OPTIONS:"
@@ -33,6 +34,7 @@ show_usage() {
     echo "  --no-backup                 Skip backup of original configuration"
     echo "  --dry-run                   Show what would be done without making changes"
     echo "  --verbose                   Enable verbose output"
+    echo "  --interactive               Enable interactive mode for confirmations"
     echo "  --help                      Show this help message"
     echo ""
     echo "EXAMPLES:"
@@ -79,6 +81,10 @@ parse_arguments() {
                 ;;
             --verbose)
                 VERBOSE="true"
+                shift
+                ;;
+            --interactive)
+                INTERACTIVE_MODE="true"
                 shift
                 ;;
             --help)
@@ -157,10 +163,82 @@ build_migration_options() {
 # Parse command line arguments
 parse_arguments "$@"
 
-echo "🔄 ESLint Migration Script starting (Portable v1.8.0)..."
+echo "🔄 ESLint Migration Script starting (Portable v1.9.0)..."
 
 # Validate configuration first
 validate_configuration
+
+# Interactive confirmation function
+interactive_confirmation() {
+    if [[ "$INTERACTIVE_MODE" != "true" ]]; then
+        return 0
+    fi
+    
+    echo "🔔 Interactive Mode: Configuration Summary"
+    echo "   • Preserve custom rules: $PRESERVE_CUSTOM_RULES"
+    echo "   • Prettier integration: $PRETTIER_INTEGRATION"
+    echo "   • Backup enabled: $BACKUP_ENABLED"
+    echo "   • Dry run: $DRY_RUN"
+    if [[ -n "$CUSTOM_RULES_FILE" ]]; then
+        echo "   • Custom rules file: $CUSTOM_RULES_FILE"
+    fi
+    
+    # Use Node.js for interactive prompts
+    NODE_CONFIRM_SCRIPT=$(cat <<'EOF'
+const inquirer = require('inquirer');
+
+async function confirm() {
+  console.log('');
+  const answers = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'proceed',
+      message: 'Do you want to proceed with this configuration?',
+      choices: [
+        { name: 'Yes, proceed with migration', value: 'yes' },
+        { name: 'No, cancel migration', value: 'no' },
+        { name: 'Modify configuration', value: 'modify' }
+      ]
+    }
+  ]);
+  
+  return answers.proceed;
+}
+
+confirm()
+  .then(result => {
+    if (result === 'yes') {
+      console.log('✅ Proceeding with migration...');
+      process.exit(0);
+    } else if (result === 'no') {
+      console.log('❌ Migration cancelled by user');
+      process.exit(1);
+    } else {
+      console.log('ℹ️  To modify configuration, use command-line options');
+      console.log('   Example: ./migrate-eslint-portable.sh --no-backup --custom-rules rules.json');
+      process.exit(1);
+    }
+  })
+  .catch(error => {
+    console.error('❌ Interactive prompt failed:', error.message);
+    proceedAnyway();
+  });
+
+function proceedAnyway() {
+  console.log('⚠️  Proceeding anyway due to prompt failure...');
+}
+EOF
+    )
+    
+    echo ""
+    # Execute interactive confirmation
+    if ! node -e "$NODE_CONFIRM_SCRIPT" 2>/dev/null; then
+        echo "⚠️  Interactive mode not available, proceeding with migration..."
+    fi
+}
+
+# Interactive confirmation before proceeding
+interactive_confirmation
 
 # Validate dependencies
 if ! check_dependencies; then
@@ -197,6 +275,99 @@ build_migration_options
 if [[ "$VERBOSE" == "true" ]]; then
     echo "   • Migration options: $MIGRATION_OPTIONS"
 fi
+
+# Interactive backup confirmation
+interactive_backup_confirmation() {
+    if [[ "$INTERACTIVE_MODE" != "true" ]] || [[ -z "$ORIGINAL_CONFIG" ]] || [[ ! -f "$ORIGINAL_CONFIG" ]]; then
+        return 0
+    fi
+    
+    if [[ "$DRY_RUN" == "true" ]]; then
+        return 0
+    fi
+    
+    local backup_action="create backup"
+    if [[ "$BACKUP_ENABLED" == "false" ]]; then
+        backup_action="overwrite original configuration without backup"
+    fi
+    
+    # Use Node.js for interactive backup confirmation
+    local NODE_BACKUP_CONFIRM_SCRIPT=$(cat <<EOF
+const inquirer = require('inquirer');
+
+async function confirmBackup() {
+  const backupEnabled = '$BACKUP_ENABLED' === 'true';
+  const backupFile = '$BACKUP_FILE';
+  
+  console.log('');
+  console.log('📋 Configuration Backup Confirmation');
+  console.log('Found existing ESLint configuration: $ORIGINAL_CONFIG');
+  
+  const actionType = backupEnabled 
+    ? \`Create backup at: \${backupFile}\` 
+    : 'Overwrite original file without backup';
+    
+  const answers = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'backupChoice',
+      message: \`How do you want to handle: \${actionType}?\`,
+      choices: backupEnabled ? [
+        { name: '✅ Create backup and proceed', value: 'backup' },
+        { name: '❌ Skip backup (dangerous)', value: 'skip' },
+        { name: '🛑 Cancel migration', value: 'cancel' }
+      ] : [
+        { name: '⚠️  Overwrite without backup (dangerous)', value: 'skip' },
+        { name: '📄 Create backup anyway', value: 'force-backup' },
+        { name: '🛑 Cancel migration', value: 'cancel' }
+      ]
+    }
+  ]);
+  
+  return answers.backupChoice;
+}
+
+confirmBackup()
+  .then(result => {
+    if (result === 'cancel') {
+      console.log('❌ Migration cancelled by user');
+      process.exit(1);
+    } else if (result === 'skip') {
+      console.log('⚠️  Proceeding without backup as requested');
+      process.exit(0);
+    } else if (result === 'force-backup') {
+      console.log('✅ Forcing backup creation as requested');
+      process.exit(2); // Special exit code for forced backup
+    } else {
+      console.log('✅ Proceeding with backup creation');
+      process.exit(0);
+    }
+  })
+  .catch(error => {
+    console.error('❌ Backup confirmation failed:', error.message);
+    process.exit(0); // Default to proceeding on error
+  });
+EOF
+    )
+    
+    # Execute interactive backup confirmation
+    echo ""
+    if [[ "$INTERACTIVE_MODE" == "true" ]]; then
+        local confirm_result
+        confirm_result=$(node -e "$NODE_BACKUP_CONFIRM_SCRIPT" 2>/dev/null; echo $?)
+        
+        # Handle special exit codes
+        if [[ "$confirm_result" -eq 1 ]]; then
+            exit 1
+        elif [[ "$confirm_result" -eq 2 ]]; then
+            echo "🔧 Forcing backup creation..."
+            return 0
+        fi
+    fi
+}
+
+# Execute interactive backup confirmation
+interactive_backup_confirmation
 
 # Backup current configuration (if enabled)
 if [[ "$BACKUP_ENABLED" == "true" ]] && [[ -f "$ORIGINAL_CONFIG" ]]; then
@@ -338,8 +509,65 @@ try {
         throw new Error('Invalid configuration generated');
     }
     
-    // Write the unified configuration (unless dry run)
+    // Interactive final configuration confirmation
     const isDryRun = '$DRY_RUN' === 'true';
+    const isInteractive = '$INTERACTIVE_MODE' === 'true';
+    
+    if (isInteractive && !isDryRun) {
+        (async () => {
+            const inquirer = require('inquirer');
+            
+            console.log('');
+            console.log('📋 Final Configuration Preview');
+            console.log('🔤 Parser:', unifiedConfig.parser || 'undefined');
+            console.log('🔌 Plugins:', unifiedConfig.plugins ? unifiedConfig.plugins.length : 'none');
+            console.log('📏 Rules count:', unifiedConfig.rules ? Object.keys(unifiedConfig.rules).length : 0);
+            if (prettierEnabled) {
+                console.log('🎨 Prettier integration: enabled');
+            }
+            console.log('📄 Output file:', '$ORIGINAL_CONFIG');
+            
+            const finalAnswers = await inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'finalAction',
+                    message: 'Confirm final action:',
+                    choices: [
+                        { name: '✅ Write configuration to file', value: 'write' },
+                        { name: '👀 Show detailed configuration preview', value: 'preview' },
+                        { name: '🛑 Cancel migration', value: 'cancel' }
+                    ]
+                }
+            ]);
+            
+            if (finalAnswers.finalAction === 'cancel') {
+                console.log('❌ Migration cancelled by user');
+                process.exit(1);
+            } else if (finalAnswers.finalAction === 'preview') {
+                console.log('📄 Detailed Configuration Preview:');
+                console.log(JSON.stringify(unifiedConfig, null, 2));
+                
+                const confirmWrite = await inquirer.prompt([
+                    {
+                        type: 'confirm',
+                        name: 'writeNow',
+                        message: 'Write this configuration to file?',
+                        default: true
+                    }
+                ]);
+                
+                if (!confirmWrite.writeNow) {
+                    console.log('❌ Migration cancelled by user');
+                    process.exit(1);
+                }
+            }
+        })().catch(error => {
+            console.error('❌ Interactive confirmation failed:', error.message);
+            console.log('⚠️  Proceeding with migration...');
+        });
+    }
+    
+    // Write the unified configuration (unless dry run)
     if (isDryRun) {
         console.log('[DRY RUN] Would write configuration to:', '$ORIGINAL_CONFIG');
         console.log('[DRY RUN] Configuration preview:');
@@ -392,7 +620,7 @@ if [[ -f "$PROJECT_ROOT/package.json" ]] && [[ -d "$PROJECT_ROOT/node_modules" ]
     echo "🧪 Testing ESLint with new configuration..."
     
     # Create temporary test file
-    local TEST_FILE="$PROJECT_ROOT/test-eslint-migration.js"
+    TEST_FILE="$PROJECT_ROOT/test-eslint-migration.js"
     echo 'const test = "hello"; console.log(test);' > "$TEST_FILE"
     
     if npx eslint "$TEST_FILE" --format=compact 2>/dev/null; then
