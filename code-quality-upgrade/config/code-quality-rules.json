@@ -1,0 +1,159 @@
+# Code Quality Upgrade Rules v2.0
+
+## Overview
+Este archivo contiene las reglas específicas para guiar el trabajo de agentes en la unificación de configuraciones de code quality, eliminando la deuda técnica mediante Clean Architecture y TDD.
+
+## Core Rules
+
+### Task Execution
+- **Max Duration**: 120 minutos por tarea
+- **Max Subtasks**: 8 por tarea  
+- **TDD Mandatory**: Red-Green-Refactor obligatorio
+- **Clean Architecture**: Single Responsibility, Dependency Inversion
+- **Test Coverage**: Mínimo 80%
+- **Documentation**: Requerida para cada cambio
+
+### File Organization  
+- **No Magic Numbers**: Todos los valores deben estar en constantes
+- **No Hardcoded Values**: Usar variables de entorno o config
+- **No Console Logs**: En código de producción
+- **Naming Conventions**: camelCase para variables, PascalCase para clases
+- **Consistent Indentation**: 2 espacios para TypeScript
+
+### Code Quality Gates
+- **ESLint Validation**: Siempre requerida
+- **Prettier Formatting**: Siempre requerida  
+- **TypeScript Checking**: Sin errores de tipos
+- **Security Validation**: Sin vulnerabilidades
+- **Performance**: Quality gates <5 minutos
+- **Tests**: Todos los tests pasando
+
+### Architecture Compliance
+- **Single Responsibility**: Una responsabilidad por clase
+- **Dependency Inversion**: Usar interfaces y DI
+- **Interface Segregation**: Interfaces pequeñas y específicas
+- **Open/Closed**: Abierto para extensión, cerrado para modificación
+- **Composition over Inheritance**: Preferir composición
+- **No Circular Dependencies**: Verificar con herramientas
+
+### Testing Requirements (TDD)
+- **Red Phase**: Escribir test que falla
+- **Green Phase**: Implementar mínima funcionalidad  
+- **Refactor Phase**: Mejorar sin cambiar comportamiento
+- **Coverage**: 90% unit, 80% integration, 70% e2e
+- **Mock Usage**: Required para dependencias externas
+- **Test Naming**: Descriptivo y siguiendo convenciones
+
+### Security Rules
+- **No Secrets**: Ni en código ni en configuración
+- **No Hardcoded Credentials**: Usar variables de entorno
+- **Input Validation**: Validar todos los inputs
+- **Secure File Operations**: Verificar paths y permisos
+- **Secure Command Execution**: Sanitizar comandos
+- **Encoding Validation**: UTF-8 consistente
+
+### Performance Requirements
+- **Max Execution Time**: Quality gates <300 segundos
+- **Max Memory Usage**: <512MB durante ejecución
+- **Cache Configuration**: Usar cache para configs
+- **Parallel Execution**: Cuando sea posible
+- **Progressive Enhancement**: Mejorar gradualmente
+
+### Documentation Requirements
+- **Code Comments**: Para lógica compleja
+- **API Documentation**: Para interfaces públicas
+- **Migration Guide**: Para cambios de config
+- **Developer Guidelines**: Para el equipo
+- **Troubleshooting**: Problemas comunes y soluciones
+- **README Updated**: Con nuevos comandos y procesos
+
+### Migration Safety
+- **Backup Before Changes**: Siempre crear backup
+- **Rollback Mechanism**: Debe funcionar siempre
+- **Gradual Rollout**: Por fases
+- **Validation After Each Step**: En cada milestone
+- **Version Control**: Tracking de todos los cambios
+
+## Phases and Success Criteria
+
+### Phase 0: Setup (16h)
+- TDD framework configurado
+- Estructura de proyecto creada
+- Dependencias instaladas
+- CI/CD pipeline funcionando
+
+### Phase 1: Fundamentals (30h)  
+- ESLint configuration unificada
+- Prettier configuration unificada
+- Scripts de migración creados
+- Documentación completa
+
+### Phase 2: Quality Gates (35h)
+- Quality gates core implementados
+- Husky hooks migrados
+- Integration tests pasando
+- Performance benchmarks cumplidos
+
+### Phase 3: Advanced Scripts (35h)
+- Evidence validation scripts
+- Metrics consistency scripts  
+- Quality gates orchestration
+- Migration automation completa
+
+### Phase 4: Validation (20h)
+- E2E tests pasando
+- Performance optimizado
+- Team training completo
+- Zero technical debt achieved
+
+## Quality Metrics
+
+- **Configuration Consistency**: 100%
+- **Test Coverage**: 90%
+- **Performance Improvement**: 50%
+- **Technical Debt**: 0 hours
+- **Team Adoption**: 100%
+
+## Agent Guidelines
+
+### Task Execution
+- Work en chunks pequeños
+- Commit frecuentemente  
+- Test después de cada cambio
+- Document decisiones importantes
+
+### Problem Solving
+- Identificar root cause
+- Proponer múltiples soluciones
+- Validar soluciones
+- Documentar trade-offs
+
+### Quality Assurance
+- Self review obligatorio
+- Peer review para cambios críticos
+- Automated validation siempre
+- Continuous improvement mindset
+
+## Deliverables
+
+### Code
+- src/config/eslint.config.ts
+- src/config/prettier.config.ts  
+- src/gates/ (quality gates)
+- src/core/ (orchestration)
+- scripts/ (migration)
+- test/ (complete test suite)
+
+### Documentation
+- dev-docs/context.md
+- dev-docs/plan.md
+- dev-docs/task.md
+- docs/developer-guidelines.md
+- docs/migration-guide.md
+
+### Validation
+- test/unit/ (unit tests)
+- test/integration/ (integration tests)
+- test/e2e/ (end-to-end tests)
+- test/performance/ (performance tests)
+- test/security/ (security tests)
