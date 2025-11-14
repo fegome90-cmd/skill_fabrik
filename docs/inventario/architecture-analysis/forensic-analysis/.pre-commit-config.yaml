@@ -1,0 +1,61 @@
+# Pre-commit hooks para prevenir problemas de calidad
+# Prevenir recurrence de problemas detectados por TDD
+
+repos:
+  # 1. Linting y formato
+  - repo: local
+    hooks:
+      - id: eslint
+        name: ESLint
+        entry: npm run lint
+        language: system
+        files: '\.(js|ts|json|md)$'
+        pass_filenames: false
+        types: [file]
+
+      - id: prettier-check
+        name: Prettier Check
+        entry: npm run format:check
+        language: system
+        files: '\.(js|ts|json|md)$'
+        pass_filenames: false
+        types: [file]
+
+  # 2. Encoding validation (prevener caracteres no-ASCII)
+  - repo: local
+    hooks:
+      - id: check-encoding
+        name: UTF-8 Encoding Check
+        entry: node src/scripts/check-encoding.js
+        language: node
+        files: '\.(md|js|ts|json)$'
+
+  # 3. Data integrity validation
+  - repo: local
+    hooks:
+      - id: data-integrity
+        name: Data Integrity Validation
+        entry: node src/scripts/validate-data-integrity.js
+        language: node
+        files: 'consolidated-reports/.*\.md$'
+        pass_filenames: false
+
+  # 4. Test execution
+  - repo: local
+    hooks:
+      - id: run-tests
+        name: Run All Tests
+        entry: npm test
+        language: system
+        files: '\.(js|ts|json|md)$'
+        pass_filenames: false
+
+  # 5. Metrics consistency check
+  - repo: local
+    hooks:
+      - id: metrics-consistency
+        name: Metrics Consistency Check
+        entry: node src/scripts/check-metrics-consistency.js
+        language: node
+        files: 'consolidated-reports/phase-.*\.md$'
+        pass_filenames: false

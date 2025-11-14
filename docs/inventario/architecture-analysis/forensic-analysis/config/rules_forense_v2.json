@@ -121,9 +121,9 @@
     },
     "evidencia": {
       "id": "MAX-005",
-      "rule": "TODA afirmación debe estar respaldada por evidencia concreta (rutas, archivos, patrones, comandos verificables)",
-      "rationale": "Análisis forense requiere evidencia verificable y reproducible",
-      "enforcement": "validación de evidencia en cada informe + evidencia indexada",
+      "rule": "TODA afirmación debe estar respaldada por evidencia verificada dinámicamente contra el repo real con comandos ejecutados en tiempo real",
+      "rationale": "Análisis forense requiere evidencia verificable y reproducible contra estado actual del repositorio",
+      "enforcement": "validación de evidencia con comandos reales ejecutados contra repo + timestamps + checksums + reproducibilidad obligatoria",
       "priority": "crítico",
       "test_required": true,
       "test_template": "tests/maximas/evidencia.test.js",
@@ -132,7 +132,9 @@
         "claims_made": 0,
         "claims_backed": 0,
         "evidence_coverage": 0,
-        "reproducible_evidence": 0
+        "reproducible_evidence": 0,
+        "live_verified_evidence": 0,
+        "repo_state_timestamp": 0
       },
       "evidence_types": [
         "file_path",
@@ -140,9 +142,12 @@
         "command_output",
         "metric_data",
         "screenshot",
-        "log_excerpt"
+        "log_excerpt",
+        "live_repo_verification",
+        "checksum_validation",
+        "timestamped_evidence"
       ],
-      "violation_impact": "crítico - afirmaciones sin sustento"
+      "violation_impact": "crítico - afirmaciones sin verificación dinámica"
     },
     "claridad": {
       "id": "MAX-006",
@@ -168,10 +173,10 @@
     },
     "completitud": {
       "id": "MAX-007",
-      "rule": "CADA área identificada debe ser analizada, sin dejar huecos o zonas sin documentar",
-      "rationale": "Análisis incompleto genera puntos ciegos críticos",
-      "enforcement": "checklist de cobertura por fase + coverage metrics",
-      "priority": "alto",
+      "rule": "CADA área identificada debe ser analizada con verificación dinámica contra estado actual del repositorio usando comandos find/wc/du obligatorios",
+      "rationale": "Análisis incompleto genera puntos ciegos críticos + datos deben reflejar estado real del repo",
+      "enforcement": "validación dinámica contra estado actual del repositorio + comandos find/wc/du obligatorios + existencia física verificada",
+      "priority": "crítico",
       "test_required": true,
       "test_template": "tests/maximas/completitud.test.js",
       "automated_check": "scripts/validate-completeness.js",
@@ -179,9 +184,12 @@
         "areas_identified": 0,
         "areas_analyzed": 0,
         "coverage_percentage": 0,
-        "gaps_found": 0
+        "gaps_found": 0,
+        "repo_verified_areas": 0,
+        "dynamic_validations_executed": 0,
+        "existence_confirmed": 0
       },
-      "violation_impact": "alto - análisis incompleto"
+      "violation_impact": "crítico - análisis incompleto o datos no verificados"
     },
     "consistencia": {
       "id": "MAX-008",
@@ -218,9 +226,9 @@
     },
     "forense": {
       "id": "MAX-010",
-      "rule": "PENSAR como detective: recolectar evidencia primero, analizar después, no hacer juicios prematuros sin datos",
-      "rationale": "Método científico aplicado al análisis de código",
-      "enforcement": "validación de método científico + peer review",
+      "rule": "PENSAR como detective: recolectar evidencia verificada dinámicamente contra el repo actual, analizar después, no hacer juicios prematuros sin datos reales",
+      "rationale": "Método científico aplicado al análisis de código con evidencia en tiempo real contra estado actual del repositorio",
+      "enforcement": "evidencia debe ser obtenida con comandos reales ejecutados contra el repo actual, no cacheada ni estimada + timestamps obligatorios",
       "priority": "crítico",
       "test_required": true,
       "test_template": "tests/maximas/forense.test.js",
@@ -228,9 +236,12 @@
       "metrics": {
         "evidence_first_adherence": 0,
         "premature_conclusions": 0,
-        "data_backed_statements": 0
+        "data_backed_statements": 0,
+        "live_repo_commands": 0,
+        "real_time_validations": 0,
+        "cached_data_prevented": 0
       },
-      "violation_impact": "crítico - compromete metodología"
+      "violation_impact": "crítico - compromete metodología sin verificación real"
     },
     "tdd_integration": {
       "id": "MAX-011",
@@ -266,6 +277,58 @@
         "avg_detection_time_ms": 0
       },
       "violation_impact": "medio - detección tardía de problemas"
+    },
+    "ejecucion_contra_rules": {
+      "id": "MAX-013",
+      "rule": "TODA ejecución debe validarse contra rules_forense_v2.json como única fuente de verdad",
+      "rationale": "Asegurar compliance consistente y validación única contra estándar establecido",
+      "enforcement": "referencia obligatoria a rules_forense_v2.json en cada ejecución con timestamp",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/ejecucion-contra-rules.test.js",
+      "automated_check": "scripts/validate-ejecucion-contra-rules.js",
+      "metrics": {
+        "ejecuciones_validadas": 0,
+        "referencias_correctas": 0,
+        "timestamp_registrados": 0,
+        "compliance_score": 0
+      },
+      "dependencies": ["gobernanza", "calidad"],
+      "violation_impact": "crítico - sin estándar de validación unificado"
+    },
+    "verificacion_dinamica_repo": {
+      "id": "MAX-014",
+      "rule": "TODA métrica cuantitativa debe ser obtenida dinámicamente del estado actual del repositorio usando comandos reales",
+      "rationale": "Los datos estáticos o cacheados pueden estar desactualizados y no reflejar el estado real del repo",
+      "enforcement": "scripts/verify-repo-state.js obligatorio + validación de timestamps + cache timeout máximo 5 minutos",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/verificacion-dinamica-repo.test.js",
+      "automated_check": "scripts/validate-dynamic-verification.js",
+      "metrics": {
+        "dynamic_metrics_obtained": 0,
+        "real_commands_executed": 0,
+        "cache_timeout_violations": 0,
+        "timestamp_validations": 0
+      },
+      "violation_impact": "crítico - datos desactualizados o incorrectos"
+    },
+    "integridad_datos_cuantitativos": {
+      "id": "MAX-015",
+      "rule": "TODOS los datos numéricos deben ser reproducibles ejecutando los mismos comandos contra el mismo estado del repo",
+      "rationale": "La reproducibilidad es fundamental para la validez científica del análisis forense",
+      "enforcement": "reproducibilidad obligatoria + comandos documentados + verificación de checksums",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/integridad-datos-cuantitativos.test.js",
+      "automated_check": "scripts/check-reproducibility.js",
+      "metrics": {
+        "reproducible_commands": 0,
+        "checksum_validations": 0,
+        "consistent_results": 0,
+        "documentation_completeness": 0
+      },
+      "violation_impact": "crítico - datos no reproducibles invalidan análisis"
     }
   },
   "prohibiciones": [
@@ -321,13 +384,14 @@
     },
     {
       "id": "PROH-006",
-      "item": "NO reportar datos numéricos sin verificación con comandos reales ejecutados",
-      "rationale": "Datos no verificados son potencialmente incorrectos",
-      "consequence": "datos invalidados, repetir recolección con evidencia",
+      "item": "NO reportar datos numéricos sin ejecutar comando de verificación en tiempo real contra el estado actual del repo",
+      "rationale": "Datos no verificados en tiempo real son potencialmente incorrectos o desactualizados",
+      "consequence": "invalidación automática + re-ejecución obligatoria de comandos + timestamp de verificación requerido",
       "severity": "fatal",
       "test_check": "scripts/check-data-verification.js",
       "automated_detection": true,
-      "remediation": "re-ejecutar comandos y documentar output"
+      "remediation": "ejecución obligatoria de comandos de verificación en tiempo real + documentación de timestamps y outputs",
+      "enforcement": "ejecución obligatoria de comandos de verificación en cada fase + validación contra estado real del repo + timestamp de verificación"
     },
     {
       "id": "PROH-007",
@@ -353,11 +417,12 @@
       "id": "PROH-009",
       "item": "NO tener inconsistencias de métricas entre informes y fases",
       "rationale": "Inconsistencias invalidan credibilidad",
-      "consequence": "cross-check obligatorio antes de continuar",
-      "severity": "error",
+      "consequence": "cross-validation automatizada entre fases usando scripts/check-metrics-consistency.js + bloqueo si hay divergencias",
+      "severity": "fatal",
       "test_check": "scripts/check-metrics-consistency.js",
       "automated_detection": true,
-      "remediation": "reconciliar métricas con fuente única de verdad"
+      "remediation": "reconciliación automática de métricas con fuente única de verdad + validación contra estado real del repo",
+      "enforcement": "cross-validation automatizada entre fases usando scripts/check-metrics-consistency.js + bloqueo automático si hay divergencias"
     },
     {
       "id": "PROH-010",
@@ -420,6 +485,26 @@
       "test_check": "scripts/check-rule-tests.js",
       "automated_detection": true,
       "remediation": "escribir tests antes de aplicar regla"
+    },
+    {
+      "id": "PROH-015",
+      "item": "NO usar datos cacheados sin verificación de frescura máxima 5 minutos",
+      "rationale": "Datos cacheados viejos pueden no reflejar el estado actual del repositorio",
+      "consequence": "invalidación automática + re-ejecución obligatoria de comandos",
+      "severity": "fatal",
+      "test_check": "scripts/check-cache-freshness.js",
+      "automated_detection": true,
+      "remediation": "ejecutar comandos frescos contra estado actual del repo + timestamp"
+    },
+    {
+      "id": "PROH-016",
+      "item": "NO reportar ninguna métrica sin ejecutar comando de verificación en tiempo real",
+      "rationale": "Métricas sin verificación en tiempo real pueden estar desactualizadas o incorrectas",
+      "consequence": "bloqueo de fase + requerimiento de ejecución obligatoria",
+      "severity": "fatal",
+      "test_check": "scripts/check-live-verification.js",
+      "automated_detection": true,
+      "remediation": "ejecutar comando real de verificación + documentar timestamp y output"
     }
   ],
   "obligaciones": [
@@ -502,27 +587,32 @@
     },
     {
       "id": "OBL-007",
-      "item": "VERIFICAR TODOS los datos numéricos con comandos reales documentados",
-      "rationale": "Exactitud de datos",
-      "verification": "cross-check con find, wc -l, du -sh + command logs",
+      "item": "VERIFICAR TODOS los datos numéricos con ejecución obligatoria de comandos reales contra el estado actual del repo",
+      "rationale": "Exactitud de datos con verificación dinámica",
+      "verification": "ejecución obligatoria de comandos reales contra repo actual + documentación de timestamps + checksums de archivos validados",
       "priority": "crítico",
       "test_template": "tests/obligations/data-verification.test.js",
       "success_criteria": {
         "all_verified": true,
-        "commands_documented": true,
-        "results_reproducible": true
+        "live_commands_executed": true,
+        "repo_state_timestamp": true,
+        "checksum_validated": true,
+        "reproducible": true
       }
     },
     {
       "id": "OBL-008",
-      "item": "VALIDAR consistencia de métricas entre todos los informes y fases",
-      "rationale": "Coherencia global",
-      "verification": "mismos valores de componentes en todas las fases",
+      "item": "VALIDAR consistencia de métricas entre todos los informes y fases con validación cruzada dinámica",
+      "rationale": "Coherencia global con verificación en tiempo real",
+      "verification": "validación cruzada dinámica entre todas las fases + auto-detección de divergencias + bloqueo automático si hay inconsistencias",
       "priority": "crítico",
       "test_template": "tests/obligations/consistency.test.js",
       "success_criteria": {
         "zero_inconsistencies": true,
-        "cross_phase_validated": true
+        "cross_phase_validated": true,
+        "dynamic_validation_executed": true,
+        "real_time_comparison": true,
+        "auto_detection_active": true
       }
     },
     {
@@ -599,6 +689,19 @@
       }
     },
     {
+      "id": "OBL-017",
+      "item": "TODA implementación debe realizarse en branches, nunca directamente en main",
+      "rationale": "Proteger main de cambios inestables y facilitar revisiones antes de merge",
+      "verification": "validación de branch actual obligatoria con patrón feature/*",
+      "priority": "crítico",
+      "test_template": "tests/obligations/branch-validation.test.js",
+      "success_criteria": {
+        "current_branch_not_main": true,
+        "branch_follows_pattern": true,
+        "git_workflow_compliant": true
+      }
+    },
+    {
       "id": "OBL-015",
       "item": "MEDIR y REPORTAR métricas de cumplimiento de reglas",
       "rationale": "Mejora continua basada en datos",
@@ -609,6 +712,36 @@
         "metrics_tracked": true,
         "dashboard_updated": true,
         "trends_analyzed": true
+      }
+    },
+    {
+      "id": "OBL-018",
+      "item": "EJECUTAR comandos de verificación directamente contra el repo real para cada métrica reportada",
+      "rationale": "Verificación directa contra el estado real previene datos incorrectos",
+      "verification": "logs de comandos ejecutados + timestamps + outputs reales + reproducibilidad 100%",
+      "priority": "crítico",
+      "test_template": "tests/obligations/live-commands.test.js",
+      "success_criteria": {
+        "commands_executed": true,
+        "real_outputs": true,
+        "timestamps_logged": true,
+        "reproducible": true,
+        "repo_verified": true
+      }
+    },
+    {
+      "id": "OBL-020",
+      "item": "VALIDAR existencia física de todos los componentes, archivos y rutas mencionadas en informes",
+      "rationale": "Referencias a componentes inexistentes invalidan el análisis",
+      "verification": "find commands + file existence checks + permission validation + checksum verification",
+      "priority": "crítico",
+      "test_template": "tests/obligations/existence-validation.test.js",
+      "success_criteria": {
+        "all_paths_exist": true,
+        "files_accessible": true,
+        "checksums_valid": true,
+        "permissions_ok": true,
+        "physical_verification": true
       }
     }
   ],
@@ -795,6 +928,50 @@
       "on_failure": {
         "action": "optimize_or_warn",
         "notification": true
+      }
+    },
+    "repo_verification": {
+      "id": "QG-010",
+      "requirement": "VERIFICACIÓN OBLIGATORIA de existencia y estado real de todos los componentes mencionados",
+      "command": "npm run verify:repo-state",
+      "threshold": "100% verificado, 0 componentes inexistentes",
+      "timeout_ms": 60000,
+      "validation": "ejecución de find/wc/du commands contra repo real",
+      "test_file": "tests/quality-gates/repo-verification.test.js",
+      "metrics": {
+        "components_checked": 0,
+        "existing_verified": 0,
+        "nonexistent_found": 0,
+        "verification_commands_executed": 0,
+        "repo_state_timestamp": 0
+      },
+      "on_failure": {
+        "action": "block_progress",
+        "notification": true,
+        "requirement": "corregir o remover referencias inexistentes + ejecutar verificación real",
+        "generate_report": true
+      }
+    },
+    "data_freshness": {
+      "id": "QG-011",
+      "requirement": "VALIDACIÓN de que todos los datos reflejen el estado actual del repo (max 5 minutos de antigüedad)",
+      "command": "npm run verify:data-freshness",
+      "threshold": "100% frescos, 0 datos cacheados viejos",
+      "timeout_ms": 30000,
+      "validation": "comparación timestamps con hora actual + verificación de ejecución real",
+      "test_file": "tests/quality-gates/data-freshness.test.js",
+      "metrics": {
+        "data_points_checked": 0,
+        "fresh_data_count": 0,
+        "stale_data_count": 0,
+        "max_age_minutes": 5,
+        "cache_violations": 0
+      },
+      "on_failure": {
+        "action": "refresh_data",
+        "notification": true,
+        "requirement": "re-ejecutar comandos de obtención + actualizar timestamps",
+        "force_revalidation": true
       }
     }
   },

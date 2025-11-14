@@ -1,0 +1,80 @@
+name: Quality Gates & Prevention
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint validation
+        run: npm run lint
+
+      - name: Prettier check
+        run: npm run format:check
+
+      - name: Encoding validation
+        run: npm run check-encoding
+
+      - name: Metrics consistency check
+        run: npm run check-metrics
+
+      - name: Run all tests
+        run: npm test
+
+      - name: Validate rules and evidence
+        run: npm run validate-all
+
+      - name: TDD Corrections validation
+        run: npm run test:corrections
+
+  encoding-security:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deep encoding validation
+        run: |
+          echo "🔍 Checking for problematic characters..."
+          find . -type f \( -name "*.md" -o -name "*.js" -o -name "*.ts" -o -name "*.json" \) -not -path "./node_modules/*" -exec file {} \; | grep -v "ASCII text"
+
+      - name: Check for invisible characters
+        run: |
+          echo "🔍 Checking for invisible/problematic characters..."
+          if grep -r $'\u00B7' . --exclude-dir=node_modules --exclude-dir=.git; then
+            echo "❌ Found problematic middle dot characters (·)"
+            exit 1
+          else
+            echo "✅ No problematic characters found"
+          fi
+
+      - name: Validate UTF-8 integrity
+        run: npm run test:encoding
