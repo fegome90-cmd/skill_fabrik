@@ -7,13 +7,12 @@
  * with type-safe configuration building and no hardcoded paths.
  */
 
-import * as path from 'path';
-import { ESLintConfiguration, RuleConfiguration, PrettierConfiguration } from '../types/configuration';
+import { ESLintConfiguration, RuleConfiguration } from '../types/configuration';
 
 /**
  * Helper to convert string rule values to proper RuleConfiguration format
  */
-function normalizeRule(rule: string | [string, any]): RuleConfiguration {
+function normalizeRule(rule: string | [string, unknown]): RuleConfiguration {
   if (typeof rule === 'string') {
     return { severity: rule as 'off' | 'warn' | 'error' };
   }
@@ -21,13 +20,14 @@ function normalizeRule(rule: string | [string, any]): RuleConfiguration {
   const [severity, options] = rule;
   return {
     severity: severity as 'off' | 'warn' | 'error',
-    options
+    options: options as Record<string, unknown>
   };
 }
 
 /**
  * Creates ESLint configuration based on options
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function createESLintConfig(options: Partial<ESLintConfiguration>): Promise<ESLintConfiguration> {
   // Default base configuration
   const baseConfig: ESLintConfiguration = {
@@ -94,11 +94,21 @@ export async function createESLintConfig(options: Partial<ESLintConfiguration>):
 /**
  * Normalizes rules object to proper RuleConfiguration format
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeRules(rules: Record<string, any>): Record<string, RuleConfiguration> {
   const normalized: Record<string, RuleConfiguration> = {};
   
-  for (const [key, value] of Object.entries(rules)) {
-    normalized[key] = normalizeRule(value);
+  for (const ruleName in rules) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    if (Object.hasOwn(rules, ruleName)) {
+      const ruleValue = rules[ruleName];
+      if (typeof ruleValue === 'string') {
+        normalized[ruleName] = normalizeRule(ruleValue);
+      } else if (Array.isArray(ruleValue) && ruleValue.length >= 2) {
+        const [severity, options] = ruleValue;
+        normalized[ruleName] = normalizeRule([severity, options]);
+      }
+    }
   }
   
   return normalized;
@@ -107,9 +117,10 @@ function normalizeRules(rules: Record<string, any>): Record<string, RuleConfigur
 /**
  * Creates ESLint configuration with Prettier integration
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function createESLintConfigWithPrettier(
   options: Partial<ESLintConfiguration>,
-  prettierConfig?: PrettierConfiguration
+  _prettierConfig?: unknown
 ): Promise<ESLintConfiguration> {
   const config = await createESLintConfig(options);
   
@@ -130,7 +141,7 @@ export async function createESLintConfigWithPrettier(
  */
 export function createTypeScriptOverride(options: {
   files: string[];
-  rules?: Record<string, any>;
+  rules?: Record<string, unknown>;
 }): ESLintConfiguration['overrides'][0] {
   return {
     files: options.files,

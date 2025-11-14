@@ -6,6 +6,7 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as yaml from 'yaml';
 
 interface ValidationResult {
   passed: boolean;
@@ -36,8 +37,8 @@ interface ProjectConfig {
 }
 
 class TaskExecutionValidator {
-  private config: ProjectConfig;
-  private projectRoot: string;
+  private readonly config: ProjectConfig;
+  private readonly projectRoot: string;
 
   constructor() {
     this.projectRoot = process.cwd();
@@ -52,8 +53,8 @@ class TaskExecutionValidator {
         const configData = fs.readFileSync(configPath, 'utf8');
         return JSON.parse(configData);
       }
-    } catch {
-      // Silently continue with defaults
+    } catch (error) {
+      console.warn('Could not load project config, using defaults');
     }
 
     // Default configuration
@@ -156,7 +157,7 @@ class TaskExecutionValidator {
       return {
         name: 'Rules File Check',
         passed: false,
-        message: `Error reading rules file: ${(error as Error).message}`,
+        message: `Error reading rules file: ${error instanceof Error ? error.message : 'Unknown error'}`,
         required: true
       };
     }
@@ -190,7 +191,7 @@ class TaskExecutionValidator {
               const content = fs.readFileSync(file, 'utf8');
               
               for (const pattern of forbiddenPatterns) {
-                const matches = content.match(pattern);
+                const matches = pattern.exec(content);
                 if (matches) {
                   foundHardcodedPaths++;
                   hardcodedPaths.push(`${file}: ${matches[0]}`);
@@ -213,7 +214,7 @@ class TaskExecutionValidator {
       return {
         name: 'No Hardcoded Paths Check',
         passed: false,
-        message: `Error checking paths: ${(error as Error).message}`,
+        message: `Error checking paths: ${error instanceof Error ? error.message : 'Unknown error'}`,
         required: true
       };
     }
@@ -223,7 +224,7 @@ class TaskExecutionValidator {
     const configFiles = [
       'package.json',
       'tsconfig.json',
-      'jest.config.cjs',
+      'jest.config.ts',
       '.eslintrc.json',
       '.prettierrc.json'
     ];
@@ -248,7 +249,7 @@ class TaskExecutionValidator {
         if (hasHardcodedPaths) {
           inconsistentPaths.push(configFile);
         }
-      } catch {
+      } catch (error) {
         // Ignore read errors for this check
       }
     }
@@ -303,12 +304,11 @@ class TaskExecutionValidator {
         };
       }
 
-      const packageJsonContent = fs.readFileSync(packageJsonPath, 'utf8');
-      const packageJson = JSON.parse(packageJsonContent);
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
       const devDependencies = Object.keys(packageJson.devDependencies || {});
       
-      // Fix: Add guard clause for undefined dependencies
-      const requiredDeps = this.config.requirements.dependencies || [];
+      // Bug fix: Ensure requirements.dependencies exists before filtering
+      const requiredDeps = this.config.requirements?.dependencies || [];
       const missingDependencies = requiredDeps.filter(
         dep => !devDependencies.includes(dep)
       );
@@ -325,7 +325,7 @@ class TaskExecutionValidator {
       return {
         name: 'Dependencies Check',
         passed: false,
-        message: `Error checking dependencies: ${(error as Error).message}`,
+        message: `Error checking dependencies: ${error instanceof Error ? error.message : 'Unknown error'}`,
         required: true
       };
     }
@@ -363,14 +363,14 @@ class TaskExecutionValidator {
     const backupScriptPath = path.join(this.projectRoot, 'scripts', 'backup-configs.sh');
     
     const exists = fs.existsSync(backupScriptPath);
-    const executable = exists ? (fs.statSync(backupScriptPath).mode & 0o111) !== 0 : false;
+    const executable = exists ? fs.statSync(backupScriptPath).mode & 0o111 : false;
 
+    const isHealthy = Boolean(exists && executable);
     return {
       name: 'Backup Mechanism Check',
-      passed: exists && executable,
-      message: exists && executable ?
+      passed: isHealthy,
+      message: isHealthy ?
         'Backup mechanism is available and executable' :
-        exists ? 'Backup mechanism exists but is not executable' : 
         'Backup mechanism not found',
       required: true
     };
@@ -380,14 +380,14 @@ class TaskExecutionValidator {
     const rollbackScriptPath = path.join(this.projectRoot, 'scripts', 'rollback-configs.sh');
     
     const exists = fs.existsSync(rollbackScriptPath);
-    const executable = exists ? (fs.statSync(rollbackScriptPath).mode & 0o111) !== 0 : false;
+    const executable = exists ? fs.statSync(rollbackScriptPath).mode & 0o111 : false;
 
+    const isHealthy = Boolean(exists && executable);
     return {
       name: 'Rollback Mechanism Check',
-      passed: exists && executable,
-      message: exists && executable ?
+      passed: isHealthy,
+      message: isHealthy ?
         'Rollback mechanism is available and executable' :
-        exists ? 'Rollback mechanism exists but is not executable' : 
         'Rollback mechanism not found',
       required: true
     };
@@ -409,7 +409,7 @@ class TaskExecutionValidator {
           files.push(fullPath);
         }
       }
-    } catch {
+    } catch (error) {
       // Ignore errors in directory traversal
     }
 
@@ -452,22 +452,20 @@ class TaskExecutionValidator {
   }
 }
 
-// CLI usage for ES modules
-async function main(): Promise<void> {
+// CLI usage
+if (import.meta.url === `file://${process.argv[1]}`) {
   const taskName = process.argv[2] || 'Unknown Task';
   
   const validator = new TaskExecutionValidator();
   
-  const result = await validator.validatePreTaskExecution(taskName);
-  process.exit(result.passed ? 0 : 1);
-}
-
-// Run main function if this file is the entry point
-if (process.argv[1] && process.argv[1].includes("validate-task-execution")) {
-  main().catch(error => {
-    console.error('Validation error:', error);
-    process.exit(1);
-  });
+  validator.validatePreTaskExecution(taskName)
+    .then(result => {
+      process.exit(result.passed ? 0 : 1);
+    })
+    .catch(error => {
+      console.error('Validation error:', error);
+      process.exit(1);
+    });
 }
 
 export { TaskExecutionValidator };
