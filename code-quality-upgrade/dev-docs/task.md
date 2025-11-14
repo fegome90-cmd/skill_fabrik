@@ -537,13 +537,23 @@ export interface RuleOverride {
 ```
 - [x] Crear types/quality.ts
 - [x] Crear types/configuration.ts
-- [x] Verificar que tipos compilan
-- [ ] Commit: `feat: add TypeScript interfaces for ESLint`
+- [x] Verificar que tipos compilen
+- [x] Commit: `feat: add TypeScript interfaces for ESLint` (dc6711c)
 
-#### T1.1.2 - Escribir tests para ESLint configuration (RED phase) (1 hora)
-```typescript
-// code-quality-upgrade/test/unit/config/eslint.config.test.ts
-import { ESLintConfiguration, RuleConfiguration } from '../../../src/types/configuration';
+✅ **T1.1.2 COMPLETADO - Tests RED phase**
+- [x] Tests creados y fallando como expected
+- [x] TypeScript errors detectados en RuleConfiguration 
+- [x] Validación de structure implementada
+- [x] Listo para GREEN phase
+
+✅ **T1.1.3 COMPLETADO - GREEN phase**
+- [x] ESLint configuration builderimplementado
+- [x] createESLintConfig function functional con defaults  
+- [x] Tests GREEN phase passing (1/1 test)
+- [x] Types integrados correctamente
+- [x] Ready para refactoring phase
+
+#### T1.1.4 - Refactorizar configuración ESLint (REFACTOR phase) (1 hora)
 
 describe('ESLintConfiguration', () => {
   describe('should validate configuration structure', () => {
