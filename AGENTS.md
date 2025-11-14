@@ -55,12 +55,33 @@ Prefer Node's built-in test runner with colocated `*.spec.mjs` files. Router beh
 
 Use Conventional Commits (`feat:`, `fix:`, `chore:`) enforced by Husky + commitlint; combine related work and avoid "WIP" prefixes. Each PR should summarize the change, link tracking issues, list the exact commands executed (with results), and include CLI output or screenshots for behavioral shifts. `pnpm pr` scaffolds the template if you prefer a guided flow.
 
-### Quality Gate Compliance (2025Q4)
+### Quality Gate Compliance (2025Q4 - DEFINITIVA)
 
-- **Pre-commit Validation**: All commits must pass 8 validation checks
+- **TypeScript Compilation Zero Errors**: npx tsc --noEmit MUST pass before ANY commit
+- **Pre-commit Validation**: All commits must pass 8 validation checks  
 - **No Bypass**: Never use `git commit --no-verify` - violates quality standards
+- **Blocking vs Cosmetic**: Distinguish errors CRITICAL vs improvements
 - **Documentation Files**: Excluded from ESLint (`dev-docs/**/*`, `config/**/*`)
 - **Rollback Available**: All configuration changes have automated rollback capability
+
+### Zero Technical Debt Definition Final
+
+**"ZERO = Literalmente cero errores que impidan funcionamiento del sistema":**
+
+1. **🔴 NON-NEGOTIABLE:**
+   - TypeScript compilation: 0 errores (npx tsc --noEmit)
+   - Core functionality tests: ALL passing
+   - ESLint compilation errors: 0
+   - Validation system: 8/8 checks passing
+
+2. **🟡 EVALUABLE POR COSTO-BENEFICIO:**
+   - ESLint/ Sonar warnings (cosmetic vs functional)
+   - Cognitive complexity (refactoring future)
+   - Performance optimizations (when needed)
+
+3. **🟢 PERMITIDOS DURANTE DESARROLLO:**
+   - Work-in-progress features con gates funcionando
+   - Temporary debug code con documentación
 
 ## Security & Configuration Tips
 
