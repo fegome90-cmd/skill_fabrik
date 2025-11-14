@@ -786,7 +786,15 @@ npm run build     # TypeScript compilation limpia
 - **Mito**: "Siempre habrá deuda técnica en código real"
 - **Realidad**: Con disciplina sistemática, zero es alcanzable y mantenible
 
-#### **2. Quality Gates DEBEN ser Confiables**
+#### **2. Sistema de Validación Inteligente IMPLEMENTADO (v1.1)**
+
+- **NUEVA CAPACIDAD**: Validador automático con `code-quality-rules.json` configurable
+- **Test Integrity Protection**: Detecta automáticamente `describe.skip/it.skip` y carpetas `test-disabled`
+- **Task Reference Validation**: Exige referencias `T1.1.5` cuando `requirePlanReference` está activado
+- **Change Management**: Bloquea movimientos destructivos sin aprobación explícita
+- **Quality Gate Automation**: Pre-commit hooks pueden invocar validación con referencias de tarea
+
+#### **3. Quality Gates DEBEN ser Confiables**
 
 - **Problema anterior**: Falsos positivos en validaciones
 - **Solución**: Testear sistemas de calidad ANTES de confiar en ellos
@@ -836,8 +844,64 @@ update docs → git commit → continue development
 4. **APLICAR TDD para nueva funcionalidad**
 5. **MODULARIZAR utilidades vs código monolítico**
 6. **PRESERVAR compatibilidadbackward en migrations**
+7. **VALIDAR tarea antes de ejecutar**: `npm run validate:task -- T1.1.5`
 
-### **Próximos Cambios**
+### **🚀 TEMPLATE DE VALIDACIÓN INTELIGENTE (NUEVO v1.1):**
+
+```bash
+# 1. VALIDAR TAREA ANTES DE EJECUTAR
+npm run validate:task -- T1.1.5
+# → Verifica: test integrity, task reference, change management
+
+# 2. VALIDACIÓN INTEGRADA EN PRE-COMMIT
+# Husky hook automatically validates if commit message contains task reference
+git commit -m "feat: implement new feature (T1.1.5)"
+# → Validation auto-triggered for T1.1.5
+
+# 3. CHEQUEO DE SALUD COMPLETO
+npm run validate:task -- --full
+# → Ejecuta todas las validaciones del ruleset
+
+# 4. CONFIGURACIÓN ESPECÍFICA DE REGLAS
+# Edit code-quality-rules.json para ajustar validaciones:
+# - testIntegrity.disallowTestDisabling: true/false
+# - changeManagement.requirePlanReference: true/false
+# - agentGuidelines.zeroDebtMandatory: true/false
+```
+
+### **🔍 EJEMPLOS DE VALIDACIÓN EN ACCIÓN:**
+
+#### **Test Integrity Protection:**
+
+```bash
+# Si encuentras test-disabled/ o tests-disabled/:
+❌ Validation failed: Suspicious test directories detected: test-disabled/
+# ¡Bloquea commits hasta investigar!
+
+# Si encuentras describe.skip o it.skip:
+❌ Validation failed: Test skipping detected in src/example.spec.ts:45
+# ¡Exige explicación antes de continuar!
+```
+
+#### **Task Reference Validation:**
+
+```bash
+# Commit sin referencia de tarea:
+git commit -m "fix: random bug"
+❌ Validation failed: Task reference required when changeManagement.requirePlanReference is true
+
+# Commit con referencia válida:
+git commit -m "fix: resolve bug in parser (T1.2.3)"
+✅ Validation passed: Task reference T1.2.3 found in dev-docs/task.md
+```
+
+#### **Quality Gate Automation:**
+
+````bash
+# Antes de ejecutar cualquier tarea:
+npm run validate:task -- T1.2.4
+# → Verifica que T1.2.4 existe, no está completado, y todos los pre-requisitos están OK
+```### **Próximos Cambios**
 
 - v1.1.0: ✅ DONE - ESLint configuration builder + ZERO DEBT ACHIEVED
 - v1.2.0: 🔄 NEXT - Integrar TestUtils mejorados
@@ -846,3 +910,4 @@ update docs → git commit → continue development
 - v1.5.0: Documentation completa y team training
 
 **🏃 ESTADO ACTUAL: ZERO TECHNICAL DEBT ALCANZADO Y MANTENIBLE** ✅
+````
