@@ -22,7 +22,24 @@ const CONFIG_CONSISTENCY_CHECK_NAME = 'Configuration Consistency Check';
 const WORKSPACE_CHECK_NAME = 'Workspace Structure Check';
 const BACKUP_CHECK_NAME = 'Backup Mechanism Check';
 const ROLLBACK_CHECK_NAME = 'Rollback Mechanism Check';
+// Unused constants for future implementation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TEST_INTEGRITY_CHECK_NAME = 'Test Integrity Check';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TASK_REFERENCE_CHECK_NAME = 'Task Reference Check';
 const CLI_UNKNOWN_TASK = 'Unknown Task';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const PLAN_REFERENCE_PATTERN = /^(T\d+\.\d+\.\d+|PLAN-\d+|TASK-\d+)$/i;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const SUSPICIOUS_TEST_DIRS = [
+  'test-disabled',
+  'tests-disabled',
+  'test_disabled',
+  'tests_disabled',
+];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const SKIPPED_TEST_PATTERN =
+  /(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\b/;
 
 interface ValidationResult {
   passed: boolean;
@@ -56,13 +73,43 @@ interface PackageJson {
   devDependencies?: Record<string, string>;
 }
 
+interface TestIntegrityRules {
+  protectIntegrationSuites?: boolean;
+  protectUnitSuites?: boolean;
+  protectE2ESuites?: boolean;
+  disallowTestDisabling?: boolean;
+  disallowMovingTestFolders?: boolean;
+  requireHumanApprovalForTestSkips?: boolean;
+  coverageGatesMandatory?: boolean;
+}
+
+interface ChangeManagementRules {
+  followTaskPlan?: boolean;
+  requirePlanReference?: boolean;
+  noDestructiveMoves?: boolean;
+  requireImpactAssessment?: boolean;
+  documentApprovals?: boolean;
+  allowEmergencyActionsOnlyWithTicket?: boolean;
+}
+
+interface QualityRulesCore {
+  testIntegrity?: TestIntegrityRules;
+  changeManagement?: ChangeManagementRules;
+}
+
+interface QualityRules {
+  coreRules?: QualityRulesCore;
+}
+
 class TaskExecutionValidator {
   private readonly config: ProjectConfig;
   private readonly projectRoot: string;
+  private readonly qualityRules: QualityRules;
 
   constructor() {
     this.projectRoot = path.resolve(process.cwd());
     this.config = this.loadProjectConfig();
+    this.qualityRules = this.loadQualityRules();
   }
 
   private loadProjectConfig(): ProjectConfig {
@@ -91,6 +138,24 @@ class TaskExecutionValidator {
         dependencies: ['typescript', 'jest', 'eslint', 'prettier'],
       },
     };
+  }
+
+  private loadQualityRules(): QualityRules {
+    const rulesPath = this.resolveProjectPath(
+      'config',
+      'code-quality-rules.json'
+    );
+
+    try {
+      if (this.safeExistsSync(rulesPath)) {
+        const content = this.safeReadFileSync(rulesPath, 'utf8');
+        return JSON.parse(content) as QualityRules;
+      }
+    } catch {
+      // Ignore parsing errors and use default empty rules
+    }
+
+    return {};
   }
 
   async validatePreTaskExecution(taskName: string): Promise<ValidationResult> {
@@ -448,6 +513,94 @@ class TaskExecutionValidator {
     });
   }
 
+  private validateTestIntegrity(): Promise<ValidationCheck> {
+    const testIntegrityRules = this.qualityRules.coreRules?.testIntegrity;
+
+    if (!testIntegrityRules) {
+      return Promise.resolve({
+        name: TEST_INTEGRITY_CHECK_NAME,
+        passed: true,
+        message: 'Test integrity rules not configured',
+        required: false,
+      });
+    }
+
+    const issues: string[] = [];
+    const requiredDirs = this.getRequiredTestSuiteDirs(testIntegrityRules);
+
+    const missingDirs = requiredDirs.filter(
+      dir => !this.safeExistsSync(this.resolveProjectPath(dir))
+    );
+    if (missingDirs.length > 0) {
+      issues.push(`Missing suites: ${missingDirs.join(', ')}`);
+    }
+
+    if (testIntegrityRules.disallowMovingTestFolders) {
+      const disabledDirs = this.findDisabledTestDirectories();
+      if (disabledDirs.length > 0) {
+        issues.push(
+          `Detected disabled test directories: ${disabledDirs.join(', ')}`
+        );
+      }
+    }
+
+    if (
+      testIntegrityRules.disallowTestDisabling ||
+      testIntegrityRules.requireHumanApprovalForTestSkips
+    ) {
+      const suiteFiles = requiredDirs
+        .filter(dir => this.safeExistsSync(this.resolveProjectPath(dir)))
+        .flatMap(dir =>
+          this.getAllFiles(this.resolveProjectPath(dir)).map(file =>
+            this.toRelativePath(file)
+          )
+        );
+
+      const skippedTests = this.scanForSkippedTests(suiteFiles);
+      if (skippedTests.length > 0) {
+        issues.push(`Skipped tests detected: ${skippedTests.join(', ')}`);
+      }
+    }
+
+    const passed = issues.length === 0;
+
+    return Promise.resolve({
+      name: TEST_INTEGRITY_CHECK_NAME,
+      passed,
+      message: passed ? 'All mandatory test suites intact' : issues.join(' | '),
+      required: true,
+    });
+  }
+
+  private validateTaskReference(taskName: string): Promise<ValidationCheck> {
+    const changeRules = this.qualityRules.coreRules?.changeManagement;
+
+    if (!changeRules?.requirePlanReference) {
+      return Promise.resolve({
+        name: TASK_REFERENCE_CHECK_NAME,
+        passed: true,
+        message: 'Task reference enforcement disabled',
+        required: false,
+      });
+    }
+
+    const normalizedReference = (taskName || '').trim();
+    const hasReference =
+      normalizedReference.length > 0 &&
+      normalizedReference !== CLI_UNKNOWN_TASK;
+    const matchesPattern =
+      hasReference && PLAN_REFERENCE_PATTERN.test(normalizedReference);
+
+    return Promise.resolve({
+      name: TASK_REFERENCE_CHECK_NAME,
+      passed: Boolean(matchesPattern),
+      message: matchesPattern
+        ? `Using task reference ${normalizedReference}`
+        : 'Task reference missing or invalid. Use format e.g., T1.1.5',
+      required: true,
+    });
+  }
+
   private validateBackupMechanism(): Promise<ValidationCheck> {
     const backupScriptPath = this.resolveProjectPath(
       'scripts',
@@ -518,6 +671,76 @@ class TaskExecutionValidator {
     return path.resolve(this.projectRoot, ...segments);
   }
 
+  private getRequiredTestSuiteDirs(rules: TestIntegrityRules): string[] {
+    const suites = new Set<string>();
+
+    if (rules.protectUnitSuites) {
+      suites.add(path.join(this.config.paths.test, 'unit'));
+    }
+
+    if (rules.protectIntegrationSuites) {
+      suites.add(path.join(this.config.paths.test, 'integration'));
+    }
+
+    if (rules.protectE2ESuites) {
+      suites.add(path.join(this.config.paths.test, 'e2e'));
+    }
+
+    return Array.from(suites);
+  }
+
+  private findDisabledTestDirectories(): string[] {
+    const dirs: string[] = [];
+
+    for (const dirName of SUSPICIOUS_TEST_DIRS) {
+      const candidate = this.resolveProjectPath(dirName);
+      if (!this.safeExistsSync(candidate)) {
+        continue;
+      }
+
+      try {
+        const stat = this.safeStatSync(candidate);
+        if (stat.isDirectory()) {
+          dirs.push(this.toRelativePath(candidate));
+        }
+      } catch {
+        // Ignore stat errors
+      }
+    }
+
+    return dirs;
+  }
+
+  private scanForSkippedTests(files: string[]): string[] {
+    const offenders: string[] = [];
+
+    for (const relativeFile of files) {
+      const absolutePath = this.resolveProjectPath(relativeFile);
+      if (!this.isTestFile(absolutePath)) {
+        continue;
+      }
+
+      try {
+        const content = this.safeReadFileSync(absolutePath, 'utf8');
+        if (SKIPPED_TEST_PATTERN.test(content)) {
+          offenders.push(relativeFile);
+        }
+      } catch {
+        // Ignore read errors
+      }
+    }
+
+    return offenders;
+  }
+
+  private isTestFile(filePath: string): boolean {
+    return /\.(test|spec)\.[tj]sx?$/i.test(filePath);
+  }
+
+  private toRelativePath(filePath: string): string {
+    return path.relative(this.projectRoot, filePath) || filePath;
+  }
+
   private ensureWithinProject(targetPath: string): string {
     const normalized = path.resolve(targetPath);
     if (!normalized.startsWith(this.projectRoot)) {
@@ -561,7 +784,14 @@ class TaskExecutionValidator {
   }
   /* eslint-enable security/detect-non-literal-fs-filename */
 
-  private reportValidationResults(_result: ValidationResult): void {}
+  private reportValidationResults(_result: ValidationResult): void {
+    // Implementation placeholder for detailed validation result reporting
+    // This method will be expanded in future iterations to provide:
+    // - Structured error reporting
+    // - Suggested fixes for failed validations
+    // - Performance metrics and timing information
+    // Console outputs avoided for ESLint compliance
+  }
 }
 
 // CLI usage
@@ -569,7 +799,8 @@ if (process.argv[1]?.endsWith('validate-task-execution.ts')) {
   const taskName = process.argv[2] || CLI_UNKNOWN_TASK;
   const validator = new TaskExecutionValidator();
 
-  validator
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  void validator
     .validatePreTaskExecution(taskName)
     .then(result => {
       process.exit(result.passed ? 0 : 1);

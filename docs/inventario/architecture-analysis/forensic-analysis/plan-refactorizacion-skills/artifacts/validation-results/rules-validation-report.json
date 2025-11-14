@@ -1,0 +1,241 @@
+{
+  "timestamp": "2025-11-14T18:20:53.860Z",
+  "rulesInfo": {
+    "name": "Rules Refactorización Skills Fabrik",
+    "version": "1.0.0",
+    "description": "Reglas de gobernanza para la refactorización del sistema Skills Fabrik basadas en análisis forense V2.0",
+    "status": "ACTIVE"
+  },
+  "summary": {
+    "totalErrors": 0,
+    "totalWarnings": 18,
+    "totalItems": {
+      "maximas": 12,
+      "prohibiciones": 14,
+      "obligaciones": 18,
+      "qualityGates": 9
+    }
+  },
+  "validation": {
+    "errors": [],
+    "warnings": [
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-001",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-001 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-002",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-002 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-003",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-003 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-004",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-004 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-005",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-005 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-006",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-006 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-007",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-007 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-008",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-008 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-009",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-009 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-010",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-010 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-011",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-011 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-012",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-012 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-013",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-013 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-014",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-014 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-015",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-015 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-016",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-016 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-017",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-017 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      },
+      {
+        "type": "ID_PATTERN_MISMATCH",
+        "id": "OBL-REF-018",
+        "expectedPattern": "PROH-REF-",
+        "section": "obligaciones",
+        "description": "ID no sigue patrón esperado: OBL-REF-018 (obligaciones)",
+        "severity": "MEDIUM",
+        "timestamp": "2025-11-14T18:20:53.860Z"
+      }
+    ],
+    "complianceStatus": "COMPLIANT"
+  },
+  "recommendations": [
+    {
+      "type": "SUGGESTION",
+      "action": "REVIEW_WARNINGS",
+      "message": "Revisar advertencias para mejorar calidad",
+      "items": [
+        {
+          "type": "ID_PATTERN_MISMATCH",
+          "id": "OBL-REF-001",
+          "expectedPattern": "PROH-REF-",
+          "section": "obligaciones",
+          "description": "ID no sigue patrón esperado: OBL-REF-001 (obligaciones)",
+          "severity": "MEDIUM",
+          "timestamp": "2025-11-14T18:20:53.860Z"
+        },
+        {
+          "type": "ID_PATTERN_MISMATCH",
+          "id": "OBL-REF-002",
+          "expectedPattern": "PROH-REF-",
+          "section": "obligaciones",
+          "description": "ID no sigue patrón esperado: OBL-REF-002 (obligaciones)",
+          "severity": "MEDIUM",
+          "timestamp": "2025-11-14T18:20:53.860Z"
+        },
+        {
+          "type": "ID_PATTERN_MISMATCH",
+          "id": "OBL-REF-003",
+          "expectedPattern": "PROH-REF-",
+          "section": "obligaciones",
+          "description": "ID no sigue patrón esperado: OBL-REF-003 (obligaciones)",
+          "severity": "MEDIUM",
+          "timestamp": "2025-11-14T18:20:53.860Z"
+        },
+        {
+          "type": "ID_PATTERN_MISMATCH",
+          "id": "OBL-REF-004",
+          "expectedPattern": "PROH-REF-",
+          "section": "obligaciones",
+          "description": "ID no sigue patrón esperado: OBL-REF-004 (obligaciones)",
+          "severity": "MEDIUM",
+          "timestamp": "2025-11-14T18:20:53.860Z"
+        },
+        {
+          "type": "ID_PATTERN_MISMATCH",
+          "id": "OBL-REF-005",
+          "expectedPattern": "PROH-REF-",
+          "section": "obligaciones",
+          "description": "ID no sigue patrón esperado: OBL-REF-005 (obligaciones)",
+          "severity": "MEDIUM",
+          "timestamp": "2025-11-14T18:20:53.860Z"
+        }
+      ]
+    }
+  ]
+}
