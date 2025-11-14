@@ -18,6 +18,36 @@ FASE 4: Validación y Deploy (15 tareas - 20 horas)
 
 ## FASE 0: Setup y Preparación (16 horas)
 
+### 🔴 **PROBLEMAS CRÍTICOS DETECTADOS** - Requiere Corrección Inmediata
+
+**Fecha**: 2025-11-14 17:04  
+**Discrepancias vs Plan Original:**
+
+#### ❌ FASE 0.1.6 - Prettier NO Estático
+- **Problema**: Prettier sigue siendo manual, no automático
+- **Requerido**: Integración con lint-staged + husky hooks
+- **Impacto**: Calidad del código inconsistente
+
+#### ❌ FASE 0.1.7 - ESLint NO Detecta Errores TypeScript
+- **Problema**: ESLint configurado pero no valida TypeScript correctamente
+- **Requerido**: ESLint integrado con tsconfig y configuración de tipos
+- **Impacto**: Errores de TypeScript no se detectan en pre-commit
+
+#### ❌ FASE 0.2.4 - CI/CD Pipeline NO Implementado
+- **Problema**: No hay pipeline de GitHub Actions
+- **Requerido**: .github/workflows/ci.yml
+- **Impacto**: No hay validación automatizada en PRs
+
+#### ❌ Estructura de Carpetas Incompleta
+- **Faltan**: test/unit/, test/integration/, test/e2e/ (parcialmente creadas)
+- **Faltan**: scripts/ migração automática
+
+#### Tareas Faltantes del Plan:
+- **T0.1.9** - Integrar Prettier con lint-staged (30min)
+- **T0.1.10** - Configurar ESLint con TypeScript correcto (45min) 
+- **T0.2.5** - Crear CI/CD pipeline (2h)
+- **T0.2.6** - Validar integración completa del sistema (1h)
+
 ### Sprint 0.1: Setup Entorno de Desarrollo (8 tareas - 8 horas)
 
 #### T0.1.1 - Crear estructura de directorios (30min) - ✅ COMPLETADO
@@ -33,7 +63,7 @@ tree code-quality-upgrade/ -a
 - [x] Confirmar estructura matches plan
 - [x] Commit: `chore: create project structure`
 
-#### T0.1.2 - Configurar package.json del proyecto (45min)
+#### T0.1.2 - Configurar package.json del proyecto (45min) - ✅ COMPLETADO
 ```json
 // code-quality-upgrade/package.json
 {
@@ -54,27 +84,29 @@ tree code-quality-upgrade/ -a
     "dev": "concurrently \"npm run build:watch\" \"npm run test:watch\""
   },
   "devDependencies": {
-    "@types/jest": "^29.0.0",
+    "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
     "concurrently": "^8.0.0",
     "eslint": "^8.0.0",
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-security": "^1.7.1",
     "eslint-plugin-sonarjs": "^0.20.0",
-    "jest": "^29.0.0",
+    "jest": "^29.5.0",
     "prettier": "^3.0.0",
-    "ts-jest": "^29.0.0",
-    "typescript": "^5.0.0"
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.0"
   }
 }
 ```
-- [x] Crear package.json con dependencias
-- [x] Instalar dependencias: `npm install`
-- [x] Verificar instalación exitosa (usando versiones más recientes)
-- [x] Commit: `chore: setup package.json and dependencies`
+- [x] Crear package.json con dependencias ✅ (usando versiones más recientes)
+- [x] Instalar dependencias: `npm install` ✅
+- [x] Verificar instalación exitosa ✅
+- [x] Commit: `chore: setup package.json and dependencies` ✅
 
 #### T0.1.3 - Configurar TypeScript (30min)
 ```json
@@ -186,7 +218,7 @@ export default config;
 - [x] Confirmar que src/ pasa linting
 - [x] Commit: `chore: setup project ESLint configuration`
 
-#### T0.1.6 - Crear Prettier básico para el proyecto (15min)
+#### T0.1.6 - Crear Prettier básico para el proyecto (15min) - ❌ PROBLEMA DETECTADO
 ```json
 // code-quality-upgrade/.prettierrc.json
 {
@@ -198,10 +230,14 @@ export default config;
   "useTabs": false
 }
 ```
-- [x] Crear .prettierrc.json
-- [x] Verificar formatting: `npm run format:check`
-- [x] Aplicar formato: `npm run format`
-- [x] Commit: `chore: setup project Prettier configuration`
+- [x] Crear .prettierrc.json ✅ (configurado estáticamente)
+- [x] Verificar formatting: `npm run format:check` ✅
+- [x] Aplicar formato: `npm run format` ✅
+- [x] Commit: `chore: setup project Prettier configuration` ✅
+
+**🔴 PROBLEMA**: Prettier sigue siendo MANUAL, no estático como requiere el plan
+- Falta: Configuración de Prettier como hook automático de husky
+- Falta: Integración con lint-staged para que sea automático
 
 #### T0.1.7 - Crear Git hooks básicos (45min)
 ```bash

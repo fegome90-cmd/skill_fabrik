@@ -7,6 +7,7 @@
 
 import Fastify from 'fastify';
 import rateLimit from '@fastify/rate-limit';
+import { createRequire } from 'module';
 import compress from '@fastify/compress';
 import { healthRoutes } from './health.js';
 import { userPromptSubmitHook } from './pre-invoke.js';
@@ -17,10 +18,15 @@ import {
   validatePreInvoke,
   validateGuardrails,
   validateStop,
-  formatValidationErrors
+  formatValidationErrors,
 } from './schemas/validation.js';
 import { GracefulShutdown } from './shutdown.js';
-import { logger, requestIdMiddleware, requestLoggingMiddleware } from './logger.js';
+import {
+  logger,
+  requestIdMiddleware,
+  requestLoggingMiddleware,
+  onResponseLogging,
+} from './logger.js';
 
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || '127.0.0.1';
@@ -30,7 +36,7 @@ async function createServer() {
     logger: false, // We use our own logger
     requestIdHeader: 'x-request-id',
     requestIdLogLabel: 'requestId',
-    disableRequestLogging: true // We handle this ourselves
+    disableRequestLogging: true, // We handle this ourselves
   });
 
   // Register request ID middleware (Task: SF-STABILITY-2025-T2.4)
@@ -39,29 +45,63 @@ async function createServer() {
   // Register request logging middleware (Task: SF-STABILITY-2025-T2.4)
   fastify.addHook('onRequest', requestLoggingMiddleware());
 
-  // Register rate limiting
-  await fastify.register(rateLimit, {
-    max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
-    timeWindow: process.env.RATE_LIMIT_WINDOW || '1 minute',
-    cache: 10000,
-    allowList: ['127.0.0.1', '::1'],
-    skipOnError: true,
-    errorResponseBuilder: () => ({
-      success: false,
-      error: 'Rate limit exceeded. Please try again later.',
-      statusCode: 429
-    })
-  });
+  // Register response logging hook for Fastify 5 compatibility
+  fastify.addHook('onSend', onResponseLogging);
+
+  const require = createRequire(import.meta.url);
+  const rateLimitPkg = require('@fastify/rate-limit/package.json');
+  const rateLimitMajor = Number(String(rateLimitPkg.version).split('.')[0] || '0');
+
+  const routerFastifyMajor = Number(fastify.version?.split?.('.')?.[0] ?? '0');
+  if (routerFastifyMajor >= 5 && rateLimitMajor >= 11) {
+    try {
+      await fastify.register(rateLimit, {
+        max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
+        timeWindow: process.env.RATE_LIMIT_WINDOW || '1 minute',
+        cache: 10000,
+        allowList: ['127.0.0.1', '::1'],
+        skipOnError: true,
+        errorResponseBuilder: () => ({
+          success: false,
+          error: 'Rate limit exceeded. Please try again later.',
+          statusCode: 429,
+        }),
+      });
+    } catch (error) {
+      logger.warn(
+        {
+          fastifyVersion: fastify.version,
+          error: error instanceof Error ? error.message : String(error),
+        },
+        'Skipping rateLimit plugin (incompatible version)'
+      );
+    }
+  } else {
+    logger.warn(
+      {
+        fastifyVersion: fastify.version,
+        rateLimitVersion: rateLimitPkg.version,
+      },
+      'Skipping rateLimit plugin until Fastify/@fastify/rate-limit versions align'
+    );
+  }
 
   // Task: SF-STABILITY-2025-T4.3 - Add HTTP compression
-  await fastify.register(compress, {
-    global: true,
-    threshold: 1024, // Only compress responses > 1KB
-    encodings: ['gzip', 'deflate'],
-    zlibOptions: {
-      level: 6 // Balanced compression level
-    }
-  });
+  if (routerFastifyMajor >= 5) {
+    await fastify.register(compress, {
+      global: true,
+      threshold: 1024, // Only compress responses > 1KB
+      encodings: ['gzip', 'deflate'],
+      zlibOptions: {
+        level: 6, // Balanced compression level
+      },
+    });
+  } else {
+    logger.warn(
+      { fastifyVersion: fastify.version },
+      'Skipping @fastify/compress due to Fastify < 5'
+    );
+  }
 
   // Register health routes
   await fastify.register(healthRoutes);
@@ -71,30 +111,39 @@ async function createServer() {
     try {
       // Validate request body
       if (!validatePreInvoke(request.body)) {
-        request.log.warn({
-          validationErrors: formatValidationErrors(validatePreInvoke.errors)
-        }, 'Validation failed for /pre-invoke');
+        request.log.warn(
+          {
+            validationErrors: formatValidationErrors(validatePreInvoke.errors),
+          },
+          'Validation failed for /pre-invoke'
+        );
 
         return reply.code(400).send({
           success: false,
           error: 'Validation error',
-          details: formatValidationErrors(validatePreInvoke.errors)
+          details: formatValidationErrors(validatePreInvoke.errors),
         });
       }
 
       const result = await userPromptSubmitHook(request.body);
 
-      request.log.info({
-        promptLength: request.body.prompt?.length,
-        filesCount: request.body.openFiles?.length
-      }, 'Pre-invoke hook executed successfully');
+      request.log.info(
+        {
+          promptLength: request.body.prompt?.length,
+          filesCount: request.body.openFiles?.length,
+        },
+        'Pre-invoke hook executed successfully'
+      );
 
       reply.send({ success: true, result });
     } catch (error) {
-      request.log.error({
-        err: error,
-        body: request.body
-      }, 'Error in /pre-invoke endpoint');
+      request.log.error(
+        {
+          err: error,
+          body: request.body,
+        },
+        'Error in /pre-invoke endpoint'
+      );
 
       reply.code(500).send({
         success: false,
@@ -107,14 +156,17 @@ async function createServer() {
     try {
       // Validate request body
       if (!validateStop(request.body)) {
-        request.log.warn({
-          validationErrors: formatValidationErrors(validateStop.errors)
-        }, 'Validation failed for /stop');
+        request.log.warn(
+          {
+            validationErrors: formatValidationErrors(validateStop.errors),
+          },
+          'Validation failed for /stop'
+        );
 
         return reply.code(400).send({
           success: false,
           error: 'Validation error',
-          details: formatValidationErrors(validateStop.errors)
+          details: formatValidationErrors(validateStop.errors),
         });
       }
 
@@ -124,9 +176,12 @@ async function createServer() {
 
       reply.send({ success: true, result });
     } catch (error) {
-      request.log.error({
-        err: error
-      }, 'Error in /stop endpoint');
+      request.log.error(
+        {
+          err: error,
+        },
+        'Error in /stop endpoint'
+      );
 
       reply.code(500).send({
         success: false,
@@ -164,28 +219,37 @@ async function createServer() {
     try {
       // Validate request body
       if (!validateGuardrails(request.body)) {
-        request.log.warn({
-          validationErrors: formatValidationErrors(validateGuardrails.errors)
-        }, 'Validation failed for /guardrails');
+        request.log.warn(
+          {
+            validationErrors: formatValidationErrors(validateGuardrails.errors),
+          },
+          'Validation failed for /guardrails'
+        );
 
         return reply.code(400).send({
           success: false,
           error: 'Validation error',
-          details: formatValidationErrors(validateGuardrails.errors)
+          details: formatValidationErrors(validateGuardrails.errors),
         });
       }
 
       const result = await checkGuardrails(request.body.editLog, request.body.cwd || process.cwd());
 
-      request.log.info({
-        editLogCount: request.body.editLog?.length
-      }, 'Guardrails check executed successfully');
+      request.log.info(
+        {
+          editLogCount: request.body.editLog?.length,
+        },
+        'Guardrails check executed successfully'
+      );
 
       reply.send({ success: true, result });
     } catch (error) {
-      request.log.error({
-        err: error
-      }, 'Error in /guardrails endpoint');
+      request.log.error(
+        {
+          err: error,
+        },
+        'Error in /guardrails endpoint'
+      );
 
       reply.code(500).send({
         success: false,
@@ -204,7 +268,7 @@ export async function startServer() {
     // Setup graceful shutdown (Task: SF-STABILITY-2025-T2.4 - Use structured logger)
     const shutdown = new GracefulShutdown(server, {
       timeout: 30000,
-      logger: logger
+      logger: logger,
     });
 
     // Update health check to consider shutdown state
@@ -212,14 +276,14 @@ export async function startServer() {
       if (!shutdown.isHealthy()) {
         return reply.code(503).send({
           status: 'shutting_down',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
 
       return {
         status: 'ready',
         uptime: process.uptime(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     });
 
@@ -228,16 +292,22 @@ export async function startServer() {
       host: HOST,
     });
 
-    logger.info({
-      host: HOST,
-      port: PORT,
-      env: process.env.NODE_ENV || 'development'
-    }, '🚀 Router service started');
+    logger.info(
+      {
+        host: HOST,
+        port: PORT,
+        env: process.env.NODE_ENV || 'development',
+      },
+      '🚀 Router service started'
+    );
 
-    logger.info({
-      healthUrl: `http://${HOST}:${PORT}/health`,
-      readinessUrl: `http://${HOST}:${PORT}/health/ready`
-    }, '📊 Health endpoints available');
+    logger.info(
+      {
+        healthUrl: `http://${HOST}:${PORT}/health`,
+        readinessUrl: `http://${HOST}:${PORT}/health/ready`,
+      },
+      '📊 Health endpoints available'
+    );
 
     // Signal PM2 that server is ready (if running under PM2)
     if (process.send) {
@@ -247,11 +317,14 @@ export async function startServer() {
 
     return server;
   } catch (error) {
-    logger.fatal({
-      err: error,
-      host: HOST,
-      port: PORT
-    }, '❌ Failed to start router service');
+    logger.fatal(
+      {
+        err: error,
+        host: HOST,
+        port: PORT,
+      },
+      '❌ Failed to start router service'
+    );
     process.exit(1);
   }
 }

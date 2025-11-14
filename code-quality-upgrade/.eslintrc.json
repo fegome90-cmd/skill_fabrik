@@ -25,7 +25,9 @@
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "error",
-      { "argsIgnorePattern": "^_" }
+      {
+        "argsIgnorePattern": "^_"
+      }
     ],
     "@typescript-eslint/explicit-function-return-type": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
@@ -34,6 +36,11 @@
     "@typescript-eslint/no-unsafe-call": "warn",
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/restrict-plus-operands": "warn",
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-unnecessary-condition": "warn",
     "import/no-unresolved": "off",
     "import/order": [
       "error",
@@ -56,18 +63,39 @@
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "security/detect-object-injection": "warn",
-    "sonarjs/cognitive-complexity": ["warn", 15]
+    "sonarjs/cognitive-complexity": [
+      "warn",
+      15
+    ],
+    "sonarjs/no-duplicate-string": [
+      "warn",
+      {
+        "threshold": 3
+      }
+    ]
   },
   "env": {
     "node": true,
     "es2022": true,
     "jest": true
   },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.spec.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ],
   "ignorePatterns": [
     "dist/**/*",
     "node_modules/**/*",
     "coverage/**/*",
     "dev-docs/**/*",
-    "config/**/*"
+    "config/**/*",
+    "backup/**/*"
   ]
 }

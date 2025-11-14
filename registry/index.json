@@ -197,7 +197,16 @@
           "para"
         ],
         "intentPatterns": [],
-        "pathPatterns": [],
+        "pathPatterns": [
+          "dev/plans/*.json",
+          "dev/plans/*.md",
+          "dev/plans/**/*.json",
+          "dev/plans/**/*.md",
+          "**/dev/plans/*.json",
+          "**/dev/plans/*.md",
+          "**/dev/plans/**/*.json",
+          "**/dev/plans/**/*.md"
+        ],
         "contentPatterns": []
       }
     },
@@ -1080,7 +1089,16 @@
           "workflow"
         ],
         "intentPatterns": [],
-        "pathPatterns": [],
+        "pathPatterns": [
+          "scripts/pm2/*.cjs",
+          "scripts/pm2/*.js",
+          "scripts/pm2/**/*",
+          "packages/**/pm2/**/*.cjs",
+          "packages/**/pm2/**/*.js",
+          "**/scripts/pm2/*.cjs",
+          "**/scripts/pm2/*.js",
+          "**/scripts/pm2/**/*"
+        ],
         "contentPatterns": []
       }
     },
@@ -1143,7 +1161,16 @@
           "snapshot"
         ],
         "intentPatterns": [],
-        "pathPatterns": [],
+        "pathPatterns": [
+          "dev/plans/*.json",
+          "dev/plans/*.md",
+          "dev/plans/**/*.json",
+          "dev/plans/**/*.md",
+          "**/dev/plans/*.json",
+          "**/dev/plans/*.md",
+          "**/dev/plans/**/*.json",
+          "**/dev/plans/**/*.md"
+        ],
         "contentPatterns": []
       }
     },
@@ -1152,7 +1179,7 @@
       "description": "Configura PM2 para gestión de procesos backend con monitoreo, logs y playbooks de troubleshooting.",
       "severity": "medium",
       "type": "workflow",
-      "enforcement": "suggest",
+      "enforcement": "warn",
       "priority": "medium",
       "triggers": {
         "keywords": [
@@ -1170,11 +1197,20 @@
           "workflow"
         ],
         "intentPatterns": [],
-        "pathPatterns": [],
+        "pathPatterns": [
+          "scripts/pm2/*.cjs",
+          "scripts/pm2/*.js",
+          "scripts/pm2/**/*",
+          "packages/**/pm2/**/*.cjs",
+          "packages/**/pm2/**/*.js",
+          "**/scripts/pm2/*.cjs",
+          "**/scripts/pm2/*.js",
+          "**/scripts/pm2/**/*"
+        ],
         "contentPatterns": []
       }
     }
   ],
   "version": "1.0.0",
-  "generatedAt": "2025-11-03T15:22:01.418Z"
+  "generatedAt": "2025-11-07T02:39:57.808Z"
 }

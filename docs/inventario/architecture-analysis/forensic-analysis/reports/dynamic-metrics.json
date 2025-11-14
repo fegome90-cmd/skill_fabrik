@@ -1,0 +1,153 @@
+{
+  "timestamp": "2025-11-14T16:40:47.236Z",
+  "targetPath": "/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis",
+  "metrics": {
+    "componentSizes": {
+      "daemon": "",
+      "router": "",
+      "skills-cli": "",
+      "mcp": "",
+      "skills": "",
+      "docs": "52K"
+    },
+    "fileCounts": {
+      "markdownFiles": "3",
+      "skillDirectories": "0",
+      "typescriptFiles": "0",
+      "javascriptFiles": "0",
+      "testFiles": "12",
+      "configurationFiles": "20"
+    },
+    "configuration": {
+      "skillRulesSize": "",
+      "slashCommandsSize": "",
+      "totalSkills": "0",
+      "activePackages": "0"
+    },
+    "repository": {
+      "currentBranch": "feature/v2-rules-compliance",
+      "lastCommit": "dc6711c",
+      "totalCommits": "24",
+      "untrackedFiles": "88",
+      "modifiedFiles": "44"
+    }
+  },
+  "placeholders": {
+    "componentSizePlaceholders": {
+      "daemon": {
+        "value": "",
+        "placeholder": "$(du -sh packages/daemon/src/ | cut -f1 || echo \"N/A\")",
+        "command": "du -sh packages/daemon/src/ | cut -f1"
+      },
+      "router": {
+        "value": "",
+        "placeholder": "$(du -sh packages/router/src/ | cut -f1 || echo \"N/A\")",
+        "command": "du -sh packages/router/src/ | cut -f1"
+      },
+      "skills-cli": {
+        "value": "",
+        "placeholder": "$(du -sh packages/skills-cli/src/ | cut -f1 || echo \"N/A\")",
+        "command": "du -sh packages/skills-cli/src/ | cut -f1"
+      },
+      "mcp": {
+        "value": "",
+        "placeholder": "$(du -sh mcp/ | cut -f1 || echo \"N/A\")",
+        "command": "du -sh mcp/ | cut -f1"
+      },
+      "skills": {
+        "value": "",
+        "placeholder": "$(du -sh skills/ | cut -f1 || echo \"N/A\")",
+        "command": "du -sh skills/ | cut -f1"
+      },
+      "docs": {
+        "value": "52K",
+        "placeholder": "$(du -sh docs/ | cut -f1 || echo \"N/A\")",
+        "command": "du -sh docs/ | cut -f1"
+      }
+    },
+    "countPlaceholders": {
+      "markdownFiles": {
+        "value": "3",
+        "placeholder": "$(find docs/ -name \"*.md\" | wc -l)",
+        "command": "find docs/ -name \"*.md\" | wc -l"
+      },
+      "skillDirectories": {
+        "value": "0",
+        "placeholder": "$(find skills/ -maxdepth 1 -type d | tail -n +2 | wc -l)",
+        "command": "find skills/ -maxdepth 1 -type d | tail -n +2 | wc -l"
+      },
+      "typescriptFiles": {
+        "value": "0",
+        "placeholder": "$(find packages/*/src/ -name \"*.ts\" | wc -l)",
+        "command": "find packages/*/src/ -name \"*.ts\" | wc -l"
+      },
+      "javascriptFiles": {
+        "value": "0",
+        "placeholder": "$(find packages/*/src/ -name \"*.js\" | wc -l)",
+        "command": "find packages/*/src/ -name \"*.js\" | wc -l"
+      },
+      "testFiles": {
+        "value": "12",
+        "placeholder": "$(find . -name \"*.test.*\" -o -name \"*.spec.*\" | wc -l)",
+        "command": "find . -name \"*.test.*\" -o -name \"*.spec.*\" | wc -l"
+      },
+      "configurationFiles": {
+        "value": "20",
+        "placeholder": "$(find . -name \"*.json\" -o -name \"*.yaml\" -o -name \"*.yml\" | wc -l)",
+        "command": "find . -name \"*.json\" -o -name \"*.yaml\" -o -name \"*.yml\" | wc -l"
+      }
+    },
+    "configPlaceholders": {
+      "skillRulesSize": {
+        "value": "",
+        "placeholder": "$(du -sh configs/skill-rules.json | cut -f1)",
+        "command": "du -sh configs/skill-rules.json | cut -f1"
+      },
+      "slashCommandsSize": {
+        "value": "",
+        "placeholder": "$(du -sh configs/slash-commands.json | cut -f1)",
+        "command": "du -sh configs/slash-commands.json | cut -f1"
+      },
+      "totalSkills": {
+        "value": "0",
+        "placeholder": "$(find skills/ -name \"SKILL.md\" | wc -l)",
+        "command": "find skills/ -name \"SKILL.md\" | wc -l"
+      },
+      "activePackages": {
+        "value": "0",
+        "placeholder": "$(find packages/ -name \"package.json\" | wc -l)",
+        "command": "find packages/ -name \"package.json\" | wc -l"
+      }
+    }
+  },
+  "summary": {
+    "totalComponentsAnalyzed": 6,
+    "totalFileCategories": 6,
+    "configItemsAnalyzed": 4,
+    "lastUpdated": "2025-11-14T16:40:47.236Z",
+    "verificationCommands": {
+      "componentSizes": {
+        "daemon": "du -sh packages/daemon/src/ | cut -f1",
+        "router": "du -sh packages/router/src/ | cut -f1",
+        "skills-cli": "du -sh packages/skills-cli/src/ | cut -f1",
+        "mcp": "du -sh mcp/ | cut -f1",
+        "skills": "du -sh skills/ | cut -f1",
+        "docs": "du -sh docs/ | cut -f1"
+      },
+      "fileCounts": {
+        "markdownFiles": "find docs/ -name \"*.md\" | wc -l",
+        "skillDirectories": "find skills/ -maxdepth 1 -type d | tail -n +2 | wc -l",
+        "typescriptFiles": "find packages/*/src/ -name \"*.ts\" | wc -l",
+        "javascriptFiles": "find packages/*/src/ -name \"*.js\" | wc -l",
+        "testFiles": "find . -name \"*.test.*\" -o -name \"*.spec.*\" | wc -l",
+        "configurationFiles": "find . -name \"*.json\" -o -name \"*.yaml\" -o -name \"*.yml\" | wc -l"
+      },
+      "configuration": {
+        "skillRulesSize": "du -sh configs/skill-rules.json | cut -f1",
+        "slashCommandsSize": "du -sh configs/slash-commands.json | cut -f1",
+        "totalSkills": "find skills/ -name \"SKILL.md\" | wc -l",
+        "activePackages": "find packages/ -name \"package.json\" | wc -l"
+      }
+    }
+  }
+}

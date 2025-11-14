@@ -10,14 +10,14 @@ const path = require('path');
 const { memoizedReadJson, cacheFileMetadata } = require('./performance-cache');
 
 /**
- * Métricas críticas que deben ser consistentes entre fases
- * Centralizadas para evitar duplicación
+ * Componentes críticos que deben ser consistentes entre fases
+ * Centralizados para evitar duplicación
  */
-const CRITICAL_METRICS = {
-  daemon: '448KB',
-  router: '512KB',
-  'skills-cli': '928KB',
-  mcp: '96MB'
+const CRITICAL_COMPONENTS = {
+  daemon: 'packages/daemon/src/',
+  router: 'packages/router/src/',
+  'skills-cli': 'packages/skills-cli/src/',
+  mcp: 'mcp/'
 };
 
 /**
@@ -174,7 +174,7 @@ function log(level, message, verbose = true) {
 
 // Exportar todas las utilidades
 module.exports = {
-  CRITICAL_METRICS,
+  CRITICAL_COMPONENTS,
   readJsonFile,
   fileExists,
   readFileContent,

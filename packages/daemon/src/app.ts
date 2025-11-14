@@ -146,12 +146,12 @@ export async function createApp(): Promise<FastifyInstance> {
   const cfg = await loadDaemonConfig();
   const eventStore = await createEventStoreFromEnv();
   // Add CORS configuration to allow cross-origin requests from dashboard
-  await app.register(import('@fastify/cors'), {
-    origin: cfg.cors.origins,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma']
-  });
+//   await app.register(import('@fastify/cors'), {
+//     origin: cfg.cors.origins,
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma']
+//   });
 
   const db = await makeDbPool();
   const skillManagerMapper = new SkillManagerMapper('../../registry/index.json', '../../obs/kpi/events.jsonl');
@@ -1201,6 +1201,7 @@ export async function createApp(): Promise<FastifyInstance> {
         activate: '/activate',
         execute: '/execute',
         metrics: '/metrics',
+        metricsSystem: '/metrics/system',
         validate: '/validate'
       }
     };
@@ -1211,7 +1212,7 @@ export async function createApp(): Promise<FastifyInstance> {
   });
 
   // Task: SF-STABILITY-2025-T4.4 - Prometheus metrics endpoint
-  app.get('/metrics', async (request, reply) => {
+  app.get('/metrics/system', async (request, reply) => {
     try {
       const metrics = await getMetrics();
       reply.header('Content-Type', getMetricsContentType());

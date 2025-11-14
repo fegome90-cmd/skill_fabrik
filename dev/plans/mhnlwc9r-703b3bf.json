@@ -1,0 +1,72 @@
+{
+  "id": "mhnlwc9r-703b3bf",
+  "task": "test task",
+  "status": "DRAFT",
+  "phases": [
+    {
+      "name": "Clarify - Define Objectives",
+      "steps": [
+        "Define clear objectives and success criteria",
+        "Identify stakeholders and requirements",
+        "Establish scope and boundaries"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "Layout - Design Approach",
+      "steps": [
+        "Design high-level architecture",
+        "Define implementation strategy",
+        "Create detailed task breakdown"
+      ],
+      "dependencies": [
+        "Clarify - Define Objectives"
+      ]
+    },
+    {
+      "name": "Operate - Execute Plan",
+      "steps": [
+        "Implement core functionality",
+        "Test and validate components",
+        "Iterate based on feedback"
+      ],
+      "dependencies": [
+        "Layout - Design Approach"
+      ]
+    },
+    {
+      "name": "Observe - Monitor Progress",
+      "steps": [
+        "Track progress against objectives",
+        "Measure performance metrics",
+        "Collect qualitative feedback"
+      ],
+      "dependencies": [
+        "Operate - Execute Plan"
+      ]
+    },
+    {
+      "name": "Reflect - Analyze Results",
+      "steps": [
+        "Analyze what worked and what didn't",
+        "Document lessons learned",
+        "Recommend improvements for future iterations"
+      ],
+      "dependencies": [
+        "Observe - Monitor Progress"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "description": "Scope creep during implementation",
+      "mitigation": "Regular scope reviews and stakeholder alignment"
+    }
+  ],
+  "metrics": {
+    "expected_tokens": 15000,
+    "estimated_latency_s": 300
+  },
+  "created": "2025-11-06T15:53:32.703Z",
+  "updated": "2025-11-06T15:53:32.703Z"
+}

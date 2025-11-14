@@ -55,15 +55,32 @@ export class RealtimeDashboard {
   private updateTimer: NodeJS.Timeout | null = null;
 
   constructor(config: DashboardConfig = {}) {
+    // Check if dashboard is explicitly disabled
+    const dashboardEnabled = process.env.SF_DASHBOARD_ENABLED !== 'false';
+
+    // Handle port 0 as disabled
+    const port = typeof config.port === 'number' ? config.port : 8888;
+    const wsPort = typeof config.wsPort === 'number' ? config.wsPort : 8889;
+
+    // Dashboard is disabled if explicitly disabled OR if ports are 0
+    const isDisabled = !dashboardEnabled || port === 0 || wsPort === 0;
+
     this.config = {
-      port: config.port || 8888,
-      wsPort: config.wsPort || 8889,
+      port: isDisabled ? 0 : port,
+      wsPort: isDisabled ? 0 : wsPort,
       updateInterval: config.updateInterval || 5000, // 5 segundos
       dataRetention: config.dataRetention || 24, // 24 horas
     };
 
     this.kpiAggregator = new KPIAggregator();
-    this.wsServer = new WebSocketServer({ port: this.config.wsPort });
+
+    // Only create WebSocket server if not disabled
+    if (!isDisabled) {
+      this.wsServer = new WebSocketServer({ port: this.config.wsPort });
+    } else {
+      // Create a dummy WebSocket server for disabled mode
+      this.wsServer = null as any;
+    }
 
     this.metrics = {
       timestamp: Date.now(),
@@ -89,24 +106,35 @@ export class RealtimeDashboard {
    * Inicia el dashboard
    */
   async start(): Promise<void> {
+    // Check if dashboard is disabled
+    if (this.config.port === 0 || this.config.wsPort === 0) {
+      console.log(`🚀 Real-time Dashboard: Desactivado (puerto 0)`);
+      return;
+    }
+
     console.log(`🚀 Iniciando Real-time Dashboard...`);
     console.log(`   HTTP Server: http://localhost:${this.config.port}`);
     console.log(`   WebSocket Server: ws://localhost:${this.config.wsPort}`);
 
-    // Iniciar servidor HTTP
-    this.server = createServer((req, res) => this.handleRequest(req, res));
-    this.server.listen(this.config.port);
+    try {
+      // Iniciar servidor HTTP
+      this.server = createServer((req, res) => this.handleRequest(req, res));
+      this.server.listen(this.config.port);
 
-    // Configurar WebSocket
-    this.setupWebSocket();
+      // Configurar WebSocket
+      this.setupWebSocket();
 
-    // Iniciar actualización periódica de métricas
-    this.startMetricsUpdates();
+      // Iniciar actualización periódica de métricas
+      this.startMetricsUpdates();
 
-    // Actualización inicial
-    await this.updateMetrics();
+      // Actualización inicial
+      await this.updateMetrics();
 
-    console.log(`✅ Dashboard iniciado exitosamente`);
+      console.log(`✅ Dashboard iniciado exitosamente`);
+    } catch (error) {
+      console.error(`❌ Error iniciando dashboard:`, error);
+      throw error;
+    }
   }
 
   /**
@@ -131,7 +159,9 @@ export class RealtimeDashboard {
       this.server.close();
     }
 
-    this.wsServer.close();
+    if (this.wsServer) {
+      this.wsServer.close();
+    }
 
     console.log(`✅ Dashboard detenido`);
   }
@@ -140,28 +170,35 @@ export class RealtimeDashboard {
    * Configura el servidor WebSocket
    */
   private setupWebSocket(): void {
+    if (!this.wsServer) {
+      console.log(`📡 WebSocket server desactivado (dashboard disabled)`);
+      return;
+    }
+
     this.wsServer.on('connection', (ws: WebSocket) => {
       console.log(`📡 Cliente conectado al dashboard (total: ${this.clients.size + 1})`);
       this.clients.add(ws);
 
       // Enviar métricas actuales al nuevo cliente
-      ws.send(JSON.stringify({
-        type: 'initial',
-        data: this.metrics,
-      }));
+      ws.send(
+        JSON.stringify({
+          type: 'initial',
+          data: this.metrics,
+        })
+      );
 
       ws.on('close', () => {
         this.clients.delete(ws);
         console.log(`📡 Cliente desconectado (total: ${this.clients.size})`);
       });
 
-      ws.on('error', (error) => {
+      ws.on('error', error => {
         console.error(`❌ Error en WebSocket:`, error);
         this.clients.delete(ws);
       });
     });
 
-    this.wsServer.on('error', (error) => {
+    this.wsServer.on('error', error => {
       console.error(`❌ Error en WebSocket server:`, error);
     });
   }
@@ -170,6 +207,11 @@ export class RealtimeDashboard {
    * Inicia actualización periódica de métricas
    */
   private startMetricsUpdates(): void {
+    // Don't start updates if dashboard is disabled
+    if (this.config.port === 0 || this.config.wsPort === 0) {
+      return;
+    }
+
     this.updateTimer = setInterval(async () => {
       await this.updateMetrics();
       this.broadcastUpdate();
@@ -186,7 +228,7 @@ export class RealtimeDashboard {
 
       // Actualizar KPIs
       const endTime = new Date();
-      const startTime = new Date(endTime.getTime() - (this.config.dataRetention * 60 * 60 * 1000));
+      const startTime = new Date(endTime.getTime() - this.config.dataRetention * 60 * 60 * 1000);
       this.metrics.kpi = await this.kpiAggregator.aggregate({
         start: startTime,
         end: endTime,
@@ -200,7 +242,6 @@ export class RealtimeDashboard {
 
       // Actualizar métricas del pipeline
       await this.updatePipelineMetrics();
-
     } catch (error) {
       console.error(`❌ Error actualizando métricas:`, error);
     }
@@ -239,7 +280,7 @@ export class RealtimeDashboard {
       try {
         const response = await fetch(url, {
           method: 'GET',
-          signal: AbortSignal.timeout(2000) // 2 segundos timeout
+          signal: AbortSignal.timeout(2000), // 2 segundos timeout
         });
         return response.ok;
       } catch {
@@ -272,7 +313,7 @@ export class RealtimeDashboard {
     const successRate = this.metrics.kpi.metricPairs.quality.zeroErrorsRate;
 
     // Calcular errores en la última hora
-    const oneHourAgo = Date.now() - (60 * 60 * 1000);
+    const oneHourAgo = Date.now() - 60 * 60 * 1000;
     const recentErrors = Math.floor(Math.random() * 5); // Simulación
 
     this.metrics.pipeline = {
@@ -919,4 +960,14 @@ export class RealtimeDashboard {
 }
 
 // Instancia global
-export const realtimeDashboard = new RealtimeDashboard();
+const DASHBOARD_PORT = process.env.SF_DASHBOARD_PORT
+  ? Number(process.env.SF_DASHBOARD_PORT)
+  : undefined;
+const DASHBOARD_WS_PORT = process.env.SF_DASHBOARD_WS_PORT
+  ? Number(process.env.SF_DASHBOARD_WS_PORT)
+  : undefined;
+
+export const realtimeDashboard = new RealtimeDashboard({
+  port: DASHBOARD_PORT,
+  wsPort: DASHBOARD_WS_PORT,
+});

@@ -170,9 +170,18 @@
       "Bash(/Users/felipe/Developer/skills-fabrik/packages/skills-cli/dist/index.js --version)",
       "Bash(tee /tmp/test-output.log)",
       "Bash(BashOutput)",
-      "Bash(tee /tmp/gates-output.log)"
+      "Bash(tee /tmp/gates-output.log)",
+      "Bash(lsof:*)"
     ],
     "deny": [],
     "ask": []
+  },
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "REPLACE_WITH_ZAI_API_KEY",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
+    "API_TIMEOUT_MS": "3000000"
   }
 }

@@ -1,0 +1,119 @@
+{
+  "generatedAt": "2025-11-13T00:00:00Z",
+  "directories": [
+    {
+      "path": "packages/daemon",
+      "notes": [
+        "Incluye src/app.ts.backup y src/persistence/backup.ts",
+        "Contiene carpetas de pruebas extensas"
+      ]
+    },
+    {
+      "path": "packages/router",
+      "notes": [
+        "Se detectaron archivos backup en src/detectors.ts.backup y jest.config.js.backup"
+      ]
+    },
+    {
+      "path": "packages/shared",
+      "notes": [
+        "Servicio discovery integrado en pm2 actual"
+      ]
+    },
+    {
+      "path": "packages/skills-cli",
+      "notes": [
+        "Carpeta dist.backup.1762011814",
+        "Artefactos empaquetados .tgz"
+      ]
+    },
+    {
+      "path": "skills/",
+      "notes": [
+        "34 skills con SKILL.md",
+        "repo-auditor y repo-auditor-deny requieren revisión de solapamientos"
+      ]
+    },
+    {
+      "path": "docs/API",
+      "notes": [
+        "ROUTER.md y DAEMON.md se proponen como contratos oficiales"
+      ]
+    },
+    {
+      "path": "docs/dev",
+      "notes": [
+        "HOOKS-NO-MESS-PM2.md mezcla hooks y política NMLB"
+      ]
+    },
+    {
+      "path": "scripts/pm2",
+      "notes": [
+        "ecosystem.config.cjs es la única configuración encontrada"
+      ]
+    }
+  ],
+  "contracts": [
+    {
+      "component": "router",
+      "files": [
+        "docs/API/ROUTER.md",
+        "dev/post-hooks-investigation/analysis/router-analysis.md"
+      ],
+      "recommendedOfficial": "docs/API/ROUTER.md"
+    },
+    {
+      "component": "daemon",
+      "files": [
+        "docs/API/DAEMON.md",
+        "docs/DAEMON-ROBUSTNESS-IMPROVEMENTS.md",
+        "docs/DAEMON-REPAIR-COMPLETE.md",
+        "docs/investigacion-activacion-skills/DAEMON-SOLUTION.md",
+        "dev/post-hooks-investigation/analysis/daemon-analysis.md"
+      ],
+      "recommendedOfficial": "docs/API/DAEMON.md"
+    },
+    {
+      "component": "skills-contract",
+      "files": [],
+      "recommendedOfficial": "docs/skills/SKILL-CONTRACT.md (nuevo)"
+    },
+    {
+      "component": "no-mess-left-behind",
+      "files": [
+        "docs/dev/HOOKS-NO-MESS-PM2.md"
+      ],
+      "recommendedOfficial": "docs/skills/NMLB.md (nuevo)"
+    }
+  ],
+  "suspiciousFiles": [
+    "packages/daemon/src/app.ts.backup",
+    "packages/daemon/src/persistence/backup.ts",
+    "packages/router/src/detectors.ts.backup",
+    "packages/router/jest.config.js.backup",
+    "scripts/pre-deployment-check.sh.backup",
+    "packages/skills-cli/dist.backup.1762011814/",
+    "docs/backups/pnpm-lock.yaml.backup",
+    "docs/backups/husky-backup-20251029-141339.tar.gz"
+  ],
+  "ciGate": {
+    "requiredContracts": [
+      "docs/API/ROUTER.md",
+      "docs/API/DAEMON.md",
+      "docs/skills/SKILL-CONTRACT.md",
+      "docs/skills/NMLB.md"
+    ],
+    "forbiddenPatterns": [
+      "*.backup",
+      "*.old",
+      "*copy*",
+      "*.tmp"
+    ],
+    "reportArtifacts": [
+      "docs/skills/skills-core-audit.md",
+      "docs/skills/skills-core-audit.json"
+    ],
+    "notes": "CI debe fallar si falta un contrato oficial o se detecta un archivo prohibido fuera de /archived."
+  }
+}
+

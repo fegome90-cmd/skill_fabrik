@@ -19,13 +19,25 @@
     "validate-rules": "node src/scripts/validate-rules.js config/rules_forense.json",
     "validate-evidence": "node src/scripts/validate-evidence.js consolidated-reports/",
     "validate-completeness": "node src/scripts/validate-completeness.js config/rules_forense.json consolidated-reports/",
+    "validate:dynamic-metrics": "node src/scripts/dynamic-metrics-collector.js",
+    "validate:consistency": "node src/scripts/consistency-validator.js",
+    "validate:dynamic-compliance": "node src/scripts/validate-dynamic-compliance.js",
+    "validate:repo-state": "node src/scripts/verify-repo-state.js",
+    "validate:quantitative": "node src/scripts/quantitative-data-validation.js",
+    "verify:component-sizes": "du -sh packages/*/src/ | sort -hr || echo 'Components not found in current directory'",
+    "count:skills": "find skills/ -maxdepth 1 -type d | tail -n +2 | wc -l || echo 'Skills directory not found'",
+    "count:docs": "find docs/ -name '*.md' | wc -l || echo 'Docs directory not found'",
+    "validate:metrics-consistency": "node src/scripts/check-metrics-consistency.js",
     "quality-gate": "npm run lint && npm run format:check && npm run test -- --passWithNoTests",
     "quality-gate-full": "npm run quality-gate && npm run validate-rules && npm run validate-evidence && npm run validate-completeness",
-    "quality-gate-strict": "npm run quality-gate-full && echo '✅ All quality gates passed - Zero technical debt'",
+    "quality-gate-dynamic": "npm run quality-gate && npm run validate:dynamic-metrics && npm run validate:consistency && npm run validate:dynamic-compliance",
+    "quality-gate-strict": "npm run quality-gate-full && npm run quality-gate-dynamic && echo '✅ All quality gates passed - Zero technical debt, Full dynamic compliance'",
     "pre-commit": "npm run lint && npm run format:check && npm run check-encoding && npm run check-metrics",
     "check-encoding": "node src/utils/encoding-validator.js .",
     "check-metrics": "node src/scripts/check-metrics-consistency.js",
     "validate-all": "npm run quality-gate-strict && npm run check-encoding && npm run check-metrics",
+    "validate:final": "node src/scripts/final-validation.js",
+    "quality-gate-ultimate": "npm run quality-gate-dynamic && npm run validate:final && echo '✅ ULTIMATE QUALITY GATE PASSED - Zero violations, Full dynamic compliance, Production ready'",
     "test:encoding": "node src/utils/encoding-validator.js consolidated-reports/ consolidated-tests/ src/",
     "test:metrics": "node src/scripts/check-metrics-consistency.js",
     "test:corrections": "npm test -- consolidated-tests/tdd-corrections.test.js",
@@ -57,5 +69,8 @@
   "repository": {
     "type": "git",
     "url": "local"
+  },
+  "directories": {
+    "doc": "docs"
   }
 }

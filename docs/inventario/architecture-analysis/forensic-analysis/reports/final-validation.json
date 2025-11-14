@@ -1,0 +1,199 @@
+{
+  "passed": 1,
+  "failed": 7,
+  "violations": [
+    {
+      "type": "CRITICAL",
+      "command": "node src/scripts/validate-dynamic-compliance.js",
+      "description": "Validación de Compliance Dinámico (PROH-006, PROH-009, OBL-007, OBL-018, MAX-014, MAX-015)",
+      "error": "Command failed: node src/scripts/validate-dynamic-compliance.js\nfind: skills/: No such file or directory\nfind: skills/: No such file or directory\nfind: packages/: No such file or directory\nfind: skills/: No such file or directory\nfind: skills/: No such file or directory\nfind: packages/: No such file or directory\nfind: skills/: No such file or directory\nfind: skills/: No such file or directory\nfind: packages/: No such file or directory\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "command": "node src/scripts/consistency-validator.js",
+      "description": "Validación de Consistencia Cruzada (PROH-009, MAX-007, QG-010)",
+      "error": "Command failed: node src/scripts/consistency-validator.js\nnode:internal/modules/cjs/loader:1147\n  throw err;\n  ^\n\nError: Cannot find module './validation-helpers'\nRequire stack:\n- /Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/src/scripts/consistency-validator.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1144:15)\n    at Module._load (node:internal/modules/cjs/loader:985:27)\n    at Module.require (node:internal/modules/cjs/loader:1235:19)\n    at require (node:internal/modules/helpers:176:18)\n    at Object.<anonymous> (/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/src/scripts/consistency-validator.js:21:5)\n    at Module._compile (node:internal/modules/cjs/loader:1376:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)\n    at Module.load (node:internal/modules/cjs/loader:1207:32)\n    at Module._load (node:internal/modules/cjs/loader:1023:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12) {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: [\n    '/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/src/scripts/consistency-validator.js'\n  ]\n}\n\nNode.js v20.10.0\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "command": "node src/scripts/check-metrics-consistency.js",
+      "description": "Validación de Consistencia de Métricas (PROH-009, MAX-014)",
+      "error": "Command failed: node src/scripts/check-metrics-consistency.js\n\n❌ Metrics consistency validation FAILED - violates PROH-009 and MAX-014:\n   - phase-a-inventory.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-a-inventory.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-a-inventory.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-b-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-b-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-b-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-b-responsibilities.md: Reporta \"daemon\" con tamaño incorrecto \"96MB\" (real: \"\")\n   - phase-b-responsibilities.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-b-responsibilities.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-c-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-c-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-c-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-c-prompt.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-c-testing.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-c-testing.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-c-testing.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-c-testing.md: Reporta \"tests\" con tamaño incorrecto \"100MB\" (real: \"undefined\")\n   - phase-d-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-d-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-d-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-d-prompt.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-d-prompt.md: Reporta \"tests\" con tamaño incorrecto \"100MB\" (real: \"undefined\")\n   - phase-d-runtime.md: Reporta \"daemon\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-d-runtime.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-d-runtime.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-d-runtime.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-e-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-e-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-e-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-e-prompt.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-e-prompt.md: Reporta \"tests\" con tamaño incorrecto \"100MB\" (real: \"undefined\")\n   - phase-e-prompts.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-e-prompts.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-e-prompts.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-e-prompts.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - Inconsistencia cruzada en daemon: 448KB, 96MB, 512KB (real: )\n   - Todas las fases reportan tamaño incorrecto de router: 512KB (real: )\n   - Todas las fases reportan tamaño incorrecto de skills-cli: 928KB (real: )\n   - Todas las fases reportan conteo de tests incorrecto: 28 (real: 12)\n\n🚨 VIOLACIONES DETECTADAS:\n❌ PROH-009: Inconsistencias de métricas entre informes y fases\n❌ MAX-014: Métricas no obtenidas dinámicamente del estado actual\n❌ OBL-008: Falta validación cruzada dinámica entre fases\n❌ QG-010: Falló verificación obligatoria de existencia y estado real\n\n💡 CORRECCIÓN OBLIGATORIA:\n1. Actualizar métricas para que coincidan con estado REAL del repositorio\n2. Ejecutar comandos reales: du -sh /packages/*/src/, find . -name \"*.test.*\"\n3. Ejecutar: npm run verify:repo-state para obtener métricas reales\n4. Eliminar caracteres \"·\" con: tr -d \"·\" < archivo > archivo.limpo && mv archivo.limpo archivo\n5. Ejecutar: npm run test:corrections para validar corrección\n\n❌ ESTO BLOQUEA EL PROGRESO SEGÚN REGLAS OBLIGATORIAS\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "rule": "PROH-006",
+      "file": "dev-docs/tasks.md",
+      "pattern": "Conteo de skills hardcodeado",
+      "matches": [
+        "33 skills"
+      ],
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "rule": "PROH-006",
+      "file": "dev-docs/tasks.md",
+      "pattern": "MCP size hardcodeado",
+      "matches": [
+        "96MB"
+      ],
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "rule": "PROH-006",
+      "file": "dev-docs/tasks.md",
+      "pattern": "chromadb size hardcodeado",
+      "matches": [
+        "405MB"
+      ],
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "rule": "OBL-007",
+      "file": "dev-docs/tasks.md",
+      "missing": "Placeholders de tamaño dinámico",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "rule": "OBL-007",
+      "file": "dev-docs/plan.md",
+      "missing": "Placeholders de tamaño dinámico",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "rule": "OBL-007",
+      "file": "dev-docs/context.md",
+      "missing": "Placeholders de tamaño dinámico",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "command": "npm run lint",
+      "description": "Linting de código",
+      "error": "Command failed: npm run lint",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "command": "npm run format:check",
+      "description": "Format check",
+      "error": "Command failed: npm run format:check\n[warn] src/detection/simple-architectural-detector.js\n[warn] src/pipeline/forensic-advanced-quality-gates.js\n[warn] src/scripts/check-metrics-consistency.js\n[warn] src/scripts/consistency-validator.js\n[warn] src/scripts/dynamic-metrics-collector.js\n[warn] src/scripts/final-validation.js\n[warn] src/scripts/quantitative-data-validation.js\n[warn] src/scripts/validate-dynamic-compliance.js\n[warn] src/scripts/verify-repo-state.js\n[warn] consolidated-tests/tdd-magic-numbers-red.test.js\n[warn] Code style issues found in 10 files. Run Prettier with --write to fix.\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    }
+  ],
+  "critical": [
+    {
+      "type": "CRITICAL",
+      "command": "node src/scripts/validate-dynamic-compliance.js",
+      "description": "Validación de Compliance Dinámico (PROH-006, PROH-009, OBL-007, OBL-018, MAX-014, MAX-015)",
+      "error": "Command failed: node src/scripts/validate-dynamic-compliance.js\nfind: skills/: No such file or directory\nfind: skills/: No such file or directory\nfind: packages/: No such file or directory\nfind: skills/: No such file or directory\nfind: skills/: No such file or directory\nfind: packages/: No such file or directory\nfind: skills/: No such file or directory\nfind: skills/: No such file or directory\nfind: packages/: No such file or directory\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "command": "node src/scripts/consistency-validator.js",
+      "description": "Validación de Consistencia Cruzada (PROH-009, MAX-007, QG-010)",
+      "error": "Command failed: node src/scripts/consistency-validator.js\nnode:internal/modules/cjs/loader:1147\n  throw err;\n  ^\n\nError: Cannot find module './validation-helpers'\nRequire stack:\n- /Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/src/scripts/consistency-validator.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1144:15)\n    at Module._load (node:internal/modules/cjs/loader:985:27)\n    at Module.require (node:internal/modules/cjs/loader:1235:19)\n    at require (node:internal/modules/helpers:176:18)\n    at Object.<anonymous> (/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/src/scripts/consistency-validator.js:21:5)\n    at Module._compile (node:internal/modules/cjs/loader:1376:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)\n    at Module.load (node:internal/modules/cjs/loader:1207:32)\n    at Module._load (node:internal/modules/cjs/loader:1023:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12) {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: [\n    '/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/src/scripts/consistency-validator.js'\n  ]\n}\n\nNode.js v20.10.0\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "command": "node src/scripts/check-metrics-consistency.js",
+      "description": "Validación de Consistencia de Métricas (PROH-009, MAX-014)",
+      "error": "Command failed: node src/scripts/check-metrics-consistency.js\n\n❌ Metrics consistency validation FAILED - violates PROH-009 and MAX-014:\n   - phase-a-inventory.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-a-inventory.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-a-inventory.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-b-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-b-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-b-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-b-responsibilities.md: Reporta \"daemon\" con tamaño incorrecto \"96MB\" (real: \"\")\n   - phase-b-responsibilities.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-b-responsibilities.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-c-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-c-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-c-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-c-prompt.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-c-testing.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-c-testing.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-c-testing.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-c-testing.md: Reporta \"tests\" con tamaño incorrecto \"100MB\" (real: \"undefined\")\n   - phase-d-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-d-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-d-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-d-prompt.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-d-prompt.md: Reporta \"tests\" con tamaño incorrecto \"100MB\" (real: \"undefined\")\n   - phase-d-runtime.md: Reporta \"daemon\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-d-runtime.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-d-runtime.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-d-runtime.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-e-prompt.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-e-prompt.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-e-prompt.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-e-prompt.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - phase-e-prompt.md: Reporta \"tests\" con tamaño incorrecto \"100MB\" (real: \"undefined\")\n   - phase-e-prompts.md: Reporta \"daemon\" con tamaño incorrecto \"448KB\" (real: \"\")\n   - phase-e-prompts.md: Reporta \"router\" con tamaño incorrecto \"512KB\" (real: \"\")\n   - phase-e-prompts.md: Reporta \"skills-cli\" con tamaño incorrecto \"928KB\" (real: \"\")\n   - phase-e-prompts.md: Menciona \"tests\" pero el tamaño reportado no coincide con el tamaño real \"undefined\"\n   - Inconsistencia cruzada en daemon: 448KB, 96MB, 512KB (real: )\n   - Todas las fases reportan tamaño incorrecto de router: 512KB (real: )\n   - Todas las fases reportan tamaño incorrecto de skills-cli: 928KB (real: )\n   - Todas las fases reportan conteo de tests incorrecto: 28 (real: 12)\n\n🚨 VIOLACIONES DETECTADAS:\n❌ PROH-009: Inconsistencias de métricas entre informes y fases\n❌ MAX-014: Métricas no obtenidas dinámicamente del estado actual\n❌ OBL-008: Falta validación cruzada dinámica entre fases\n❌ QG-010: Falló verificación obligatoria de existencia y estado real\n\n💡 CORRECCIÓN OBLIGATORIA:\n1. Actualizar métricas para que coincidan con estado REAL del repositorio\n2. Ejecutar comandos reales: du -sh /packages/*/src/, find . -name \"*.test.*\"\n3. Ejecutar: npm run verify:repo-state para obtener métricas reales\n4. Eliminar caracteres \"·\" con: tr -d \"·\" < archivo > archivo.limpo && mv archivo.limpo archivo\n5. Ejecutar: npm run test:corrections para validar corrección\n\n❌ ESTO BLOQUEA EL PROGRESO SEGÚN REGLAS OBLIGATORIAS\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "rule": "PROH-006",
+      "file": "dev-docs/tasks.md",
+      "pattern": "Conteo de skills hardcodeado",
+      "matches": [
+        "33 skills"
+      ],
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "rule": "PROH-006",
+      "file": "dev-docs/tasks.md",
+      "pattern": "MCP size hardcodeado",
+      "matches": [
+        "96MB"
+      ],
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "CRITICAL",
+      "rule": "PROH-006",
+      "file": "dev-docs/tasks.md",
+      "pattern": "chromadb size hardcodeado",
+      "matches": [
+        "405MB"
+      ],
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    }
+  ],
+  "high": [
+    {
+      "type": "HIGH",
+      "rule": "OBL-007",
+      "file": "dev-docs/tasks.md",
+      "missing": "Placeholders de tamaño dinámico",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "rule": "OBL-007",
+      "file": "dev-docs/plan.md",
+      "missing": "Placeholders de tamaño dinámico",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "rule": "OBL-007",
+      "file": "dev-docs/context.md",
+      "missing": "Placeholders de tamaño dinámico",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "command": "npm run lint",
+      "description": "Linting de código",
+      "error": "Command failed: npm run lint",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    },
+    {
+      "type": "HIGH",
+      "command": "npm run format:check",
+      "description": "Format check",
+      "error": "Command failed: npm run format:check\n[warn] src/detection/simple-architectural-detector.js\n[warn] src/pipeline/forensic-advanced-quality-gates.js\n[warn] src/scripts/check-metrics-consistency.js\n[warn] src/scripts/consistency-validator.js\n[warn] src/scripts/dynamic-metrics-collector.js\n[warn] src/scripts/final-validation.js\n[warn] src/scripts/quantitative-data-validation.js\n[warn] src/scripts/validate-dynamic-compliance.js\n[warn] src/scripts/verify-repo-state.js\n[warn] consolidated-tests/tdd-magic-numbers-red.test.js\n[warn] Code style issues found in 10 files. Run Prettier with --write to fix.\n",
+      "timestamp": "2025-11-14T16:40:42.473Z"
+    }
+  ],
+  "summary": {
+    "timestamp": "2025-11-14T16:40:42.473Z",
+    "totalValidations": 8,
+    "passed": 1,
+    "failed": 7,
+    "criticalViolations": 6,
+    "highViolations": 5,
+    "overallStatus": "NON_COMPLIANT",
+    "complianceWithRules": {
+      "PROH_006": false,
+      "PROH_009": true,
+      "OBL_007": false,
+      "OBL_018": true,
+      "MAX_014": true,
+      "MAX_015": true
+    }
+  }
+}

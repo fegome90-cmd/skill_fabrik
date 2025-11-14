@@ -2,21 +2,28 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # Pre-commit hooks ejecutados automáticamente antes de cada commit
+# Integrado con lint-staged para manejo automático de Prettier + ESLint + TypeScript
 
 echo "🔍 Running pre-commit hooks..."
-
-# Ejecutar lint-staged (formatea y valida archivos staged)
-pnpm exec lint-staged
-
-# Validar que el mensaje de commit siga Conventional Commits
-if [ -n "$SKIP_COMMIT_MSG_CHECK" ]; then
-  exit 0
-fi
 
 # Verificar que haya cambios para commitear
 if git diff --cached --quiet; then
   echo "⚠️  No hay cambios staged para commitear"
   exit 1
+fi
+
+# Ejecutar lint-staged (formatea y valida archivos staged automáticamente)
+echo "📝 Running lint-staged (Prettier + ESLint + TypeScript)..."
+pnpm exec lint-staged
+
+if [ $? -ne 0 ]; then
+  echo "❌ Lint-staged validation failed. Please fix the errors and try again."
+  exit 1
+fi
+
+# Validar que el mensaje de commit siga Conventional Commits
+if [ -n "$SKIP_COMMIT_MSG_CHECK" ]; then
+  exit 0
 fi
 
 echo "✅ Pre-commit hooks passed!"

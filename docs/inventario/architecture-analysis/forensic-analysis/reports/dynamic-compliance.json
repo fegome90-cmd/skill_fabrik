@@ -1,0 +1,133 @@
+{
+  "timestamp": "2025-11-14T16:54:12.052Z",
+  "targetPath": "/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis",
+  "summary": {
+    "totalFilesValidated": 3,
+    "totalViolations": 3,
+    "totalWarnings": 0,
+    "criticalViolations": 0,
+    "highViolations": 3,
+    "mediumViolations": 0,
+    "complianceStatus": "NON_COMPLIANT"
+  },
+  "compliance": {
+    "PROH_006": {
+      "rule": "Prohibición de datos sin verificación en tiempo real",
+      "compliant": true,
+      "violations": []
+    },
+    "PROH_009": {
+      "rule": "Prohibición de inconsistencias de métricas",
+      "compliant": true,
+      "violations": []
+    },
+    "PROH_015": {
+      "rule": "Prohibición de datos no dinámicos en tareas",
+      "compliant": true,
+      "violations": []
+    },
+    "OBL_007": {
+      "rule": "Verificación con comandos reales",
+      "compliant": true,
+      "violations": []
+    },
+    "OBL_018": {
+      "rule": "Comandos de verificación obligatorios",
+      "compliant": true,
+      "violations": []
+    },
+    "MAX_014": {
+      "rule": "Verificación dinámica máxima contra repositorio",
+      "compliant": true,
+      "violations": []
+    },
+    "MAX_015": {
+      "rule": "Integridad máxima de datos cuantitativos",
+      "compliant": true,
+      "violations": []
+    }
+  },
+  "violations": [
+    {
+      "type": "MISSING_VERIFICATION_SECTION",
+      "severity": "HIGH",
+      "file": "tasks.md",
+      "missingSections": [
+        "/##.*[Mm]étricas.*[Rr]eales/i"
+      ],
+      "description": "Faltan secciones obligatorias de verificación dinámica",
+      "suggestion": "Añadir secciones de verificación dinámica, comandos y quality gates"
+    },
+    {
+      "type": "MISSING_VERIFICATION_SECTION",
+      "severity": "HIGH",
+      "file": "plan.md",
+      "missingSections": [
+        "/##.*[Mm]étricas.*[Rr]eales/i"
+      ],
+      "description": "Faltan secciones obligatorias de verificación dinámica",
+      "suggestion": "Añadir secciones de verificación dinámica, comandos y quality gates"
+    },
+    {
+      "type": "MISSING_VERIFICATION_SECTION",
+      "severity": "HIGH",
+      "file": "context.md",
+      "missingSections": [
+        "/##.*[Mm]étricas.*[Rr]eales/i"
+      ],
+      "description": "Faltan secciones obligatorias de verificación dinámica",
+      "suggestion": "Añadir secciones de verificación dinámica, comandos y quality gates"
+    }
+  ],
+  "warnings": [],
+  "validationResults": [
+    {
+      "fileName": "tasks.md",
+      "violations": [
+        {
+          "type": "MISSING_VERIFICATION_SECTION",
+          "severity": "HIGH",
+          "file": "tasks.md",
+          "missingSections": [
+            "/##.*[Mm]étricas.*[Rr]eales/i"
+          ],
+          "description": "Faltan secciones obligatorias de verificación dinámica",
+          "suggestion": "Añadir secciones de verificación dinámica, comandos y quality gates"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "fileName": "plan.md",
+      "violations": [
+        {
+          "type": "MISSING_VERIFICATION_SECTION",
+          "severity": "HIGH",
+          "file": "plan.md",
+          "missingSections": [
+            "/##.*[Mm]étricas.*[Rr]eales/i"
+          ],
+          "description": "Faltan secciones obligatorias de verificación dinámica",
+          "suggestion": "Añadir secciones de verificación dinámica, comandos y quality gates"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "fileName": "context.md",
+      "violations": [
+        {
+          "type": "MISSING_VERIFICATION_SECTION",
+          "severity": "HIGH",
+          "file": "context.md",
+          "missingSections": [
+            "/##.*[Mm]étricas.*[Rr]eales/i"
+          ],
+          "description": "Faltan secciones obligatorias de verificación dinámica",
+          "suggestion": "Añadir secciones de verificación dinámica, comandos y quality gates"
+        }
+      ],
+      "warnings": []
+    }
+  ]
+}
