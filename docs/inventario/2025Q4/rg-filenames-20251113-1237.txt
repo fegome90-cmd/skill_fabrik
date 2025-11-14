@@ -1,0 +1,33 @@
+skills/data/database-management/resources/backup.md
+packages/router/src/detectors.ts.backup
+docs/backups/husky-backup-20251029-141339.tar.gz
+docs/backups/pnpm-lock.yaml.backup
+investigaciones/repo de claude skill para analisis/theme-factory/themes/golden-hour.md
+mcp/servers/memtech/scripts/memtech/backup.js
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/WorkSans-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/IBMPlexSerif-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/BigShoulders-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/Boldonse-OFL.txt
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/InstrumentSans-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/GeistMono-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/BricolageGrotesque-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/Lora-BoldItalic.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/NationalPark-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/InstrumentSans-BoldItalic.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/CrimsonPro-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/WorkSans-BoldItalic.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/IBMPlexMono-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/IBMPlexSerif-BoldItalic.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/Lora-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/JetBrainsMono-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/RedHatMono-Bold.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/Boldonse-Regular.ttf
+investigaciones/repo de claude skill para analisis/canvas-design/canvas-fonts/Outfit-Bold.ttf
+packages/router/jest.config.js.backup
+packages/daemon/src/app.ts.backup
+packages/daemon/src/persistence/backup.ts
+packages/skills-cli/test/chaos/chaos-backups/package.json.backup
+packages/skills-cli/test/chaos/chaos-backups/hosts.backup
+packages/skills-cli/test/chaos/chaos-backups/tsconfig.json.backup
+scripts/pre-deployment-check.sh.backup
+scripts/daemon-backup.sh
