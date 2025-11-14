@@ -20,7 +20,7 @@ FASE 4: Validación y Deploy (15 tareas - 20 horas)
 
 ### Sprint 0.1: Setup Entorno de Desarrollo (8 tareas - 8 horas)
 
-#### T0.1.1 - Crear estructura de directorios (30min)
+#### T0.1.1 - Crear estructura de directorios (30min) - ✅ COMPLETADO
 ```bash
 # Crear estructura de directorios
 mkdir -p code-quality-upgrade/{src/{core,gates,config,scripts,interfaces,types},test/{unit,integration,e2e},scripts,backup,config}
@@ -28,10 +28,10 @@ mkdir -p code-quality-upgrade/{src/{core,gates,config,scripts,interfaces,types},
 # Verificar estructura
 tree code-quality-upgrade/ -a
 ```
-- [ ] Ejecutar comando mkdir
-- [ ] Verificar que todos los directorios se crearon
-- [ ] Confirmar estructura matches plan
-- [ ] Commit: `chore: create project structure`
+- [x] Ejecutar comando mkdir
+- [x] Verificar que todos los directorios se crearon
+- [x] Confirmar estructura matches plan
+- [x] Commit: `chore: create project structure`
 
 #### T0.1.2 - Configurar package.json del proyecto (45min)
 ```json
@@ -71,10 +71,10 @@ tree code-quality-upgrade/ -a
   }
 }
 ```
-- [ ] Crear package.json con dependencias
-- [ ] Instalar dependencias: `npm install`
-- [ ] Verificar instalación exitosa
-- [ ] Commit: `chore: setup package.json and dependencies`
+- [x] Crear package.json con dependencias
+- [x] Instalar dependencias: `npm install`
+- [x] Verificar instalación exitosa (usando versiones más recientes)
+- [x] Commit: `chore: setup package.json and dependencies`
 
 #### T0.1.3 - Configurar TypeScript (30min)
 ```json
@@ -101,14 +101,18 @@ tree code-quality-upgrade/ -a
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "test"]
+  "include": [
+    "src/**/*",
+    "test/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": ["node_modules", "dist"]
 }
 ```
-- [ ] Crear tsconfig.json con configuración estricta
-- [ ] Verificar compilación: `tsc --noEmit`
-- [ ] Confirmar que no hay errores de tipos
-- [ ] Commit: `chore: configure TypeScript strict mode`
+- [x] Crear tsconfig.json con configuración estricta
+- [x] Verificar compilación: `tsc --noEmit`
+- [x] Confirmar que no hay errores de tipos
+- [x] Commit: `chore: configure TypeScript strict mode`
 
 #### T0.1.4 - Configurar Jest para TDD (45min)
 ```javascript
@@ -147,10 +151,10 @@ const config: Config = {
 
 export default config;
 ```
-- [ ] Crear jest.config.ts
-- [ ] Crear test/setup.ts para configuración global
-- [ ] Verificar configuración: `npm test`
-- [ ] Commit: `chore: configure Jest for TDD`
+- [x] Crear jest.config.ts
+- [x] Crear test/setup.ts para configuración global
+- [x] Verificar configuración: `npm test`
+- [x] Commit: `chore: configure Jest for TDD`
 
 #### T0.1.5 - Crear ESLint básico para el proyecto (30min)
 ```json
@@ -177,10 +181,10 @@ export default config;
   "ignorePatterns": ["dist/", "node_modules/"]
 }
 ```
-- [ ] Crear .eslintrc.json para el proyecto
-- [ ] Verificar linting: `npm run lint`
-- [ ] Confirmar que src/ pasa linting
-- [ ] Commit: `chore: setup project ESLint configuration`
+- [x] Crear .eslintrc.json para el proyecto
+- [x] Verificar linting: `npm run lint`
+- [x] Confirmar que src/ pasa linting
+- [x] Commit: `chore: setup project ESLint configuration`
 
 #### T0.1.6 - Crear Prettier básico para el proyecto (15min)
 ```json
@@ -194,10 +198,10 @@ export default config;
   "useTabs": false
 }
 ```
-- [ ] Crear .prettierrc.json
-- [ ] Verificar formatting: `npm run format:check`
-- [ ] Aplicar formato: `npm run format`
-- [ ] Commit: `chore: setup project Prettier configuration`
+- [x] Crear .prettierrc.json
+- [x] Verificar formatting: `npm run format:check`
+- [x] Aplicar formato: `npm run format`
+- [x] Commit: `chore: setup project Prettier configuration`
 
 #### T0.1.7 - Crear Git hooks básicos (45min)
 ```bash
@@ -221,10 +225,10 @@ fi
 
 echo "Pre-commit hooks passed!"
 ```
-- [ ] Crear .husky/pre-commit
-- [ ] Hacer executable: `chmod +x .husky/pre-commit`
-- [ ] Verificar que hooks funcionan
-- [ ] Commit: `chore: setup basic Git hooks`
+- [x] Crear .husky/pre-commit con validación completa
+- [x] Hacer executable: `chmod +x .husky/pre-commit`
+- [x] Verificar que hooks funcionan
+- [x] Commit: `chore: setup basic Git hooks`
 
 #### T0.1.8 - Setup Coverage y Quality Gates básicos (30min)
 ```bash
@@ -234,10 +238,10 @@ npm run test:coverage
 # Verificar que quality gates funcionan
 npm run quality:check
 ```
-- [ ] Ejecutar coverage y verificar reporte
-- [ ] Verificar quality gates execution
-- [ ] Confirmar que todos los thresholds se cumplen
-- [ ] Commit: `chore: setup coverage and quality gates`
+- [x] Ejecutar coverage y verificar reporte
+- [x] Verificar quality gates execution
+- [x] Confirmar que todos los thresholds se cumplen
+- [x] Commit: `chore: setup coverage and quality gates`
 
 ### Sprint 0.2: Backup y Documentación (4 tareas - 8 horas)
 
@@ -291,10 +295,10 @@ EOF
 echo "Backup completed in $BACKUP_DIR"
 echo "Backup manifest created: $BACKUP_DIR/manifest.json"
 ```
-- [ ] Crear script backup-configs.sh
-- [ ] Hacer executable
-- [ ] Ejecutar backup y verificar resultado
-- [ ] Commit: `feat: add automated backup script`
+- [x] Crear script backup-configs.sh
+- [x] Hacer executable
+- [x] Ejecutar backup y verificar resultado
+- [x] Commit: `feat: add automated backup script`
 
 #### T0.2.2 - Crear script de rollback (2 horas)
 ```bash
@@ -360,10 +364,10 @@ fi
 
 echo "Rollback completed successfully"
 ```
-- [ ] Crear script rollback-configs.sh
-- [ ] Hacer executable
-- [ ] Probar con backup creado
-- [ ] Commit: `feat: add rollback script`
+- [x] Crear script rollback-configs.sh
+- [x] Hacer executable
+- [x] Probar con backup creado
+- [x] Commit: `feat: add rollback script`
 
 #### T0.2.3 - Crear test utilities y mocks (2 horas)
 ```typescript
@@ -426,10 +430,10 @@ export class TestUtils {
   }
 }
 ```
-- [ ] Crear TestUtils class
-- [ ] Verificar que todos los métodos funcionan
-- [ ] Crear tests para TestUtils
-- [ ] Commit: `feat: add test utilities and mocks`
+- [x] Crear TestUtils class
+- [x] Verificar que todos los métodos funcionan
+- [x] Crear tests para TestUtils
+- [x] Commit: `feat: add test utilities and mocks`
 
 #### T0.2.4 - Setup CI/CD básico para el proyecto (2 horas)
 ```yaml
@@ -470,10 +474,10 @@ jobs:
     - name: Upload coverage
       uses: codecov/codecov-action@v3
 ```
-- [ ] Crear .github/workflows/ci.yml
-- [ ] Verificar que CI pasa
-- [ ] Configurar badges en README
-- [ ] Commit: `feat: setup CI/CD pipeline`
+- [x] Crear .github/workflows/ci.yml con validación completa
+- [x] Verificar que CI pasa
+- [x] Configurar badges en README
+- [x] Commit: `feat: setup CI/CD pipeline`
 
 ## FASE 1: Fundamentos (30 horas)
 
@@ -531,9 +535,9 @@ export interface RuleOverride {
   rules: Record<string, RuleConfiguration>;
 }
 ```
-- [ ] Crear types/quality.ts
-- [ ] Crear types/configuration.ts
-- [ ] Verificar que tipos compilan
+- [x] Crear types/quality.ts
+- [x] Crear types/configuration.ts
+- [x] Verificar que tipos compilan
 - [ ] Commit: `feat: add TypeScript interfaces for ESLint`
 
 #### T1.1.2 - Escribir tests para ESLint configuration (RED phase) (1 hora)
