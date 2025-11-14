@@ -18,6 +18,7 @@ describe('ESLint Migration Integration', () => {
   const CONFIG_FILE = '.eslintrc.json';
   const TEST_FILE = 'test.ts';
   const MIGRATION_SCRIPT = 'scripts/migrate-eslint.sh';
+  const PORTABLE_MIGRATION_SCRIPT = 'scripts/migrate-eslint-portable.sh';
   // eslint-disable-next-line sonarjs/no-duplicate-string
   const TYPESCRIPT_PARSER = '@typescript-eslint/parser';
   // eslint-disable-next-line sonarjs/no-duplicate-string
@@ -73,6 +74,41 @@ describe('ESLint Migration Integration', () => {
     expect(scriptContent).toContain('set -e');
 
     // STRUCTURE-ONLY: Full execution testing after T1.1.7 portability refactor
+  });
+
+  it('should validate portable script structure and dependencies - T1.1.7', () => {
+    // Validate: Portable script exists and has expected structure
+    const portableScriptPath = path.join(
+      process.cwd(),
+      PORTABLE_MIGRATION_SCRIPT
+    );
+    expect(fs.existsSync(portableScriptPath)).toBe(true);
+
+    const scriptStats = fs.statSync(portableScriptPath);
+    expect(
+      scriptStats.mode &
+        (fs.constants.S_IXUSR | fs.constants.S_IXGRP | fs.constants.S_IXOTH)
+    ).toBeTruthy();
+
+    const scriptContent = fs.readFileSync(portableScriptPath, 'utf8');
+
+    // Validate key portability improvements
+    expect(scriptContent).toContain('get_script_dir');
+    expect(scriptContent).toContain('resolve_path');
+    expect(scriptContent).toContain('get_timestamp');
+    expect(scriptContent).toContain('check_dependencies');
+    expect(scriptContent).toContain('validate_json');
+
+    // Validate utils are loaded
+    expect(scriptContent).toContain(
+      'source "$SCRIPT_DIR/utils/portability.sh"'
+    );
+
+    // Validate cross-platform improvements
+    expect(scriptContent).toContain('PROJECT_ROOT');
+    expect(scriptContent).toContain('Portable v1.7');
+
+    // Full script testing in T1.1.8
   });
 
   it('should backup original configuration before migration - REACTIVATED: structure validation', () => {
