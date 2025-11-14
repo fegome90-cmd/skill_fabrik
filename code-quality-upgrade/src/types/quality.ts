@@ -1,6 +1,6 @@
 /*
  * Quality System TypeScript Interfaces
- * 
+ *
  * These interfaces define the core types for the quality system
  * following Clean Architecture principles with no hardcoded paths.
  */

@@ -1,6 +1,6 @@
 /*
  * Configuration TypeScript Interfaces
- * 
+ *
  * These interfaces define the configuration types for ESLint and other tools
  * following Clean Architecture principles with proper type safety.
  */

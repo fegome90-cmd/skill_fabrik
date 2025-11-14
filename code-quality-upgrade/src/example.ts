@@ -4,7 +4,7 @@ export function saludar(nombre: string): string {
 
 export function calcularAreaCirculo(radio: number): number {
   if (radio <= 0) {
-    throw new Error("El radio debe ser positivo");
+    throw new Error('El radio debe ser positivo');
   }
   return Math.PI * radio ** 2;
 }

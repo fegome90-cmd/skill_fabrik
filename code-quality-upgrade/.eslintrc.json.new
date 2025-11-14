@@ -63,7 +63,10 @@
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "security/detect-object-injection": "warn",
-    "sonarjs/cognitive-complexity": ["warn", 15],
+    "sonarjs/cognitive-complexity": [
+      "warn",
+      15
+    ],
     "sonarjs/no-duplicate-string": [
       "warn",
       {
@@ -82,7 +85,10 @@
   },
   "overrides": [
     {
-      "files": ["**/*.test.ts", "**/*.spec.ts"],
+      "files": [
+        "**/*.test.ts",
+        "**/*.spec.ts"
+      ],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
       }

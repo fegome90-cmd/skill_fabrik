@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "es2020",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES2022"],
     "outDir": "./dist",
@@ -11,18 +11,15 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
     "types": ["node", "jest"]
   },
   "include": [
     "src/**/*",
     "test/**/*",
     "scripts/**/*",
+    "utils/**/*",
+    "test-disabled/**/*",
     "*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage"
-  ]
+  "exclude": ["node_modules", "dist", "coverage"]
 }

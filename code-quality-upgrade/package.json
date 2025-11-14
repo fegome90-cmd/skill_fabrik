@@ -2,7 +2,6 @@
   "name": "code-quality-upgrade",
   "version": "1.0.0",
   "description": "Zero Technical Debt - Code Quality Unification",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -21,7 +20,7 @@
     "migrate:unified": "bash scripts/migrate-to-unified.sh",
     "tsx": "tsx"
   },
-"devDependencies": {
+  "devDependencies": {
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
@@ -42,9 +41,16 @@
     "typescript": "^5.3.0"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix"],
-    "*.{json,md,yml,yaml}": ["prettier --write"],
-    "*.{ts,tsx}": ["tsc --noEmit"]
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "tsc --noEmit"
+    ]
   },
   "keywords": [
     "code-quality",
