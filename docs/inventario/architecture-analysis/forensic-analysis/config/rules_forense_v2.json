@@ -1,0 +1,1144 @@
+{
+  "metadata": {
+    "name": "Rules of Forensic Analysis - Skills Core",
+    "version": "2.0.0",
+    "description": "Reglas mejoradas con TDD integration, automated validation y metrics tracking para análisis forense de repositorios",
+    "created": "2025-11-13",
+    "updated": "2025-01-13",
+    "authority": "máxima - guía todo el proceso de análisis",
+    "authors": ["Forensic Analysis Team", "TDD Integration Team"],
+    "updates": [
+      {
+        "version": "2.0.0",
+        "date": "2025-01-13",
+        "changes": [
+          "Added TDD integration principles",
+          "Added automated test requirements for rules validation",
+          "Enhanced quality gates with metrics and thresholds",
+          "Added continuous validation framework",
+          "Added metrics tracking and reporting",
+          "Added rule impact analysis",
+          "Enhanced emergency procedures with rollback mechanisms",
+          "Added CI/CD integration guidelines",
+          "Restructured for better scalability",
+          "Added rule dependencies and relationships",
+          "Added validation test templates",
+          "Added performance benchmarks"
+        ]
+      },
+      {
+        "version": "1.1.0",
+        "date": "2025-11-13",
+        "changes": [
+          "Added clean_code maximum for code quality standards",
+          "Added autoanalisis maximum for self-validation requirements",
+          "Added magic numbers prohibitions",
+          "Added hardcoded paths prohibitions",
+          "Added function naming prohibitions",
+          "Added Single Responsibility Principle enforcement",
+          "Added clean_code quality gate",
+          "Enhanced quality gates to include clean code validation"
+        ]
+      }
+    ]
+  },
+  "maximas": {
+    "integridad": {
+      "id": "MAX-001",
+      "rule": "NO MODIFICAR NADA del repo original, solo observar y describir",
+      "rationale": "Mantener la integridad del análisis forense sin contaminar evidencia",
+      "enforcement": "validación automática contra timestamp de archivos + checksums",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/integridad.test.js",
+      "automated_check": "scripts/validate-integrity.js",
+      "metrics": {
+        "files_modified": 0,
+        "timestamps_changed": 0,
+        "checksums_altered": 0
+      },
+      "violation_impact": "alto - invalida todo el análisis"
+    },
+    "calidad": {
+      "id": "MAX-002",
+      "rule": "CADA fase debe pasar quality gates (lint + tests + formato + clean code) antes de continuar",
+      "rationale": "Asegurar calidad consistente en cada etapa del análisis",
+      "enforcement": "quality gates obligatorios entre fases + CI/CD integration",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/calidad.test.js",
+      "automated_check": "scripts/run-quality-gates.js",
+      "metrics": {
+        "gates_passed": 0,
+        "gates_failed": 0,
+        "gate_pass_rate": 0,
+        "average_gate_time_ms": 0
+      },
+      "dependencies": ["clean_code", "evidencia"],
+      "violation_impact": "alto - compromete confiabilidad del análisis"
+    },
+    "clean_code": {
+      "id": "MAX-003",
+      "rule": "TODO script de validación debe seguir clean code principles (sin magic numbers, paths hardcodeados, nombres ambiguos)",
+      "rationale": "Código de análisis debe ser mantenible y profesional",
+      "enforcement": "validación automatizada de clean code violations en src/",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/clean-code.test.js",
+      "automated_check": "scripts/validate-clean-code.js",
+      "metrics": {
+        "magic_numbers": 0,
+        "hardcoded_paths": 0,
+        "ambiguous_names": 0,
+        "srp_violations": 0,
+        "complexity_score": 0
+      },
+      "thresholds": {
+        "max_function_complexity": 10,
+        "max_function_lines": 50,
+        "max_file_lines": 300,
+        "min_test_coverage": 80
+      },
+      "violation_impact": "medio - afecta mantenibilidad"
+    },
+    "autoanalisis": {
+      "id": "MAX-004",
+      "rule": "LA herramienta forense debe cumplir los mismos estándares que exige al repositorio analizado",
+      "rationale": "Predicar con el ejemplo - dogfooding de calidad",
+      "enforcement": "clean code audit obligatorio de scripts de validación + meta-testing",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/autoanalisis.test.js",
+      "automated_check": "scripts/self-audit.js",
+      "metrics": {
+        "self_audit_score": 0,
+        "rules_followed": 0,
+        "rules_violated": 0,
+        "compliance_rate": 0
+      },
+      "dependencies": ["clean_code", "calidad"],
+      "violation_impact": "alto - pérdida de credibilidad"
+    },
+    "evidencia": {
+      "id": "MAX-005",
+      "rule": "TODA afirmación debe estar respaldada por evidencia concreta (rutas, archivos, patrones, comandos verificables)",
+      "rationale": "Análisis forense requiere evidencia verificable y reproducible",
+      "enforcement": "validación de evidencia en cada informe + evidencia indexada",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/evidencia.test.js",
+      "automated_check": "scripts/validate-evidence.js",
+      "metrics": {
+        "claims_made": 0,
+        "claims_backed": 0,
+        "evidence_coverage": 0,
+        "reproducible_evidence": 0
+      },
+      "evidence_types": [
+        "file_path",
+        "code_snippet",
+        "command_output",
+        "metric_data",
+        "screenshot",
+        "log_excerpt"
+      ],
+      "violation_impact": "crítico - afirmaciones sin sustento"
+    },
+    "claridad": {
+      "id": "MAX-006",
+      "rule": "SIN jerga técnica ambigua, describir en lenguaje natural claro y preciso",
+      "rationale": "Informes deben ser comprensibles por audiencias diversas",
+      "enforcement": "revisión de lenguaje en informes + readability score",
+      "priority": "alto",
+      "test_required": true,
+      "test_template": "tests/maximas/claridad.test.js",
+      "automated_check": "scripts/validate-clarity.js",
+      "metrics": {
+        "readability_score": 0,
+        "jargon_count": 0,
+        "avg_sentence_length": 0,
+        "clarity_rating": 0
+      },
+      "thresholds": {
+        "min_readability_score": 60,
+        "max_jargon_count": 10,
+        "max_avg_sentence_length": 25
+      },
+      "violation_impact": "medio - afecta comunicación"
+    },
+    "completitud": {
+      "id": "MAX-007",
+      "rule": "CADA área identificada debe ser analizada, sin dejar huecos o zonas sin documentar",
+      "rationale": "Análisis incompleto genera puntos ciegos críticos",
+      "enforcement": "checklist de cobertura por fase + coverage metrics",
+      "priority": "alto",
+      "test_required": true,
+      "test_template": "tests/maximas/completitud.test.js",
+      "automated_check": "scripts/validate-completeness.js",
+      "metrics": {
+        "areas_identified": 0,
+        "areas_analyzed": 0,
+        "coverage_percentage": 0,
+        "gaps_found": 0
+      },
+      "violation_impact": "alto - análisis incompleto"
+    },
+    "consistencia": {
+      "id": "MAX-008",
+      "rule": "TODOS los informes siguen el mismo formato, estructura y convenciones de nomenclatura",
+      "rationale": "Consistencia facilita comparación y comprensión",
+      "enforcement": "plantillas estándar para informes + schema validation",
+      "priority": "medio",
+      "test_required": true,
+      "test_template": "tests/maximas/consistencia.test.js",
+      "automated_check": "scripts/validate-consistency.js",
+      "metrics": {
+        "template_compliance": 0,
+        "naming_violations": 0,
+        "format_errors": 0,
+        "consistency_score": 0
+      },
+      "violation_impact": "bajo - afecta usabilidad"
+    },
+    "gobernanza": {
+      "id": "MAX-009",
+      "rule": "LAS dev-docs son la fuente de verdad del proceso de análisis - single source of truth",
+      "rationale": "Evitar divergencia de procesos y versiones",
+      "enforcement": "referencias obligatorias a dev-docs + version tracking",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/gobernanza.test.js",
+      "automated_check": "scripts/validate-governance.js",
+      "metrics": {
+        "doc_references": 0,
+        "outdated_refs": 0,
+        "doc_compliance": 0
+      },
+      "violation_impact": "medio - desalineación de procesos"
+    },
+    "forense": {
+      "id": "MAX-010",
+      "rule": "PENSAR como detective: recolectar evidencia primero, analizar después, no hacer juicios prematuros sin datos",
+      "rationale": "Método científico aplicado al análisis de código",
+      "enforcement": "validación de método científico + peer review",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/forense.test.js",
+      "automated_check": "scripts/validate-forensic-method.js",
+      "metrics": {
+        "evidence_first_adherence": 0,
+        "premature_conclusions": 0,
+        "data_backed_statements": 0
+      },
+      "violation_impact": "crítico - compromete metodología"
+    },
+    "tdd_integration": {
+      "id": "MAX-011",
+      "rule": "CADA regla debe tener tests automatizados que validen su cumplimiento - tests first approach",
+      "rationale": "TDD aplicado a las reglas del análisis forense",
+      "enforcement": "mandatory test suite para cada regla + CI integration",
+      "priority": "crítico",
+      "test_required": true,
+      "test_template": "tests/maximas/tdd-integration.test.js",
+      "automated_check": "scripts/validate-tdd-compliance.js",
+      "metrics": {
+        "rules_with_tests": 0,
+        "test_coverage": 0,
+        "tests_passing": 0,
+        "tdd_compliance": 0
+      },
+      "dependencies": ["calidad", "autoanalisis"],
+      "violation_impact": "alto - no hay validación automatizada"
+    },
+    "continuous_validation": {
+      "id": "MAX-012",
+      "rule": "VALIDACIÓN debe ser continua y automatizada, no solo al final de cada fase",
+      "rationale": "Detectar problemas temprano reduce costo de corrección",
+      "enforcement": "CI/CD pipeline con validaciones en cada commit",
+      "priority": "alto",
+      "test_required": true,
+      "test_template": "tests/maximas/continuous-validation.test.js",
+      "automated_check": "scripts/continuous-validation.js",
+      "metrics": {
+        "validation_frequency": 0,
+        "early_detections": 0,
+        "late_detections": 0,
+        "avg_detection_time_ms": 0
+      },
+      "violation_impact": "medio - detección tardía de problemas"
+    }
+  },
+  "prohibiciones": [
+    {
+      "id": "PROH-001",
+      "item": "NO ejecutar código del repo original",
+      "rationale": "Ejecución puede modificar estado o tener efectos secundarios",
+      "consequence": "terminación inmediata del análisis",
+      "severity": "fatal",
+      "test_check": "scripts/check-no-execution.js",
+      "automated_detection": true,
+      "remediation": "rollback completo del análisis"
+    },
+    {
+      "id": "PROH-002",
+      "item": "NO modificar archivos del repo original",
+      "rationale": "Preservar integridad de la evidencia",
+      "consequence": "terminación inmediata del análisis",
+      "severity": "fatal",
+      "test_check": "scripts/check-no-modification.js",
+      "automated_detection": true,
+      "remediation": "rollback completo + restauración de backup"
+    },
+    {
+      "id": "PROH-003",
+      "item": "NO proponer cambios durante la fase de análisis",
+      "rationale": "Separar observación objetiva de recomendación subjetiva",
+      "consequence": "separación de observación vs recomendación en secciones distintas",
+      "severity": "error",
+      "test_check": "scripts/check-no-early-recommendations.js",
+      "automated_detection": true,
+      "remediation": "mover recomendaciones a sección apropiada"
+    },
+    {
+      "id": "PROH-004",
+      "item": "NO omitir áreas por complejidad o falta de tiempo",
+      "rationale": "Análisis incompleto genera puntos ciegos críticos",
+      "consequence": "análisis marcado como incompleto, repetir fase",
+      "severity": "error",
+      "test_check": "scripts/check-completeness.js",
+      "automated_detection": true,
+      "remediation": "completar áreas faltantes"
+    },
+    {
+      "id": "PROH-005",
+      "item": "NO mezclar observaciones con recomendaciones en el mismo apartado",
+      "rationale": "Claridad en qué es hecho vs opinión",
+      "consequence": "reestructurar en secciones separadas",
+      "severity": "warning",
+      "test_check": "scripts/check-section-separation.js",
+      "automated_detection": true,
+      "remediation": "reorganizar contenido"
+    },
+    {
+      "id": "PROH-006",
+      "item": "NO reportar datos numéricos sin verificación con comandos reales ejecutados",
+      "rationale": "Datos no verificados son potencialmente incorrectos",
+      "consequence": "datos invalidados, repetir recolección con evidencia",
+      "severity": "fatal",
+      "test_check": "scripts/check-data-verification.js",
+      "automated_detection": true,
+      "remediation": "re-ejecutar comandos y documentar output"
+    },
+    {
+      "id": "PROH-007",
+      "item": "NO usar caracteres no-ASCII en documentación profesional",
+      "rationale": "Compatibilidad y profesionalismo",
+      "consequence": "limpieza inmediata de caracteres",
+      "severity": "error",
+      "test_check": "scripts/check-encoding.js",
+      "automated_detection": true,
+      "remediation": "convertir a ASCII equivalente"
+    },
+    {
+      "id": "PROH-008",
+      "item": "NO tener configuraciones ESLint inválidas o no funcionales",
+      "rationale": "Quality gates dependen de ESLint funcional",
+      "consequence": "quality gates rotos, no se puede continuar",
+      "severity": "fatal",
+      "test_check": "scripts/check-eslint-config.js",
+      "automated_detection": true,
+      "remediation": "corregir configuración ESLint"
+    },
+    {
+      "id": "PROH-009",
+      "item": "NO tener inconsistencias de métricas entre informes y fases",
+      "rationale": "Inconsistencias invalidan credibilidad",
+      "consequence": "cross-check obligatorio antes de continuar",
+      "severity": "error",
+      "test_check": "scripts/check-metrics-consistency.js",
+      "automated_detection": true,
+      "remediation": "reconciliar métricas con fuente única de verdad"
+    },
+    {
+      "id": "PROH-010",
+      "item": "NO usar magic numbers - usar constantes nombradas con significado semántico",
+      "rationale": "Mantenibilidad y claridad del código",
+      "consequence": "error en quality gates, refactorización obligatoria",
+      "severity": "error",
+      "test_check": "scripts/check-magic-numbers.js",
+      "automated_detection": true,
+      "remediation": "extraer a constantes nombradas",
+      "examples": {
+        "bad": "if (count > 100) { ... }",
+        "good": "const MAX_ITEMS = 100; if (count > MAX_ITEMS) { ... }"
+      }
+    },
+    {
+      "id": "PROH-011",
+      "item": "NO usar paths hardcodeados - implementar dependency injection pattern",
+      "rationale": "Flexibilidad y testeabilidad",
+      "consequence": "error en quality gates, refactorización obligatoria",
+      "severity": "error",
+      "test_check": "scripts/check-hardcoded-paths.js",
+      "automated_detection": true,
+      "remediation": "usar configuración inyectada",
+      "examples": {
+        "bad": "const path = '/Users/john/project/src'",
+        "good": "constructor({ basePath }) { this.basePath = basePath; }"
+      }
+    },
+    {
+      "id": "PROH-012",
+      "item": "NO tener nombres genéricos de funciones/variables (data, info, tmp, process, handle)",
+      "rationale": "Claridad y auto-documentación",
+      "consequence": "error en quality gates, renombrar con propósito específico",
+      "severity": "error",
+      "test_check": "scripts/check-naming.js",
+      "automated_detection": true,
+      "remediation": "renombrar con nombres descriptivos",
+      "examples": {
+        "bad": "function process(data) { ... }",
+        "good": "function validateUserInput(userCredentials) { ... }"
+      }
+    },
+    {
+      "id": "PROH-013",
+      "item": "NO violar Single Responsibility Principle en scripts de validación",
+      "rationale": "Mantenibilidad y testeabilidad",
+      "consequence": "error en quality gates, dividir en funciones específicas",
+      "severity": "error",
+      "test_check": "scripts/check-srp.js",
+      "automated_detection": true,
+      "remediation": "refactorizar en funciones con responsabilidad única"
+    },
+    {
+      "id": "PROH-014",
+      "item": "NO proceder sin tests que validen el cumplimiento de cada regla",
+      "rationale": "TDD enforcement - no rule without test",
+      "consequence": "bloqueador - implementar tests primero",
+      "severity": "fatal",
+      "test_check": "scripts/check-rule-tests.js",
+      "automated_detection": true,
+      "remediation": "escribir tests antes de aplicar regla"
+    }
+  ],
+  "obligaciones": [
+    {
+      "id": "OBL-001",
+      "item": "VALIDAR cada fase contra tests específicos automatizados",
+      "rationale": "Asegurar calidad consistente",
+      "verification": "tests unitarios y de integración con > 80% coverage",
+      "priority": "crítico",
+      "test_template": "tests/obligations/validation.test.js",
+      "success_criteria": {
+        "all_tests_passing": true,
+        "min_coverage": 80,
+        "max_duration_ms": 30000
+      }
+    },
+    {
+      "id": "OBL-002",
+      "item": "DOCUMENTAR toda evidencia encontrada con referencias verificables",
+      "rationale": "Reproducibilidad y trazabilidad",
+      "verification": "sección de evidencia por informe con índice",
+      "priority": "crítico",
+      "test_template": "tests/obligations/documentation.test.js",
+      "success_criteria": {
+        "evidence_coverage": 100,
+        "references_valid": true,
+        "reproducible": true
+      }
+    },
+    {
+      "id": "OBL-003",
+      "item": "MANTENER formato consistente en todos los informes según templates",
+      "rationale": "Profesionalismo y usabilidad",
+      "verification": "plantillas y validación de estructura + schema validation",
+      "priority": "alto",
+      "test_template": "tests/obligations/format.test.js",
+      "success_criteria": {
+        "template_compliance": 100,
+        "schema_valid": true
+      }
+    },
+    {
+      "id": "OBL-004",
+      "item": "REFERENCIAR siempre las dev-docs guía con versión específica",
+      "rationale": "Single source of truth",
+      "verification": "referencias cruzadas obligatorias con version tags",
+      "priority": "crítico",
+      "test_template": "tests/obligations/references.test.js",
+      "success_criteria": {
+        "references_present": true,
+        "versions_specified": true,
+        "links_valid": true
+      }
+    },
+    {
+      "id": "OBL-005",
+      "item": "EJECUTAR quality gates después de cada fase sin excepciones",
+      "rationale": "Calidad no negociable",
+      "verification": "automated quality checks en CI/CD",
+      "priority": "crítico",
+      "test_template": "tests/obligations/quality-gates.test.js",
+      "success_criteria": {
+        "all_gates_passed": true,
+        "no_skipped_gates": true,
+        "execution_time_acceptable": true
+      }
+    },
+    {
+      "id": "OBL-006",
+      "item": "REGISTRAR hallazgos en dev-docs/tasks.md en tiempo real",
+      "rationale": "Trazabilidad y continuidad",
+      "verification": "log actualizado continuamente con timestamps",
+      "priority": "alto",
+      "test_template": "tests/obligations/logging.test.js",
+      "success_criteria": {
+        "log_up_to_date": true,
+        "timestamps_present": true,
+        "format_correct": true
+      }
+    },
+    {
+      "id": "OBL-007",
+      "item": "VERIFICAR TODOS los datos numéricos con comandos reales documentados",
+      "rationale": "Exactitud de datos",
+      "verification": "cross-check con find, wc -l, du -sh + command logs",
+      "priority": "crítico",
+      "test_template": "tests/obligations/data-verification.test.js",
+      "success_criteria": {
+        "all_verified": true,
+        "commands_documented": true,
+        "results_reproducible": true
+      }
+    },
+    {
+      "id": "OBL-008",
+      "item": "VALIDAR consistencia de métricas entre todos los informes y fases",
+      "rationale": "Coherencia global",
+      "verification": "mismos valores de componentes en todas las fases",
+      "priority": "crítico",
+      "test_template": "tests/obligations/consistency.test.js",
+      "success_criteria": {
+        "zero_inconsistencies": true,
+        "cross_phase_validated": true
+      }
+    },
+    {
+      "id": "OBL-009",
+      "item": "ASEGURAR UTF-8 limpio en toda documentación sin excepciones",
+      "rationale": "Compatibilidad universal",
+      "verification": "sin caracteres no-ASCII en informes profesionales",
+      "priority": "alto",
+      "test_template": "tests/obligations/encoding.test.js",
+      "success_criteria": {
+        "encoding_valid": true,
+        "no_special_chars": true
+      }
+    },
+    {
+      "id": "OBL-010",
+      "item": "VALIDAR clean code principles en todo script de validación src/",
+      "rationale": "Código profesional",
+      "verification": "automated clean code scan con reglas específicas",
+      "priority": "crítico",
+      "test_template": "tests/obligations/clean-code.test.js",
+      "success_criteria": {
+        "zero_violations": true,
+        "complexity_acceptable": true,
+        "test_coverage": 80
+      }
+    },
+    {
+      "id": "OBL-011",
+      "item": "IMPLEMENTAR dependency injection pattern en todos los constructores",
+      "rationale": "Testeabilidad y flexibilidad",
+      "verification": "revisión de options parameters vs hardcoded values",
+      "priority": "crítico",
+      "test_template": "tests/obligations/dependency-injection.test.js",
+      "success_criteria": {
+        "di_implemented": true,
+        "testable": true
+      }
+    },
+    {
+      "id": "OBL-012",
+      "item": "TENER tests que prevengan regresiones de clean code violations",
+      "rationale": "Prevención de degradación",
+      "verification": "tests específicos para magic numbers, paths, naming",
+      "priority": "crítico",
+      "test_template": "tests/obligations/regression-tests.test.js",
+      "success_criteria": {
+        "regression_tests_present": true,
+        "all_passing": true
+      }
+    },
+    {
+      "id": "OBL-013",
+      "item": "EJECUTAR clean code audit después de cada nuevo script",
+      "rationale": "Prevención proactiva",
+      "verification": "automated validation con código de salida 0",
+      "priority": "alto",
+      "test_template": "tests/obligations/audit.test.js",
+      "success_criteria": {
+        "audit_passed": true,
+        "exit_code_zero": true
+      }
+    },
+    {
+      "id": "OBL-014",
+      "item": "ESCRIBIR tests ANTES de implementar validaciones - TDD strict",
+      "rationale": "TDD enforcement",
+      "verification": "tests existen antes de código de validación",
+      "priority": "crítico",
+      "test_template": "tests/obligations/tdd-compliance.test.js",
+      "success_criteria": {
+        "test_first": true,
+        "red_green_refactor": true
+      }
+    },
+    {
+      "id": "OBL-015",
+      "item": "MEDIR y REPORTAR métricas de cumplimiento de reglas",
+      "rationale": "Mejora continua basada en datos",
+      "verification": "dashboard de métricas actualizado",
+      "priority": "alto",
+      "test_template": "tests/obligations/metrics.test.js",
+      "success_criteria": {
+        "metrics_tracked": true,
+        "dashboard_updated": true,
+        "trends_analyzed": true
+      }
+    }
+  ],
+  "quality_gates": {
+    "lint": {
+      "id": "QG-001",
+      "requirement": "CERO errores de ESLint - configuración válida y funcional",
+      "command": "npm run lint",
+      "threshold": "0 errors, 0 warnings",
+      "timeout_ms": 30000,
+      "validation": "ESLint debe estar funcionalmente configurado sin propiedades inválidas",
+      "test_file": "tests/quality-gates/lint.test.js",
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "files_linted": 0,
+        "duration_ms": 0
+      },
+      "on_failure": {
+        "action": "block_progress",
+        "notification": true,
+        "log_to": "dev-docs/quality-gate-failures.md"
+      }
+    },
+    "format": {
+      "id": "QG-002",
+      "requirement": "Formato Prettier consistente al 100%",
+      "command": "npm run format:check",
+      "threshold": "100% conformidad",
+      "timeout_ms": 20000,
+      "test_file": "tests/quality-gates/format.test.js",
+      "metrics": {
+        "files_checked": 0,
+        "files_formatted": 0,
+        "conformity_percentage": 0
+      },
+      "on_failure": {
+        "action": "auto_fix",
+        "command": "npm run format:write",
+        "notification": true
+      }
+    },
+    "tests": {
+      "id": "QG-003",
+      "requirement": "TODOS los tests de la fase deben pasar con cobertura > 80%",
+      "command": "npm run test:phase-{X}",
+      "threshold": "100% pass rate, > 80% coverage",
+      "timeout_ms": 60000,
+      "test_file": "tests/quality-gates/tests.test.js",
+      "metrics": {
+        "tests_total": 0,
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "coverage_percentage": 0,
+        "duration_ms": 0
+      },
+      "on_failure": {
+        "action": "block_progress",
+        "notification": true,
+        "generate_report": true
+      }
+    },
+    "clean_code": {
+      "id": "QG-004",
+      "requirement": "CERO violaciones de clean code en src/ y tests/",
+      "command": "npm run validate:clean-code",
+      "threshold": "0 magic numbers, 0 paths hardcodeados, 0 nombres ambiguos, SRP compliance",
+      "timeout_ms": 30000,
+      "validation": "automated scan de clean code violations en scripts de validación",
+      "test_file": "tests/quality-gates/clean-code.test.js",
+      "metrics": {
+        "magic_numbers": 0,
+        "hardcoded_paths": 0,
+        "ambiguous_names": 0,
+        "srp_violations": 0,
+        "avg_complexity": 0,
+        "max_function_length": 0
+      },
+      "thresholds": {
+        "max_complexity": 10,
+        "max_function_lines": 50,
+        "max_file_lines": 300
+      },
+      "on_failure": {
+        "action": "block_progress",
+        "notification": true,
+        "generate_violations_report": true
+      }
+    },
+    "evidence": {
+      "id": "QG-005",
+      "requirement": "CADA hallazgo debe tener evidencia verificable y reproducible",
+      "validation": "función de validación de evidencia",
+      "threshold": "100% evidenciado",
+      "test_file": "tests/quality-gates/evidence.test.js",
+      "metrics": {
+        "total_claims": 0,
+        "backed_claims": 0,
+        "evidence_coverage": 0,
+        "reproducible_evidence": 0
+      },
+      "on_failure": {
+        "action": "request_evidence",
+        "notification": true
+      }
+    },
+    "completeness": {
+      "id": "QG-006",
+      "requirement": "TODAS las áreas identificadas deben ser cubiertas",
+      "validation": "checklist de cobertura",
+      "threshold": "100% cobertura",
+      "test_file": "tests/quality-gates/completeness.test.js",
+      "metrics": {
+        "areas_identified": 0,
+        "areas_covered": 0,
+        "coverage_percentage": 0,
+        "gaps": 0
+      },
+      "on_failure": {
+        "action": "identify_gaps",
+        "notification": true,
+        "generate_gap_report": true
+      }
+    },
+    "data_integrity": {
+      "id": "QG-007",
+      "requirement": "TODOS los datos numéricos deben ser verificables y consistentes",
+      "validation": "cross-check entre informes",
+      "threshold": "0 inconsistencies",
+      "test_file": "tests/quality-gates/data-integrity.test.js",
+      "checks": [
+        "Métricas de componentes consistentes entre fases",
+        "Conteos de archivos verificables con comandos find",
+        "Tamaños de archivos corroborados con du -sh",
+        "Sin caracteres no-ASCII en documentación profesional",
+        "Timestamps de archivo no modificados"
+      ],
+      "metrics": {
+        "data_points_checked": 0,
+        "inconsistencies_found": 0,
+        "verification_commands_run": 0,
+        "integrity_score": 0
+      },
+      "on_failure": {
+        "action": "reconcile_data",
+        "notification": true,
+        "generate_inconsistency_report": true
+      }
+    },
+    "security": {
+      "id": "QG-008",
+      "requirement": "Sin vulnerabilidades de seguridad conocidas",
+      "command": "npm audit --audit-level=high",
+      "threshold": "0 high/critical vulnerabilities",
+      "timeout_ms": 40000,
+      "test_file": "tests/quality-gates/security.test.js",
+      "metrics": {
+        "vulnerabilities_found": 0,
+        "critical": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0
+      },
+      "on_failure": {
+        "action": "block_progress",
+        "notification": true,
+        "generate_security_report": true
+      }
+    },
+    "performance": {
+      "id": "QG-009",
+      "requirement": "Scripts de validación deben ejecutarse en tiempo aceptable",
+      "thresholds": {
+        "max_validation_time_ms": 120000,
+        "max_memory_mb": 512,
+        "max_cpu_percent": 80
+      },
+      "test_file": "tests/quality-gates/performance.test.js",
+      "metrics": {
+        "execution_time_ms": 0,
+        "memory_used_mb": 0,
+        "cpu_usage_percent": 0
+      },
+      "on_failure": {
+        "action": "optimize_or_warn",
+        "notification": true
+      }
+    }
+  },
+  "phases": {
+    "phase-a": {
+      "id": "PHASE-A",
+      "name": "Inventario Estructural y Pathing",
+      "description": "Mapeo completo de estructura de directorios y archivos",
+      "maximas": ["integridad", "evidencia", "completitud"],
+      "prohibiciones": ["PROH-001", "PROH-004", "PROH-006"],
+      "obligaciones": ["OBL-001", "OBL-002", "OBL-007"],
+      "quality_gates": ["QG-001", "QG-002", "QG-003", "QG-005", "QG-007"],
+      "deliverables": [
+        "inventory-report.md",
+        "directory-tree.txt",
+        "file-metrics.json"
+      ],
+      "test_suite": "tests/phases/phase-a.test.js",
+      "estimated_duration_hours": 4
+    },
+    "phase-b": {
+      "id": "PHASE-B",
+      "name": "Mapa de Responsabilidades y Arquitectura Real",
+      "description": "Análisis de responsabilidades y relaciones entre componentes",
+      "maximas": ["evidencia", "claridad", "forense"],
+      "prohibiciones": ["PROH-003", "PROH-005"],
+      "obligaciones": ["OBL-002", "OBL-004"],
+      "quality_gates": ["QG-001", "QG-003", "QG-004", "QG-005"],
+      "deliverables": [
+        "architecture-map.md",
+        "responsibilities-matrix.json",
+        "dependencies-graph.dot"
+      ],
+      "test_suite": "tests/phases/phase-b.test.js",
+      "estimated_duration_hours": 6
+    },
+    "phase-c": {
+      "id": "PHASE-C",
+      "name": "Testing, Calidad y Errores",
+      "description": "Análisis de cobertura de tests y calidad del código",
+      "maximas": ["completitud", "evidencia", "clean_code"],
+      "prohibiciones": [
+        "PROH-004",
+        "PROH-010",
+        "PROH-011",
+        "PROH-012",
+        "PROH-013"
+      ],
+      "obligaciones": ["OBL-010", "OBL-012"],
+      "quality_gates": ["QG-003", "QG-004", "QG-008"],
+      "deliverables": [
+        "testing-report.md",
+        "coverage-analysis.json",
+        "quality-metrics.json"
+      ],
+      "test_suite": "tests/phases/phase-c.test.js",
+      "estimated_duration_hours": 5
+    },
+    "phase-d": {
+      "id": "PHASE-D",
+      "name": "CLI, Runtime, pm2 y Uso Real",
+      "description": "Análisis de interfaces de línea de comandos y runtime",
+      "maximas": ["evidencia", "claridad"],
+      "prohibiciones": ["PROH-001"],
+      "obligaciones": ["OBL-002", "OBL-006"],
+      "quality_gates": ["QG-005", "QG-007"],
+      "deliverables": [
+        "cli-analysis.md",
+        "runtime-flows.md",
+        "pm2-config-analysis.md"
+      ],
+      "test_suite": "tests/phases/phase-d.test.js",
+      "estimated_duration_hours": 4
+    },
+    "phase-e": {
+      "id": "PHASE-E",
+      "name": "Prompt Builder y Contratos",
+      "description": "Análisis de sistema de prompts y contratos de API",
+      "maximas": ["gobernanza", "evidencia", "consistencia"],
+      "prohibiciones": ["PROH-002", "PROH-009"],
+      "obligaciones": ["OBL-003", "OBL-008"],
+      "quality_gates": ["QG-005", "QG-006", "QG-007"],
+      "deliverables": [
+        "prompt-analysis.md",
+        "contracts-validation.json",
+        "api-contracts.md"
+      ],
+      "test_suite": "tests/phases/phase-e.test.js",
+      "estimated_duration_hours": 5
+    }
+  },
+  "validation": {
+    "rules_check": {
+      "id": "VAL-001",
+      "command": "node scripts/validate-rules.js",
+      "frequency": "antes de cada fase",
+      "required": true,
+      "timeout_ms": 10000,
+      "test_file": "tests/validation/rules-check.test.js"
+    },
+    "evidence_check": {
+      "id": "VAL-002",
+      "command": "node scripts/validate-evidence.js",
+      "frequency": "después de cada informe",
+      "required": true,
+      "timeout_ms": 15000,
+      "test_file": "tests/validation/evidence-check.test.js"
+    },
+    "completeness_check": {
+      "id": "VAL-003",
+      "command": "node scripts/validate-completeness.js",
+      "frequency": "al final de cada fase",
+      "required": true,
+      "timeout_ms": 10000,
+      "test_file": "tests/validation/completeness-check.test.js"
+    },
+    "data_integrity_check": {
+      "id": "VAL-004",
+      "command": "node scripts/validate-data-integrity.js",
+      "frequency": "después de correcciones de datos + continuo en CI",
+      "required": true,
+      "timeout_ms": 20000,
+      "test_file": "tests/validation/data-integrity-check.test.js",
+      "checks": [
+        "Cross-check métricas componentes entre todas las fases",
+        "Verificar conteos de archivos con find/wc",
+        "Validar configuraciones ESLint funcionales",
+        "Detectar caracteres no-ASCII en documentación",
+        "Validar checksums de archivos originales"
+      ]
+    },
+    "tdd_compliance_check": {
+      "id": "VAL-005",
+      "command": "node scripts/validate-tdd-compliance.js",
+      "frequency": "con cada nuevo script o regla",
+      "required": true,
+      "timeout_ms": 15000,
+      "test_file": "tests/validation/tdd-compliance-check.test.js",
+      "checks": [
+        "Cada regla tiene test automatizado",
+        "Tests escritos antes de implementación",
+        "Coverage > 80% en validadores",
+        "Tests previenen regresiones"
+      ]
+    },
+    "continuous_validation": {
+      "id": "VAL-006",
+      "command": "node scripts/continuous-validation.js",
+      "frequency": "en cada commit (CI/CD)",
+      "required": true,
+      "timeout_ms": 30000,
+      "test_file": "tests/validation/continuous-validation.test.js",
+      "triggers": ["pre-commit hook", "pre-push hook", "CI pipeline"]
+    }
+  },
+  "metrics_tracking": {
+    "enabled": true,
+    "dashboard_url": "http://localhost:3000/forensic-dashboard",
+    "storage": "dev-docs/metrics/",
+    "update_frequency": "real-time",
+    "metrics": {
+      "rule_compliance": {
+        "maximas_followed": 0,
+        "prohibitions_violated": 0,
+        "obligations_fulfilled": 0,
+        "compliance_score": 0
+      },
+      "quality_gates": {
+        "gates_passed": 0,
+        "gates_failed": 0,
+        "average_gate_time_ms": 0,
+        "slowest_gate": ""
+      },
+      "test_coverage": {
+        "overall_coverage": 0,
+        "unit_tests": 0,
+        "integration_tests": 0,
+        "e2e_tests": 0
+      },
+      "clean_code": {
+        "magic_numbers_total": 0,
+        "hardcoded_paths_total": 0,
+        "naming_violations_total": 0,
+        "avg_complexity": 0
+      },
+      "phase_progress": {
+        "phases_completed": 0,
+        "phases_in_progress": 0,
+        "phases_pending": 0,
+        "total_phases": 5
+      },
+      "performance": {
+        "avg_validation_time_ms": 0,
+        "total_analysis_time_hours": 0,
+        "memory_usage_mb": 0
+      }
+    },
+    "reports": {
+      "daily": "dev-docs/metrics/daily-report.json",
+      "phase": "dev-docs/metrics/phase-{X}-report.json",
+      "final": "dev-docs/metrics/final-analysis-report.json"
+    }
+  },
+  "lecciones_aprendidas": {
+    "phase_1_corrections": {
+      "eslint_validation": "La configuración ESLint debe ser validada funcionalmente, no solo sintácticamente",
+      "data_verification": "Todos los datos numéricos deben ser verificados con comandos reales (find, wc -l, du -sh)",
+      "cross_phase_consistency": "Las métricas de componentes deben ser idénticas entre todas las fases",
+      "encoding_validation": "Toda documentación profesional debe mantener UTF-8 limpio sin caracteres extraños",
+      "quality_gate_functionality": "Los quality gates deben estar realmente operativos, no solo configurados"
+    },
+    "tdd_integration_learnings": {
+      "test_first_mandatory": "Escribir tests antes de reglas previene interpretaciones ambiguas",
+      "automated_validation": "Validación manual es propensa a errores - automatizar todo",
+      "continuous_feedback": "Validación continua detecta problemas más temprano",
+      "metrics_matter": "Lo que se mide se mejora - trackear todo"
+    },
+    "critical_validation_points": [
+      "Daemon: 448KB en TODAS las fases donde se mencione",
+      "Router: 512KB en TODAS las fases donde se mencione",
+      "Skills CLI: 928KB en TODAS las fases donde se mencione",
+      "MCP: 96MB en TODAS las fases donde se mencione",
+      "Tests: 42 archivos totales distribuidos Router(28) + Skills CLI(10) + E2E(4)"
+    ],
+    "validation_commands": {
+      "component_sizes": "du -sh /packages/{daemon,router,skills-cli}/src/",
+      "test_counts": "find / -name '*.test.*' -o -name '*.spec.*' | wc -l",
+      "file_validation": "find /skills -name 'SKILL.md' | wc -l",
+      "encoding_check": "file -bi reports/*.md",
+      "checksum_verification": "sha256sum -c checksums.txt"
+    }
+  },
+  "emergency": {
+    "rule_violation": {
+      "action": "detener inmediatamente la fase actual",
+      "escalation": "reportar a dev-docs/tasks.md + notificar equipo",
+      "resolution": "corregir antes de continuar",
+      "rollback": "restaurar estado anterior si es necesario",
+      "test_verification": "ejecutar tests de regresión después de corrección"
+    },
+    "quality_gate_failure": {
+      "action": "no avanzar a la siguiente fase - bloqueador",
+      "escalation": "registrar fallo en log + generar reporte detallado",
+      "resolution": "resolver todos los errores + re-ejecutar gate",
+      "retry_policy": {
+        "max_retries": 3,
+        "backoff_ms": 5000
+      }
+    },
+    "evidence_missing": {
+      "action": "marcar informe como incompleto - no publicar",
+      "escalation": "requerir recolección adicional de evidencia",
+      "resolution": "completar evidencia + validar reproducibilidad"
+    },
+    "data_inconsistency": {
+      "action": "pausar análisis - reconciliar datos",
+      "escalation": "cross-check con múltiples fuentes",
+      "resolution": "establecer fuente única de verdad + actualizar todos los informes"
+    },
+    "test_failure": {
+      "action": "bloqueador - no continuar hasta resolver",
+      "escalation": "analizar causa raíz + documentar en lecciones aprendidas",
+      "resolution": "corregir tests o código + verificar no hay regresiones"
+    }
+  },
+  "ci_cd_integration": {
+    "enabled": true,
+    "platform": "github-actions",
+    "config_file": ".github/workflows/forensic-analysis.yml",
+    "triggers": ["push", "pull_request", "schedule"],
+    "jobs": {
+      "validate_rules": {
+        "runs_on": "ubuntu-latest",
+        "steps": [
+          "checkout",
+          "setup-node",
+          "npm-install",
+          "validate-rules",
+          "upload-results"
+        ]
+      },
+      "quality_gates": {
+        "runs_on": "ubuntu-latest",
+        "steps": [
+          "checkout",
+          "setup-node",
+          "npm-install",
+          "run-lint",
+          "run-format-check",
+          "run-tests",
+          "run-clean-code-check",
+          "upload-coverage"
+        ]
+      },
+      "continuous_validation": {
+        "runs_on": "ubuntu-latest",
+        "schedule": "*/30 * * * *",
+        "steps": [
+          "checkout",
+          "setup-node",
+          "npm-install",
+          "run-continuous-validation",
+          "notify-on-failure"
+        ]
+      }
+    },
+    "notifications": {
+      "on_failure": true,
+      "channels": ["slack", "email"],
+      "recipients": ["team@example.com"]
+    }
+  },
+  "test_templates": {
+    "maxima_test": {
+      "path": "tests/templates/maxima.test.template.js",
+      "description": "Template para tests de máximas"
+    },
+    "prohibition_test": {
+      "path": "tests/templates/prohibition.test.template.js",
+      "description": "Template para tests de prohibiciones"
+    },
+    "obligation_test": {
+      "path": "tests/templates/obligation.test.template.js",
+      "description": "Template para tests de obligaciones"
+    },
+    "quality_gate_test": {
+      "path": "tests/templates/quality-gate.test.template.js",
+      "description": "Template para tests de quality gates"
+    },
+    "phase_test": {
+      "path": "tests/templates/phase.test.template.js",
+      "description": "Template para tests de fases"
+    }
+  },
+  "documentation": {
+    "main_guide": "docs/FORENSIC_ANALYSIS_GUIDE.md",
+    "quick_start": "docs/QUICK_START.md",
+    "api_reference": "docs/API_REFERENCE.md",
+    "troubleshooting": "docs/TROUBLESHOOTING.md",
+    "contributing": "docs/CONTRIBUTING.md"
+  },
+  "version_compatibility": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0",
+    "required_tools": ["git", "eslint", "prettier", "jest"]
+  }
+}
