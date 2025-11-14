@@ -1,13 +1,15 @@
 # Code Quality Upgrade Rules v2.0
 
 ## Overview
+
 Este archivo contiene las reglas específicas para guiar el trabajo de agentes en la unificación de configuraciones de code quality, eliminando la deuda técnica mediante Clean Architecture y TDD.
 
 ## Core Rules
 
 ### Task Execution
+
 - **Max Duration**: 120 minutos por tarea
-- **Max Subtasks**: 8 por tarea  
+- **Max Subtasks**: 8 por tarea
 - **TDD Mandatory**: Red-Green-Refactor obligatorio
 - **Clean Architecture**: Single Responsibility, Dependency Inversion
 - **Test Coverage**: Mínimo 80%
@@ -16,6 +18,7 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **Configuration Review**: Validar que no hay rutas hardcodeadas
 
 ### Mandatory Validations (Antes de Cada Tarea)
+
 - **Rules File Check**: Leer y entender code-quality-rules.json
 - **Path Validation**: Verificar que no hay rutas hardcodeadas
 - **Configuration Consistency**: Revisar que todas las rutas usan configuración dinámica
@@ -25,7 +28,8 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **Backup Creation**: Crear backup antes de cualquier cambio
 - **Rollback Verification**: Validar que mecanismo de rollback funciona
 
-### File Organization  
+### File Organization
+
 - **No Magic Numbers**: Todos los valores deben estar en constantes
 - **No Hardcoded Values**: Usar variables de entorno o config
 - **No Hardcoded Paths**: Usar config o path resolution dinámica
@@ -35,14 +39,16 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **Dynamic Path Resolution**: paths desde configuración centralizada
 
 ### Code Quality Gates
+
 - **ESLint Validation**: Siempre requerida
-- **Prettier Formatting**: Siempre requerida  
+- **Prettier Formatting**: Siempre requerida
 - **TypeScript Checking**: Sin errores de tipos
 - **Security Validation**: Sin vulnerabilidades
 - **Performance**: Quality gates <5 minutos
 - **Tests**: Todos los tests pasando
 
 ### Architecture Compliance
+
 - **Single Responsibility**: Una responsabilidad por clase
 - **Dependency Inversion**: Usar interfaces y DI
 - **Interface Segregation**: Interfaces pequeñas y específicas
@@ -51,14 +57,16 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **No Circular Dependencies**: Verificar con herramientas
 
 ### Testing Requirements (TDD)
+
 - **Red Phase**: Escribir test que falla
-- **Green Phase**: Implementar mínima funcionalidad  
+- **Green Phase**: Implementar mínima funcionalidad
 - **Refactor Phase**: Mejorar sin cambiar comportamiento
 - **Coverage**: 90% unit, 80% integration, 70% e2e
 - **Mock Usage**: Required para dependencias externas
 - **Test Naming**: Descriptivo y siguiendo convenciones
 
 ### Security Rules
+
 - **No Secrets**: Ni en código ni en configuración
 - **No Hardcoded Credentials**: Usar variables de entorno
 - **Input Validation**: Validar todos los inputs
@@ -67,6 +75,7 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **Encoding Validation**: UTF-8 consistente
 
 ### Performance Requirements
+
 - **Max Execution Time**: Quality gates <300 segundos
 - **Max Memory Usage**: <512MB durante ejecución
 - **Cache Configuration**: Usar cache para configs
@@ -74,6 +83,7 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **Progressive Enhancement**: Mejorar gradualmente
 
 ### Documentation Requirements
+
 - **Code Comments**: Para lógica compleja
 - **API Documentation**: Para interfaces públicas
 - **Migration Guide**: Para cambios de config
@@ -82,6 +92,7 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **README Updated**: Con nuevos comandos y procesos
 
 ### Migration Safety
+
 - **Backup Before Changes**: Siempre crear backup
 - **Rollback Mechanism**: Debe funcionar siempre
 - **Gradual Rollout**: Por fases
@@ -91,30 +102,35 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 ## Phases and Success Criteria
 
 ### Phase 0: Setup (16h)
+
 - TDD framework configurado
 - Estructura de proyecto creada
 - Dependencias instaladas
 - CI/CD pipeline funcionando
 
-### Phase 1: Fundamentals (30h)  
+### Phase 1: Fundamentals (30h)
+
 - ESLint configuration unificada
 - Prettier configuration unificada
 - Scripts de migración creados
 - Documentación completa
 
 ### Phase 2: Quality Gates (35h)
+
 - Quality gates core implementados
 - Husky hooks migrados
 - Integration tests pasando
 - Performance benchmarks cumplidos
 
 ### Phase 3: Advanced Scripts (35h)
+
 - Evidence validation scripts
-- Metrics consistency scripts  
+- Metrics consistency scripts
 - Quality gates orchestration
 - Migration automation completa
 
 ### Phase 4: Validation (20h)
+
 - E2E tests pasando
 - Performance optimizado
 - Team training completo
@@ -131,8 +147,9 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 ## Agent Guidelines
 
 ### Task Execution
+
 - Work en chunks pequeños
-- Commit frecuentemente  
+- Commit frecuentemente
 - Test después de cada cambio
 - Document decisiones importantes
 - **Pre-Task Checklist**: Siempre revisar code-quality-rules.json antes de empezar
@@ -140,18 +157,21 @@ Este archivo contiene las reglas específicas para guiar el trabajo de agentes e
 - **Configuration Validation**: Usar paths dinámicos desde configuración centralizada
 
 ### Problem Solving
+
 - Identificar root cause
 - Proponer múltiples soluciones
 - Validar soluciones
 - Documentar trade-offs
 
 ### Quality Assurance
+
 - Self review obligatorio
 - Peer review para cambios críticos
 - Automated validation siempre
 - Continuous improvement mindset
 
 ### Pre-Task Validation Checklist (OBLIGATORIO)
+
 Antes de ejecutar cualquier tarea, el agente debe:
 
 1. **Leer** code-quality-rules.json completamente
@@ -163,7 +183,9 @@ Antes de ejecutar cualquier tarea, el agente debe:
 7. **Documentar** cualquier configuración especial requerida
 
 ### Path Management Guidelines
+
 **PROHIBIDO - Rutas Hardcodeadas (NUNCA usar)**:
+
 - `/Users/felipe/Developer/skills-fabrik/` (path específico del usuario)
 - `/home/user/` (path genérico Unix)
 - `/usr/local/bin/` (paths del sistema)
@@ -172,6 +194,7 @@ Antes de ejecutar cualquier tarea, el agente debe:
 - Paths que contienen nombres de usuario
 
 **REQUERIDO - Path Resolution Dinámica**:
+
 - Usar `process.cwd()` para directorio actual
 - Usar `path.resolve()` para resolución de paths
 - Usar `path.join()` para construcción de paths
@@ -180,6 +203,7 @@ Antes de ejecutar cualquier tarea, el agente debe:
 - Usar paths relativos desde la raíz del proyecto
 
 **Ejemplo CORRECTO**:
+
 ```typescript
 // ✅ Correcto - Uso de configuración
 import * as path from 'path';
@@ -198,9 +222,11 @@ const fullPath = path.resolve(__dirname, '..', 'config', 'settings.json');
 ```
 
 **Ejemplo INCORRECTO**:
+
 ```typescript
 // ❌ INCORRECTO - Rutas hardcodeadas
-const configPath = '/Users/felipe/Developer/skills-fabrik/code-quality-upgrade/src/config';
+const configPath =
+  '/Users/felipe/Developer/skills-fabrik/code-quality-upgrade/src/config';
 
 // ❌ INCORRECTO - Paths específicos de sistema
 const binaryPath = '/usr/local/bin/some-tool';
@@ -212,14 +238,16 @@ const homePath = '/Users/felipe/Documents/project';
 ## Deliverables
 
 ### Code
+
 - src/config/eslint.config.ts
-- src/config/prettier.config.ts  
+- src/config/prettier.config.ts
 - src/gates/ (quality gates)
 - src/core/ (orchestration)
 - scripts/ (migration)
 - test/ (complete test suite)
 
 ### Documentation
+
 - dev-docs/context.md
 - dev-docs/plan.md
 - dev-docs/task.md
@@ -227,6 +255,7 @@ const homePath = '/Users/felipe/Documents/project';
 - docs/migration-guide.md
 
 ### Validation
+
 - test/unit/ (unit tests)
 - test/integration/ (integration tests)
 - test/e2e/ (end-to-end tests)
