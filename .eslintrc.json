@@ -27,5 +27,17 @@
     "memtech/**",
     "packages/router/src/guardrails.ts",
     "packages/router/src/stop.ts"
+  ],
+  "overrides": [
+    {
+      "files": ["*.test.js", "**/tests/**/*.js"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-undef": "off"
+      }
+    }
   ]
 }
