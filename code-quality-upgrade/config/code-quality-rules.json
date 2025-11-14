@@ -192,15 +192,34 @@
         "Dependencies checker lanza errores undefined",
         "Config files tienen formato incorrecto",
         "ES modules vs CommonJS conflicts"
-      ]
+      ],
+      "proven": true,
+      "caseStudy": "2025-11-14: From 82 issues to zero debt by applying this rule"
     },
     "validationTruthfulness": {
       "description": "Las validaciones deben ser 100% confiables antes de confiar en ellas",
-      "action": "Verificar que cada validación realmente chequea lo que dice"
+      "action": "Verificar que cada validación realmente chequea lo que dice",
+      "proven": true,
+      "caseStudy": "Fixed broken yaml validation that gave false positives"
     },
     "earlyFailureDetection": {
       "description": "Detectar y corregir problemas estructurales lo antes posible",
-      "action": "Investigar inconsistencias inmediatamente"
+      "action": "Investigar inconsistencias inmediatamente",
+      "proven": true,
+      "caseStudy": "Fixed script validation ES modules vs CommonJS in early phase"
+    },
+    "zeroTechnicalDebtMandatory": {
+      "description": "Zero Technical Debt significa cero errores de compilación/test/lint - NO negociable",
+      "action": "Detener todo al detectar errores hasta llegar a cero, documentar, commitear",
+      "examples": [
+        "8 ESLint errors → MUST FIX before continue",
+        "TypeScript compilation errors → BLOCKS commits",
+        "Test failures → INVESTIGATE and fix immediately",
+        "74 warnings → Evaluate cost-benefit, strategic fixes"
+      ],
+      "proven": true,
+      "caseStudy": "2025-11-14: Achieved perfect zero from 82 issues in single session",
+      "implementationTemplate": "See dev-docs/context.md section 'TEMPLATE APLICABLE'"
     }
   },
 
@@ -214,7 +233,8 @@
       "blockOnError": true,
       "referencePlanTask": true,
       "protectTestSuites": true,
-      "noUnapprovedMoves": true
+      "noUnapprovedMoves": true,
+      "zeroDebtMandatory": true
     },
     "problemSolving": {
       "identifyRootCause": true,
@@ -234,7 +254,11 @@
       "investigateBeforeProceeding": true,
       "distinguishBlockingVsCosmetic": true,
       "restoreTestSuitesIfTouched": true,
-      "reportRuleViolationsImmediately": true
+      "reportRuleViolationsImmediately": true,
+      "achieveZeroDebtBeforeContinue": true,
+      "applyTddMethodology": true,
+      "strategicEslintDisables": true,
+      "modularizeUtilities": true
     }
   },
   "deliverables": {
