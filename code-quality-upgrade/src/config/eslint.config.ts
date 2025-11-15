@@ -7,12 +7,12 @@
  * with type-safe configuration building and no hardcoded paths.
  */
 
-import { ESLintConfiguration, RuleConfiguration } from '../types/configuration';
+import { ESLintConfigOptions,ESLintConfiguration, RuleConfiguration } from '../types/configuration';
 
 /**
  * Helper to convert string rule values to proper RuleConfiguration format
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, security/detect-object-injection */
+/* eslint-disable @typescript-eslint/no-explicit-any, no-console */
 function normalizeRule(rule: string | [string, unknown]): RuleConfiguration {
   if (typeof rule === 'string') {
     return { severity: rule as 'off' | 'warn' | 'error' };
@@ -30,7 +30,7 @@ function normalizeRule(rule: string | [string, unknown]): RuleConfiguration {
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function createESLintConfig(
-  options: Partial<ESLintConfiguration>
+  options: ESLintConfigOptions = {}
 ): Promise<ESLintConfiguration> {
   // Default base configuration
   const baseConfig: ESLintConfiguration = {
@@ -70,7 +70,7 @@ export async function createESLintConfig(
       'simple-import-sort/exports': 'error',
       'import/order': 'error',
       'import/newline-after-import': 'error',
-      'security/detect-object-injection': 'warn',
+      'no-console': 'warn',
       'sonarjs/cognitive-complexity': ['warn', 15],
       'sonarjs/no-duplicate-string': 'error',
       'sonarjs/no-identical-expressions': 'error',
@@ -100,7 +100,7 @@ export async function createESLintConfig(
 /**
  * Normalizes rules object to proper RuleConfiguration format
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, security/detect-object-injection */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, no-console */
 function normalizeRules(
   rules: Record<string, any>
 ): Record<string, RuleConfiguration> {
@@ -126,7 +126,7 @@ function normalizeRules(
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function createESLintConfigWithPrettier(
-  options: Partial<ESLintConfiguration>,
+  options: ESLintConfigOptions,
   _prettierConfig?: unknown
 ): Promise<ESLintConfiguration> {
   const config = await createESLintConfig(options);
@@ -243,7 +243,6 @@ export function createESLintConfigSync(
       'simple-import-sort/exports': 'error',
 
       // Security rules
-      'security/detect-object-injection': 'warn',
       'sonarjs/cognitive-complexity': ['warn', 15],
       'sonarjs/no-duplicate-string': ['warn', { threshold: 3 }],
 
@@ -278,7 +277,7 @@ export function createESLintConfigSync(
 
   // Preserve custom rules if requested
   if (preserveCustomRules && originalConfig.rules) {
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, security/detect-object-injection */
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, no-console */
     // Merge custom rules with base rules, preserving custom settings
     const customRules = { ...baseConfig.rules };
 
@@ -308,4 +307,4 @@ export function createESLintConfigSync(
 
   return baseConfig as ESLintConfiguration;
 }
-/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, security/detect-object-injection */
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, no-console */

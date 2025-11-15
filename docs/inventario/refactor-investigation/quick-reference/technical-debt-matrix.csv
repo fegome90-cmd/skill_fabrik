@@ -1,0 +1,17 @@
+ID,Component,Type,Impact,Effort,Priority,Timeline,Risk,Owner,Notes
+F-001,Daemon,HACK,Critical,2 weeks,1,Immediate,Critical Path Manager,Security authentication bypass
+F-002,Daemon,FIXME,High,1 week,1,This week,Daemon Lead,Database connection failures
+F-003,Daemon,FIXME,High,1 week,2,This week,Daemon Lead,Metrics recording failures
+F-004,Daemon,FIXME,High,1 week,3,This week,Daemon Lead,Configuration validation missing
+F-005,Skills-CLI,TODO,High,3 days,2,This week,CLI Lead,User approval hardcoding
+F-006,Skills-CLI,TODO,High,1 week,2,This week,CLI Lead,Schema validation missing
+F-007,Skills-CLI,TODO,High,1 week,2,This week,CLI Lead,Triggers configuration hardcoded
+F-008,Router,TODO,Low,2 days,4,Next week,Router Lead,CORS configuration missing
+F-009,Router,TODO,Low,2 days,4,Next week,Router Lead,Rate limiting incomplete
+F-010,Daemon,TODO,Medium,1 week,3,Next sprint,Daemon Lead,Logging levels hardcoded
+F-011,Daemon,TODO,Medium,5 days,3,Next sprint,Daemon Lead,Cache management missing
+F-012,Config,FIXME,Medium,3 days,3,Next sprint,Config Lead,Validation schemas missing
+F-013,Config,FIXME,Medium,3 days,3,Next sprint,Config Lead,Environment overrides
+F-014,Testing,FIXME,High,1 week,2,This week,QA Lead,Mock data outdated
+F-015,Testing,FIXME,High,1 week,2,This week,QA Lead,Test data inconsistent
+F-016,Testing,FIXME,Medium,3 days,3,Next sprint,QA Lead,Test cleanup missing

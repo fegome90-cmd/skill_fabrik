@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 
+import { PerformanceMonitor } from '../../../src/monitoring/performance-monitor';
 import {
   Bottleneck,
   MigrationProfile,
@@ -270,6 +271,76 @@ describe('Performance Monitor Integration Tests - T1.2.0', () => {
       expect(phaseMetrics.length).toBe(5);
       expect(overallMetrics.executionTime).toBeLessThan(300000); // Performance requirement
       expect(overallMetrics.peakMemoryUsage).toBeLessThan(512 * 1024 * 1024); // 512MB max
+    });
+  });
+
+  describe('Coverage edge cases', () => {
+    it('should cover performance monitor with disabled memory tracking', () => {
+      // This covers conditional branch for trackMemory: false (line 79)
+      const monitor = new PerformanceMonitor({
+        trackMemory: false,
+      });
+      
+      monitor.start();
+      monitor.end();
+      
+      const finalMetrics = monitor.getCurrentMetrics();
+      expect(finalMetrics).toBeDefined();
+      expect(finalMetrics?.memoryUsage).toBeUndefined(); // trackMemory: false
+      expect(finalMetrics?.duration).toBeDefined();
+      expect(finalMetrics?.filesProcessed).toBe(0);
+    });
+
+    it('should cover performance monitor with enabled memory tracking', () => {
+      // This covers conditional branch for trackMemory: true (line 79)
+      const monitor = new PerformanceMonitor({
+        trackMemory: true,
+      });
+      
+      monitor.start();
+      monitor.end();
+      
+      const finalMetrics = monitor.getCurrentMetrics();
+      expect(finalMetrics).toBeDefined();
+      expect(finalMetrics?.memoryUsage).toBeDefined();
+      expect(finalMetrics?.duration).toBeDefined();
+      expect(finalMetrics?.filesProcessed).toBe(0);
+    });
+
+    it('should cover getCurrentMetrics when not started', () => {
+      // This covers conditional branch for metrics null check (line 153)
+      const monitor = new PerformanceMonitor({
+        trackMemory: false,
+      });
+      
+      const metrics = monitor.getCurrentMetrics();
+      expect(metrics).toBeNull();
+    });
+
+    it('should cover getCurrentMetrics when started but not ended', () => {
+      // This covers conditional branch for metrics exists but no endTime (line 156)
+      const monitor = new PerformanceMonitor({
+        trackMemory: false,
+      });
+      
+      monitor.start();
+      const metrics = monitor.getCurrentMetrics();
+      
+      expect(metrics).toBeDefined();
+      expect(typeof metrics?.duration).toBe('number'); // Should return a number
+      expect(metrics?.filesProcessed).toBe(0);
+      expect(metrics?.memoryUsage).toBeUndefined(); // trackMemory: false
+    });
+
+    it('should cover isHealthy when not started', () => {
+      // This covers conditional branch for metrics null check in isHealthy (line 167)
+      const monitor = new PerformanceMonitor({
+        trackMemory: false,
+        maxExecutionTime: 300,
+      });
+      
+      const isHealthy = monitor.isHealthy();
+      expect(isHealthy).toBe(false);
     });
   });
 });

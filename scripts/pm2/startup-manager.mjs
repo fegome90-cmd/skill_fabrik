@@ -6,8 +6,7 @@
  * Manages startup ordering, dependencies, and health monitoring for PM2 services
  */
 
-import { execSync } from 'child_process';
-import { setTimeout } from 'timers/promises';
+import { setTimeout } from 'node:timers/promises';
 import { ServiceDependencyManager } from '../../packages/shared/src/dependency-manager.js';
 import { HealthChecker } from '../../packages/shared/src/health-checker.js';
 
@@ -256,7 +255,7 @@ class EnhancedServiceManager {
     return detailed;
   }
 
-  formatUptime(seconds: number): string {
+  formatUptime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;

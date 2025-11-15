@@ -1,6 +1,5 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+/** @type {import('jest').Config} */
+const config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/test', '<rootDir>/src'],
@@ -33,4 +32,4 @@ const config: Config = {
   restoreMocks: true
 };
 
-export default config;
+module.exports = config;

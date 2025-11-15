@@ -8,7 +8,7 @@ import { stopHook } from '../../packages/router/dist/index.js';
 import { execSync } from 'child_process';
 import { readFile } from 'fs/promises';
 
-async function getEditLog(): Promise<Array<{ file: string; repo: string; ts: number }>> {
+async function getEditLog() {
   try {
     // Try to get git diff to track edited files
     const { execSync: execSyncSync } = await import('child_process');

@@ -43,6 +43,49 @@ export interface RuleConfiguration {
 }
 
 /**
+ * Type for raw rule values (string, array, or object)
+ */
+export type RawRuleValue = string | [string, unknown] | RuleConfiguration;
+
+/**
+ * Type for parser options with additional properties
+ */
+export interface ParserOptionsWithExtras {
+  ecmaVersion?: number;
+  sourceType?: 'module' | 'script';
+  project?: string;
+  ecmaFeatures?: {
+    jsx?: boolean;
+  };
+  [key: string]: unknown;
+}
+
+/**
+ * Type for ESLint configuration options
+ */
+export interface ESLintConfigOptions {
+  version?: string;
+  root?: boolean;
+  parser?: string;
+  parserOptions?: {
+    ecmaVersion?: number;
+    sourceType?: 'module' | 'script';
+    project?: string;
+    ecmaFeatures?: {
+      jsx?: boolean;
+    };
+    [key: string]: unknown;
+  };
+  extends?: string[];
+  plugins?: string[];
+  rules?: Record<string, unknown>;
+  ignorePatterns?: string[];
+  overrides?: RuleOverride[];
+  env?: Record<string, boolean>;
+  globals?: Record<string, boolean>;
+}
+
+/**
  * ESLint rule override configuration
  */
 export interface RuleOverride {

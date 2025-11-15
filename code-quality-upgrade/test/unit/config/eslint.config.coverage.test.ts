@@ -11,7 +11,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable sonarjs/no-duplicate-string */
+/* eslint-disable no-console */
 
 import {
   createESLintConfig,
@@ -45,11 +45,11 @@ describe('ESLint Configuration - Coverage Tests', () => {
         extends: ['custom-config'],
         plugins: ['custom-plugin'],
         rules: {
-          'custom-rule': 'error' as any,
+          'custom-rule': 'error',
           '@typescript-eslint/no-unused-vars': [
             'error',
             { argsIgnorePattern: '^test' },
-          ] as any,
+          ],
         },
         ignorePatterns: ['custom-pattern/**'],
       };
@@ -58,7 +58,9 @@ describe('ESLint Configuration - Coverage Tests', () => {
 
       expect(config.extends).toContain('custom-config');
       expect(config.plugins).toContain('custom-plugin');
-      expect((config.rules['custom-rule'] as any).severity).toBe('error');
+      expect(config.rules['custom-rule']).toEqual({
+        severity: 'error',
+      });
       expect(config.rules['@typescript-eslint/no-unused-vars']).toEqual({
         severity: 'error',
         options: { argsIgnorePattern: '^test' },
@@ -84,13 +86,13 @@ describe('ESLint Configuration - Coverage Tests', () => {
           project: './tsconfig.json',
           tsconfigRootDir: process.cwd(),
         },
-      } as any;
+      };
 
       const config = await createESLintConfig(options);
 
       expect(config.parserOptions).toBeDefined();
       expect(config.parserOptions.project).toBe('./tsconfig.json');
-      expect((config.parserOptions as any).tsconfigRootDir).toBe(process.cwd());
+      expect((config.parserOptions as { tsconfigRootDir?: string }).tsconfigRootDir).toBe(process.cwd());
     });
 
     it('should handle env overrides', async () => {
@@ -99,13 +101,13 @@ describe('ESLint Configuration - Coverage Tests', () => {
           browser: true,
           node: false,
         },
-      } as any;
+      };
 
       const config = await createESLintConfig(options);
 
-      expect((config.env as any).browser).toBe(true);
-      expect((config.env as any).node).toBe(false);
-      expect((config.env as any).es2022).toBe(true);
+      expect(config.env?.browser).toBe(true);
+      expect(config.env?.node).toBe(false);
+      expect(config.env?.es2022).toBe(true);
     });
   });
   describe('createESLintConfigWithPrettier', () => {
@@ -372,6 +374,42 @@ describe('ESLint Configuration - Coverage Tests', () => {
 
       expect(result2).toBeDefined();
       expect(result2.rules).toBeDefined();
+    });
+
+    it('should cover default parameter branch in createESLintConfig', async () => {
+      // This covers the default parameter branch (line 33)
+      const config = await createESLintConfig();
+      
+      expect(config).toBeDefined();
+      expect(config.version).toBe('1.0.0');
+      expect(config.root).toBe(true);
+    });
+
+    it('should cover createESLintConfigSync edge case with empty options', () => {
+      // This covers edge cases in createESLintConfigSync (lines 170-176)
+      const result = createESLintConfigSync({});
+      
+      expect(result).toBeDefined();
+      expect(result.rules).toBeDefined();
+    });
+
+    it('should cover rule merging logic branches', () => {
+      // This covers the conditional branches in rule merging (lines 285, 294)
+      const originalConfig = {
+        rules: {
+          'non-existent-rule': 'error', // Rule not in base config
+          'existing-rule': 'warn', // Rule that exists in base
+        },
+      };
+
+      const result = createESLintConfigSync({
+        preserveCustomRules: true,
+        originalConfig,
+      });
+
+      // Should add non-existent rule and update existing rule
+      expect(result.rules['non-existent-rule']).toBe('error');
+      expect(result.rules['existing-rule']).toBe('warn');
     });
   });
 });

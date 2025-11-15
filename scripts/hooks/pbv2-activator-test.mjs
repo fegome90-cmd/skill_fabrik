@@ -13,7 +13,7 @@ import { resolve } from 'path';
       const planCheckModule = await getPlanCheck(cwd);
       const planCheck = await planCheckModule.checkApprovedPlan(cwd);
       if (planCheck.hasPlan && planCheck.plan) {
-        const plan = planCheck.plan as { id?: string; phases?: Array<{ name: string }> };
+        const plan = planCheck.plan;
         planContext = {
           planId: plan.id,
           taskName: planCheck.taskName,

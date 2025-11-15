@@ -68,11 +68,11 @@ async function benchmark() {
       const result = await activatePBv2(testCase, '/Users/felipe/Developer/skills-fabrik');
       const latency = Date.now() - start;
       results.push({ testCase, latency, success: result.success });
-      console.log(`${testCase}: ${latency}ms ✅`);
+      console.log(`${testCase}: ${latency}ms success`);
     } catch (error) {
       const latency = Date.now() - start;
       results.push({ testCase, latency, success: false });
-      console.log(`${testCase}: ${latency}ms ❌`);
+      console.log(`${testCase}: ${latency}ms failed`);
     }
   }
 

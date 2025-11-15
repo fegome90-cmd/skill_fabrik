@@ -1,4 +1,4 @@
-import { activatePBv2 } from '/Users/felipe/Developer/skills-fabrik/scripts/hooks/pbv2-activator.mjs';
+import { activatePBv2 } from '../../../scripts/hooks/pbv2-activator.mjs';
 
 const testCases = [
   'Create a React component',
@@ -7,23 +7,16 @@ const testCases = [
   'Add security testing'
 ];
 
-async function benchmark() {
-  console.log('Running performance benchmark...
-');
+async function runBenchmark() {
+  console.log('Running performance benchmark...');
 
   const results = [];
   for (const testCase of testCases) {
     const start = Date.now();
-    try {
-      const result = await activatePBv2(testCase, '/Users/felipe/Developer/skills-fabrik');
-      const latency = Date.now() - start;
-      results.push({ testCase, latency, success: result.success });
-      console.log(testCase + ': ' + latency + 'ms ✅');
-    } catch (error) {
-      const latency = Date.now() - start;
-      results.push({ testCase, latency, success: false });
-      console.log(testCase + ': ' + latency + 'ms ❌');
-    }
+    const result = await activatePBv2(testCase, '/Users/felipe/Developer/skills-fabrik');
+    const latency = Date.now() - start;
+    results.push({ testCase, latency, success: result.success });
+    console.log(testCase + ': ' + latency + 'ms ✅');
   }
 
   const avgLatency = results.reduce((a, b) => a + b.latency, 0) / results.length;
@@ -35,4 +28,10 @@ async function benchmark() {
   return { avgLatency, successRate, results };
 }
 
-benchmark().catch(console.error);
+// Top-level await for ESM module
+try {
+  await runBenchmark();
+} catch (error) {
+  console.error('Benchmark failed:', error);
+  process.exit(1);
+}

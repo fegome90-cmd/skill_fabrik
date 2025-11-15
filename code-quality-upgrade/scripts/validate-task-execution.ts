@@ -760,7 +760,7 @@ class TaskExecutionValidator {
    * Centralizes filesystem access and validates paths before delegating to Node's fs module.
    * Paths are resolved against the project root so disabling the security rule is safe.
    */
-  /* eslint-disable security/detect-non-literal-fs-filename */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   private safeExistsSync(targetPath: string): boolean {
     try {
       const normalized = this.ensureWithinProject(targetPath);
@@ -787,7 +787,7 @@ class TaskExecutionValidator {
     const normalized = this.ensureWithinProject(targetPath);
     return fs.readdirSync(normalized);
   }
-  /* eslint-enable security/detect-non-literal-fs-filename */
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   private reportValidationResults(result: ValidationResult): void {
     // Implementation placeholder for detailed validation result reporting
@@ -814,7 +814,7 @@ if (process.argv[1]?.endsWith('validate-task-execution.ts')) {
 
   // CLI pattern: required for Node.js compatibility (top-level await not available in scripts)
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  void validator
+  validator
     .validatePreTaskExecution(taskName)
     .then(result => {
       process.exit(result.passed ? 0 : 1);

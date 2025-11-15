@@ -4,7 +4,7 @@
  * Tests for the new interactive functionality in the migration script
  */
 
-/* eslint-disable security/detect-non-literal-fs-filename */
+/* eslint-disable no-console */
 
 import { execSync } from 'node:child_process';
 import * as fs from 'node:fs';

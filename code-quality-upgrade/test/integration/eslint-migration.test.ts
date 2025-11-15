@@ -14,18 +14,18 @@ import { TestUtils } from '../../utils/TestUtils';
 
 describe('ESLint Migration Integration', () => {
   // Constants following plan requirements
-  // eslint-disable-next-line sonarjs/no-duplicate-string
+  // eslint-disable-next-line no-console
   const CONFIG_FILE = '.eslintrc.json';
   const TEST_FILE = 'test.ts';
   const MIGRATION_SCRIPT = 'scripts/migrate-eslint.sh';
   const PORTABLE_MIGRATION_SCRIPT = 'scripts/migrate-eslint-portable.sh';
-  // eslint-disable-next-line sonarjs/no-duplicate-string
+  // eslint-disable-next-line no-console
   const TYPESCRIPT_PARSER = '@typescript-eslint/parser';
-  // eslint-disable-next-line sonarjs/no-duplicate-string
+  // eslint-disable-next-line no-console
   const ESLINT_RECOMMENDED = 'eslint:recommended';
-  // eslint-disable-next-line sonarjs/no-duplicate-string
+  // eslint-disable-next-line no-console
   const TYPESCRIPT_PLUGIN = '@typescript-eslint';
-  // eslint-disable-next-line sonarjs/no-duplicate-string
+  // eslint-disable-next-line no-console
   const TYPESCRIPT_RECOMMENDED = 'plugin:@typescript-eslint/recommended';
 
   let tempProject: string;
@@ -40,7 +40,7 @@ describe('ESLint Migration Integration', () => {
 
   it('should migrate fragmented configuration to unified using actual script - REACTIVATED: structure validation', () => {
     // Setup: Create fragmented configuration as specified in plan
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, security/detect-non-literal-fs-filename */
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, no-console */
     const fragmentedConfig = {
       parser: 'espree',
       extends: [ESLINT_RECOMMENDED],
@@ -225,10 +225,8 @@ describe('ESLint Migration Integration', () => {
     });
 
     // Verify core functionality while respecting architecture
-    /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
-    expect((result as any).parser).toBe(TYPESCRIPT_PARSER);
-    expect((result as any).plugins).toContain(TYPESCRIPT_PLUGIN);
-    // eslint-disable-next-line sonarjs/no-duplicate-string
-    expect((result as any).extends).toContain(TYPESCRIPT_RECOMMENDED);
+    expect(result.parser).toBe(TYPESCRIPT_PARSER);
+    expect(result.plugins).toContain(TYPESCRIPT_PLUGIN);
+    expect(result.extends).toContain(TYPESCRIPT_RECOMMENDED);
   });
 });
