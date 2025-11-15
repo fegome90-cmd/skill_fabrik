@@ -36,7 +36,7 @@ export class PerformanceMonitor {
   private startTime: number = 0;
   private endTime: number = 0;
   private metrics: PerformanceMetrics | null = null;
-  private options: MonitoringOptions;
+  private readonly options: MonitoringOptions;
   private phaseTimings: Record<string, number> = {};
   private filesProcessed: number = 0;
 
@@ -100,7 +100,7 @@ export class PerformanceMonitor {
     }
 
     // Calculate success rate
-    this.metrics.successRate = 1.0; // All phases successful
+    this.metrics.successRate = 1; // All phases successful
     this.metrics.bottlenecks = this.identifyBottlenecks();
 
     return { ...this.metrics };
@@ -167,15 +167,27 @@ export class PerformanceMonitor {
     const current = this.getCurrentMetrics();
     if (!current) return false;
 
-    if (
-      current.duration &&
-      this.options.maxExecutionTime &&
-      current.duration > this.options.maxExecutionTime * 1000
-    ) {
+    // Check execution time limit
+    if (this.isExecutionTimeExceeded(current)) {
       return false;
     }
 
-    return !(
+    // Check memory limit
+    return !this.isMemoryLimitExceeded(current);
+  }
+
+  private isExecutionTimeExceeded(
+    current: Partial<PerformanceMetrics>
+  ): boolean {
+    return !!(
+      current.duration &&
+      this.options.maxExecutionTime &&
+      current.duration > this.options.maxExecutionTime * 1000
+    );
+  }
+
+  private isMemoryLimitExceeded(current: Partial<PerformanceMetrics>): boolean {
+    return !!(
       current.memoryUsage &&
       this.options.maxMemoryUsage &&
       current.memoryUsage.heapUsed > this.options.maxMemoryUsage * 1024 * 1024

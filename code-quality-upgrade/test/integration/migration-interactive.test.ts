@@ -152,11 +152,17 @@ coverage/
     }
   });
 
+  interface MigrationResult {
+    exitCode: number | string;
+    stdout: string;
+    stderr: string;
+  }
+
   const runMigrationScript = (
     args: string,
     input?: string,
-    timeout: number = 10000
-  ): { exitCode: number; stdout: string; stderr: string } => {
+    timeout: number = 30000
+  ): MigrationResult => {
     try {
       const result = execSync(
         `cd ${tempProjectPath} && echo "${input || ''}" | ./scripts/${MIGRATION_SCRIPT} ${args}`,
@@ -178,7 +184,21 @@ coverage/
         stderr?: string;
         signal?: string;
         code?: number;
+        message?: string;
       };
+
+      // Handle timeout specifically
+      if (
+        execError.message?.includes('ETIMEDOUT') ||
+        execError.signal === 'SIGTERM'
+      ) {
+        return {
+          exitCode: 'ETIMEDOUT',
+          stdout: execError.stdout || '',
+          stderr: `Process timed out after ${timeout}ms`,
+        };
+      }
+
       return {
         exitCode: execError.status || execError.code || 1,
         stdout: execError.stdout || '',
@@ -202,7 +222,7 @@ coverage/
   describe('Interactive Configuration Summary', () => {
     it('should show configuration in interactive mode', () => {
       // Provide "0" for cancel to exit immediately and avoid timeout
-      const result = runMigrationScript('--interactive --dry-run', '0', 10000);
+      const result = runMigrationScript('--interactive --dry-run', '0', 30000);
 
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain(
@@ -215,7 +235,7 @@ coverage/
     it('should proceed when interactive prompts fail', () => {
       // This test simulates a scenario where inquirer might fail
       // The script should fallback to non-interactive mode with timeout for cancel
-      const result = runMigrationScript('--interactive --help', '0', 5000);
+      const result = runMigrationScript('--interactive --help', '0', 30000);
 
       expect(result.exitCode).toBe(0);
       // Should show help even if interactive mode is enabled
@@ -235,7 +255,7 @@ coverage/
     });
 
     it('should proceed with migration without prompts', () => {
-      const result = runMigrationScript('--dry-run', '', 10000);
+      const result = runMigrationScript('--dry-run', '', 30000);
 
       expect(result.exitCode).toBe(0);
       // Should not show interactive prompts in dry run mode
@@ -258,7 +278,7 @@ coverage/
       const result = runMigrationScript(
         `--interactive --custom-rules ${customRulesPath} --no-backup --dry-run`,
         '0',
-        10000
+        30000
       );
 
       expect(result.exitCode).toBe(0);
@@ -272,7 +292,7 @@ coverage/
       const result = runMigrationScript(
         '--interactive --unknown-option',
         '0',
-        5000
+        30000
       );
 
       expect(result.exitCode).toBe(1);

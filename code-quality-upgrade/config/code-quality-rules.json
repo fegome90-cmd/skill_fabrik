@@ -58,7 +58,13 @@
         "e2e": 70
       },
       "mockUsage": true,
-      "testNaming": true
+      "testNaming": true,
+      "integrationTestTimeout": {
+        "minimumTimeout": 30000,
+        "rationale": "Integration tests require ≥30s timeout for stability in full suite execution",
+        "enforcement": "mandatory",
+        "documentation": "Updated 2025-11-15 after timeout incident resolution"
+      }
     },
     "testIntegrity": {
       "protectIntegrationSuites": true,
@@ -92,7 +98,18 @@
       "maxMemoryUsage": 512,
       "cacheConfiguration": true,
       "parallelExecution": true,
-      "progressiveEnhancement": true
+      "progressiveEnhancement": true,
+      "cliCompatibility": {
+        "required": true,
+        "pattern": "promise-based",
+        "rationale": "CLI scripts must use promise-based patterns for Node.js CommonJS compatibility",
+        "examples": [
+          "validator.validatePreTaskExecution(taskName).then().catch()",
+          "Avoid top-level await in CommonJS modules"
+        ],
+        "enforcement": "mandatory",
+        "updated": "2025-11-15"
+      }
     },
 
     "documentationRequirements": {
