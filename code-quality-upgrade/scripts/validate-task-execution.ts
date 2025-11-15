@@ -460,7 +460,7 @@ class TaskExecutionValidator {
       const devDependencies = Object.keys(packageJson.devDependencies ?? {});
 
       // Bug fix: Ensure requirements.dependencies exists before filtering
-      const requiredDeps = this.config.requirements.dependencies;
+      const requiredDeps = this.config.requirements.dependencies || [];
       const missingDependencies = requiredDeps.filter(
         dep => !devDependencies.includes(dep)
       );
@@ -784,13 +784,21 @@ class TaskExecutionValidator {
   }
   /* eslint-enable security/detect-non-literal-fs-filename */
 
-  private reportValidationResults(_result: ValidationResult): void {
+  private reportValidationResults(result: ValidationResult): void {
     // Implementation placeholder for detailed validation result reporting
     // This method will be expanded in future iterations to provide:
     // - Structured error reporting
     // - Suggested fixes for failed validations
     // - Performance metrics and timing information
     // Console outputs avoided for ESLint compliance
+
+    // Use process.stderr.write for errors (ESLint compliant)
+    if (!result.passed) {
+      const failedChecks = result.checks.filter(check => !check.passed);
+      failedChecks.forEach(check => {
+        process.stderr.write(`❌ ${check.name}: ${check.message}\n`);
+      });
+    }
   }
 }
 

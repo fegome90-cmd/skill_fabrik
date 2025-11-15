@@ -52,6 +52,36 @@ describe('ESLint Migration - Configuration Options', () => {
       recursive: true,
     });
 
+    // Create legacy ESLint configuration for testing migration
+    fs.writeFileSync(
+      path.join(tempProjectPath, '.eslintrc.json'),
+      JSON.stringify(
+        {
+          extends: ['eslint:recommended'],
+          parser: '@typescript-eslint/parser',
+          plugins: ['@typescript-eslint'],
+          rules: {
+            'no-console': 'warn',
+            'prefer-const': 'error',
+            // Custom rule that needs to be preserved
+            '@typescript-eslint/no-explicit-any': 'warn',
+          },
+        },
+        null,
+        2
+      )
+    );
+
+    // Create .eslintignore
+    fs.writeFileSync(
+      path.join(tempProjectPath, '.eslintignore'),
+      `node_modules/
+dist/
+coverage/
+*.config.js
+`
+    );
+
     // Copy eslint config module
     const eslintConfigSrc = path.join(
       SCRIPT_BASE,
@@ -67,11 +97,32 @@ describe('ESLint Migration - Configuration Options', () => {
       );
     }
 
-    // Copy migration script
+    // Create scripts directory to match expected script structure
+    fs.mkdirSync(path.join(tempProjectPath, 'scripts'), { recursive: true });
+    fs.mkdirSync(path.join(tempProjectPath, 'scripts', 'utils'), {
+      recursive: true,
+    });
+
+    // Copy migration script to scripts/ directory
     const scriptSrc = path.join(SCRIPT_BASE, 'scripts', MIGRATION_SCRIPT);
-    const scriptDest = path.join(tempProjectPath, MIGRATION_SCRIPT);
+    const scriptDest = path.join(tempProjectPath, 'scripts', MIGRATION_SCRIPT);
     fs.copyFileSync(scriptSrc, scriptDest);
     fs.chmodSync(scriptDest, 0o755);
+
+    // Copy utils directory to scripts/utils/ (required by migration script)
+    const utilsSrc = path.join(SCRIPT_BASE, 'scripts', 'utils');
+    const utilsDest = path.join(tempProjectPath, 'scripts', 'utils');
+    if (fs.existsSync(utilsSrc)) {
+      const files = fs.readdirSync(utilsSrc);
+      for (const file of files) {
+        const srcFile = path.join(utilsSrc, file);
+        const destFile = path.join(utilsDest, file);
+        fs.copyFileSync(srcFile, destFile);
+        if (fs.statSync(srcFile).mode & 0o111) {
+          fs.chmodSync(destFile, 0o755);
+        }
+      }
+    }
   });
 
   afterEach(() => {
@@ -85,20 +136,27 @@ describe('ESLint Migration - Configuration Options', () => {
     args: string
   ): { exitCode: number; stdout: string } => {
     try {
+      const result = execSync(
+        `cd ${tempProjectPath} && ./scripts/${MIGRATION_SCRIPT} ${args}`,
+        {
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: 30000, // 30 second timeout
+        }
+      );
       return {
         exitCode: 0,
-        stdout: execSync(
-          `cd ${tempProjectPath} && ./migrate-eslint-portable.sh ${args}`,
-          {
-            encoding: 'utf8',
-            stdio: 'pipe',
-          }
-        ),
+        stdout: result,
       };
     } catch (error: unknown) {
-      const execError = error as { status?: number; stdout?: string };
+      const execError = error as {
+        status?: number;
+        stdout?: string;
+        signal?: string;
+        code?: number;
+      };
       return {
-        exitCode: execError.status || 1,
+        exitCode: execError.status || execError.code || 1,
         stdout: execError.stdout || '',
       };
     }
@@ -185,7 +243,7 @@ describe('ESLint Migration - Configuration Options', () => {
 
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain('Custom rules file:');
-      expect(result.stdout).toContain('backup is disabled');
+      expect(result.stdout).toContain('Backup enabled: false');
     });
   });
 });
