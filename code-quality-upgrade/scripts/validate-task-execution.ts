@@ -2,6 +2,9 @@
 /**
  * Task Execution Validator
  * Valida que antes de ejecutar cualquier tarea se cumplan todos los requisitos
+ *
+ * NOTE: CLI scripts require then/catch pattern for Node.js compatibility.
+ * eslint-disable-next-line @typescript-eslint/prefer-top-level-await
  */
 
 import * as fs from 'node:fs';
@@ -63,10 +66,12 @@ interface ProjectConfig {
     scripts: string;
     devDocs: string;
   };
-  requirements: {
-    nodeVersion: string;
-    dependencies: string[];
-  };
+  requirements:
+    | {
+        nodeVersion: string;
+        dependencies: string[];
+      }
+    | undefined;
 }
 
 interface PackageJson {
@@ -459,8 +464,8 @@ class TaskExecutionValidator {
       ) as PackageJson;
       const devDependencies = Object.keys(packageJson.devDependencies ?? {});
 
-      // Bug fix: Ensure requirements.dependencies exists before filtering
-      const requiredDeps = this.config.requirements.dependencies || [];
+      // Safely access dependencies array with optional chaining
+      const requiredDeps = this.config.requirements?.dependencies ?? [];
       const missingDependencies = requiredDeps.filter(
         dep => !devDependencies.includes(dep)
       );
@@ -795,9 +800,9 @@ class TaskExecutionValidator {
     // Use process.stderr.write for errors (ESLint compliant)
     if (!result.passed) {
       const failedChecks = result.checks.filter(check => !check.passed);
-      failedChecks.forEach(check => {
+      for (const check of failedChecks) {
         process.stderr.write(`❌ ${check.name}: ${check.message}\n`);
-      });
+      }
     }
   }
 }
@@ -807,13 +812,14 @@ if (process.argv[1]?.endsWith('validate-task-execution.ts')) {
   const taskName = process.argv[2] || CLI_UNKNOWN_TASK;
   const validator = new TaskExecutionValidator();
 
+  // CLI pattern: required for Node.js compatibility (top-level await not available in scripts)
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   void validator
     .validatePreTaskExecution(taskName)
     .then(result => {
       process.exit(result.passed ? 0 : 1);
     })
-    .catch(error => {
+    .catch((error: unknown) => {
       process.stderr.write(`Validation error: ${String(error)}\n`);
       process.exit(1);
     });
