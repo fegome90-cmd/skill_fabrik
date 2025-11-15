@@ -50,6 +50,7 @@
 - **Coverage**: 93.39% global, 87.5% PerformanceMonitor (≥80% requirement) ✅
 - **TDD Methodology**: RED→GREEN→REFACTOR correctly implemented ✅
 - **Production ready status**: v2.0.0 con todos los componentes funcionales
+- **Índice de tests**: `dev-docs/test-index.md` documenta todas las suites activas para auditorías TDD.
 
 ## 🚀 PROGRESO COMPLETADO - FASE 0 EXITOSA
 
