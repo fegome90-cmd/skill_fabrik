@@ -103,6 +103,12 @@
       "troubleshooting": true,
       "readmeUpdated": true
     },
+    "artifactHygiene": {
+      "banBackupAccumulation": true,
+      "maxBackupDirectories": 3,
+      "prohibitNodeModulesInBackups": true,
+      "cleanupRequiredBeforeCompletion": true
+    },
 
     "migrationSafety": {
       "backupBeforeChanges": true,
@@ -220,6 +226,17 @@
       "proven": true,
       "caseStudy": "2025-11-14: Achieved perfect zero from 82 issues in single session",
       "implementationTemplate": "See dev-docs/context.md section 'TEMPLATE APLICABLE'"
+    },
+    "artifactCleanupMandatory": {
+      "description": "No acumular backups ni artefactos temporales dentro del repo",
+      "action": "Eliminar backups viejos y prohibir node_modules dentro de backup/configs antes de cerrar cada tarea",
+      "examples": [
+        "Más de 3 carpetas en backup/configs → bloquear commit",
+        "Eliminar backup/configs/*/node_modules inmediatamente después de uso",
+        "Documentar limpieza cada vez que se ejecuta migrate-to-unified"
+      ],
+      "proven": false,
+      "caseStudy": "2025-11-15: 7 backups y un node_modules detectados en backup/configs/"
     }
   },
 

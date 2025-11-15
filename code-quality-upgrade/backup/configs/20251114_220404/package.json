@@ -1,9 +1,6 @@
 {
   "name": "code-quality-upgrade",
   "version": "1.0.0",
-  "description": "Zero Technical Debt - Code Quality Unification",
-  "type": "module",
-  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -21,38 +18,8 @@
     "migrate:unified": "bash scripts/migrate-to-unified.sh",
     "tsx": "tsx"
   },
-  "devDependencies": {
-    "@types/jest": "^29.5.0",
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.46.4",
-    "@typescript-eslint/parser": "^8.46.4",
-    "concurrently": "^8.0.0",
-    "eslint": "^8.0.0",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-security": "^1.7.1",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-sonarjs": "^0.20.0",
-    "jest": "^29.5.0",
-    "prettier": "^3.0.0",
-    "ts-jest": "^29.1.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.3.0"
-  },
-  "keywords": [
-    "code-quality",
-    "zero-debt",
-    "clean-architecture",
-    "tdd",
-    "eslint",
-    "prettier"
-  ],
-  "author": "Code Quality Team",
-  "license": "MIT",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"
-  },
-  "dependencies": {
-    "yaml": "^2.8.1"
   }
 }
