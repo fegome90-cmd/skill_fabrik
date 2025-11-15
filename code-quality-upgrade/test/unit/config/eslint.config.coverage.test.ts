@@ -92,7 +92,9 @@ describe('ESLint Configuration - Coverage Tests', () => {
 
       expect(config.parserOptions).toBeDefined();
       expect(config.parserOptions.project).toBe('./tsconfig.json');
-      expect((config.parserOptions as { tsconfigRootDir?: string }).tsconfigRootDir).toBe(process.cwd());
+      expect(
+        (config.parserOptions as { tsconfigRootDir?: string }).tsconfigRootDir
+      ).toBe(process.cwd());
     });
 
     it('should handle env overrides', async () => {
@@ -379,7 +381,7 @@ describe('ESLint Configuration - Coverage Tests', () => {
     it('should cover default parameter branch in createESLintConfig', async () => {
       // This covers the default parameter branch (line 33)
       const config = await createESLintConfig();
-      
+
       expect(config).toBeDefined();
       expect(config.version).toBe('1.0.0');
       expect(config.root).toBe(true);
@@ -388,7 +390,7 @@ describe('ESLint Configuration - Coverage Tests', () => {
     it('should cover createESLintConfigSync edge case with empty options', () => {
       // This covers edge cases in createESLintConfigSync (lines 170-176)
       const result = createESLintConfigSync({});
-      
+
       expect(result).toBeDefined();
       expect(result.rules).toBeDefined();
     });

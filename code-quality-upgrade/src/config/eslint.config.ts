@@ -7,7 +7,11 @@
  * with type-safe configuration building and no hardcoded paths.
  */
 
-import { ESLintConfigOptions,ESLintConfiguration, RuleConfiguration } from '../types/configuration';
+import {
+  ESLintConfigOptions,
+  ESLintConfiguration,
+  RuleConfiguration,
+} from '../types/configuration';
 
 /**
  * Helper to convert string rule values to proper RuleConfiguration format

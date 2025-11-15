@@ -57,6 +57,13 @@
         "integration": 80,
         "e2e": 70
       },
+      "integrationDataBuilders": {
+        "requireSharedFactories": true,
+        "factoryExample": "test/integration/quality-system-integration.test.ts#createMetrics",
+        "rationale": "Integration suites must reuse typed data builders (e.g., createMetrics) to keep scenarios type-safe and aligned with shared interfaces.",
+        "enforcement": "mandatory",
+        "updated": "2025-11-15"
+      },
       "mockUsage": true,
       "testNaming": true,
       "integrationTestTimeout": {

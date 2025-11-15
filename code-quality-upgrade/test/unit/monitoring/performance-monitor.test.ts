@@ -280,10 +280,10 @@ describe('Performance Monitor Integration Tests - T1.2.0', () => {
       const monitor = new PerformanceMonitor({
         trackMemory: false,
       });
-      
+
       monitor.start();
       monitor.end();
-      
+
       const finalMetrics = monitor.getCurrentMetrics();
       expect(finalMetrics).toBeDefined();
       expect(finalMetrics?.memoryUsage).toBeUndefined(); // trackMemory: false
@@ -296,10 +296,10 @@ describe('Performance Monitor Integration Tests - T1.2.0', () => {
       const monitor = new PerformanceMonitor({
         trackMemory: true,
       });
-      
+
       monitor.start();
       monitor.end();
-      
+
       const finalMetrics = monitor.getCurrentMetrics();
       expect(finalMetrics).toBeDefined();
       expect(finalMetrics?.memoryUsage).toBeDefined();
@@ -312,7 +312,7 @@ describe('Performance Monitor Integration Tests - T1.2.0', () => {
       const monitor = new PerformanceMonitor({
         trackMemory: false,
       });
-      
+
       const metrics = monitor.getCurrentMetrics();
       expect(metrics).toBeNull();
     });
@@ -322,10 +322,10 @@ describe('Performance Monitor Integration Tests - T1.2.0', () => {
       const monitor = new PerformanceMonitor({
         trackMemory: false,
       });
-      
+
       monitor.start();
       const metrics = monitor.getCurrentMetrics();
-      
+
       expect(metrics).toBeDefined();
       expect(typeof metrics?.duration).toBe('number'); // Should return a number
       expect(metrics?.filesProcessed).toBe(0);
@@ -338,7 +338,7 @@ describe('Performance Monitor Integration Tests - T1.2.0', () => {
         trackMemory: false,
         maxExecutionTime: 300,
       });
-      
+
       const isHealthy = monitor.isHealthy();
       expect(isHealthy).toBe(false);
     });
