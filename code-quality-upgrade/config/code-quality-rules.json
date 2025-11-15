@@ -101,7 +101,8 @@
       "migrationGuide": true,
       "developerGuidelines": true,
       "troubleshooting": true,
-      "readmeUpdated": true
+      "readmeUpdated": true,
+      "testIndexMaintained": true
     },
     "artifactHygiene": {
       "banBackupAccumulation": true,

@@ -103,7 +103,8 @@ code-quality-upgrade/
 ├── dev-docs/                        # Documentación
 │   ├── context.md                   # Contexto completo
 │   ├── plan.md                      # Este archivo
-│   └── task.md                      # Tareas granulares
+│   ├── task.md                      # Tareas granulares
+│   └── test-index.md                # Índice vivo de suites unitarias/integración
 ├── backup/                          # Backup de configuraciones
 ├── config/                          # Configuraciones de referencia
 └── package.json                     # Dependencias del proyecto
