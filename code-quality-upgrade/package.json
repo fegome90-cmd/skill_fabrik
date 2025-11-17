@@ -16,6 +16,12 @@
     "backup:configs": "bash scripts/backup-configs.sh",
     "rollback:configs": "bash scripts/rollback-configs.sh",
     "migrate:unified": "bash scripts/migrate-to-unified.sh",
+    "cli:generate-report": "tsx src/scripts/quality-cli-main.ts --generate-report",
+    "cli:check-alerts": "tsx src/scripts/quality-cli-main.ts --check-alerts",
+    "cli:system-status": "tsx src/scripts/quality-cli-main.ts --system-status",
+    "evidence:validate": "tsx src/scripts/evidence-cli.ts",
+    "evidence:validate:json": "tsx src/scripts/evidence-cli.ts --json",
+    "evidence:validate:quick": "tsx src/scripts/evidence-cli.ts --no-interactive --timeout=30000",
     "tsx": "tsx"
   },
   "engines": {
@@ -34,6 +40,7 @@
     "lint-staged": "^15.5.1",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript-eslint": "^8.46.4"
   }
 }

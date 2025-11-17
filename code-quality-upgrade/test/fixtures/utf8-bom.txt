@@ -1,0 +1,2 @@
+﻿Este archivo tiene BOM UTF-8.
+Contenido de prueba con BOM.

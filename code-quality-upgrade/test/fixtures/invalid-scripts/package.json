@@ -1,0 +1,9 @@
+{
+  "name": "invalid-scripts",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest",
+    "invalid-script": "&&& invalid command syntax",
+    "build": "tsc"
+  }
+}

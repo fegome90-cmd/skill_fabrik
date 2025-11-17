@@ -46,7 +46,8 @@
 ## 5. Approval Flow
 
 1. Validator reviews evidence (plan section + command logs).
-2. If everything matches the checklist, respond with `decision: GO`.
-3. If gaps exist, respond with `decision: NO_GO` plus required fixes and reference rule IDs from `config/code-quality-rules.json`.
+2. Before replying to the executor, re-read the relevant sections in `config/code-quality-rules.json` and `dev-docs/task.md` to ensure the decision aligns with current rules and objectives.
+3. If everything matches the checklist, respond with `decision: GO`.
+4. If gaps exist, respond with `decision: NO_GO` plus required fixes and reference rule IDs from `config/code-quality-rules.json`.
 
 > Use this template whenever you, as validator, need to approve or reject a sub-task. Keep it in sync with future process changes.

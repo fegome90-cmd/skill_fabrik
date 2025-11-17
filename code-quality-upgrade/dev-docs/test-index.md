@@ -13,6 +13,10 @@ This registry tracks every Jest suite that enforces the 2025Q4 Zero Technical De
 | `test/unit/monitoring/performance-monitor.tdd.test.ts` | `PerformanceMonitor` lifecycle                   | GREEN/REFACTOR suite verifying `trackPhase`, async timing, memory/cpu stats, and overall `end()` aggregation. Includes helper promises to satisfy the ≥80 % coverage gate. |
 | `test/unit/monitoring/quality-alerts.test.ts`          | `QualityAlerts`                                  | Covers `evaluateAlerts`, `sendAlert`, and `escalateAlert` with LOW→CRITICAL gating thresholds for failure rate, ESLint error rate, and runtime metrics.                    |
 | `test/unit/monitoring/quality-dashboard.test.ts`       | `QualityDashboard`                               | Ensures report generation, scoring, technical debt classification, and recommendations respect the metrics contract in `src/types/quality.ts`.                             |
+| `test/unit/scripts/quality-system-cli.test.ts`         | `quality-system-cli.ts` (T2.2.4)                 | Validates CLI commands functionality: `generateQualityReport()`, `checkQualityAlerts()`, `qualitySystemStatus()`, and integration with QualityDashboard/QualityAlerts.     |
+| `test/unit/scripts/quality-cli-main.test.ts`           | `quality-cli-main.ts` (T2.2.4)                   | Tests CLI entry point including command parsing (`--generate-report`, `--check-alerts`, `--system-status`, `--help`) and main function execution.                          |
+| `test/unit/scripts/validate-evidence.test.ts`          | `validate-evidence.ts` (T3.1.1)                  | Tests evidence validation system including UTF-8 encoding detection, markdown link validation, and package.json consistency checks for foren analysis.                     |
+| `test/unit/scripts/evidence-cli.test.ts`               | `evidence-cli.ts` (T3.1.2)                       | Tests CLI wrapper automation for validate-evidence.ts including Commander.js integration, argument parsing, error handling, and performance monitoring.                    |
 
 ## Integration Suites
 
@@ -22,9 +26,16 @@ This registry tracks every Jest suite that enforces the 2025Q4 Zero Technical De
 | `test/integration/migration-options.test.ts`     | CLI options support (T1.1.8)       | Spins up a temp project to exercise `--custom-rules`, backup toggles, dry-run mode, and ensures the portable script preserves custom ESLint rules.                                            |
 | `test/integration/migration-interactive.test.ts` | Interactive confirmations (T1.1.9) | Creates sandbox projects to validate inquirer-driven flows, script copying, and full user prompts for destructive operations.                                                                 |
 
+## CLI Suites (T2.2.4)
+
+| Path                                           | Scenario                    | Focus & Notes                                                                                                                                                                   |
+| ---------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `test/unit/scripts/quality-system-cli.test.ts` | CLI Commands functionality  | Tests the three main CLI commands (`generateQualityReport`, `checkQualityAlerts`, `qualitySystemStatus`) and their integration with QualityDashboard and QualityAlerts systems. |
+| `test/unit/scripts/quality-cli-main.test.ts`   | CLI Entry Point integration | Validates command line argument parsing, help display, and overall CLI interface structure for all supported commands.                                                          |
+
 ### Upcoming Suites
 
-- `test/integration/quality-system-integration.test.ts` – reserved for T2.2.3 to cover QualityDashboard ↔ QualityAlerts flows (see `dev-docs/role-guides/validator/validador-handoff-t2.2.3.md`).
+- `test/integration/quality-system-integration.test.ts` – COMPLETED in T2.2.3 to cover QualityDashboard ↔ QualityAlerts flows.
 
 ## Maintenance Rules
 
