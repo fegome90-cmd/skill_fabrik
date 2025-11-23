@@ -6,12 +6,55 @@
 
 echo "🔍 Running pre-commit hooks..."
 
+# ============================================
 # Verificar que haya cambios para commitear
+# ============================================
 if git diff --cached --quiet; then
   echo "⚠️  No hay cambios staged para commitear"
   exit 1
 fi
 
+# ============================================
+# Security Check: Prevent .env file commits
+# ============================================
+echo "🔒 Checking for sensitive files..."
+
+if git diff --cached --name-only | grep -E "^\.env\.(dev|development|prod|production|test|testing|staging|local|dashboard|check)$"; then
+  echo ""
+  echo "❌ ERROR: Attempted to commit restricted .env file"
+  echo ""
+  echo "Only .env.example files are allowed in the repository."
+  echo ""
+  echo "If you need to store configurations:"
+  echo "  1. Add values to .env.example as placeholders"
+  echo "  2. Keep your actual .env file out of git (it's in .gitignore)"
+  echo ""
+  echo "To bypass this check (NOT RECOMMENDED):"
+  echo "  git commit --no-verify"
+  echo ""
+  exit 1
+fi
+
+# Check for potential passwords in file contents
+if git diff --cached --diff-filter=AM | grep -i "password.*=.*[^[]" | grep -v ".env.example" | grep -v ".husky" | grep -q .; then
+  echo ""
+  echo "⚠️  WARNING: Potential password detected in staged changes"
+  echo ""
+  echo "Please ensure you're using environment variables and not hardcoded passwords."
+  echo ""
+  read -p "Are you sure you want to continue? (y/N): " -n 1 -r confirm
+  echo ""
+  if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+    echo "❌ Commit cancelled"
+    exit 1
+  fi
+fi
+
+echo "✅ Security checks passed"
+
+# ============================================
+# Lint and Format
+# ============================================
 # Ejecutar lint-staged (formatea y valida archivos staged automáticamente)
 echo "📝 Running lint-staged (Prettier + ESLint + TypeScript)..."
 pnpm exec lint-staged
@@ -21,6 +64,9 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# ============================================
+# Git Checks
+# ============================================
 # Validar que el mensaje de commit siga Conventional Commits
 if [ -n "$SKIP_COMMIT_MSG_CHECK" ]; then
   exit 0
