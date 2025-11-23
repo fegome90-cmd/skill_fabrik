@@ -10,7 +10,7 @@
 
 Este proyecto ahora cuenta con **3 documentos profesionales** generados usando el sistema de templates dev-docs:
 
-### **1. context.md** (880 líneas, 26KB)
+### **1. docs/dev-docs/context.md** (880 líneas, 26KB)
 **Propósito**: Contexto técnico completo de Skills Fabrik
 
 **Contenido**:
@@ -38,7 +38,7 @@ Este proyecto ahora cuenta con **3 documentos profesionales** generados usando e
 
 ---
 
-### **2. plan.md** (729 líneas, 28KB)
+### **2. docs/dev-docs/plan.md** (729 líneas, 28KB)
 **Propósito**: Plan estratégico de migración a arquitectura remota
 
 **Contenido**:
@@ -79,7 +79,7 @@ Este proyecto ahora cuenta con **3 documentos profesionales** generados usando e
 
 ---
 
-### **3. tasks.md** (619 líneas, 15KB - Template original)
+### **3. docs/dev-docs/tasks.md** (619 líneas, 15KB - Template original)
 **Propósito**: Seguimiento de tareas e implementación
 
 **Contenido** (pendiente de personalización):
@@ -88,7 +88,7 @@ Este proyecto ahora cuenta con **3 documentos profesionales** generados usando e
 - Definición de tareas por sprint/fase
 - Métricas de velocidad y calidad
 
-**Acción requerida**: Personalizar con tareas específicas de plan.md (las 5 fases de migración remota).
+**Acción requerida**: Personalizar con tareas específicas de docs/dev-docs/plan.md (las 5 fases de migración remota).
 
 ---
 
@@ -96,24 +96,24 @@ Este proyecto ahora cuenta con **3 documentos profesionales** generados usando e
 
 ### **Para Nuevos Desarrolladores**
 1. **Leer primero**: `CLAUDE.md` (overview rápido del proyecto)
-2. **Luego**: `context.md` (arquitectura técnica completa)
-3. **Si hay migración activa**: `plan.md` (plan de deployment remoto)
+2. **Luego**: `docs/dev-docs/context.md` (arquitectura técnica completa)
+3. **Si hay migración activa**: `docs/dev-docs/plan.md` (plan de deployment remoto)
 
 ### **Para Planificación de Sprints**
-1. **Revisar**: `plan.md` (fases, milestones, Definition of Done)
-2. **Actualizar**: `tasks.md` con tareas específicas del sprint
-3. **Trackear**: Métricas y KPIs definidos en `plan.md`
+1. **Revisar**: `docs/dev-docs/plan.md` (fases, milestones, Definition of Done)
+2. **Actualizar**: `docs/dev-docs/tasks.md` con tareas específicas del sprint
+3. **Trackear**: Métricas y KPIs definidos en `docs/dev-docs/plan.md`
 
 ### **Para Decisiones Técnicas**
-1. **Consultar**: `context.md` (stack tecnológico, componentes, flujo de datos)
+1. **Consultar**: `docs/dev-docs/context.md` (stack tecnológico, componentes, flujo de datos)
 2. **Validar**: Contra quality gates (G1-G8) y políticas del proyecto
-3. **Documentar**: Decisiones en `docs/architecture/` o actualizar `context.md`
+3. **Documentar**: Decisiones en `docs/architecture/` o actualizar `docs/dev-docs/context.md`
 
 ### **Para Troubleshooting**
-1. **Revisar**: `context.md` → Sección "Manejo de Errores e Incidentes"
+1. **Revisar**: `docs/dev-docs/context.md` → Sección "Manejo de Errores e Incidentes"
 2. **Logs**: `pm2 logs <service> --lines 200`
 3. **Health checks**: `skills-cli dashboard health`
-4. **Escalación**: Seguir proceso definido en `plan.md` → Contactos y Soporte
+4. **Escalación**: Seguir proceso definido en `docs/dev-docs/plan.md` → Contactos y Soporte
 
 ---
 
@@ -123,9 +123,9 @@ Este proyecto ahora cuenta con **3 documentos profesionales** generados usando e
 
 | Documento | Frecuencia | Trigger | Owner |
 |-----------|------------|---------|-------|
-| `context.md` | Mensual o por cambio mayor | Cambios arquitecturales, nuevos componentes | Tech Lead |
-| `plan.md` | Por sprint/fase | Inicio de proyecto, migración, refactor | Project Lead |
-| `tasks.md` | Diario/semanal | Progreso de tareas, cambios en scope | Development Team |
+| `docs/dev-docs/context.md` | Mensual o por cambio mayor | Cambios arquitecturales, nuevos componentes | Tech Lead |
+| `docs/dev-docs/plan.md` | Por sprint/fase | Inicio de proyecto, migración, refactor | Project Lead |
+| `docs/dev-docs/tasks.md` | Diario/semanal | Progreso de tareas, cambios en scope | Development Team |
 
 ### **Workflow de Actualización**
 
@@ -134,13 +134,13 @@ Este proyecto ahora cuenta con **3 documentos profesionales** generados usando e
 git checkout -b docs/update-context-2025-11
 
 # 2. Actualizar documento(s)
-nano context.md  # o plan.md, tasks.md
+nano docs/dev-docs/context.md  # o docs/dev-docs/plan.md, docs/dev-docs/tasks.md
 
 # 3. Validar sintaxis Markdown
-npx markdownlint context.md plan.md tasks.md
+npx markdownlint docs/dev-docs/context.md docs/dev-docs/plan.md docs/dev-docs/tasks.md
 
 # 4. Commit y PR
-git add context.md plan.md tasks.md
+git add docs/dev-docs/context.md docs/dev-docs/plan.md docs/dev-docs/tasks.md
 git commit -m "docs: update context with remote architecture"
 git push origin docs/update-context-2025-11
 
@@ -156,12 +156,12 @@ gh pr create --title "Update dev-docs with remote deployment" --body "See change
 
 ```yaml
 documentation_coverage:
-  technical_architecture: 100%  # context.md completo
-  deployment_plan: 100%         # plan.md completo
-  task_tracking: 30%            # tasks.md requiere personalización
+  technical_architecture: 100%  # docs/dev-docs/context.md completo
+  deployment_plan: 100%         # docs/dev-docs/plan.md completo
+  task_tracking: 30%            # docs/dev-docs/tasks.md requiere personalización
   api_documentation: 80%        # READMEs en packages/*
-  troubleshooting: 70%          # Secciones en context.md + CLAUDE.md
-  onboarding: 90%               # CLAUDE.md + context.md + Quick Start
+  troubleshooting: 70%          # Secciones en docs/dev-docs/context.md + CLAUDE.md
+  onboarding: 90%               # CLAUDE.md + docs/dev-docs/context.md + Quick Start
 ```
 
 ### **Calidad**
@@ -170,16 +170,16 @@ documentation_coverage:
 - ✅ **Completitud**: 880 + 729 + 619 = 2,228 líneas
 - ✅ **Estructura**: Sigue template profesional
 - ✅ **Información**: Basada en código real del proyecto
-- ⚠️ **Personalización tasks.md**: Pendiente
+- ⚠️ **Personalización docs/dev-docs/tasks.md**: Pendiente
 
 ---
 
 ## 🚀 **Próximos Pasos**
 
 ### **Inmediatos**
-1. [ ] Personalizar `tasks.md` con tareas del plan de migración remota
-2. [ ] Validar métricas actuales en `context.md` (test success rate, latency)
-3. [ ] Agregar diagramas visuales (Mermaid) en `context.md` si es posible
+1. [ ] Personalizar `docs/dev-docs/tasks.md` con tareas del plan de migración remota
+2. [ ] Validar métricas actuales en `docs/dev-docs/context.md` (test success rate, latency)
+3. [ ] Agregar diagramas visuales (Mermaid) en `docs/dev-docs/context.md` si es posible
 
 ### **Corto Plazo**
 1. [ ] Crear `docs/deployment/oracle-setup.md` (detalle de Fase 2)
@@ -200,7 +200,7 @@ documentation_coverage:
 - **Team Chat**: `#skills-fabrik-docs`
 
 ### **Proponer Mejoras**
-- **PR directamente**: Editar `context.md`, `plan.md`, `tasks.md`
+- **PR directamente**: Editar `docs/dev-docs/context.md`, `docs/dev-docs/plan.md`, `docs/dev-docs/tasks.md`
 - **Issue template**: Usar `DOCUMENTATION_IMPROVEMENT.md` (si existe)
 
 ### **Reportar Errores**

@@ -1,0 +1,5 @@
+Este es un archivo de prueba con codificación UTF-8 válida.
+Contiene caracteres especiales: áéíóú ñ ç 
+Y algunos emojis: 🚀 ✅ 📋
+
+Sin BOM y con saltos de línea LF.

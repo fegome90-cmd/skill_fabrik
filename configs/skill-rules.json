@@ -166,7 +166,18 @@
         "observe"
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "dev/plans/*.json",
+        "dev/plans/*.md",
+        "dev/plans/**/*.json",
+        "dev/plans/**/*.md",
+        "**/dev/plans/*.json",
+        "**/dev/plans/*.md",
+        "**/dev/plans/**/*.json",
+        "**/dev/plans/**/*.md"
+      ]
+    }
   },
   "visual-regression-testing": {
     "type": "guideline",
@@ -184,7 +195,18 @@
         "formatting"
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "scripts/pm2/*.cjs",
+        "scripts/pm2/*.js",
+        "scripts/pm2/**/*",
+        "packages/**/pm2/**/*.cjs",
+        "packages/**/pm2/**/*.js",
+        "**/scripts/pm2/*.cjs",
+        "**/scripts/pm2/*.js",
+        "**/scripts/pm2/**/*"
+      ]
+    }
   },
   "error-pattern-standardization": {
     "type": "guideline",
@@ -469,11 +491,22 @@
         "context.md,"
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "dev/plans/*.json",
+        "dev/plans/*.md",
+        "dev/plans/**/*.json",
+        "dev/plans/**/*.md",
+        "**/dev/plans/*.json",
+        "**/dev/plans/*.md",
+        "**/dev/plans/**/*.json",
+        "**/dev/plans/**/*.md"
+      ]
+    }
   },
   "pm2-monitor": {
     "type": "guideline",
-    "enforcement": "suggest",
+    "enforcement": "warn",
     "priority": "medium",
     "promptTriggers": {
       "keywords": [
@@ -488,7 +521,18 @@
         "troubleshooting."
       ]
     },
-    "fileTriggers": {}
+    "fileTriggers": {
+      "pathPatterns": [
+        "scripts/pm2/*.cjs",
+        "scripts/pm2/*.js",
+        "scripts/pm2/**/*",
+        "packages/**/pm2/**/*.cjs",
+        "packages/**/pm2/**/*.js",
+        "**/scripts/pm2/*.cjs",
+        "**/scripts/pm2/*.js",
+        "**/scripts/pm2/**/*"
+      ]
+    }
   },
   "code-review-checklist": {
     "type": "guideline",

@@ -1822,6 +1822,36 @@ export async function stopHook(input: StopHookInput): Promise<StopHookOutput> {
     console.log(`   🎯 Cache hits: ${cacheHitsTotal}/3 services (${Math.round((cacheHitsTotal / 3) * 100)}%)`);
   }
 
+  // MemTech integration: Store hook context (non-blocking)
+  if (process.env.MEMTECH_ENABLED !== 'false') {
+    try {
+      const { storeHookContext } = await import('./memtech-integration.js');
+      await storeHookContext(
+        'stop',
+        {
+          editLog: input.editLog,
+          reposChanged: Array.from(input.reposChanged),
+        },
+        {
+          formatted: formatted.length,
+          typecheck: totalErrors,
+          autoResolved,
+          zero_errors_left_behind: totalErrors === 0 && totalESLintIssues === 0 && nmlbResult.clean,
+        },
+        {
+          total_errors: totalErrors,
+          formatted_count: formatted.length,
+          auto_resolved: autoResolved,
+          latency_ms: finalMetrics.totalDuration,
+        }
+      ).catch(() => {
+        // Silently fail - MemTech is optional
+      });
+    } catch {
+      // MemTech integration not available, continue normally
+    }
+  }
+
   return {
     formatted,
     typecheck,

@@ -1,0 +1,57 @@
+{
+  "cycle": "2025Q4",
+  "findings": [
+    {
+      "id": "F-001",
+      "path": "packages/router/scripts/pm2/router-ecosystem-old.cjs",
+      "domain": "pm2",
+      "severity": "P1",
+      "type": "archivo duplicado",
+      "description": "Archivo pm2 alterno con sufijo `-old`, fuera del ecosystem oficial.",
+      "evidence": "Detectado con `rg --files -g '*old*' --glob '!node_modules/*' --glob '!dist/*' --glob '!.sf/*'`",
+      "status": "pending",
+      "owner": "Router Lead",
+      "due_date": "2025-11-20",
+      "notes": "Validar si debe archivarse o eliminarse."
+    },
+    {
+      "id": "F-002",
+      "path": "docs/skills/ROUTER-copy.md",
+      "domain": "docs",
+      "severity": "P1",
+      "type": "contrato duplicado",
+      "description": "Duplicado de contrato ROUTER, potencialmente desactualizado.",
+      "evidence": "Listado en `docs/inventario/2025Q4/raw-files-packages.txt` y `find docs/skills -name 'ROUTER*.md'`.",
+      "status": "pending",
+      "owner": "DocOps",
+      "due_date": "2025-11-18",
+      "notes": "Decidir si se consolida en el contrato oficial o se archiva."
+    },
+    {
+      "id": "F-003",
+      "path": "skills/guidelines/backend-dev-old/SKILL.md",
+      "domain": "skills",
+      "severity": "P2",
+      "type": "skill obsoleto",
+      "description": "Skill duplicado con sufijo `-old`, no referenciado en `registry/index.json`.",
+      "evidence": "`find skills -name 'SKILL.md' -not -path '*/node_modules/*'` + revisión manual.",
+      "status": "pending",
+      "owner": "Skills Curator",
+      "due_date": "2025-11-22",
+      "notes": "Verificar si fue reemplazado por skill vigente y mover a /archived."
+    },
+    {
+      "id": "F-004",
+      "path": "docs/skills/",
+      "domain": "docs",
+      "severity": "P0",
+      "type": "contrato ausente",
+      "description": "No se encontró documentación de contratos ROUTER/DAEMON/SKILL/NMLB en `docs/skills/` (solo README.md).",
+      "evidence": "`ls docs/skills` → únicamente README.md; no existen archivos ROUTER.md, DAEMON.md, etc.",
+      "status": "pending",
+      "owner": "DocOps",
+      "due_date": "2025-11-18",
+      "notes": "Confirmar si contratos viven en otra ruta o deben recrearse siguiendo política single source of truth."
+    }
+  ]
+}

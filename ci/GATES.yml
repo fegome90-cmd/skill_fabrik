@@ -65,8 +65,8 @@ gates:
     required: false
     description: "README presente y con contenido (T-020)"
 
-  skills-lint:
-    name: skills-lint
+  skills-index:
+    name: skills-index
     command: 'node packages/skills-cli/dist/index.js skills index ./skills --out ./registry/index.json'
     required: true
     description: 'Validate skills structure'

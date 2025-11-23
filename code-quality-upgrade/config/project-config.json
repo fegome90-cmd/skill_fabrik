@@ -1,0 +1,20 @@
+{
+  "projectName": "code-quality-upgrade",
+  "version": "2.0.0",
+  "description": "Zero Technical Debt - Code Quality Unification",
+  "paths": {
+    "src": "src",
+    "test": "test", 
+    "config": "config",
+    "scripts": "scripts",
+    "devDocs": "dev-docs",
+    "backup": "backup",
+    "output": "dist",
+    "coverage": "coverage",
+    "docs": "docs"
+  },
+  "requirements": {
+    "nodeVersion": ">=16.0.0",
+    "npmVersion": ">=8.0.0"
+  }
+}

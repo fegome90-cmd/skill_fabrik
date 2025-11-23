@@ -1,0 +1,7 @@
+{
+  "name": "inconsistent-version",
+  "version": "",
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}

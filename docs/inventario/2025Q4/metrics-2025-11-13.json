@@ -1,0 +1,22 @@
+{
+  "cycle": "2025Q4",
+  "date": "2025-11-13",
+  "totals": {
+    "files_scanned": 524,
+    "skills_reviewed": 68,
+    "contracts_reviewed": 7
+  },
+  "findings": {
+    "critical": 1,
+    "high": 2,
+    "medium": 1,
+    "info": 0
+  },
+  "progress": {
+    "discovery": 45,
+    "analysis": 20,
+    "validation": 10,
+    "reporting": 5
+  },
+  "notes": "Discovery en marcha; hallazgos F-001 a F-004 registrados (F-004 = contratos ausentes). Actualizar métricas al cierre de cada jornada."
+}

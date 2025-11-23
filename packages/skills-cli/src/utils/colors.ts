@@ -256,7 +256,7 @@ export function createSimpleBox(
   title?: string,
   borderColorName?: string | any
 ): string {
-  const borderColor = typeof borderColorName === 'string' ? (colors[borderColorName] || colors.border) : borderColorName || colors.border;
+  const borderColor = typeof borderColorName === 'string' ? ((colors as any)[borderColorName] || colors.border) : borderColorName || colors.border;
   const lines = content.split('\n');
   const maxLineLength = Math.max(...lines.map(line => line.length), title?.length || 0);
 

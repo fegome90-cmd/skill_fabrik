@@ -1,0 +1,330 @@
+{
+  "version": "2.0",
+  "title": "Code Quality Upgrade Rules",
+  "overview": "Este archivo contiene las reglas específicas para guiar el trabajo de agentes en la unificación de configuraciones de code quality, eliminando la deuda técnica mediante Clean Architecture y TDD.",
+
+  "coreRules": {
+    "taskExecution": {
+      "maxDuration": 120,
+      "maxSubtasks": 8,
+      "tddMandatory": true,
+      "cleanArchitecture": true,
+      "testCoverage": 80,
+      "documentation": true,
+      "criticalRule": "NEVER_CONTINUE_ON_BROKEN_QUALITY_GATES"
+    },
+
+    "fileOrganization": {
+      "noMagicNumbers": true,
+      "noHardcodedValues": true,
+      "noConsoleLogs": true,
+      "namingConventions": {
+        "variables": "camelCase",
+        "classes": "PascalCase",
+        "indentation": "2 spaces"
+      }
+    },
+
+    "codeQualityGates": {
+      "typeScriptZeroErrors": true,
+      "eslintCompilationErrors": true,
+      "functionalityTests": true,
+      "validationSystem": true,
+      "performance": 3,
+      "tests": true,
+      "validationTruthfulness": true,
+      "falsePositivePrevention": true,
+      "earlyFailureDetection": true,
+      "qualityGateReliability": 100,
+      "blockingVsCosmetic": true
+    },
+
+    "architectureCompliance": {
+      "singleResponsibility": true,
+      "dependencyInversion": true,
+      "interfaceSegregation": true,
+      "openClosed": true,
+      "compositionOverInheritance": true,
+      "noCircularDependencies": true
+    },
+
+    "testingRequirements": {
+      "redPhase": true,
+      "greenPhase": true,
+      "refactorPhase": true,
+      "coverage": {
+        "unit": 90,
+        "integration": 80,
+        "e2e": 70
+      },
+      "integrationDataBuilders": {
+        "requireSharedFactories": true,
+        "factoryExample": "test/integration/quality-system-integration.test.ts#createMetrics",
+        "rationale": "Integration suites must reuse typed data builders (e.g., createMetrics) to keep scenarios type-safe and aligned with shared interfaces.",
+        "enforcement": "mandatory",
+        "updated": "2025-11-15"
+      },
+      "mockUsage": true,
+      "testNaming": true,
+      "integrationTestTimeout": {
+        "minimumTimeout": 30000,
+        "rationale": "Integration tests require ≥30s timeout for stability in full suite execution",
+        "enforcement": "mandatory",
+        "documentation": "Updated 2025-11-15 after timeout incident resolution"
+      }
+    },
+    "testIntegrity": {
+      "protectIntegrationSuites": true,
+      "protectUnitSuites": true,
+      "protectE2ESuites": true,
+      "disallowTestDisabling": true,
+      "disallowMovingTestFolders": true,
+      "requireHumanApprovalForTestSkips": true,
+      "coverageGatesMandatory": true
+    },
+    "changeManagement": {
+      "followTaskPlan": true,
+      "requirePlanReference": true,
+      "noDestructiveMoves": true,
+      "requireImpactAssessment": true,
+      "documentApprovals": true,
+      "allowEmergencyActionsOnlyWithTicket": true
+    },
+
+    "securityRules": {
+      "noSecrets": true,
+      "noHardcodedCredentials": true,
+      "inputValidation": true,
+      "secureFileOperations": true,
+      "secureCommandExecution": true,
+      "encodingValidation": "UTF-8"
+    },
+
+    "performanceRequirements": {
+      "maxExecutionTime": 300,
+      "maxMemoryUsage": 512,
+      "cacheConfiguration": true,
+      "parallelExecution": true,
+      "progressiveEnhancement": true,
+      "cliCompatibility": {
+        "required": true,
+        "pattern": "promise-based",
+        "rationale": "CLI scripts must use promise-based patterns for Node.js CommonJS compatibility",
+        "examples": [
+          "validator.validatePreTaskExecution(taskName).then().catch()",
+          "Avoid top-level await in CommonJS modules"
+        ],
+        "enforcement": "mandatory",
+        "updated": "2025-11-15"
+      }
+    },
+
+    "documentationRequirements": {
+      "codeComments": true,
+      "apiDocumentation": true,
+      "migrationGuide": true,
+      "developerGuidelines": true,
+      "troubleshooting": true,
+      "readmeUpdated": true,
+      "testIndexMaintained": true
+    },
+    "artifactHygiene": {
+      "banBackupAccumulation": true,
+      "maxBackupDirectories": 3,
+      "prohibitNodeModulesInBackups": true,
+      "cleanupRequiredBeforeCompletion": true
+    },
+
+    "migrationSafety": {
+      "backupBeforeChanges": true,
+      "rollbackMechanism": true,
+      "gradualRollout": true,
+      "validationAfterEachStep": true,
+      "versionControl": true,
+      "validationSystemIntegrity": true,
+      "qualityGateVerification": true,
+      "stopOnBrokenValidation": true,
+      "investigateQualityGateFailures": true
+    }
+  },
+
+  "phases": [
+    {
+      "phase": 0,
+      "name": "Setup",
+      "hours": 16,
+      "successCriteria": [
+        "TDD framework configurado",
+        "Estructura de proyecto creada",
+        "Dependencias instaladas",
+        "CI/CD pipeline funcionando"
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "Fundamentals",
+      "hours": 30,
+      "successCriteria": [
+        "ESLint configuration unificada",
+        "Prettier configuration unificada",
+        "Scripts de migración creados",
+        "Documentación completa"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Quality Gates",
+      "hours": 35,
+      "successCriteria": [
+        "Quality gates core implementados",
+        "Husky hooks migrados",
+        "Integration tests pasando",
+        "Performance benchmarks cumplidos"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Advanced Scripts",
+      "hours": 35,
+      "successCriteria": [
+        "Evidence validation scripts",
+        "Metrics consistency scripts",
+        "Quality gates orchestration",
+        "Migration automation completa"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Validation",
+      "hours": 20,
+      "successCriteria": [
+        "E2E tests pasando",
+        "Performance optimizado",
+        "Team training completo",
+        "Zero technical debt achieved"
+      ]
+    }
+  ],
+
+  "qualityMetrics": {
+    "configurationConsistency": 100,
+    "testCoverage": 90,
+    "performanceImprovement": 50,
+    "technicalDebt": 0,
+    "teamAdoption": 100
+  },
+
+  "criticalRules": {
+    "neverContinueOnBrokenQualityGates": {
+      "description": "Siempre detenerse cuando los quality gates tienen falsos positivos o errores de validación",
+      "action": "Investigar y reparar sistemas de validación antes de continuar cualquier tarea",
+      "examples": [
+        "Validaciones pasan falsamente pero hay errores reales",
+        "Dependencies checker lanza errores undefined",
+        "Config files tienen formato incorrecto",
+        "ES modules vs CommonJS conflicts"
+      ],
+      "proven": true,
+      "caseStudy": "2025-11-14: From 82 issues to zero debt by applying this rule"
+    },
+    "validationTruthfulness": {
+      "description": "Las validaciones deben ser 100% confiables antes de confiar en ellas",
+      "action": "Verificar que cada validación realmente chequea lo que dice",
+      "proven": true,
+      "caseStudy": "Fixed broken yaml validation that gave false positives"
+    },
+    "earlyFailureDetection": {
+      "description": "Detectar y corregir problemas estructurales lo antes posible",
+      "action": "Investigar inconsistencias inmediatamente",
+      "proven": true,
+      "caseStudy": "Fixed script validation ES modules vs CommonJS in early phase"
+    },
+    "zeroTechnicalDebtMandatory": {
+      "description": "Zero Technical Debt significa cero errores de compilación/test/lint - NO negociable",
+      "action": "Detener todo al detectar errores hasta llegar a cero, documentar, commitear",
+      "examples": [
+        "8 ESLint errors → MUST FIX before continue",
+        "TypeScript compilation errors → BLOCKS commits",
+        "Test failures → INVESTIGATE and fix immediately",
+        "74 warnings → Evaluate cost-benefit, strategic fixes"
+      ],
+      "proven": true,
+      "caseStudy": "2025-11-14: Achieved perfect zero from 82 issues in single session",
+      "implementationTemplate": "See dev-docs/context.md section 'TEMPLATE APLICABLE'"
+    },
+    "artifactCleanupMandatory": {
+      "description": "No acumular backups ni artefactos temporales dentro del repo",
+      "action": "Eliminar backups viejos y prohibir node_modules dentro de backup/configs antes de cerrar cada tarea",
+      "examples": [
+        "Más de 3 carpetas en backup/configs → bloquear commit",
+        "Eliminar backup/configs/*/node_modules inmediatamente después de uso",
+        "Documentar limpieza cada vez que se ejecuta migrate-to-unified"
+      ],
+      "proven": false,
+      "caseStudy": "2025-11-15: 7 backups y un node_modules detectados en backup/configs/"
+    }
+  },
+
+  "agentGuidelines": {
+    "taskExecution": {
+      "workInChunks": true,
+      "commitFrequently": true,
+      "testAfterChanges": true,
+      "documentDecisions": true,
+      "typeScriptFirst": true,
+      "blockOnError": true,
+      "referencePlanTask": true,
+      "protectTestSuites": true,
+      "noUnapprovedMoves": true,
+      "zeroDebtMandatory": true
+    },
+    "problemSolving": {
+      "identifyRootCause": true,
+      "proposeMultipleSolutions": true,
+      "validateSolutions": true,
+      "documentTradeoffs": true,
+      "efficiencyFocus": true
+    },
+    "qualityAssurance": {
+      "selfReviewRequired": true,
+      "peerReviewCritical": true,
+      "automatedValidation": true,
+      "continuousImprovement": true,
+      "testValidationSystemsFirst": true,
+      "verifyQualityGateIntegrity": true,
+      "stopOnValidationFailures": true,
+      "investigateBeforeProceeding": true,
+      "distinguishBlockingVsCosmetic": true,
+      "restoreTestSuitesIfTouched": true,
+      "reportRuleViolationsImmediately": true,
+      "achieveZeroDebtBeforeContinue": true,
+      "applyTddMethodology": true,
+      "strategicEslintDisables": true,
+      "modularizeUtilities": true
+    }
+  },
+  "deliverables": {
+    "code": [
+      "src/config/eslint.config.ts",
+      "src/config/prettier.config.ts",
+      "src/gates/",
+      "src/core/",
+      "scripts/",
+      "test/"
+    ],
+    "documentation": [
+      "dev-docs/context.md",
+      "dev-docs/plan.md",
+      "dev-docs/task.md",
+      "docs/developer-guidelines.md",
+      "docs/migration-guide.md"
+    ],
+    "validation": [
+      "test/unit/",
+      "test/integration/",
+      "test/e2e/",
+      "test/performance/",
+      "test/security/"
+    ]
+  }
+}

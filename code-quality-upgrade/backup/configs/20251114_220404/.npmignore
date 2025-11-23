@@ -1,0 +1,3 @@
+# BACKUP DIRECTORY - DO NOT INSTALL DEPENDENCIES HERE
+node_modules/
+# This is a backup directory created by backup-configs.sh

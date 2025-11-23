@@ -1,0 +1,25 @@
+{
+  "name": "code-quality-upgrade",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ test/ scripts/ --ext .ts,.js",
+    "lint:fix": "eslint src/ test/ scripts/ --ext .ts,.js --fix",
+    "format": "prettier --write src/ test/ scripts/",
+    "format:check": "prettier --check src/ test/ scripts/",
+    "quality:check": "npm run lint && npm run format:check && npm test",
+    "validate:task": "tsx scripts/validate-task-execution.ts",
+    "dev": "concurrently \"npm run build:watch\" \"npm run test:watch\"",
+    "backup:configs": "bash scripts/backup-configs.sh",
+    "rollback:configs": "bash scripts/rollback-configs.sh",
+    "migrate:unified": "bash scripts/migrate-to-unified.sh",
+    "tsx": "tsx"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

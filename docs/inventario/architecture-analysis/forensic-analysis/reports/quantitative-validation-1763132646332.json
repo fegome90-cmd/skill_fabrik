@@ -1,0 +1,128 @@
+{
+  "timestamp": "2025-11-14T15:04:04.764Z",
+  "targetPath": "/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis",
+  "maxAgeMinutes": 5,
+  "summary": {
+    "total_data_points": 12,
+    "verified_data_points": 0,
+    "stale_data_points": 0,
+    "reproducibility_errors": 12,
+    "cache_violations": 0,
+    "success_rate": "0.00%"
+  },
+  "validation_results": [
+    {
+      "command": "du -sh /packages/daemon/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "448KB",
+      "actual": "",
+      "dataPoint": "Tamaño daemon",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/router/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "512KB",
+      "actual": "",
+      "dataPoint": "Tamaño router",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/skills-cli/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "928KB",
+      "actual": "",
+      "dataPoint": "Tamaño skills-cli",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "find /skills -name \"SKILL.md\" | wc -l",
+      "expected": "33",
+      "actual": "0",
+      "dataPoint": "Conteo skills",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/daemon/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "96MB",
+      "actual": "",
+      "dataPoint": "Tamaño daemon",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/router/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "512KB",
+      "actual": "",
+      "dataPoint": "Tamaño router",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/skills-cli/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "928KB",
+      "actual": "",
+      "dataPoint": "Tamaño skills-cli",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "find /skills -name \"SKILL.md\" | wc -l",
+      "expected": "33",
+      "actual": "0",
+      "dataPoint": "Conteo skills",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/daemon/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "448KB",
+      "actual": "",
+      "dataPoint": "Tamaño daemon",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "du -sh /packages/router/src/ 2>/dev/null | cut -f1 || echo \"N/A\"",
+      "expected": "512KB",
+      "actual": "",
+      "dataPoint": "Tamaño router",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "find . -name \"*.test.*\" -o -name \"*.spec.*\" | wc -l",
+      "expected": "28",
+      "actual": "12",
+      "dataPoint": "Conteo tests",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    },
+    {
+      "command": "find /skills -name \"SKILL.md\" | wc -l",
+      "expected": "33",
+      "actual": "0",
+      "dataPoint": "Conteo skills",
+      "timestamp": "2025-11-14T15:04:04.764Z",
+      "error": "Non-reproducible result",
+      "success": false
+    }
+  ],
+  "compliance": {
+    "MAX_015_compliant": false,
+    "OBL_007_compliant": false,
+    "QG_011_ready": true
+  }
+}

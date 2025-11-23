@@ -47,8 +47,8 @@ export async function userPromptSubmitHook(input: PreHookInput): Promise<PreHook
             command: parsedCommand.command,
             args: parsedCommand.args,
             flags: parsedCommand.flags,
-            options: parsedCommand.options
-          }
+            options: parsedCommand.options,
+          },
         },
         blocked: false,
       };
@@ -71,15 +71,38 @@ export async function userPromptSubmitHook(input: PreHookInput): Promise<PreHook
   }
 
   // Continue with skill activation (paralelo con rules loading)
-  const [rules] = await Promise.all([
-    loadRules(input.cwd)
-  ]);
+  const [rules] = await Promise.all([loadRules(input.cwd)]);
 
   const threshold = parseFloat(process.env.SKILL_ACTIVATION_THRESHOLD || '0.45');
   const output = matchRulesFor(input, rules, threshold);
 
   // Enhanced daemon integration with caching and improved error handling
   await enhanceWithDaemonResults(input, output, threshold);
+
+  // MemTech integration: Store activation context (non-blocking)
+  if (process.env.MEMTECH_ENABLED !== 'false' && output.activated && output.activated.length > 0) {
+    try {
+      const { storeSkillActivationContext } = await import('./memtech-integration.js');
+      for (const skillId of output.activated) {
+        const score = output.metadata?.scores?.[skillId] || 0;
+        await storeSkillActivationContext(
+          skillId,
+          input.prompt,
+          score,
+          {
+            open_files: input.openFiles,
+            active_file: input.activeFile,
+            cwd: input.cwd,
+            reasons: output.metadata?.reasons?.[skillId] || [],
+          }
+        ).catch(() => {
+          // Silently fail - MemTech is optional
+        });
+      }
+    } catch {
+      // MemTech integration not available, continue normally
+    }
+  }
 
   // Add plan info if available (reutilizar planCheck)
   if (planCheck && planCheck.hasPlan && planCheck.plan) {
@@ -99,7 +122,7 @@ const MAX_CACHE_SIZE = parseInt(process.env.DAEMON_CACHE_MAX_SIZE || '100');
 const daemonCache = new LRUCache<any>({
   maxSize: MAX_CACHE_SIZE,
   ttl: CACHE_TTL_MS,
-  cleanupInterval: 30000 // 30 seconds
+  cleanupInterval: 30000, // 30 seconds
 });
 
 /**
@@ -128,7 +151,7 @@ const daemonCircuitBreaker = new CircuitBreaker({
   failureThreshold: parseInt(process.env.CIRCUIT_BREAKER_FAILURE_THRESHOLD || '5'),
   successThreshold: parseInt(process.env.CIRCUIT_BREAKER_SUCCESS_THRESHOLD || '2'),
   resetTimeout: parseInt(process.env.CIRCUIT_BREAKER_RESET_TIMEOUT || '30000'), // 30 seconds
-  timeout: parseInt(process.env.DAEMON_TIMEOUT || '5000') // 5 seconds
+  timeout: parseInt(process.env.DAEMON_TIMEOUT || '5000'), // 5 seconds
 });
 
 /**
@@ -136,7 +159,7 @@ const daemonCircuitBreaker = new CircuitBreaker({
  * Task: SF-STABILITY-2025-T3.2
  */
 const daemonHealthChecker = new DaemonHealthChecker(
-  process.env.SKILLS_DAEMON_URL || 'http://localhost:3001',
+  process.env.SKILLS_DAEMON_URL || 'http://localhost:7727',
   parseInt(process.env.DAEMON_HEALTH_CHECK_INTERVAL || '30000') // 30 seconds
 );
 
@@ -146,7 +169,11 @@ daemonHealthChecker.start();
 /**
  * Enhanced daemon integration with caching, retry logic, and improved signal processing
  */
-async function enhanceWithDaemonResults(input: PreHookInput, output: PreHookOutput, threshold: number): Promise<void> {
+async function enhanceWithDaemonResults(
+  input: PreHookInput,
+  output: PreHookOutput,
+  threshold: number
+): Promise<void> {
   const enableDaemon = process.env.SKILLS_DAEMON_ENHANCED !== 'false';
   if (!enableDaemon) {
     return;
@@ -163,22 +190,25 @@ async function enhanceWithDaemonResults(input: PreHookInput, output: PreHookOutp
   const cached = getCachedResult(cacheKey);
   if (cached) {
     mergeDaemonResults(output, cached, 'cache');
-    output.metadata = output.metadata || { scores: {}, reasons: {} } as any;
+    output.metadata = output.metadata || ({ scores: {}, reasons: {} } as any);
     (output.metadata as any).cache = { hit: true, stats: getCacheStats() };
     return;
   }
 
   // Task: SF-STABILITY-2025-T3.2 - Check daemon health before calling
   if (!daemonHealthChecker.isHealthy()) {
-    logger.warn({
-      healthStatus: daemonHealthChecker.getStatus()
-    }, 'Daemon is unhealthy, skipping activation');
+    logger.warn(
+      {
+        healthStatus: daemonHealthChecker.getStatus(),
+      },
+      'Daemon is unhealthy, skipping activation'
+    );
 
-    output.metadata = output.metadata || { scores: {}, reasons: {} } as any;
+    output.metadata = output.metadata || ({ scores: {}, reasons: {} } as any);
     (output.metadata as any).daemon = {
       success: false,
       error: 'daemon_unhealthy',
-      healthStatus: daemonHealthChecker.getStatus()
+      healthStatus: daemonHealthChecker.getStatus(),
     };
     return;
   }
@@ -190,7 +220,7 @@ async function enhanceWithDaemonResults(input: PreHookInput, output: PreHookOutp
   try {
     const headers: Record<string, string> = {
       'content-type': 'application/json',
-      'x-router-cache-key': cacheKey
+      'x-router-cache-key': cacheKey,
     };
 
     if (process.env.SF_API_KEY) {
@@ -211,38 +241,41 @@ async function enhanceWithDaemonResults(input: PreHookInput, output: PreHookOutp
         // Add project context
         projectType: await detectProjectType(input.cwd),
         // Add timestamp for cache busting if needed
-        requestTime: Date.now()
+        requestTime: Date.now(),
       },
       options: {
         threshold,
         maxResults: 10, // Increased from 5 for better coverage
         includeSignals: true, // Request signal processing
-        includeMetadata: true // Request detailed metadata
-      }
+        includeMetadata: true, // Request detailed metadata
+      },
     };
 
     // Execute with retry + circuit breaker
-    const json = await withRetry(async () => {
-      return await daemonCircuitBreaker.execute(async () => {
-        const res = await fetch(`${daemonUrl}/activate`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(body)
+    const json = await withRetry(
+      async () => {
+        return await daemonCircuitBreaker.execute(async () => {
+          const res = await fetch(`${daemonUrl}/activate`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+          });
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+
+          return res.json() as Promise<any>;
         });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-        }
-
-        return res.json() as Promise<any>;
-      });
-    }, {
-      maxRetries,
-      initialDelayMs: 1000,
-      maxDelayMs: 10000,
-      backoffMultiplier: 2,
-      jitter: true
-    });
+      },
+      {
+        maxRetries,
+        initialDelayMs: 1000,
+        maxDelayMs: 10000,
+        backoffMultiplier: 2,
+        jitter: true,
+      }
+    );
 
     // Cache successful response
     cacheResult(cacheKey, json);
@@ -250,7 +283,7 @@ async function enhanceWithDaemonResults(input: PreHookInput, output: PreHookOutp
     // Enhanced result processing
     if (json.results && Array.isArray(json.results)) {
       mergeDaemonResults(output, json, 'daemon', input);
-      output.metadata = output.metadata || { scores: {}, reasons: {} } as any;
+      output.metadata = output.metadata || ({ scores: {}, reasons: {} } as any);
       (output.metadata as any).daemon = {
         success: true,
         results: json.results.length,
@@ -258,42 +291,47 @@ async function enhanceWithDaemonResults(input: PreHookInput, output: PreHookOutp
         latency: Date.now() - startTime,
         url: daemonUrl,
         circuitState: daemonCircuitBreaker.getState(),
-        circuitStats: daemonCircuitBreaker.getStats()
+        circuitStats: daemonCircuitBreaker.getStats(),
       };
     }
 
     return; // Success
-
   } catch (error) {
     // Handle circuit breaker errors specially
     if (error instanceof CircuitBreakerError) {
-      logger.warn({
-        circuitState: error.state,
-        circuitStats: daemonCircuitBreaker.getStats()
-      }, 'Circuit breaker open, skipping daemon call');
+      logger.warn(
+        {
+          circuitState: error.state,
+          circuitStats: daemonCircuitBreaker.getStats(),
+        },
+        'Circuit breaker open, skipping daemon call'
+      );
 
-      output.metadata = output.metadata || { scores: {}, reasons: {} } as any;
+      output.metadata = output.metadata || ({ scores: {}, reasons: {} } as any);
       (output.metadata as any).daemon = {
         success: false,
         error: 'circuit_breaker_open',
         circuitState: daemonCircuitBreaker.getState(),
         circuitStats: daemonCircuitBreaker.getStats(),
-        latency: Date.now() - startTime
+        latency: Date.now() - startTime,
       };
       return; // Don't retry when circuit is open
     }
 
     // Handle other errors
-    logger.warn({
-      err: error,
-      daemonUrl
-    }, 'Daemon activation failed after retries');
+    logger.warn(
+      {
+        err: error,
+        daemonUrl,
+      },
+      'Daemon activation failed after retries'
+    );
 
-    output.metadata = output.metadata || { scores: {}, reasons: {} } as any;
+    output.metadata = output.metadata || ({ scores: {}, reasons: {} } as any);
     (output.metadata as any).daemon = {
       success: false,
       error: error instanceof Error ? error.message : String(error),
-      latency: Date.now() - startTime
+      latency: Date.now() - startTime,
     };
   }
 }
@@ -308,7 +346,11 @@ function generateCacheKey(input: PreHookInput, threshold: number): string {
     hasActiveContent: !!input.activeFileContent,
     threshold,
     // Include only file types for better cache hits
-    fileTypes: Array.from(new Set((input.openFiles || []).map(f => f.split('.').pop()?.toLowerCase() || '').filter(Boolean))).sort()
+    fileTypes: Array.from(
+      new Set(
+        (input.openFiles || []).map(f => f.split('.').pop()?.toLowerCase() || '').filter(Boolean)
+      )
+    ).sort(),
   };
 
   return Buffer.from(JSON.stringify(key)).toString('base64');
@@ -344,7 +386,9 @@ async function getDaemonUrl(cwd?: string): Promise<string> {
 
       // Sticky selection for consistent routing
       if (process.env.ROUTER_STICKY === '1' && cwd) {
-        const list = await fetch(`${discovery}/services/sf-daemon?endpoints=true`).then(r => r.ok ? r.json() : null) as any;
+        const list = (await fetch(`${discovery}/services/sf-daemon?endpoints=true`).then(r =>
+          r.ok ? r.json() : null
+        )) as any;
         const eps: any[] = Array.isArray(list?.endpoints) ? list.endpoints : [];
 
         if (eps.length > 0) {
@@ -358,15 +402,20 @@ async function getDaemonUrl(cwd?: string): Promise<string> {
         }
       } else {
         // Round-robin or first available
-        const ep = await fetch(`${discovery}/services/sf-daemon/endpoint`).then(r => r.ok ? r.json() : null) as any;
+        const ep = (await fetch(`${discovery}/services/sf-daemon/endpoint`).then(r =>
+          r.ok ? r.json() : null
+        )) as any;
         if (ep?.success && ep.endpoint?.url) daemonUrl = ep.endpoint.url;
       }
     } catch (error) {
       // Service discovery failed, use default URL
-      logger.debug({
-        err: error,
-        discoveryUrl: process.env.DISCOVERY_URL
-      }, 'Service discovery failed, using default daemon URL');
+      logger.debug(
+        {
+          err: error,
+          discoveryUrl: process.env.DISCOVERY_URL,
+        },
+        'Service discovery failed, using default daemon URL'
+      );
     }
   }
 
@@ -381,12 +430,12 @@ async function detectProjectType(cwd?: string): Promise<string> {
 
   // Simple heuristics for project type detection
   const indicators = {
-    'react': ['package.json', 'src', 'public'],
-    'node': ['package.json', 'node_modules'],
-    'python': ['requirements.txt', 'setup.py', 'pyproject.toml'],
-    'typescript': ['tsconfig.json', 'package.json'],
-    'nextjs': ['next.config.js', 'package.json'],
-    'express': ['package.json', 'app.js', 'server.js']
+    react: ['package.json', 'src', 'public'],
+    node: ['package.json', 'node_modules'],
+    python: ['requirements.txt', 'setup.py', 'pyproject.toml'],
+    typescript: ['tsconfig.json', 'package.json'],
+    nextjs: ['next.config.js', 'package.json'],
+    express: ['package.json', 'app.js', 'server.js'],
   };
 
   try {
@@ -404,7 +453,12 @@ async function detectProjectType(cwd?: string): Promise<string> {
 /**
  * Merge daemon results with existing output with enhanced confidence scoring
  */
-function mergeDaemonResults(output: PreHookOutput, daemonData: any, source: 'cache' | 'daemon', input?: PreHookInput): void {
+function mergeDaemonResults(
+  output: PreHookOutput,
+  daemonData: any,
+  source: 'cache' | 'daemon',
+  input?: PreHookInput
+): void {
   if (!daemonData.results || !Array.isArray(daemonData.results)) return;
 
   const existingSkills = new Set(output.activated || []);
@@ -418,8 +472,8 @@ function mergeDaemonResults(output: PreHookOutput, daemonData: any, source: 'cac
         source,
         originalConfidence: r.confidence || 0,
         signals: r.signals || {},
-        ...(r.metadata || {})
-      }
+        ...(r.metadata || {}),
+      },
     }));
 
   // Merge skills, removing duplicates and sorting by confidence
@@ -427,28 +481,29 @@ function mergeDaemonResults(output: PreHookOutput, daemonData: any, source: 'cac
     ...(output.activated || []).map(skillId => ({
       skillId,
       confidence: 0.5, // Default confidence for router results
-      reason: 'router-match'
+      reason: 'router-match',
     })),
-    ...daemonSkills
+    ...daemonSkills,
   ];
 
   // Remove duplicates and sort by confidence
-  const uniqueSkills = allSkills.reduce((acc: any[], skill: any) => {
-    const existing = acc.find((s: any) => s.skillId === skill.skillId);
-    if (!existing) {
-      acc.push(skill);
-    } else if (skill.confidence > existing.confidence) {
-      // Keep the higher confidence result
-      Object.assign(existing, skill);
-    }
-    return acc;
-  }, [] as any[])
-  .sort((a: any, b: any) => b.confidence - a.confidence);
+  const uniqueSkills = allSkills
+    .reduce((acc: any[], skill: any) => {
+      const existing = acc.find((s: any) => s.skillId === skill.skillId);
+      if (!existing) {
+        acc.push(skill);
+      } else if (skill.confidence > existing.confidence) {
+        // Keep the higher confidence result
+        Object.assign(existing, skill);
+      }
+      return acc;
+    }, [] as any[])
+    .sort((a: any, b: any) => b.confidence - a.confidence);
 
   output.activated = uniqueSkills.map(s => s.skillId);
 
   // Update metadata with enhanced scoring
-  output.metadata = output.metadata || { scores: {}, reasons: {} } as any;
+  output.metadata = output.metadata || ({ scores: {}, reasons: {} } as any);
   uniqueSkills.forEach((skill: any) => {
     (output.metadata as any).scores[skill.skillId] = skill.confidence;
     (output.metadata as any).reasons[skill.skillId] = skill.reason;

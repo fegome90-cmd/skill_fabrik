@@ -1,0 +1,664 @@
+{
+  "version": "1.0.0",
+  "name": "Rules Refactorización Skills Fabrik",
+  "description": "Reglas de gobernanza para la refactorización del sistema Skills Fabrik basadas en análisis forense V2.0",
+  "status": "ACTIVE",
+  "lastUpdated": "2025-11-14T16:00:00Z",
+  "governance": {
+    "type": "REFACTOR_GOVERNANCE",
+    "scope": "FULL_SYSTEM_REFACTOR",
+    "methodology": "TDD + RISK_MANAGEMENT + CONTINUOUS_VALIDATION",
+    "compliance": "MANDATORY"
+  },
+  "maximas": [
+    {
+      "id": "REF-001",
+      "category": "INTEGRITY",
+      "title": "Integridad del Sistema",
+      "description": "La refactorización debe mantener la integridad funcional y de datos del sistema",
+      "priority": "CRITICAL",
+      "examples": [
+        "Preservar toda funcionalidad existente",
+        "Mantener compatibilidad de datos",
+        "No introducir regresiones"
+      ]
+    },
+    {
+      "id": "REF-002",
+      "category": "QUALITY",
+      "title": "Calidad Zero-Deuda",
+      "description": "Toda refactorización debe reducir o mantener cero deuda técnica",
+      "priority": "CRITICAL",
+      "examples": [
+        "Cada cambio debe mejorar la calidad",
+        "No se permite acumular nueva deuda",
+        "Métricas de calidad deben mejorar"
+      ]
+    },
+    {
+      "id": "REF-003",
+      "category": "EVIDENCE",
+      "title": "Evidencia Primero",
+      "description": "Todo cambio debe estar respaldado por evidencia cuantificable",
+      "priority": "CRITICAL",
+      "examples": [
+        "Métricas antes y después",
+        "Tests que validen mejoras",
+        "Benchmarking de rendimiento"
+      ]
+    },
+    {
+      "id": "REF-004",
+      "category": "ROLLBACK",
+      "title": "Rollback Siempre Posible",
+      "description": "Cualquier cambio debe poder revertirse completamente",
+      "priority": "CRITICAL",
+      "examples": [
+        "Backups automáticos antes de cambios",
+        "Procedimientos de rollback testados",
+        "Puntos de restauración verificados"
+      ]
+    },
+    {
+      "id": "REF-005",
+      "category": "INCREMENTAL",
+      "title": "Cambios Incrementales",
+      "description": "La refactorización debe realizarse en cambios pequeños y validables",
+      "priority": "HIGH",
+      "examples": [
+        "Cambios atómicos e independientes",
+        "Validación después de cada cambio",
+        "Progreso medible y continuo"
+      ]
+    },
+    {
+      "id": "REF-006",
+      "category": "TESTING",
+      "title": "Testing Obligatorio",
+      "description": "Todo cambio debe incluir testing automático y manual",
+      "priority": "CRITICAL",
+      "examples": [
+        "Tests unitarios para cada componente",
+        "Tests de integración entre sistemas",
+        "Tests de regresión automatizados"
+      ]
+    },
+    {
+      "id": "REF-007",
+      "category": "MONITORING",
+      "title": "Monitoreo Continuo",
+      "description": "Todo cambio debe ser monitoreado en producción",
+      "priority": "HIGH",
+      "examples": [
+        "Métricas en tiempo real",
+        "Alertas automáticas",
+        "Dashboard de seguimiento"
+      ]
+    },
+    {
+      "id": "REF-008",
+      "category": "DOCUMENTATION",
+      "title": "Documentación Viva",
+      "description": "Toda decisión y cambio debe estar documentado",
+      "priority": "HIGH",
+      "examples": [
+        "Architecture Decision Records",
+        "Documentación de componentes",
+        "Guías de implementación"
+      ]
+    },
+    {
+      "id": "REF-009",
+      "category": "COLLABORATION",
+      "title": "Colaboración Efectiva",
+      "description": "La refactorización requiere coordinación y comunicación efectiva",
+      "priority": "MEDIUM",
+      "examples": [
+        "Revisiones de código obligatorias",
+        "Comunicación de cambios",
+        "Coordinación entre equipos"
+      ]
+    },
+    {
+      "id": "REF-010",
+      "category": "PERFORMANCE",
+      "title": "Mejora de Performance",
+      "description": "Toda refactorización debe mejorar o mantener el performance",
+      "priority": "HIGH",
+      "examples": [
+        "Benchmarking antes/después",
+        "Optimización de consultas",
+        "Mejora de tiempos de respuesta"
+      ]
+    },
+    {
+      "id": "REF-011",
+      "category": "SECURITY",
+      "title": "Seguridad Mantenida",
+      "description": "La refactorización no debe comprometer la seguridad del sistema",
+      "priority": "CRITICAL",
+      "examples": [
+        "Análisis de seguridad en cambios",
+        "Mantener controles de acceso",
+        "Validación de vulnerabilidades"
+      ]
+    },
+    {
+      "id": "REF-012",
+      "category": "SCALABILITY",
+      "title": "Escalabilidad Mejorada",
+      "description": "Los cambios deben mejorar o mantener la escalabilidad",
+      "priority": "HIGH",
+      "examples": [
+        "Arquitectura escalable",
+        "Optimización de recursos",
+        "Capacidad de crecimiento"
+      ]
+    }
+  ],
+  "prohibiciones": [
+    {
+      "id": "PROH-REF-001",
+      "category": "BREAKING_CHANGES",
+      "title": "Cambios Rupturantes",
+      "description": "Prohibido introducir cambios rupturantes sin validación y rollout",
+      "severity": "CRITICAL",
+      "penalty": "BLOCK_PROGRESO",
+      "examples": [
+        "Cambios en APIs sin versionado",
+        "Eliminación de funcionalidad crítica",
+        "Cambios en esquema de datos sin migración"
+      ]
+    },
+    {
+      "id": "PROH-REF-002",
+      "category": "DATA_LOSS",
+      "title": "Pérdida de Datos",
+      "description": "Prohibida cualquier operación que pueda causar pérdida de datos",
+      "severity": "CRITICAL",
+      "penalty": "IMMEDIATE_ROLLBACK",
+      "examples": [
+        "Eliminación de datos no validados",
+        "Migraciones sin backup",
+        "Cambios en estructura persistente"
+      ]
+    },
+    {
+      "id": "PROH-REF-003",
+      "category": "REGRESSION",
+      "title": "Regresiones",
+      "description": "Prohibido introducir regresiones en funcionalidad existente",
+      "severity": "HIGH",
+      "penalty": "REQUIRED_FIX",
+      "examples": [
+        "Tests existentes que fallen",
+        "Funcionalidad que deje de funcionar",
+        "Performance que degrade significativamente"
+      ]
+    },
+    {
+      "id": "PROH-REF-004",
+      "category": "UNTESTED_CHANGES",
+      "title": "Cambios no Testados",
+      "description": "Prohibido implementar cambios sin testing adecuado",
+      "severity": "HIGH",
+      "penalty": "BLOCK_DEPLOY",
+      "examples": [
+        "Código sin tests unitarios",
+        "Cambios sin validación manual",
+        "Ausencia de tests de integración"
+      ]
+    },
+    {
+      "id": "PROH-REF-005",
+      "category": "TECHNICAL_DEBT",
+      "title": "Acumulación de Deuda Técnica",
+      "description": "Prohibido introducir nueva deuda técnica sin plan de pago",
+      "severity": "MEDIUM",
+      "penalty": "DOCUMENTATION_REQUIRED",
+      "examples": [
+        "Code sin documentar",
+        "Soluciones temporales sin plazo",
+        "Anti-patrones sin justificación"
+      ]
+    },
+    {
+      "id": "PROH-REF-006",
+      "category": "HARDCODED_VALUES",
+      "title": "Valores Hardcodeados",
+      "description": "Prohibido introducir valores configurables hardcodeados",
+      "severity": "MEDIUM",
+      "penalty": "REFACTOR_REQUIRED",
+      "examples": [
+        "URLs, credenciales en código",
+        "Métricas sin verificación dinámica",
+        "Configuración sin externalizar"
+      ]
+    },
+    {
+      "id": "PROH-REF-007",
+      "category": "SINGLE_POINT_FAILURE",
+      "title": "Puntos Únicos de Falla",
+      "description": "Prohibido introducir nuevos puntos únicos de falla",
+      "severity": "HIGH",
+      "penalty": "REDUNDANCY_REQUIRED",
+      "examples": [
+        "Dependencias únicas críticas",
+        "Componentes sin redundancia",
+        "Falta de mecanismos de fallback"
+      ]
+    },
+    {
+      "id": "PROH-REF-008",
+      "category": "SECRETS",
+      "title": "Secretos en Código",
+      "description": "Prohibido almacenar secretos o credenciales en código",
+      "severity": "CRITICAL",
+      "penalty": "IMMEDIATE_SECURITY",
+      "examples": [
+        "Contraseñas en repositorio",
+        "API keys en código",
+        "Tokens de acceso en archivos"
+      ]
+    },
+    {
+      "id": "PROH-REF-009",
+      "category": "BLOCKING_CHANGES",
+      "title": "Cambios Bloqueantes",
+      "description": "Prohibido implementar cambios que bloqueen el sistema",
+      "severity": "CRITICAL",
+      "penalty": "IMMEDIATE_ROLLBACK",
+      "examples": [
+        "Deadlocks o race conditions",
+        "Bucles infinitos",
+        "Fugas de memoria"
+      ]
+    },
+    {
+      "id": "PROH-REF-010",
+      "category": "UNDOCUMENTED_APIS",
+      "title": "APIs no Documentadas",
+      "description": "Prohibido crear APIs sin documentación completa",
+      "severity": "MEDIUM",
+      "penalty": "DOCUMENTATION_MANDATORY",
+      "examples": [
+        "Endpoints sin especificación",
+        "Parámetros sin documentar",
+        "Falta de ejemplos de uso"
+      ]
+    },
+    {
+      "id": "PROH-REF-011",
+      "category": "DEPRECATED_TECH",
+      "title": "Tecnologías Obsoletas",
+      "description": "Prohibido introducir dependencias obsoletas o inseguras",
+      "severity": "HIGH",
+      "penalty": "ALTERNATIVE_REQUIRED",
+      "examples": [
+        "Librerías con vulnerabilidades",
+        "Frameworks sin mantenimiento",
+        "Tecnologías end-of-life"
+      ]
+    },
+    {
+      "id": "PROH-REF-012",
+      "category": "MONOLITHIC_CHANGES",
+      "title": "Cambios Monolíticos",
+      "description": "Prohibido cambios monolíticos no descomponibles",
+      "severity": "HIGH",
+      "penalty": "BREAKDOWN_REQUIRED",
+      "examples": [
+        "Cambios masivos sin fases",
+        "Modificaciones no atómicas",
+        "Actualizaciones interdependientes"
+      ]
+    },
+    {
+      "id": "PROH-REF-013",
+      "category": "UNVALIDATED_MIGRATIONS",
+      "title": "Migraciones no Validadas",
+      "description": "Prohibido ejecutar migraciones de datos sin validación completa",
+      "severity": "CRITICAL",
+      "penalty": "VALIDATION_REQUIRED",
+      "examples": [
+        "Migraciones sin rollback",
+        "Transformaciones sin pruebas",
+        "Cambios en datos sin verificación"
+      ]
+    },
+    {
+      "id": "PROH-REF-014",
+      "category": "NO_MONITORING",
+      "title": "Falta de Monitoreo",
+      "description": "Prohibido implementar cambios sin monitoreo adecuado",
+      "severity": "MEDIUM",
+      "penalty": "MONITORING_REQUIRED",
+      "examples": [
+        "Componentes sin métricas",
+        "Cambios sin alertas",
+        "Ausencia de logging"
+      ]
+    }
+  ],
+  "obligaciones": [
+    {
+      "id": "OBL-REF-001",
+      "category": "BACKUP",
+      "title": "Backup Obligatorio",
+      "description": "Todo cambio debe incluir backup automático del estado anterior",
+      "priority": "CRITICAL",
+      "validation": "AUTOMATED",
+      "frequency": "BEFORE_CHANGE",
+      "implementation": "scripts/backup-manager.js"
+    },
+    {
+      "id": "OBL-REF-002",
+      "category": "TESTING",
+      "title": "Testing Completo",
+      "description": "Todo cambio debe tener suite de tests completa",
+      "priority": "CRITICAL",
+      "validation": "AUTOMATED",
+      "frequency": "WITH_CHANGE",
+      "implementation": "tests/validation/"
+    },
+    {
+      "id": "OBL-REF-003",
+      "category": "DOCUMENTATION",
+      "title": "Documentación de Cambios",
+      "description": "Todo cambio debe estar documentado en ADRs",
+      "priority": "HIGH",
+      "validation": "MANUAL",
+      "frequency": "WITH_CHANGE",
+      "implementation": "dev-docs/decision-records.md"
+    },
+    {
+      "id": "OBL-REF-004",
+      "category": "METRICS",
+      "title": "Métricas de Impacto",
+      "description": "Todo cambio debe incluir medición de impacto",
+      "priority": "HIGH",
+      "validation": "AUTOMATED",
+      "frequency": "BEFORE_AFTER",
+      "implementation": "src/utils/metrics-collector.js"
+    },
+    {
+      "id": "OBL-REF-005",
+      "category": "ROLLBACK_TEST",
+      "title": "Test de Rollback",
+      "description": "Todo cambio debe tener test de rollback validado",
+      "priority": "CRITICAL",
+      "validation": "AUTOMATED",
+      "frequency": "BEFORE_DEPLOY",
+      "implementation": "src/validation/rollback-validator.js"
+    },
+    {
+      "id": "OBL-REF-006",
+      "category": "SECURITY_REVIEW",
+      "title": "Revisión de Seguridad",
+      "description": "Todo cambio debe pasar revisión de seguridad",
+      "priority": "HIGH",
+      "validation": "MANUAL",
+      "frequency": "BEFORE_DEPLOY",
+      "implementation": "security-checklist.md"
+    },
+    {
+      "id": "OBL-REF-007",
+      "category": "PERFORMANCE_TEST",
+      "title": "Test de Performance",
+      "description": "Todo cambio debe incluir validación de performance",
+      "priority": "HIGH",
+      "validation": "AUTOMATED",
+      "frequency": "WITH_CHANGE",
+      "implementation": "tests/performance/"
+    },
+    {
+      "id": "OBL-REF-008",
+      "category": "PEER_REVIEW",
+      "title": "Revisión por Pares",
+      "description": "Todo cambio debe tener revisión por pares",
+      "priority": "MEDIUM",
+      "validation": "MANUAL",
+      "frequency": "BEFORE_MERGE",
+      "implementation": "pull-request-template.md"
+    },
+    {
+      "id": "OBL-REF-009",
+      "category": "MONITORING_SETUP",
+      "title": "Configuración de Monitoreo",
+      "description": "Todo cambio debe incluir configuración de monitoreo",
+      "priority": "HIGH",
+      "validation": "AUTOMATED",
+      "frequency": "WITH_CHANGE",
+      "implementation": "tools/monitoring/"
+    },
+    {
+      "id": "OBL-REF-010",
+      "category": "ROLLBACK_PROCEDURE",
+      "title": "Procedimiento de Rollback",
+      "description": "Todo cambio debe tener procedimiento de rollback documentado",
+      "priority": "CRITICAL",
+      "validation": "MANUAL",
+      "frequency": "BEFORE_DEPLOY",
+      "implementation": "rollback-procedures/"
+    },
+    {
+      "id": "OBL-REF-011",
+      "category": "DISTRIBUTED_TESTING",
+      "title": "Testing Distribuido",
+      "description": "Cambios críticos requieren testing en entorno distribuido",
+      "priority": "HIGH",
+      "validation": "AUTOMATED",
+      "frequency": "FOR_CRITICAL",
+      "implementation": "tests/distributed/"
+    },
+    {
+      "id": "OBL-REF-012",
+      "category": "COMMUNICATION",
+      "title": "Comunicación de Cambios",
+      "description": "Todo cambio debe ser comunicado a stakeholders",
+      "priority": "MEDIUM",
+      "validation": "MANUAL",
+      "frequency": "BEFORE_DEPLOY",
+      "implementation": "communication-templates/"
+    },
+    {
+      "id": "OBL-REF-013",
+      "category": "COMPLIANCE_CHECK",
+      "title": "Validación de Compliance",
+      "description": "Todo cambio debe validar compliance con reglas",
+      "priority": "CRITICAL",
+      "validation": "AUTOMATED",
+      "frequency": "CONTINUOUS",
+      "implementation": "src/validation/refactor-validator.js"
+    },
+    {
+      "id": "OBL-REF-014",
+      "category": "DATA_INTEGRITY",
+      "title": "Validación de Integridad de Datos",
+      "description": "Cambios en datos deben incluir validación de integridad",
+      "priority": "CRITICAL",
+      "validation": "AUTOMATED",
+      "frequency": "WITH_DATA_CHANGE",
+      "implementation": "src/validation/data-integrity.js"
+    },
+    {
+      "id": "OBL-REF-015",
+      "category": "DEPENDENCY_CHECK",
+      "title": "Validación de Dependencias",
+      "description": "Cambios deben incluir validación de dependencias",
+      "priority": "MEDIUM",
+      "validation": "AUTOMATED",
+      "frequency": "WITH_DEPENDENCY_CHANGE",
+      "implementation": "dependency-validation/"
+    },
+    {
+      "id": "OBL-REF-016",
+      "category": "USER_ACCEPTANCE",
+      "title": "Validación de Usuario",
+      "description": "Cambios significativos requieren validación de usuario",
+      "priority": "MEDIUM",
+      "validation": "MANUAL",
+      "frequency": "FOR_MAJOR_CHANGES",
+      "implementation": "user-acceptance-tests/"
+    },
+    {
+      "id": "OBL-REF-017",
+      "category": "ENVIRONMENT_SYNC",
+      "title": "Sincronización de Ambientes",
+      "description": "Cambios deben sincronizarse entre ambientes",
+      "priority": "HIGH",
+      "validation": "AUTOMATED",
+      "frequency": "POST_DEPLOY",
+      "implementation": "environment-sync/"
+    },
+    {
+      "id": "OBL-REF-018",
+      "category": "POST_DEPLOY_VALIDATION",
+      "title": "Validación Post-Deploy",
+      "description": "Todo deploy debe incluir validación post-implementación",
+      "priority": "CRITICAL",
+      "validation": "AUTOMATED",
+      "frequency": "POST_DEPLOY",
+      "implementation": "src/validation/post-deploy.js"
+    }
+  ],
+  "qualityGates": [
+    {
+      "id": "QG-REF-001",
+      "name": "Cero Violaciones Críticas",
+      "description": "No debe haber violaciones críticas de reglas",
+      "severity": "CRITICAL",
+      "validation": "AUTOMATED",
+      "threshold": "0",
+      "metric": "critical_violations",
+      "implementation": "src/validation/gates-checker.js"
+    },
+    {
+      "id": "QG-REF-002",
+      "name": "Cobertura de Tests > 80%",
+      "description": "La cobertura de tests debe ser mayor al 80%",
+      "severity": "HIGH",
+      "validation": "AUTOMATED",
+      "threshold": "80",
+      "metric": "test_coverage_percentage",
+      "implementation": "tests/coverage-validator.js"
+    },
+    {
+      "id": "QG-REF-003",
+      "name": "Performance Mantenido",
+      "description": "El performance no debe degradarse más del 5%",
+      "severity": "HIGH",
+      "validation": "AUTOMATED",
+      "threshold": "5",
+      "metric": "performance_degradation_percentage",
+      "implementation": "tests/performance-validator.js"
+    },
+    {
+      "id": "QG-REF-004",
+      "name": "Seguridad Validada",
+      "description": "No debe haber vulnerabilidades de seguridad",
+      "severity": "CRITICAL",
+      "validation": "AUTOMATED",
+      "threshold": "0",
+      "metric": "security_vulnerabilities",
+      "implementation": "security/scan-validator.js"
+    },
+    {
+      "id": "QG-REF-005",
+      "name": "Rollback Exitoso",
+      "description": "El rollback debe funcionar correctamente",
+      "severity": "CRITICAL",
+      "validation": "AUTOMATED",
+      "threshold": "100",
+      "metric": "rollback_success_percentage",
+      "implementation": "src/validation/rollback-test.js"
+    },
+    {
+      "id": "QG-REF-006",
+      "name": "Documentación Completa",
+      "description": "La documentación debe estar completa y actualizada",
+      "severity": "MEDIUM",
+      "validation": "MANUAL",
+      "threshold": "100",
+      "metric": "documentation_completeness",
+      "implementation": "docs/documentation-validator.js"
+    },
+    {
+      "id": "QG-REF-007",
+      "name": "Integridad de Datos",
+      "description": "La integridad de datos debe estar garantizada",
+      "severity": "CRITICAL",
+      "validation": "AUTOMATED",
+      "threshold": "100",
+      "metric": "data_integrity_percentage",
+      "implementation": "src/validation/data-integrity-check.js"
+    },
+    {
+      "id": "QG-REF-008",
+      "name": "Deuda Técnica Controlada",
+      "description": "La deuda técnica debe estar controlada o reducida",
+      "severity": "MEDIUM",
+      "validation": "AUTOMATED",
+      "threshold": "0",
+      "metric": "new_technical_debt",
+      "implementation": "src/validation/tech-debt-check.js"
+    },
+    {
+      "id": "QG-REF-009",
+      "name": "Monitoreo Funcional",
+      "description": "El monitoreo debe estar configurado y funcionando",
+      "severity": "HIGH",
+      "validation": "AUTOMATED",
+      "threshold": "100",
+      "metric": "monitoring_coverage_percentage",
+      "implementation": "src/validation/monitoring-check.js"
+    }
+  ],
+  "complianceLevels": {
+    "FULLY_COMPLIANT": {
+      "description": "Todas las reglas cumplidas, cero violaciones",
+      "action": "PROCEED",
+      "conditions": [
+        "critical_violations = 0",
+        "high_violations = 0",
+        "all_quality_gates_passed = true"
+      ]
+    },
+    "COMPLIANT_WITH_WARNINGS": {
+      "description": "Reglas críticas cumplidas, algunas violaciones medias",
+      "action": "PROCEED_WITH_MITIGATION",
+      "conditions": [
+        "critical_violations = 0",
+        "high_violations = 0",
+        "all_quality_gates_critical = true"
+      ]
+    },
+    "NON_COMPLIANT": {
+      "description": "Violaciones críticas o altas detectadas",
+      "action": "BLOCK",
+      "conditions": ["critical_violations > 0 OR high_violations > 0"]
+    }
+  },
+  "validationCriteria": {
+    "criticalViolations": 0,
+    "highViolations": 0,
+    "mediumViolations": "MAX_5",
+    "qualityGatesPassed": "ALL_CRITICAL",
+    "testCoverageMinimum": 80,
+    "rollbackSuccessRequired": true,
+    "documentationCompleteness": 100
+  },
+  "implementation": {
+    "framework": "TDD + RISK_MANAGEMENT + CONTINUOUS_VALIDATION",
+    "tools": [
+      "src/validation/refactor-validator.js",
+      "tests/integration/",
+      "tools/monitoring/",
+      "src/utils/metrics-collector.js"
+    ],
+    "process": [
+      "PLAN -> ANALYZE -> DESIGN -> IMPLEMENT -> VALIDATE -> DEPLOY -> MONITOR"
+    ],
+    "frequency": "CONTINUOUS"
+  }
+}

@@ -12,6 +12,7 @@ async function loadSlashCommandSystem() {
   if (!slashCommandSystem) {
     try {
       // Try to load the full slash commands system (workspace mode)
+      // @ts-ignore - Declaration file not available but module exists
       slashCommandSystem = await import('@skills-fabrik/slash-commands');
     } catch (error) {
       try {
@@ -273,12 +274,12 @@ async function showCommandHelp(
   console.log(chalk.yellow('Persistence:'), command.persistenceLevel);
 
   if (command.aliases && command.aliases.length > 0) {
-    console.log(chalk.yellow('Aliases:'), command.aliases.map(a => `/${a}`).join(', '));
+    console.log(chalk.yellow('Aliases:'), command.aliases.map((a: any) => `/${a}`).join(', '));
   }
 
   if (command.examples && command.examples.length > 0) {
     console.log(chalk.yellow('\nExamples:'));
-    command.examples.forEach(example => {
+    command.examples.forEach((example: any) => {
       console.log(`  ${chalk.cyan(example)}`);
     });
   }
@@ -320,14 +321,14 @@ async function listAvailableCommands(registry: any, categoryFilter?: string) {
 
   const categories = registry.getCategories();
   for (const cat of categories) {
-    const catCommands = commands.filter(c => c.category === cat);
+    const catCommands = commands.filter((c: any) => c.category === cat);
     if (catCommands.length === 0) continue;
 
     console.log(chalk.underline(`${cat.charAt(0).toUpperCase() + cat.slice(1)} Commands:`));
 
-    catCommands.forEach(command => {
+    catCommands.forEach((command: any) => {
       const aliases = command.aliases && command.aliases.length > 0
-        ? ` (${command.aliases.map(a => `/${a}`).join(', ')})`
+        ? ` (${command.aliases.map((a: any) => `/${a}`).join(', ')})`
         : '';
 
       console.log(`  ${chalk.cyan(`/${command.name}`)}${aliases}`);
@@ -392,7 +393,7 @@ async function validateRegistry(registry: any) {
     Logger.success('✅ Registry validation passed');
   } else {
     Logger.error('❌ Registry validation failed:');
-    validation.errors.forEach(error => {
+    validation.errors.forEach((error: any) => {
       console.log(`  • ${error}`);
     });
   }
@@ -432,14 +433,14 @@ async function listStandaloneCommands(registry: any, categoryFilter?: string) {
 
   const categories = registry.getCategories();
   for (const cat of categories) {
-    const catCommands = commands.filter(c => c.category === cat);
+    const catCommands = commands.filter((c: any) => c.category === cat);
     if (catCommands.length === 0) continue;
 
     console.log(chalk.underline(`${cat.charAt(0).toUpperCase() + cat.slice(1)} Commands:`));
 
-    catCommands.forEach(command => {
+    catCommands.forEach((command: any) => {
       const aliases = command.aliases && command.aliases.length > 0
-        ? ` (${command.aliases.map(a => `/${a}`).join(', ')})`
+        ? ` (${command.aliases.map((a: any) => `/${a}`).join(', ')})`
         : '';
 
       console.log(`  ${chalk.cyan(`/${command.name}`)}${aliases}`);

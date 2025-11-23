@@ -5,10 +5,10 @@
  * Comprehensive testing with error detection and reporting
  */
 
-import { execSync, spawn } from 'child_process';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { spawn } from 'node:child_process';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,19 +23,7 @@ class E2ETestSuite {
   }
 
   // Colors for output
-  #colors = {
-    reset: '\x1b[0m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m'
-  };
-
-  // Colors for output
-  private colors = {
+  colors = {
     reset: '\x1b[0m',
     red: '\x1b[31m',
     green: '\x1b[32m',
@@ -333,8 +321,8 @@ if __name__ == "__main__":
         );
         this.warnings.push('Invalid command should have failed');
       } catch (error) {
-        // Expected to fail
-        this.log('success', 'Invalid command properly rejected');
+        // Expected to fail - log diagnostic information
+        this.log('success', 'Invalid command properly rejected', { error: this.formatError(error) });
       }
 
       // Test missing required arguments
@@ -345,8 +333,8 @@ if __name__ == "__main__":
         );
         this.warnings.push('Command with missing args should have failed');
       } catch (error) {
-        // Expected to fail
-        this.log('success', 'Missing arguments properly rejected');
+        // Expected to fail - log diagnostic information
+        this.log('success', 'Missing arguments properly rejected', { error: this.formatError(error) });
       }
 
     } finally {
@@ -555,25 +543,25 @@ ${this.colors.reset}`);
       console.log(`\n${this.colors.red}========================================
   Errors Detected
 ========================================${this.colors.reset}`);
-      report.errors.forEach((error, index) => {
+      for (const [index, error] of report.errors.entries()) {
         console.log(`${this.colors.red}${index + 1}.${this.colors.reset} ${error}`);
-      });
+      }
     }
 
     if (report.warnings.length > 0) {
       console.log(`\n${this.colors.yellow}========================================
   Warnings
 ========================================${this.colors.reset}`);
-      report.warnings.forEach((warning, index) => {
+      for (const [index, warning] of report.warnings.entries()) {
         console.log(`${this.colors.yellow}${index + 1}.${this.colors.reset} ${warning}`);
-      });
+      }
     }
 
     console.log(`\n${this.colors.cyan}========================================
   Test Details
 ========================================${this.colors.reset}`);
 
-    report.tests.forEach((test, index) => {
+    for (const [index, test] of report.tests.entries()) {
       const statusColor = {
         PASS: this.colors.green,
         FAIL: this.colors.red,
@@ -589,15 +577,15 @@ ${this.colors.reset}`);
       if (test.details) {
         console.log(`   ${this.colors.blue}Details:${this.colors.reset} ${test.details}`);
       }
-    });
+    }
 
     if (report.recommendations.length > 0) {
       console.log(`\n${this.colors.magenta}========================================
   Recommendations
 ========================================${this.colors.reset}`);
-      report.recommendations.forEach((rec, index) => {
+      for (const rec of report.recommendations) {
         console.log(`${this.colors.magenta}•${this.colors.reset} ${rec}`);
-      });
+      }
     }
 
     console.log(`\n${this.colors.cyan}========================================
@@ -621,15 +609,16 @@ ${this.colors.reset}`);
 // Run tests if this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   const testSuite = new E2ETestSuite();
-
-  testSuite.runAllTests()
-    .then((report) => {
-      process.exit(report.summary.failed > 0 ? 1 : 0);
-    })
-    .catch((error) => {
-      console.error(`${testSuite['colors'].red}Fatal error running tests:${testSuite['colors'].reset}`, error);
-      process.exit(1);
-    });
+  try {
+    const report = await testSuite.runAllTests();
+    process.exit(report.summary.failed > 0 ? 1 : 0);
+  } catch (error) {
+    console.error(`${testSuite['colors'].red}Fatal error running tests:${testSuite['colors'].reset}`, error);
+    process.exit(1);
+  }
 }
 
 export { E2ETestSuite, TestReport, TestResult };
+  private formatError(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
+  }

@@ -470,16 +470,14 @@ export async function loadRules(cwd: string = process.cwd()): Promise<SkillRules
  * Match simple de glob pattern (soporta ** y *)
  */
 function minimatchLike(file: string, pattern: string): boolean {
-  // Escapar puntos literales
-  let regexStr = pattern
-    .replace(/\./g, '\\.')
-    .replace(/\*\*/g, '__DOUBLESTAR__')
-    .replace(/\*/g, '[^/]+')
-    .replace('__DOUBLESTAR__', '.*');
-
-  // Normalizar separadores
   const normalizedFile = file.replace(/\\/g, '/');
-  regexStr = regexStr.replace(/\\/g, '/');
+  let normalizedPattern = pattern.replace(/\\/g, '/');
+  normalizedPattern = normalizedPattern.replace(/\*\*/g, '__DOUBLESTAR__');
+
+  const escaped = normalizedPattern.replace(/[-/\\^$+?.()|[\]{}]/g, '\\$&');
+  const regexStr = escaped
+    .replace(/\*/g, '[^/]*')
+    .replace(/__DOUBLESTAR__/g, '.*');
 
   try {
     return new RegExp(`^${regexStr}$`).test(normalizedFile);
