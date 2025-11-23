@@ -23,9 +23,13 @@ describe('QualityDashboard', () => {
         cpuUtilization: 15,
       },
       gates: {
-        executionTime: 1200,
-        successRate: 0.92,
-        failureRate: 0.08,
+        executionTime: 1000,
+        successRate: 1,
+        failureRate: 0,
+        totalGates: 5,
+        passedGates: 5,
+        failedGates: 0,
+        skippedGates: 0,
       },
       trends: {
         qualityScore: 0.8,

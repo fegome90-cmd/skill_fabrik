@@ -100,6 +100,10 @@ export interface QualityMetrics {
     executionTime: number;
     successRate: number;
     failureRate: number;
+    totalGates: number;
+    passedGates: number;
+    failedGates: number;
+    skippedGates: number;
   };
   trends: QualityTrends;
   eslintErrorRate: number;

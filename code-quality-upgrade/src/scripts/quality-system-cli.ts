@@ -30,9 +30,13 @@ function collectCurrentMetrics(): QualityMetrics {
       cpuUtilization: 45,
     },
     gates: {
-      executionTime: 62000,
-      successRate: 90.5,
-      failureRate: 9.5,
+      executionTime: 1500,
+      successRate: 1,
+      failureRate: 0,
+      totalGates: 6,
+      passedGates: 6,
+      failedGates: 0,
+      skippedGates: 0,
     },
     trends: {
       qualityScore: 87.2,

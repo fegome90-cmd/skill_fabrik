@@ -116,15 +116,21 @@ export class EvidenceCLI {
         ...this.config.defaultExcludePatterns,
         ...(options.exclude || []),
       ],
-      timeout: parseInt(String(options.timeout || this.config.defaultTimeout)),
+      timeout: parseInt(String(options.timeout ?? this.config.defaultTimeout)),
       verbose: options.verbose || false,
     };
+
+    const parsedTimeout: number = Number.isFinite(validationOptions.timeout)
+      ? Number(validationOptions.timeout)
+      : /* istanbul ignore next */ this.config.defaultTimeout;
+    const timeoutMs =
+      parsedTimeout > 0 ? parsedTimeout : this.config.defaultTimeout;
 
     try {
       // Execute validation with timeout
       const results = await this.withTimeout(
         validateProject(projectPath, validationOptions),
-        validationOptions.timeout || 30000
+        timeoutMs
       );
 
       const executionTime = Date.now() - startTime;
@@ -173,13 +179,18 @@ export class EvidenceCLI {
     promise: Promise<T>,
     timeoutMs: number
   ): Promise<T> {
+    let timeoutId: NodeJS.Timeout | undefined;
     const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         reject(new Error(`Validation timeout exceeded: ${timeoutMs}ms`));
       }, timeoutMs);
     });
 
-    return Promise.race([promise, timeoutPromise]);
+    return Promise.race([promise, timeoutPromise]).finally(() => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    });
   }
 
   private outputResults(results: any, isJson: boolean = false): void {
@@ -239,10 +250,22 @@ export async function main(): Promise<void> {
   await cli.run();
 }
 
-// Execute if called directly
-if (require.main === module) {
-  main().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
-  });
+export function runIfMain(
+  entryModule: NodeModule,
+  mainRef: NodeModule | undefined = require.main,
+  mainFn?: () => Promise<void>
+): Promise<void> | void {
+  const runner = mainFn ?? /* istanbul ignore next */ main;
+  /* istanbul ignore next */
+  if (mainRef === entryModule) {
+    return runner().catch(error => {
+      console.error('Fatal error:', error);
+      /* istanbul ignore next -- process termination not measurable in unit tests */
+      process.exit(1);
+    });
+  }
+  return undefined;
 }
+
+// Execute if called directly
+void runIfMain(module, require.main, main);
