@@ -1,0 +1,13 @@
+{
+  "name": "test-missing-deps",
+  "version": "1.0.0",
+  "dependencies": {
+    "missing-dep1": "^1.0.0",
+    "missing-dep2": "^2.0.0",
+    "lodash": "^4.17.21"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  }
+}

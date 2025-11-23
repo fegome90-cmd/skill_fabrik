@@ -1,0 +1,359 @@
+{
+  "metadata": {
+    "name": "Rules of Forensic Analysis - Skills Core",
+    "version": "1.1.0",
+    "description": "Reglas y máximas que rigen el análisis forense del repositorio Skills Core - Enhanced with Clean Code Validation",
+    "created": "2025-11-13",
+    "updated": "2025-11-13",
+    "authority": "máxima - guía todo el proceso de análisis",
+    "updates": [
+      {
+        "version": "1.1.0",
+        "changes": [
+          "Added clean_code maximum for code quality standards",
+          "Added autoanalisis maximum for self-validation requirements",
+          "Added magic numbers prohibitions",
+          "Added hardcoded paths prohibitions",
+          "Added function naming prohibitions",
+          "Added Single Responsibility Principle enforcement",
+          "Added clean_code quality gate",
+          "Enhanced quality gates to include clean code validation"
+        ]
+      }
+    ]
+  },
+  "maximas": {
+    "integridad": {
+      "rule": "NO MODIFICAR NADA del repo original, solo observar y describir",
+      "enforcement": "validación automática contra timestamp de archivos",
+      "priority": "crítico"
+    },
+    "calidad": {
+      "rule": "CADA fase debe pasar quality gates (lint + tests + formato + clean code) antes de continuar",
+      "enforcement": "quality gates obligatorios entre fases + validación de clean code",
+      "priority": "crítico"
+    },
+    "clean_code": {
+      "rule": "TODO script de validación debe seguir clean code principles (sin magic numbers, paths hardcodeados, nombres ambiguos)",
+      "enforcement": "validación automatizada de clean code violations en src/",
+      "priority": "crítico"
+    },
+    "autoanalisis": {
+      "rule": "LA herramienta forense debe cumplir los mismos estándares que exige al repositorio analizado",
+      "enforcement": "clean code audit obligatorio de scripts de validación",
+      "priority": "crítico"
+    },
+    "evidencia": {
+      "rule": "TODA afirmación debe estar respaldada por evidencia concreta (rutas, archivos, patrones)",
+      "enforcement": "validación de evidencia en cada informe",
+      "priority": "crítico"
+    },
+    "claridad": {
+      "rule": "SIN jerga técnica ambigua, describir en lenguaje natural claro",
+      "enforcement": "revisión de lenguaje en informes",
+      "priority": "alto"
+    },
+    "completitud": {
+      "rule": "CADA área identificada debe ser analizada, sin dejar huecos",
+      "enforcement": "checklist de cobertura por fase",
+      "priority": "alto"
+    },
+    "consistencia": {
+      "rule": "TODOS los informes siguen el mismo formato y estructura",
+      "enforcement": "plantillas estándar para informes",
+      "priority": "medio"
+    },
+    "gobernanza": {
+      "rule": "LAS dev-docs son la fuente de verdad del proceso de análisis",
+      "enforcement": "referencias obligatorias a dev-docs",
+      "priority": "crítico"
+    },
+    "forense": {
+      "rule": "PENSAR como detective: recolectar evidencia, no hacer juicios sin datos",
+      "enforcement": "validación de método científico",
+      "priority": "crítico"
+    }
+  },
+  "prohibiciones": [
+    {
+      "item": "NO ejecutar código del repo original",
+      "consequence": "terminación inmediata del análisis",
+      "severity": "fatal"
+    },
+    {
+      "item": "NO modificar archivos del repo original",
+      "consequence": "terminación inmediata del análisis",
+      "severity": "fatal"
+    },
+    {
+      "item": "NO proponer cambios durante el análisis",
+      "consequence": "separación de observación vs recomendación",
+      "severity": "error"
+    },
+    {
+      "item": "NO omitir áreas por complejidad",
+      "consequence": "análisis incompleto, repetir fase",
+      "severity": "error"
+    },
+    {
+      "item": "NO mezclar observaciones con recomendaciones",
+      "consequence": "separar en secciones distintas",
+      "severity": "warning"
+    },
+    {
+      "item": "NO reportar datos numéricos sin verificación con comandos reales",
+      "consequence": "datos invalidados, repetir recolección",
+      "severity": "fatal"
+    },
+    {
+      "item": "NO usar caracteres no-ASCII en documentación profesional",
+      "consequence": "limpieza inmediata de caracteres",
+      "severity": "error"
+    },
+    {
+      "item": "NO tener configuraciones ESLint inválidas",
+      "consequence": "quality gates rotos, no se puede continuar",
+      "severity": "fatal"
+    },
+    {
+      "item": "NO tener inconsistencias de métricas entre informes",
+      "consequence": "cross-check obligatorio antes de continuar",
+      "severity": "error"
+    },
+    {
+      "item": "NO usar magic numbers sin constantes nombradas con significado semántico",
+      "consequence": "error en quality gates, refactorización obligatoria",
+      "severity": "error"
+    },
+    {
+      "item": "NO usar paths hardcodeados, implementar dependency injection pattern",
+      "consequence": "error en quality gates, refactorización obligatoria",
+      "severity": "error"
+    },
+    {
+      "item": "NO tener nombres genéricos de funciones/variables (data, info, tmp, process)",
+      "consequence": "error en quality gates, renombrar con propósito específico",
+      "severity": "error"
+    },
+    {
+      "item": "NO violar Single Responsibility Principle en scripts de validación",
+      "consequence": "error en quality gates, dividir en funciones específicas",
+      "severity": "error"
+    }
+  ],
+  "obligaciones": [
+    {
+      "item": "VALIDAR cada fase contra tests específicos",
+      "verification": "tests unitarios y de integración",
+      "priority": "crítico"
+    },
+    {
+      "item": "DOCUMENTAR toda evidencia encontrada",
+      "verification": "sección de evidencia por informe",
+      "priority": "crítico"
+    },
+    {
+      "item": "MANTENER formato consistente en todos los informes",
+      "verification": "plantillas y validación de estructura",
+      "priority": "alto"
+    },
+    {
+      "item": "REFERENCIAR siempre las dev-docs guía",
+      "verification": "referencias cruzadas obligatorias",
+      "priority": "crítico"
+    },
+    {
+      "item": "EJECUTAR quality gates después de cada fase",
+      "verification": "automated quality checks",
+      "priority": "crítico"
+    },
+    {
+      "item": "REGISTRAR hallazgos en dev-docs/tasks.md",
+      "verification": "log actualizado continuamente",
+      "priority": "alto"
+    },
+    {
+      "item": "VERIFICAR TODOS los datos numéricos con comandos reales",
+      "verification": "cross-check con find, wc -l, du -sh",
+      "priority": "crítico"
+    },
+    {
+      "item": "VALIDAR consistencia de métricas entre todos los informes",
+      "verification": "mismos valores de componentes en todas las fases",
+      "priority": "crítico"
+    },
+    {
+      "item": "ASEGURAR UTF-8 limpio en toda documentación",
+      "verification": "sin caracteres no-ASCII en informes profesionales",
+      "priority": "alto"
+    },
+    {
+      "item": "VALIDAR clean code principles en todo script de validación src/",
+      "verification": "automated clean code scan con reglas específicas",
+      "priority": "crítico"
+    },
+    {
+      "item": "IMPLEMENTAR dependency injection pattern en constructores",
+      "verification": "revisión de options parameters vs hardcoded values",
+      "priority": "crítico"
+    },
+    {
+      "item": "TENER tests que prevengan regresiones de clean code violations",
+      "verification": "tests específicos para magic numbers, paths, naming",
+      "priority": "crítico"
+    },
+    {
+      "item": "EJECUTAR clean code audit después de cada nuevo script",
+      "verification": "automated validation con código de salida 0",
+      "priority": "alto"
+    }
+  ],
+  "quality_gates": {
+    "lint": {
+      "requirement": "CERO errores de ESLint - configuración válida",
+      "command": "npm run lint",
+      "threshold": "0 errors, 0 warnings",
+      "validation": "ESLint debe estar funcionalmente configurado sin propiedades inválidas"
+    },
+    "format": {
+      "requirement": "Formato Prettier consistente",
+      "command": "npm run format:check",
+      "threshold": "100% conformidad"
+    },
+    "tests": {
+      "requirement": "TODOS los tests de la fase deben pasar",
+      "command": "npm run test:phase-{X}",
+      "threshold": "100% pass rate"
+    },
+    "clean_code": {
+      "requirement": "CERO violaciones de clean code en src/",
+      "command": "npm run validate:clean-code",
+      "threshold": "0 magic numbers, 0 paths hardcodeados, 0 nombres ambiguos",
+      "validation": "automated scan de clean code violations en scripts de validación"
+    },
+    "evidence": {
+      "requirement": "CADA hallazgo debe tener evidencia verificable",
+      "validation": "función de validación de evidencia",
+      "threshold": "100% evidenciado"
+    },
+    "completeness": {
+      "requirement": "TODAS las áreas deben ser cubiertas",
+      "validation": "checklist de cobertura",
+      "threshold": "100% cobertura"
+    },
+    "data_integrity": {
+      "requirement": "TODOS los datos numéricos deben ser verificables",
+      "validation": "cross-check entre informes",
+      "threshold": "0 inconsistencies",
+      "checks": [
+        "Métricas de componentes consistentes entre fases",
+        "Conteos de archivos verificables con comandos find",
+        "Tamaños de archivos corroborados con du -sh",
+        "Sin caracteres no-ASCII en documentación profesional"
+      ]
+    }
+  },
+  "phases": {
+    "phase-a": {
+      "name": "Inventario Estructural y Pathing",
+      "maximas": ["integridad", "evidencia", "completitud"],
+      "prohibiciones": ["NO ejecutar código", "NO omitir áreas"],
+      "obligaciones": [
+        "VALIDAR estructura",
+        "DOCUMENTAR todo",
+        "REFERENCIAR dev-docs"
+      ]
+    },
+    "phase-b": {
+      "name": "Mapa de Responsabilidades y Arquitectura Real",
+      "maximas": ["evidencia", "claridad", "forense"],
+      "prohibiciones": ["NO mezclar observación con recomendación"],
+      "obligaciones": ["VALIDAR responsabilidades", "DOCUMENTAR dependencias"]
+    },
+    "phase-c": {
+      "name": "Testing, Calidad y Errores",
+      "maximas": ["completitud", "evidencia"],
+      "prohibiciones": ["NO omitir áreas por complejidad"],
+      "obligaciones": ["DOCUMENTAR TODO/FIXME", "VALIDAR cobertura"]
+    },
+    "phase-d": {
+      "name": "CLI, Runtime, pm2 y Uso Real",
+      "maximas": ["evidencia", "claridad"],
+      "prohibiciones": ["NO ejecutar scripts del repo"],
+      "obligaciones": ["DOCUMENTAR flujos", "IDENTIFICAR redundancias"]
+    },
+    "phase-e": {
+      "name": "Prompt Builder y Contratos",
+      "maximas": ["gobernanza", "evidencia", "consistencia"],
+      "prohibiciones": ["NO modificar prompts"],
+      "obligaciones": ["VALIDAR contratos", "DETECTAR conflictos"]
+    }
+  },
+  "validation": {
+    "rules_check": {
+      "command": "node scripts/validate-rules.js",
+      "frequency": "antes de cada fase",
+      "required": true
+    },
+    "evidence_check": {
+      "command": "node scripts/validate-evidence.js",
+      "frequency": "después de cada informe",
+      "required": true
+    },
+    "completeness_check": {
+      "command": "node scripts/validate-completeness.js",
+      "frequency": "al final de cada fase",
+      "required": true
+    },
+    "data_integrity_check": {
+      "command": "node scripts/validate-data-integrity.js",
+      "frequency": "después de correcciones de datos",
+      "required": true,
+      "checks": [
+        "Cross-check métricas componentes entre todas las fases",
+        "Verificar conteos de archivos con find/wc",
+        "Validar configuraciones ESLint funcionales",
+        "Detectar caracteres no-ASCII en documentación"
+      ]
+    }
+  },
+  "lecciones_aprendidas": {
+    "phase_1_corrections": {
+      "eslint_validation": "La configuración ESLint debe ser validada funcionalmente, no solo sintácticamente",
+      "data_verification": "Todos los datos numéricos deben ser verificados con comandos reales (find, wc -l, du -sh)",
+      "cross_phase_consistency": "Las métricas de componentes deben ser idénticas entre todas las fases",
+      "encoding_validation": "Toda documentación profesional debe mantener UTF-8 limpio sin caracteres extraños",
+      "quality_gate_functionality": "Los quality gates deben estar realmente operativos, no solo configurados"
+    },
+    "critical_validation_points": [
+      "Daemon: 448KB en TODAS las fases donde se mencione",
+      "Router: 512KB en TODAS las fases donde se mencione",
+      "Skills CLI: 928KB en TODAS las fases donde se mencione",
+      "MCP: 96MB en TODAS las fases donde se mencione",
+      "Tests: 42 archivos totales distribuidos Router(28) + Skills CLI(10) + E2E(4)"
+    ],
+    "validation_commands": {
+      "component_sizes": "du -sh /packages/{daemon,router,skills-cli}/src/",
+      "test_counts": "find / -name '*.test.*' -o -name '*.spec.*' | wc -l",
+      "file_validation": "find /skills -name 'SKILL.md' | wc -l",
+      "encoding_check": "file -bi reports/*.md"
+    }
+  },
+  "emergency": {
+    "rule_violation": {
+      "action": "detener inmediatamente la fase actual",
+      "escalation": "reportar a dev-docs/tasks.md",
+      "resolution": "corregir antes de continuar"
+    },
+    "quality_gate_failure": {
+      "action": "no avanzar a la siguiente fase",
+      "escalation": "registrar fallo en log",
+      "resolution": "resolver todos los errores"
+    },
+    "evidence_missing": {
+      "action": "marcar informe como incompleto",
+      "escalation": "requerir recolección adicional",
+      "resolution": "completar evidencia antes de continuar"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "moduleDetection": "force",
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo-v2",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@/orchestration/*": ["orchestration/*"],
+      "@/observability/*": ["observability/*"],
+      "@/utils/*": ["utils/*"]
+    }
+  },
+  "include": [
+    "src/daemon-v2.ts",
+    "src/orchestration/**/*.ts",
+    "src/observability/**/*.ts",
+    "src/utils/**/*.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/index.ts",
+    "src/app.ts"
+  ],
+  "references": [
+    {
+      "path": "../router"
+    },
+    {
+      "path": "../kpi"
+    }
+  ]
+}

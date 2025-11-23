@@ -103,8 +103,8 @@ export function extractKeywords(description: string, metadata?: any): string[] {
       const summaryWords = metadata.summary
         .toLowerCase()
         .split(/\s+/)
-        .filter(word => word.length > 2);
-      summaryWords.forEach(word => keywords.add(word));
+        .filter((word: string) => word.length > 2);
+      summaryWords.forEach((word: string) => keywords.add(word));
     }
 
     // Extract from when_to_use
@@ -112,8 +112,8 @@ export function extractKeywords(description: string, metadata?: any): string[] {
       const whenWords = metadata.when_to_use
         .toLowerCase()
         .split(/\s+/)
-        .filter(word => word.length > 2);
-      whenWords.forEach(word => keywords.add(word));
+        .filter((word: string) => word.length > 2);
+      whenWords.forEach((word: string) => keywords.add(word));
     }
 
     // Add domain-specific keywords based on type and tools

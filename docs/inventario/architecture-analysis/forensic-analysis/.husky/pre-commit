@@ -1,0 +1,62 @@
+#!/bin/sh
+# Pre-commit hook for forensic analysis project
+# Ensures TDD compliance and dynamic data validation
+
+echo "🔍 Running pre-commit quality gates..."
+
+# Run basic quality gates
+echo "📋 Running basic quality gates..."
+npm run lint || {
+  echo "❌ Linting failed - please fix before committing"
+  exit 1
+}
+
+echo "📋 Running format check..."
+npm run format:check || {
+  echo "❌ Format check failed - run 'npm run format:fix'"
+  exit 1
+}
+
+echo "📋 Running tests..."
+npm run test -- --passWithNoTests || {
+  echo "❌ Tests failed - please fix before committing"
+  exit 1
+}
+
+# Run dynamic compliance validation (OBLIGATORIO)
+echo "📋 Running dynamic compliance validation..."
+npm run validate:dynamic-compliance || {
+  echo "❌ Dynamic compliance validation failed"
+  echo "❌ VIOLATION: PROH-006, PROH-009, OBL-007, OBL-018 detected"
+  echo "💡 Fix hardcoded metrics and try again"
+  exit 1
+}
+
+# Run consistency validation
+echo "📋 Running consistency validation..."
+npm run validate:consistency || {
+  echo "❌ Consistency validation failed"
+  echo "❌ VIOLATION: PROH-009, MAX-007, QG-010 detected"
+  exit 1
+}
+
+# Check for hardcoded metrics in dev-docs
+echo "📋 Checking for hardcoded metrics in dev-docs..."
+if grep -r "([0-9][0-9]*[KMGT]?B)" dev-docs/; then
+  echo "❌ HARDCODED METRICS DETECTED - PROH-006 VIOLATION"
+  echo "💡 Replace with dynamic placeholders like: \$(du -sh packages/daemon/src/ | cut -f1)"
+  exit 1
+fi
+
+if grep -r "3,510\|33 skills" dev-docs/; then
+  echo "❌ HARDCODED COUNTS DETECTED - PROH-006 VIOLATION"
+  echo "💡 Replace with dynamic placeholders like: \$(find docs/ -name '*.md' | wc -l)"
+  exit 1
+fi
+
+echo "✅ All pre-commit quality gates passed"
+echo "✅ TDD compliance verified"
+echo "✅ Dynamic data validation verified"
+echo "✅ Ready to commit"
+
+exit 0

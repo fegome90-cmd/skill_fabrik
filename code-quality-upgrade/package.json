@@ -1,0 +1,46 @@
+{
+  "name": "code-quality-upgrade",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ test/ scripts/ --ext .ts,.js",
+    "lint:fix": "eslint src/ test/ scripts/ --ext .ts,.js --fix",
+    "format": "prettier --write src/ test/ scripts/",
+    "format:check": "prettier --check src/ test/ scripts/",
+    "quality:check": "npm run lint && npm run format:check && npm test",
+    "validate:task": "tsx scripts/validate-task-execution.ts",
+    "dev": "concurrently \"npm run build:watch\" \"npm run test:watch\"",
+    "backup:configs": "bash scripts/backup-configs.sh",
+    "rollback:configs": "bash scripts/rollback-configs.sh",
+    "migrate:unified": "bash scripts/migrate-to-unified.sh",
+    "cli:generate-report": "tsx src/scripts/quality-cli-main.ts --generate-report",
+    "cli:check-alerts": "tsx src/scripts/quality-cli-main.ts --check-alerts",
+    "cli:system-status": "tsx src/scripts/quality-cli-main.ts --system-status",
+    "evidence:validate": "tsx src/scripts/evidence-cli.ts",
+    "evidence:validate:json": "tsx src/scripts/evidence-cli.ts --json",
+    "evidence:validate:quick": "tsx src/scripts/evidence-cli.ts --no-interactive --timeout=30000",
+    "tsx": "tsx"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-sonarjs": "^3.0.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript-eslint": "^8.46.4"
+  }
+}

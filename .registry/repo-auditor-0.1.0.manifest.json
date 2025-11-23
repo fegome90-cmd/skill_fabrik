@@ -8,9 +8,9 @@
     "git.diff"
   ],
   "scripts": {
-    "run": "node scripts/run.js",
-    "dry-run": "node scripts/plan.js"
+    "run": "node exec-scripts/run.js",
+    "dry-run": "node exec-scripts/plan.js"
   },
-  "hash": "b129197a428f7733537c26bdacb50cede241983cb91ea63789b05fd6a09b4c3b",
-  "createdAt": "2025-10-31T02:51:41.242Z"
+  "hash": "8c153ca4d0f1c4b6727658c0ba4170ef43511b08ba4d13ec87592df1bf12bede",
+  "createdAt": "2025-11-06T15:22:49.920Z"
 }

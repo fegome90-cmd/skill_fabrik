@@ -1291,7 +1291,7 @@ export async function buildOptimizedPromptV2(
   if (options.includePlanContext) {
     try {
       const planCheckModule = await getPlanCheck(cwd);
-      const planCheck = await planCheckModule.checkApprovedPlan(cwd);
+      const planCheck = await planCheckModule.checkApprovedPlan(cwd) as any;
       if (planCheck.hasPlan && planCheck.plan) {
         const plan = planCheck.plan as { id?: string; phases?: Array<{ name: string }> };
         planContext = {

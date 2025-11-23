@@ -1,0 +1,5 @@
+Este archivo tiene mezcla de saltos de línea.
+Esta línea termina con CRLF\r\n
+Esta línea termina con LF\n
+Y esta también termina con CRLF\r\n
+Para pruebas de detección de inconsistencia.

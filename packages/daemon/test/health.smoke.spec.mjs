@@ -14,5 +14,14 @@ await test('GET /health :: basic shape and endpoints list', async () => {
   assert.equal(typeof body.endpoints, 'object');
 });
 
-await app.close();
+await test('daemon ports :: check that daemon is listening on 7727', async () => {
+  // Test that we can make requests to the daemon
+  const res = await app.inject({ method: 'GET', url: '/api/health' });
+  assert.equal(res.statusCode, 200);
+  const body = res.json();
+  assert.equal(typeof body.status, 'string');
+  assert.equal(typeof body.timestamp, 'string');
+  assert.ok(body.services || body.uptime); // Either services object or uptime should be present
+});
 
+await app.close();

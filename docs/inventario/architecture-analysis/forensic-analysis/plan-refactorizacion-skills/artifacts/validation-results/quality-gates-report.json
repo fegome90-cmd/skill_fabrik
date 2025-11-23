@@ -1,0 +1,240 @@
+{
+  "timestamp": "2025-11-14T18:22:25.070Z",
+  "summary": {
+    "totalGates": 9,
+    "passedGates": 8,
+    "failedGates": 1,
+    "complianceRate": 89,
+    "status": "SOME_FAILED"
+  },
+  "gatesResults": [
+    {
+      "id": "QG-REF-001",
+      "name": "Cero Violaciones Críticas",
+      "description": "No debe haber violaciones críticas de reglas",
+      "severity": "CRITICAL",
+      "threshold": "0",
+      "metric": "critical_violations",
+      "implementation": "src/validation/gates-checker.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": 0
+    },
+    {
+      "id": "QG-REF-002",
+      "name": "Cobertura de Tests > 80%",
+      "description": "La cobertura de tests debe ser mayor al 80%",
+      "severity": "HIGH",
+      "threshold": "80",
+      "metric": "test_coverage_percentage",
+      "implementation": "tests/coverage-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "FAILED",
+      "actualValue": 0,
+      "error": "Cobertura de tests muy baja: 0%"
+    },
+    {
+      "id": "QG-REF-003",
+      "name": "Performance Mantenido",
+      "description": "El performance no debe degradarse más del 5%",
+      "severity": "HIGH",
+      "threshold": "5",
+      "metric": "performance_degradation_percentage",
+      "implementation": "tests/performance-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "ESTABLISHED"
+    },
+    {
+      "id": "QG-REF-004",
+      "name": "Seguridad Validada",
+      "description": "No debe haber vulnerabilidades de seguridad",
+      "severity": "CRITICAL",
+      "threshold": "0",
+      "metric": "security_vulnerabilities",
+      "implementation": "security/scan-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "READY"
+    },
+    {
+      "id": "QG-REF-005",
+      "name": "Rollback Exitoso",
+      "description": "El rollback debe funcionar correctamente",
+      "severity": "CRITICAL",
+      "threshold": "100",
+      "metric": "rollback_success_percentage",
+      "implementation": "src/validation/rollback-test.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "CONFIGURED"
+    },
+    {
+      "id": "QG-REF-006",
+      "name": "Documentación Completa",
+      "description": "La documentación debe estar completa y actualizada",
+      "severity": "MEDIUM",
+      "threshold": "100",
+      "metric": "documentation_completeness",
+      "implementation": "docs/documentation-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "100%"
+    },
+    {
+      "id": "QG-REF-007",
+      "name": "Integridad de Datos",
+      "description": "La integridad de datos debe estar garantizada",
+      "severity": "CRITICAL",
+      "threshold": "100",
+      "metric": "data_integrity_percentage",
+      "implementation": "src/validation/data-integrity-check.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "READY"
+    },
+    {
+      "id": "QG-REF-008",
+      "name": "Deuda Técnica Controlada",
+      "description": "La deuda técnica debe estar controlada o reducida",
+      "severity": "MEDIUM",
+      "threshold": "0",
+      "metric": "new_technical_debt",
+      "implementation": "src/validation/tech-debt-check.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "BASELINE_ESTABLISHED"
+    },
+    {
+      "id": "QG-REF-009",
+      "name": "Monitoreo Funcional",
+      "description": "El monitoreo debe estar configurado y funcionando",
+      "severity": "HIGH",
+      "threshold": "100",
+      "metric": "monitoring_coverage_percentage",
+      "implementation": "src/validation/monitoring-check.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "CONFIGURED"
+    }
+  ],
+  "passedGates": [
+    {
+      "id": "QG-REF-001",
+      "name": "Cero Violaciones Críticas",
+      "description": "No debe haber violaciones críticas de reglas",
+      "severity": "CRITICAL",
+      "threshold": "0",
+      "metric": "critical_violations",
+      "implementation": "src/validation/gates-checker.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": 0
+    },
+    {
+      "id": "QG-REF-003",
+      "name": "Performance Mantenido",
+      "description": "El performance no debe degradarse más del 5%",
+      "severity": "HIGH",
+      "threshold": "5",
+      "metric": "performance_degradation_percentage",
+      "implementation": "tests/performance-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "ESTABLISHED"
+    },
+    {
+      "id": "QG-REF-004",
+      "name": "Seguridad Validada",
+      "description": "No debe haber vulnerabilidades de seguridad",
+      "severity": "CRITICAL",
+      "threshold": "0",
+      "metric": "security_vulnerabilities",
+      "implementation": "security/scan-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "READY"
+    },
+    {
+      "id": "QG-REF-005",
+      "name": "Rollback Exitoso",
+      "description": "El rollback debe funcionar correctamente",
+      "severity": "CRITICAL",
+      "threshold": "100",
+      "metric": "rollback_success_percentage",
+      "implementation": "src/validation/rollback-test.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "CONFIGURED"
+    },
+    {
+      "id": "QG-REF-006",
+      "name": "Documentación Completa",
+      "description": "La documentación debe estar completa y actualizada",
+      "severity": "MEDIUM",
+      "threshold": "100",
+      "metric": "documentation_completeness",
+      "implementation": "docs/documentation-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "100%"
+    },
+    {
+      "id": "QG-REF-007",
+      "name": "Integridad de Datos",
+      "description": "La integridad de datos debe estar garantizada",
+      "severity": "CRITICAL",
+      "threshold": "100",
+      "metric": "data_integrity_percentage",
+      "implementation": "src/validation/data-integrity-check.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "READY"
+    },
+    {
+      "id": "QG-REF-008",
+      "name": "Deuda Técnica Controlada",
+      "description": "La deuda técnica debe estar controlada o reducida",
+      "severity": "MEDIUM",
+      "threshold": "0",
+      "metric": "new_technical_debt",
+      "implementation": "src/validation/tech-debt-check.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "BASELINE_ESTABLISHED"
+    },
+    {
+      "id": "QG-REF-009",
+      "name": "Monitoreo Funcional",
+      "description": "El monitoreo debe estar configurado y funcionando",
+      "severity": "HIGH",
+      "threshold": "100",
+      "metric": "monitoring_coverage_percentage",
+      "implementation": "src/validation/monitoring-check.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "PASSED",
+      "actualValue": "CONFIGURED"
+    }
+  ],
+  "failedGates": [
+    {
+      "id": "QG-REF-002",
+      "name": "Cobertura de Tests > 80%",
+      "description": "La cobertura de tests debe ser mayor al 80%",
+      "severity": "HIGH",
+      "threshold": "80",
+      "metric": "test_coverage_percentage",
+      "implementation": "tests/coverage-validator.js",
+      "timestamp": "2025-11-14T18:22:25.070Z",
+      "status": "FAILED",
+      "actualValue": 0,
+      "error": "Cobertura de tests muy baja: 0%"
+    }
+  ],
+  "criticalGates": [],
+  "recommendation": {
+    "action": "PROCEED_WITH_CAUTION",
+    "message": "Algunos quality gates fallan - Corregir antes de la implementación",
+    "failedBy": ["Cobertura de Tests > 80%"]
+  }
+}

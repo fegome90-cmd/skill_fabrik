@@ -18,13 +18,13 @@ let colorsContent = fs.readFileSync(colorsPath, 'utf8');
 const simplifiedFunctions = `
 // Backward compatibility functions for basic usage
 export const simpleFormat = {
-  header: (text: string) => colors.primary.bold(`🔧 ${text}`),
-  command: (text: string) => colors.primaryLight(text),
-  number: (num: number) => colors.primary(num.toString()),
-  success: (text: string) => colors.success.bold(`✅ ${text}`),
-  warning: (text: string) => colors.warning.bold(`⚠️  ${text}`),
-  error: (text: string) => colors.error.bold(`❌ ${text}`),
-  info: (text: string) => colors.info.bold(`ℹ️  ${text}`)
+  header: (text) => colors.primary.bold(`🔧 ${text}`),
+  command: (text) => colors.primaryLight(text),
+  number: (num) => colors.primary(num.toString()),
+  success: (text) => colors.success.bold(`success ${text}`),
+  warning: (text) => colors.warning.bold(`warning ${text}`),
+  error: (text) => colors.error.bold(`error ${text}`),
+  info: (text) => colors.info.bold(`info ${text}`)
 };
 
 // Simple createBox that accepts color strings

@@ -44,7 +44,7 @@ test('skills install writes manifest and loadSkillMeta can read it', async () =>
     const { loadSkillMeta } = await import('../../daemon/dist/skills.js');
     const meta = await loadSkillMeta('policy-s1');
     assert.deepEqual(meta.allowedTools, ['fs.write']);
-    assert.equal(meta.scripts?.dryRun, 'node scripts/plan.js');
+    assert.equal(meta.scripts?.dryRun, 'node exec-scripts/plan.js');
   } finally {
     process.chdir(originalCwd);
   }

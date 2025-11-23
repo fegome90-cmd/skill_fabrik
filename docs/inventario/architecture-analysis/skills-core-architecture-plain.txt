@@ -1,0 +1,97 @@
+Arquitectura Skills Core - Orquestador Central con Periferia de Skills (Resumen Plano)
+
+1. Visión general
+El sistema Skills Core adopta la arquitectura llamada "Orquestador Central con Periferia de Skills". Es un sistema sin frontend obligatorio cuyo objetivo es orquestar skills de forma estable, predecible y mantenible por años. La arquitectura se organiza en cuatro capas con responsabilidades claras y flujo unidireccional.
+
+2. Capas principales
+
+Capa 1. Contratos y Fuente de Verdad
+Define todas las reglas, interfaces y formatos oficiales del sistema. Incluye:
+- Contratos oficiales de router, daemon, skills y No-Mess-Left-Behind.
+- Especificación oficial de SKILL.md.
+- Reglas de gobernanza.
+Esta capa se almacena en la carpeta dev-docs/contracts y documentos relacionados.
+
+Capa 2. Núcleo Orquestador
+Es el corazón del sistema. Incluye:
+- Skills CLI para operaciones y comandos administrativos.
+- Configuración única de pm2 para levantar y supervisar procesos.
+- Router, encargado solo de decidir qué skill debe activarse.
+- Daemon, encargado solo de ejecutar skills y coordinar recursos.
+La relación es: contratos definen cómo deben comportarse router y daemon; pm2 gestiona sus procesos; la CLI ejecuta tareas sobre ellos.
+
+Capa 3. Runtime de Skills
+Es donde se ejecutan las peticiones reales. Incluye:
+- Pre hooks que validan, enriquecen e inyectan contexto antes del routing.
+- Router que evalúa candidatos y selecciona un skill o ninguno.
+- Daemon que, basado en la selección y en los contratos, ejecuta el skill.
+- Registro de skills basado en archivos SKILL.md estandarizados.
+- Motor de ejecución que invoca herramientas, APIs o sistema de archivos.
+El objetivo es que cada skill sea un "plugin" bien definido, conectado al núcleo solo a través de contratos y SKILL.md.
+
+Capa 4. Observabilidad y Gobernanza
+Incluye todo lo relacionado con calidad, limpieza y control:
+- Stop hooks que se ejecutan después de la ejecución del skill.
+- No-Mess-Left-Behind, encargado de limpieza, rollback y consistencia.
+- Logging y métricas (eventos, KPIs, traces).
+- Dashboard opcional como cliente visual, nunca parte del core.
+- Proceso de auditoría, informes de auditoría y CI gates que bloquean merges cuando se detectan problemas graves.
+Esta capa observa las demás, pero no introduce lógica de negocio.
+
+3. Problemas actuales que se deben corregir
+La arquitectura actual presenta estos problemas:
+- El Dashboard React se usa como si fuera parte del core en lugar de un cliente opcional.
+- Router y daemon se pisan responsabilidades, ambos deciden y ejecutan.
+- Existen múltiples contratos y documentos que describen lo mismo de forma distinta.
+- Los archivos SKILL.md no siguen un formato unificado.
+- No hay proceso de auditoría formal ni CI gates ligados a la arquitectura.
+La meta de toda refactorización es eliminar estos problemas y alinear el código con el diseño de cuatro capas.
+
+4. Single Source of Truth
+Cada tipo de contrato tiene un único archivo oficial, ubicado en dev-docs/contracts. Cualquier otro documento que intente redefinir el mismo contrato se considera obsoleto o archivado. La configuración de pm2 tiene un solo archivo oficial en configs. El formato de SKILL.md se define en dev-docs/skill-contract. Las reglas de gobernanza y No-Mess-Left-Behind se definen en dev-docs/governance.
+
+5. Principios obligatorios
+
+1. Separación estricta de responsabilidades: router decide, daemon ejecuta, skills implementan acciones.
+2. Flujo unidireccional entre capas: contratos definen, orquestación coordina, runtime ejecuta, observabilidad vigila.
+3. Un solo contrato oficial por cada componente crítico.
+4. Ningún nuevo contrato o cambio estructural entra sin actualizar los documentos en dev-docs.
+5. El Dashboard es cliente opcional, no parte de la arquitectura core.
+
+6. Mandamientos de Gobernanza
+
+1. Unicidad de Contratos: Nunca crear un segundo contrato de router/daemon/skills/NMLB sin decidir primero el destino del anterior.
+2. Actualización Sincronizada: Ningún cambio en contratos entra a main sin actualización simultánea de este documento o sus anexos.
+3. Independencia del Core: Skills Core no depende de dashboards ni frontends para funcionar.
+4. Configuración Centralizada: pm2 para Skills Core se configura solo en configs/ecosystem.config.js.
+5. Autoridad de este Documento: Si hay conflicto entre código y este diseño, el defecto está del lado del código, hasta que se actualicen los contratos.
+
+7. Rutas Oficiales del Proyecto
+
+En este documento, las rutas se interpretan así:
+- dev-docs/: Documentación y contratos oficiales del sistema
+- configs/: Archivos de configuración (pm2, etc.)
+- skills/: Skills individuales y sus archivos SKILL.md
+- packages/router: Código fuente del router
+- packages/daemon: Código fuente del daemon
+- packages/tools: Herramientas compartidas del sistema
+
+8. Auditoría conceptual
+La auditoría periódica del proyecto debe revisar:
+- Carpetas de código y documentación para detectar archivos duplicados, versiones viejas y backups.
+- Contratos en dev-docs y su alineación con la arquitectura definida.
+- Formato y homogeneidad de los SKILL.md.
+- Existencia y funcionamiento de procesos de observabilidad y gobernanza.
+Los resultados se documentan en informes legibles que listan conflictos, basura a eliminar, riesgos y recomendaciones.
+
+9. Fuera de Alcance
+Skills Core se centra exclusivamente en la orquestación de skills y NO incluye:
+- Lógica de dominio de otros proyectos: Skills Core no implementa lógica de negocio específica de proyectos externos.
+- Dashboard React como componente core: El Dashboard es un cliente opcional, no define contratos ni arquitectura core.
+- Stack de almacenamiento: No se cubre aquí el stack de almacenamiento (DBs, MemTech, etc.), solo orquestación de skills.
+- Implementaciones específicas de herramientas: Skills Core coordina herramientas pero no implementa su lógica interna.
+
+10. Autoridad Normativa
+Este documento es la fuente normativa del proyecto, no una guía técnica. Cualquier cambio arquitectónico requiere primero la actualización de este documento y su aprobación según los mandamientos de gobernanza establecidos. Toda auditoría de Skills Core debe evaluarse contra este documento. Si hay conflicto entre código y este diseño, el defecto está del lado del código, hasta que se actualicen los contratos.
+
+Cuando el código, la configuración y la documentación respetan esta descripción, se considera que la arquitectura de Skills Core está limpia y alineada con el diseño objetivo.

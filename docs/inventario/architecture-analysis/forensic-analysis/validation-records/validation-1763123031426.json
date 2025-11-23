@@ -1,0 +1,15 @@
+{
+  "validation_timestamp": "2025-11-14T12:23:51.421Z",
+  "rules_reference": "rules_forense_v2.json",
+  "rules_version": "2.0.0",
+  "rules_path": "/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/config/rules_forense_v2.json",
+  "validation_status": "PASSED",
+  "compliance_score": 100,
+  "maximas_validated": 13,
+  "prohibiciones_validated": 14,
+  "obligaciones_validated": 16,
+  "quality_gates_validated": 9,
+  "validator": "validate-ejecucion-contra-rules.js",
+  "node_version": "v20.10.0",
+  "working_directory": "/Users/felipe/Developer/skills-fabrik/docs/inventario/architecture-analysis/forensic-analysis/consolidated-tests"
+}

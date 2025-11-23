@@ -23,11 +23,14 @@
   "author": "Skills Fabrik Team",
   "license": "MIT",
   "dependencies": {
-    "commander": "^14.0.2",
+    "@skills-fabrik/kpi": "workspace:*",
+    "@skills-fabrik/slash-commands": "workspace:*",
     "chalk": "^5.3.0",
+    "commander": "^14.0.2",
     "fs-extra": "^11.2.0",
-    "yaml": "^2.4.1",
-    "glob": "^11.0.3"
+    "glob": "^11.0.3",
+    "node-fetch": "^3.3.2",
+    "yaml": "^2.4.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

@@ -1,0 +1,35 @@
+{
+  "cycle": "2025Q4",
+  "generated_at": "2025-11-13T00:00:00Z",
+  "scope": [
+    "packages/daemon",
+    "packages/router",
+    "packages/tools",
+    "skills/**/SKILL.md",
+    "scripts/*.mjs",
+    "docs/skills/*.md",
+    "scripts/pm2/*.cjs"
+  ],
+  "hypotheses": [
+    "Cada dominio crítico posee un único contrato vigente.",
+    "Los SKILL.md cumplen con el contrato global.",
+    "Los artefactos con sufijos sospechosos están controlados y con plan de retiro."
+  ],
+  "success_criteria": [
+    "Máximo un contrato activo por dominio crítico.",
+    "100% de skills clasificadas con estado de salud.",
+    "Todos los hallazgos documentados con responsable y fecha objetivo."
+  ],
+  "status": {
+    "discovery": "pending",
+    "analysis": "pending",
+    "validation": "pending",
+    "reporting": "pending"
+  },
+  "artifacts": {
+    "hallazgos": "hallazgos.json",
+    "acciones": "acciones.md",
+    "metrics": ["metrics-2025-11-13.json"],
+    "prompts": "prompts/"
+  }
+}

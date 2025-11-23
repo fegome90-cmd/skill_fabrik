@@ -22,8 +22,8 @@
   "author": "Skills Fabric Team",
   "license": "MIT",
   "dependencies": {
-    "@fastify/cors": "^8.4.0",
-    "fastify": "^4.24.3"
+    "@fastify/cors": "^11.1.0",
+    "fastify": "^5.6.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",

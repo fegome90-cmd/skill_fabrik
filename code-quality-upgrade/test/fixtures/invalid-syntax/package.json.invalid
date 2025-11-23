@@ -1,0 +1,11 @@
+{
+  "name": "invalid-syntax",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "scripts": {
+    "test": "jest"
+  // Missing comma here - invalid JSON
+  "build": "tsc"
+}

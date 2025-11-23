@@ -264,7 +264,7 @@ export class TemporalBiasDetector {
     const { decay } = this.config;
     const { function: decayFunction, halfLife, minWeight, maxWeight } = decay;
 
-    switch (function) {
+    switch (decayFunction) {
       case 'exponential':
         return Math.max(minWeight, maxWeight * Math.pow(0.5, ageInMs / halfLife));
 

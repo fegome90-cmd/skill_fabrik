@@ -1,0 +1,4 @@
+Este archivo tiene mezcla de saltos de línea.
+Esta línea termina con CRLF
+Esta línea termina con LF
+Y esta también termina con CRLF
