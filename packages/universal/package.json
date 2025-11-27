@@ -44,8 +44,8 @@
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "eslint": "^8.52.0",
-    "rollup": "^4.52.5",
-    "rollup-plugin-dts": "^6.2.3",
+    "rollup": "^4.53.3",
+    "rollup-plugin-dts": "^6.3.0",
     "typescript": "^5.2.2"
   },
   "files": [
