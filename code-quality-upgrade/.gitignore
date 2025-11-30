@@ -1,1 +1,7 @@
 backup/configs/
+
+# Claude local settings
+.claude/settings.local.json
+
+# Backup files
+*.bak
