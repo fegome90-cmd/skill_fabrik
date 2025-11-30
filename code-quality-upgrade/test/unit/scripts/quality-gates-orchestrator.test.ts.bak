@@ -1,0 +1,580 @@
+/**
+ * T3.3.0: Quality Gates Orchestrator Tests
+ *
+ * TDD Methodology: RED→GREEN→REFACTOR
+ * Given-When-Then naming convention
+ * Coverage target: ≥90% for unit tests
+ */
+
+import { 
+  QualityAlerts 
+} from '../../../src/monitoring/quality-alerts';
+import { 
+  QualityDashboard 
+} from '../../../src/monitoring/quality-dashboard';
+import { 
+  QualityGatesOrchestrator, 
+  QualityGate, 
+  GateExecutionResult 
+} from '../../../src/scripts/quality-gates-orchestrator';
+
+// Types for test stubs
+interface TestQualityGate extends QualityGate {
+  execute(): Promise<GateExecutionResult>;
+}
+
+interface TestGateExecutionResult extends GateExecutionResult {
+  name: string;
+  success: boolean;
+  executionTime: number;
+  output?: string;
+  error?: string;
+}
+
+// Type for orchestrator private method access to avoid 'any' warnings
+interface OrchestratorWithPrivateMethods extends QualityGatesOrchestrator {
+  getQualityGates(): TestQualityGate[];
+  executeParallel(gates: QualityGate[]): Promise<GateExecutionResult[]>;
+  executeSequential(gates: QualityGate[]): Promise<GateExecutionResult[]>;
+  executeGate(gate: QualityGate): Promise<GateExecutionResult>;
+  calculateMetrics(results: GateExecutionResult[], executionTime: number): Record<string, unknown>;
+}
+
+// Helper to create properly typed jest spies
+function spyOnMethod<T extends object, K extends keyof T>(
+  obj: T,
+  method: K
+): jest.SpyInstance<T[K] extends (...args: infer P) => infer R ? (...args: P) => R : never> {
+  return jest.spyOn(obj, method);
+}
+
+// Helper function to create typed test gates
+function createTestGate(
+  name: string, 
+  success: boolean, 
+  executionTime: number = 100,
+  critical: boolean = false,
+  output?: string,
+  error?: string
+): TestQualityGate {
+  const result: TestGateExecutionResult = {
+    name,
+    success,
+    executionTime,
+    output,
+    error
+  };
+
+  return {
+    name,
+    critical,
+    timeout: 5000,
+    execute: jest.fn().mockResolvedValue(result)
+  };
+}
+
+// Mock dependencies
+jest.mock('../../../src/monitoring/quality-dashboard');
+jest.mock('../../../src/monitoring/quality-alerts');
+
+describe('QualityGatesOrchestrator', () => {
+  let orchestrator: QualityGatesOrchestrator;
+  let mockDashboard: jest.Mocked<QualityDashboard>;
+  let mockAlerts: jest.Mocked<QualityAlerts>;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    // Setup mocks for QualityDashboard and QualityAlerts
+    mockDashboard = {
+      generateReport: jest.fn().mockReturnValue({
+        timestamp: Date.now(),
+        overall: {
+          qualityScore: 85,
+          technicalDebt: 'MEDIUM',
+          performance: {
+            executionTime: 1000,
+            memoryUsage: 256,
+            cpuUtilization: 45,
+          },
+        },
+        gates: {
+          executionTime: 500,
+          successRate: 0.8,
+          failureRate: 0.2,
+        },
+        trends: {
+          qualityScore: 87,
+          performanceScore: 75,
+          maintainabilityScore: 90,
+        },
+        recommendations: [],
+      })
+    } as unknown as jest.Mocked<QualityDashboard>;
+
+    mockAlerts = {
+      evaluateAlerts: jest.fn().mockReturnValue({
+        critical: [],
+        warnings: [],
+        info: [],
+      })
+    } as unknown as jest.Mocked<QualityAlerts>;
+
+    // Mock the constructors to return our mocked instances
+    (QualityDashboard as jest.MockedClass<typeof QualityDashboard>).mockImplementation(() => mockDashboard);
+    (QualityAlerts as jest.MockedClass<typeof QualityAlerts>).mockImplementation(() => mockAlerts);
+  });
+
+  describe('given orchestrator with default configuration', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+
+      // Mock getQualityGates to return simple test gates
+      const testGate1 = createTestGate('Test Gate 1', true, 100, true, 'Test completed');
+      const testGate2 = createTestGate('Test Gate 2', true, 150, false, 'Test completed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate1, testGate2]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should execute all quality gates successfully', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(true);
+        expect(result.results).toHaveLength(2);
+        expect(result.executionTime).toBeGreaterThanOrEqual(0); // Allow 0 for mocked tests
+        expect(result.metrics).toBeDefined();
+        // Note: The spies are set up in the test, but the actual calls happen during execution
+        // So we can't verify the call counts here since they're called before we set up the spies
+      });
+    });
+  });
+
+  describe('given orchestrator with sequential execution', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator({
+        parallel: false,
+        failFast: false,
+        continueOnError: true,
+        timeout: 300000,
+        maxRetries: 1,
+      });
+
+      const testGate1 = createTestGate('Test Gate 1', true, 100, true, 'Test completed');
+      const testGate2 = createTestGate('Test Gate 2', true, 150, false, 'Test completed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate1, testGate2]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should execute gates sequentially', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(true);
+        expect(result.results).toHaveLength(2);
+      });
+    });
+  });
+
+  describe('given orchestrator with failFast enabled', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator({
+        parallel: false,
+        failFast: true,
+        continueOnError: false,
+        timeout: 300000,
+        maxRetries: 1,
+      });
+
+      const testGate1 = createTestGate('Test Gate 1', false, 100, true, undefined, 'Test failed');
+      const testGate2 = createTestGate('Test Gate 2', true, 150, false, 'Test completed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate1, testGate2]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should stop after first failure', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(false);
+        expect(result.results).toHaveLength(1); // Should stop after first failure
+      });
+    });
+  });
+
+  describe('given orchestrator with dashboard error', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+      
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([
+        {
+          name: 'Test Gate',
+          critical: true,
+          timeout: 5000,
+          execute: jest.fn().mockResolvedValue({
+            name: 'Test Gate',
+            success: true,
+            executionTime: 100,
+            output: 'Test completed'
+          })
+        }
+      ]);
+      
+      mockDashboard.generateReport.mockImplementation(() => {
+        throw new Error('Dashboard failed');
+      });
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should handle dashboard errors gracefully', async () => {
+        const result = await orchestrator.executeAllGates();
+  
+        // When dashboard fails during report generation, it should be caught and return success: false
+        expect(result.success).toBe(false);
+        expect(result.error).toContain('Dashboard failed');
+        expect(result.report).toBeNull();
+      });
+    });
+  });
+
+  describe('given orchestrator with alert evaluation error', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+      
+      const testGate = createTestGate('Test Gate', true, 100, true, 'Test completed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate]);
+      
+      mockAlerts.evaluateAlerts.mockImplementation(() => {
+        throw new Error('Alerts failed');
+      });
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should handle alert errors gracefully', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        // When alerts fail during evaluation, it should be caught and return success: false
+        expect(result.success).toBe(false);
+        expect(result.alertResults).toEqual({
+          critical: [],
+          warnings: [],
+          info: [],
+        });
+      });
+    });
+  });
+
+  describe('given performance requirements', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+
+      const testGate = createTestGate('Performance Gate', true, 100, true, 'Performance test');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate]);
+    });
+    
+    it('should execute gates within reasonable time', async () => {
+      const startTime = Date.now();
+      const result = await orchestrator.executeAllGates();
+      const executionTime = Date.now() - startTime;
+
+      expect(executionTime).toBeLessThan(1000); // Should be much faster with mocks
+      expect(result.executionTime).toBeGreaterThanOrEqual(0); // Allow 0 for mocked tests
+    });
+  });
+
+  describe('given catastrophic failure', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+      
+      const testGate = createTestGate('Test Gate', true, 100, true, 'Test completed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate]);
+    });
+    
+    it('should provide meaningful error information', async () => {
+      const result = await orchestrator.executeAllGates();
+
+      expect(result.success).toBeDefined();
+      expect(result.results).toBeDefined();
+      expect(result.metrics).toBeDefined();
+    });
+  });
+
+  describe('given empty gates list', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+
+      // Empty gates list - no mock needed
+      
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should handle empty gates list gracefully', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(true); // No gates to fail
+        expect(result.results).toHaveLength(0);
+        expect(result.metrics.qualityScore).toBe(0);
+        expect(result.metrics.gates.totalGates).toBe(0);
+      });
+    });
+  });
+
+  describe('given all gates fail', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+      
+      const testGate1 = createTestGate('Test Gate 1', false, 100, true, undefined, 'Test failed');
+      const testGate2 = createTestGate('Test Gate 2', false, 150, false, undefined, 'Test failed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate1, testGate2]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should handle all gates failing', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(false);
+        expect(result.results).toHaveLength(2);
+        expect(result.metrics.qualityScore).toBe(0);
+        expect(result.metrics.technicalDebt).toBe('HIGH');
+        expect(result.metrics.gates.successRate).toBe(0);
+        expect(result.metrics.gates.failureRate).toBe(1);
+      });
+    });
+  });
+
+  describe('given gate execution throws error', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator();
+      
+      const testGate = createTestGate('Test Gate', true, 100, true);
+      testGate.execute = jest.fn().mockRejectedValue(new Error('Gate execution failed'));
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should handle gate execution errors', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(false);
+        expect(result.results).toHaveLength(1);
+        expect(result.results[0].success).toBe(false);
+        expect(result.results[0].error).toContain('Gate execution failed');
+      });
+    });
+  });
+
+  describe('given parallel execution with mixed results', () => {
+    beforeEach(() => {
+      orchestrator = new QualityGatesOrchestrator({
+        parallel: true,
+        failFast: false,
+        continueOnError: true,
+        timeout: 300000,
+        maxRetries: 1,
+      });
+      
+      const testGate1 = createTestGate('Test Gate 1', true, 100, true, 'Test completed');
+      const testGate2 = createTestGate('Test Gate 2', false, 100, false);
+      testGate2.execute = jest.fn().mockRejectedValue(new Error('Test failed'));
+      const testGate3 = createTestGate('Test Gate 3', true, 150, true, 'Test completed');
+
+      jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([testGate1, testGate2, testGate3]);
+    });
+
+    describe('when executeAllGates is called', () => {
+      it('should handle mixed success/failure in parallel execution', async () => {
+        const result = await orchestrator.executeAllGates();
+
+        expect(result.success).toBe(false); // At least one gate failed
+        expect(result.results).toHaveLength(3);
+        expect(result.results.filter(r => r.success).length).toBe(2);
+        expect(result.results.filter(r => !r.success).length).toBe(1);
+        expect(result.metrics.qualityScore).toBeGreaterThan(0);
+        expect(result.metrics.qualityScore).toBeLessThan(100);
+      });
+    });
+  
+    describe('given timeout scenarios', () => {
+      beforeEach(() => {
+        orchestrator = new QualityGatesOrchestrator({
+          parallel: true,
+          failFast: false,
+          continueOnError: true,
+          timeout: 100, // Very short timeout
+          maxRetries: 1,
+        });
+        
+        jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([
+          {
+            name: 'Slow Gate',
+            critical: true,
+            timeout: 50, // Shorter than orchestrator timeout
+            execute: jest.fn().mockImplementation(() =>
+              new Promise(resolve => setTimeout(() => resolve({
+                name: 'Slow Gate',
+                success: true,
+                executionTime: 200, // This will exceed the gate timeout
+                output: 'Completed'
+              }), 200))
+            )
+          }
+        ]);
+      });
+  
+      describe('when executeAllGates is called', () => {
+        it('should handle gate timeout gracefully', async () => {
+          const result = await orchestrator.executeAllGates();
+  
+          expect(result.success).toBe(false);
+          expect(result.results).toHaveLength(1);
+          expect(result.results[0].success).toBe(false);
+          expect(result.results[0].error).toContain('timeout');
+        });
+      });
+    });
+  
+    describe('given sequential execution with continueOnError', () => {
+      beforeEach(() => {
+        orchestrator = new QualityGatesOrchestrator({
+          parallel: false,
+          failFast: false,
+          continueOnError: true,
+          timeout: 300000,
+          maxRetries: 1,
+        });
+
+        const failingGate1 = createTestGate('Failing Gate 1', false, 100, true, undefined, 'First failure');
+        const successfulGate = createTestGate('Successful Gate', true, 150, false, 'Test completed');
+        const failingGate2 = createTestGate('Failing Gate 2', false, 200, true, undefined, 'Second failure');
+
+        jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([failingGate1, successfulGate, failingGate2]);
+      });
+  
+      describe('when executeAllGates is called', () => {
+        it('should continue execution after failures when continueOnError is true', async () => {
+          const result = await orchestrator.executeAllGates();
+  
+          expect(result.success).toBe(false); // Overall success is false because some gates failed
+          expect(result.results).toHaveLength(3); // Should execute all 3 gates
+          expect(result.results.filter(r => r.success).length).toBe(1);
+          expect(result.results.filter(r => !r.success).length).toBe(2);
+        });
+      });
+    
+      describe('given sequential execution with continueOnError false', () => {
+        beforeEach(() => {
+          orchestrator = new QualityGatesOrchestrator({
+            parallel: false,
+            failFast: false,
+            continueOnError: false, // This should trigger the log message
+            timeout: 300000,
+            maxRetries: 1,
+          });
+    
+          const failingGate = createTestGate('Failing Gate', false, 100, true, undefined, 'Test failed');
+          const successfulGate = createTestGate('Successful Gate', true, 150, false, 'Test completed');
+
+          jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([failingGate, successfulGate]);
+        });
+    
+        describe('when executeAllGates is called', () => {
+          it('should log continuation message when continueOnError is false', async () => {
+            // Spy on console output to verify the log message
+            const consoleSpy = jest.spyOn(process.stdout, 'write').mockImplementation();
+            
+            const result = await orchestrator.executeAllGates();
+    
+            expect(result.success).toBe(false);
+            expect(result.results).toHaveLength(2); // Should execute both gates
+            expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('failed, continuing...'));
+            
+            consoleSpy.mockRestore();
+          });
+        });
+      });
+    
+      describe('given metrics calculation edge cases', () => {
+        beforeEach(() => {
+          orchestrator = new QualityGatesOrchestrator();
+        });
+    
+        describe('when executeAllGates is called with zero gates', () => {
+          it('should handle zero division in metrics calculation', async () => {
+            jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([]);
+            
+            const result = await orchestrator.executeAllGates();
+    
+            expect(result.success).toBe(true);
+            expect(result.metrics.qualityScore).toBe(0);
+            expect(result.metrics.gates.successRate).toBe(0);
+            expect(result.metrics.gates.failureRate).toBe(0);
+            expect(result.metrics.averageExecutionTime).toBeNaN(); // Division by zero results in NaN
+          });
+        });
+    
+        describe('when executeAllGates is called with all gates passing', () => {
+          it('should calculate perfect metrics', async () => {
+            const perfectGate1 = createTestGate('Perfect Gate 1', true, 100, true, 'Perfect');
+            const perfectGate2 = createTestGate('Perfect Gate 2', true, 150, false, 'Perfect');
+
+            jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([perfectGate1, perfectGate2]);
+            
+            const result = await orchestrator.executeAllGates();
+    
+            expect(result.success).toBe(true);
+            expect(result.metrics.qualityScore).toBe(100);
+            expect(result.metrics.technicalDebt).toBe('LOW');
+            expect(result.metrics.gates.successRate).toBe(1);
+            expect(result.metrics.gates.failureRate).toBe(0);
+          });
+        });
+      });
+    });
+  
+    describe('given parallel execution with Promise.allSettled rejection', () => {
+      beforeEach(() => {
+        orchestrator = new QualityGatesOrchestrator({
+          parallel: true,
+          failFast: false,
+          continueOnError: true,
+          timeout: 300000,
+          maxRetries: 1,
+        });
+  
+        // Mock executeGate to throw an error directly (not just return failure)
+        jest.spyOn(orchestrator as any, 'executeGate').mockRejectedValue(new Error('Parallel execution error'));
+        
+        jest.spyOn(orchestrator as any, 'getQualityGates').mockReturnValue([
+          {
+            name: 'Problematic Gate',
+            critical: true,
+            timeout: 5000,
+            execute: jest.fn().mockResolvedValue({
+              name: 'Problematic Gate',
+              success: true,
+              executionTime: 100,
+              output: 'Should not reach here'
+            })
+          }
+        ]);
+      });
+  
+      describe('when executeAllGates is called', () => {
+        it('should handle parallel execution errors in Promise.allSettled', async () => {
+          const result = await orchestrator.executeAllGates();
+  
+          expect(result.success).toBe(false);
+          expect(result.results).toHaveLength(1);
+          expect(result.results[0].success).toBe(false);
+          expect(result.results[0].error).toContain('Parallel execution error');
+        });
+      });
+    });
+  });
+});

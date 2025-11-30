@@ -36,3 +36,11 @@ This repository centralizes the code-quality-upgrade initiative for the Skills F
 
 - Never commit credentials; copy `.env` templates from `dev/` and keep secrets local.
 - Schemas stay inside `configs/`, generated data under `registry/` or `db/`. Review diffs for accidental secrets before pushing.
+
+## Current Quality Snapshot (2025-11-23)
+
+- Tests: 195/195 passing (latest run `npm test -- --coverage`).
+- Coverage: 94.95% statements / 89.47% branches (global gates ≥80% cumplidos).
+- `evidence-cli.ts`: 100% reportado con exclusiones `istanbul ignore` para el guard `require.main` y fallback de timeout (documentado como riesgo bajo).
+- Lint/Build: `npm run lint` y `npm run build` verdes.
+- Mantén Conventional Commits; no bypass a hooks (`pre-commit` activo).

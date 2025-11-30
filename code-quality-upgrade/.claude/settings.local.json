@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(code --list-extensions)",
+      "Bash(code --install-extension anthropic.claude-code)",
+      "Bash(/opt/homebrew/bin/python3 -m pip install -r /Users/felipe/Developer/memtech-universal/requirements.txt)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
