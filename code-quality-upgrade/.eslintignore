@@ -1,0 +1,23 @@
+# Temporary test directories
+test/temp/
+test/temp/**/*
+
+# Backup directories  
+backup/
+
+# Node modules
+node_modules/
+
+# Claude settings
+.claude/
+
+# Docs outside project
+../docs/
+
+# Backup files
+*.bak
+
+# Build outputs
+dist/
+build/
+coverage/

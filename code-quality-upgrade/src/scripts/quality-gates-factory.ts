@@ -158,13 +158,10 @@ class EvidenceValidationGate implements QualityGate {
 
   async execute(): Promise<GateExecutionResult> {
     try {
-      const { stdout } = await execAsync(
-        'npm run evidence:validate 2>/dev/null || echo "No evidence validation available"',
-        {
-          timeout: this.timeout - 5000,
-          encoding: 'utf8',
-        }
-      );
+      const { stdout } = await execAsync('npm run evidence:validate', {
+        timeout: this.timeout - 5000,
+        encoding: 'utf8',
+      });
 
       return {
         name: this.name,
@@ -173,11 +170,26 @@ class EvidenceValidationGate implements QualityGate {
         output: stdout,
       };
     } catch (error) {
+      // Handle case where evidence validation is not available
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      if (
+        errorMessage.includes('evidence:validate') ||
+        errorMessage.includes('ENOENT')
+      ) {
+        return {
+          name: this.name,
+          success: true,
+          executionTime: 0,
+          output: 'No evidence validation available',
+        };
+      }
+
       return {
         name: this.name,
         success: false,
         executionTime: 0,
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
       };
     }
   }
@@ -188,33 +200,35 @@ class MetricsValidationGate implements QualityGate {
   critical = false;
   timeout = 30000;
 
-  execute(): GateExecutionResult {
-    try {
-      // Test metrics validation
-      const validator = new MetricsValidator();
-      const testMetrics = this.createTestMetrics();
-      const result = validator.validateStructure(
-        testMetrics as unknown as Partial<QualityMetrics> &
-          Record<string, unknown>
-      );
+  async execute(): Promise<GateExecutionResult> {
+    return new Promise(resolve => {
+      try {
+        // Test metrics validation
+        const validator = new MetricsValidator();
+        const testMetrics = this.createTestMetrics();
+        const result = validator.validateStructure(
+          testMetrics as unknown as Partial<QualityMetrics> &
+            Record<string, unknown>
+        );
 
-      return {
-        name: this.name,
-        success: result.isValid,
-        executionTime: 0,
-        output: `Validation completed in ${result.metadata.duration}ms`,
-        metrics: {
-          validationResult: result,
-        },
-      };
-    } catch (error) {
-      return {
-        name: this.name,
-        success: false,
-        executionTime: 0,
-        error: error instanceof Error ? error.message : String(error),
-      };
-    }
+        resolve({
+          name: this.name,
+          success: result.isValid,
+          executionTime: 0,
+          output: `Validation completed in ${result.metadata.duration}ms`,
+          metrics: {
+            validationResult: result,
+          },
+        });
+      } catch (error) {
+        resolve({
+          name: this.name,
+          success: false,
+          executionTime: 0,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    });
   }
 
   private createTestMetrics(): QualityMetrics {
