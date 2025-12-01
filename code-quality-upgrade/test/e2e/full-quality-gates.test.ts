@@ -54,14 +54,14 @@ describe('E2E – Quality Gates Happy Path', () => {
 
       // Individual gate results validation
       expect(report.results).toHaveLength(EXPECTED_GATES);
-      report.results.forEach(result => {
+      for (const result of report.results) {
         expect(result).toHaveProperty('name');
         expect(result).toHaveProperty('executionTime');
         expect(result).toHaveProperty('success');
         expect(result.success).toBe(true);
         expect(typeof result.executionTime).toBe('number');
         expect(result.executionTime).toBeGreaterThanOrEqual(0);
-      });
+      }
     });
   });
 });

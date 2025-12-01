@@ -60,16 +60,14 @@ export class QualityGatesOrchestrator {
   private readonly alerts: QualityAlerts;
   private readonly validator: MetricsValidator;
 
-  constructor(
-    config: OrchestrationConfig = {
+  constructor(config?: OrchestrationConfig) {
+    this.config = config ?? {
       parallel: true,
       failFast: true,
       continueOnError: false,
       timeout: 300000, // 5 minutes
       maxRetries: 1,
-    }
-  ) {
-    this.config = config;
+    };
     this.dashboard = new QualityDashboard();
     this.alerts = new QualityAlerts();
     this.validator = new MetricsValidator();

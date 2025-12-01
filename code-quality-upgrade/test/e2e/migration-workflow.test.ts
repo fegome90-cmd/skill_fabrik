@@ -155,7 +155,7 @@ function executeBackup(projectPath: string): {
   stderr: string;
 } {
   // Simulate backup-configs.sh behavior - create backup in backup/configs/ directory
-  const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '');
+  const timestamp = new Date().toISOString().slice(0, 19).replaceAll(':', '');
   const backupDir = path.join(projectPath, 'backup', 'configs', timestamp);
 
   // Create backup directory
@@ -233,8 +233,11 @@ function executeMigration(projectPath: string): {
       string,
       unknown
     >;
+    const existingScripts =
+      (pkg.scripts as Record<string, unknown> | undefined) ?? {};
+
     (pkg.scripts as Record<string, unknown>) = {
-      ...((pkg.scripts as Record<string, unknown>) || {}),
+      ...existingScripts,
       lint: 'eslint . --ext .ts,.js',
       test: 'jest',
       build: 'tsc',
@@ -254,7 +257,7 @@ function executeMigration(projectPath: string): {
     stdout: `🚀 Iniciando migración a configuración unificada...
 📦 Creando backup de configuraciones actuales...
 🔄 Creando backup de configuraciones...
-✅ Backup creado en: backup/configs/${new Date().toISOString().slice(0, 19).replace(/:/g, '')}
+✅ Backup creado en: backup/configs/${new Date().toISOString().slice(0, 19).replaceAll(':', '')}
 🔍 Validando condiciones pre-migración...
 ✅ Pre-migration validation passed
 📦 Verificando dependencias...
@@ -275,6 +278,26 @@ function executeMigration(projectPath: string): {
 }
 
 /**
+ * Gets the latest backup directory for a project
+ */
+function getLatestBackupDir(projectPath: string): string | null {
+  const backupBaseDir = path.join(projectPath, 'backup', 'configs');
+  if (!fs.existsSync(backupBaseDir)) {
+    return null;
+  }
+
+  const backups = fs
+    .readdirSync(backupBaseDir)
+    .sort((a, b) => b.localeCompare(a)); // orden descendente, alfabético estable
+
+  if (backups.length === 0) {
+    return null;
+  }
+
+  return path.join(backupBaseDir, backups[0]);
+}
+
+/**
  * Executes rollback-configs.sh in the temporary project
  */
 function executeRollback(
@@ -286,25 +309,15 @@ function executeRollback(
   // Handle "latest" parameter
   let actualBackupDir = backupDir;
   if (backupDir === 'latest') {
-    const backupBaseDir = path.join(projectPath, 'backup', 'configs');
-    if (fs.existsSync(backupBaseDir)) {
-      const backups = fs.readdirSync(backupBaseDir).sort().reverse();
-      if (backups.length > 0) {
-        actualBackupDir = path.join(backupBaseDir, backups[0]);
-      } else {
-        return {
-          exitCode: 1,
-          stdout: '',
-          stderr: '❌ Error: No backup directories found',
-        };
-      }
-    } else {
+    const latestDir = getLatestBackupDir(projectPath);
+    if (!latestDir) {
       return {
         exitCode: 1,
         stdout: '',
-        stderr: '❌ Error: Directorio de backup no existe: ' + backupBaseDir,
+        stderr: '❌ Error: No backup directories found',
       };
     }
+    actualBackupDir = latestDir;
   }
 
   if (!fs.existsSync(actualBackupDir)) {
@@ -371,10 +384,13 @@ function executeRollback(
  * Extracts backup directory path from backup command output
  */
 function extractBackupDir(stdout: string): string {
-  // Extract backup directory from backup command output
-  const match = stdout.match(/✅ Backup creado en: (.+)/);
-  if (match && match[1]) {
-    return match[1].trim();
+  const regex = /✅ Backup creado en: (.+)/;
+  const match = regex.exec(stdout);
+  const dir = match?.[1];
+
+  if (!dir) {
+    throw new Error('Could not extract backup directory from output');
   }
-  throw new Error('Could not extract backup directory from output');
+
+  return dir.trim();
 }
