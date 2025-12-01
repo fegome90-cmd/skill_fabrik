@@ -124,7 +124,7 @@
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
+    "prettier": "^3.7.3",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
     "typescript": "^5.3.3"
