@@ -9,3 +9,5 @@ coverage
 .env.*.local
 .husky/_
 .env
+# Claude local configs in any subdirectory
+**/.claude/
