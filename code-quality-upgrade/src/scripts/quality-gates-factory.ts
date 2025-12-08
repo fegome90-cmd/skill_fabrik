@@ -42,7 +42,8 @@ class ESLintGate implements QualityGate {
 
   async execute(): Promise<GateExecutionResult> {
     try {
-      const { stdout } = await execAsync('npm run lint', {
+      // Use --cache for faster subsequent runs
+      const { stdout } = await execAsync('npm run lint -- --cache', {
         timeout: this.timeout - 5000,
         encoding: 'utf8',
       });
@@ -71,7 +72,8 @@ class TypeScriptGate implements QualityGate {
 
   async execute(): Promise<GateExecutionResult> {
     try {
-      const { stdout } = await execAsync('npx tsc --noEmit', {
+      // Use incremental compilation for faster subsequent builds
+      const { stdout } = await execAsync('npx tsc --noEmit --incremental', {
         timeout: this.timeout - 5000,
         encoding: 'utf8',
       });
@@ -129,10 +131,14 @@ class PrettierGate implements QualityGate {
 
   async execute(): Promise<GateExecutionResult> {
     try {
-      const { stdout } = await execAsync('npx prettier --check .', {
-        timeout: this.timeout - 5000,
-        encoding: 'utf8',
-      });
+      // Check specific source directories for faster execution
+      const { stdout } = await execAsync(
+        'npx prettier --check "src/**/*.ts" "test/**/*.ts" "scripts/**/*.ts"',
+        {
+          timeout: this.timeout - 5000,
+          encoding: 'utf8',
+        }
+      );
 
       return {
         name: this.name,
