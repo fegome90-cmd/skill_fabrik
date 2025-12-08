@@ -2,6 +2,8 @@
 
 Use this template whenever actives tasked work inside `code-quality-upgrade/`. It aligns with `dev-docs/plan.md`, `dev-docs/task.md` (89 tareas), and `dev-docs/context.md` so every executor keeps Zero Technical Debt during the 2025Q4 upgrade.
 
+> **Regla crítica de documentación**: Como executor **no debes modificar directamente** archivos dentro de `dev-docs/` (`task.md`, `plan.md`, `context.md`, `test-index.md`, handoffs). Toda actualización de estado, métricas o decisiones debe registrarse en la conversación o en el handoff activo; el validador es quien integra esos cambios en la documentación oficial. Esto evita sobrescribir el historial completo de tareas por accidente.
+
 ## 1. Mission Alignment
 
 - **Reference**: Capture task ID + section link from `dev-docs/task.md` and confirm it is authorized in the latest handoff.
@@ -54,8 +56,9 @@ After implementation re-run the baseline commands plus any task-specific scripts
 
 ## 7. Documentation & Handoff
 
-- Update `dev-docs/task.md` (status, metrics, command outputs).
-- If tests added, append entries to `dev-docs/test-index.md`.
+- No edites `dev-docs/task.md` ni `dev-docs/test-index.md` directamente. En su lugar:
+  - Documenta en tu respuesta: task ID, estado, métricas (coverage, tests, lint/build) y comandos ejecutados.
+  - Si añades tests, incluye en la conversación la ruta del archivo, el propósito de la suite y cómo ejecutarla. El validador usará esa información para actualizar `dev-docs/test-index.md`.
 - Summarize findings + blockers inside the active handoff (e.g., `validador-handoff-*.md`) before requesting validation.
 
 ## 8. Critical Rules Snapshot (from config/code-quality-rules.json)
