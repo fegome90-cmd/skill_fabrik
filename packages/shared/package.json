@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@fastify/cors": "^11.1.0",
-    "fastify": "^5.6.1"
+    "fastify": "^5.7.4"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",
@@ -33,7 +33,7 @@
     "cors": "link:@types/@fastify/cors",
     "eslint": "^8.54.0",
     "jest": "^29.7.0",
-    "ts-jest": "^29.1.1",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.2.2"
   },
   "files": [
