@@ -5,3 +5,9 @@ backup/configs/
 
 # Backup files
 *.bak
+
+# Test temporary directories
+test/temp/
+
+# Task backup files
+dev-docs/*.pre-*.md

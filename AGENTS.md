@@ -58,7 +58,7 @@ Use Conventional Commits (`feat:`, `fix:`, `chore:`) enforced by Husky + commitl
 ### Quality Gate Compliance (2025Q4 - DEFINITIVA)
 
 - **TypeScript Compilation Zero Errors**: npx tsc --noEmit MUST pass before ANY commit
-- **Pre-commit Validation**: All commits must pass 8 validation checks  
+- **Pre-commit Validation**: All commits must pass 8 validation checks
 - **No Bypass**: Never use `git commit --no-verify` - violates quality standards
 - **Blocking vs Cosmetic**: Distinguish errors CRITICAL vs improvements
 - **Documentation Files**: Excluded from ESLint (`dev-docs/**/*`, `config/**/*`)
@@ -94,3 +94,34 @@ Never commit credentials. Populate `.env` files by copying from `dev/` templates
 - **Quality Gates**: ✅ All 8 validations passing
 - **Test Coverage**: ✅ 9 tests passing, 80% coverage threshold active
 - **Configuration**: ✅ ESLint v8.46.4 + TypeScript v5.9.3 compatibility resolved
+
+## 🛡️ Protocolo de Seguridad y Auditoría (2025)
+
+**Instrucciones Críticas para Agentes:**
+Se requiere realizar verificaciones periódicas de seguridad en este repositorio para mitigar amenazas de cadena de suministro y vulnerabilidades conocidas.
+
+### 1. Detección de Paquetes Maliciosos
+
+Buscar proactivamente dependencias conocidas por contener malware (robo de credenciales SSH, inyección de código):
+
+- `warbeast2000`
+- `kodiak2k`
+- `lottie-player` (versiones comprometidas)
+
+**Comando de verificación:**
+
+```bash
+npm list warbeast2000 kodiak2k || pnpm list warbeast2000 kodiak2k
+```
+
+### 2. Vulnerabilidades Críticas (React/Next.js)
+
+Verificar versiones vulnerables a RCE (Remote Code Execution):
+
+- **React:** Versiones 19.0, 19.1, 19.2 son vulnerables. Usar v18.3.1 o superior parcheada.
+- **Next.js:** Versiones 15.x, 16.x y canaries recientes pueden ser vulnerables.
+
+### 3. Mantenimiento Preventivo
+
+- **Lockfiles:** Asegurar que `package-lock.json` o `pnpm-lock.yaml` estén siempre versionados.
+- **Auditoría:** Ejecutar `npm audit` o `pnpm audit` regularmente.

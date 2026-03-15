@@ -12,14 +12,14 @@ The project is highly structured and follows the CLOOP methodology, a five-phase
 
 ### Main Technologies
 
-*   **Node.js:** The project is built on the Node.js runtime.
-*   **TypeScript:** The project is written in TypeScript.
-*   **pnpm:** The project uses pnpm for package management.
-*   **Jest:** The project uses Jest for testing.
-*   **ESLint:** The project uses ESLint for linting.
-*   **Prettier:** The project uses Prettier for code formatting.
-*   **PM2:** The project uses PM2 for process management.
-*   **Fastify:** The project uses Fastify for building web services.
+- **Node.js:** The project is built on the Node.js runtime.
+- **TypeScript:** The project is written in TypeScript.
+- **pnpm:** The project uses pnpm for package management.
+- **Jest:** The project uses Jest for testing.
+- **ESLint:** The project uses ESLint for linting.
+- **Prettier:** The project uses Prettier for code formatting.
+- **PM2:** The project uses PM2 for process management.
+- **Fastify:** The project uses Fastify for building web services.
 
 ## Building and Running
 
@@ -87,10 +87,41 @@ All development work should follow this methodology. For more information, see t
 
 ## Key Files and Directories
 
-*   `packages/`: The directory containing the individual packages of the monorepo.
-*   `packages/skills-cli/`: The source code for the `skills-cli`.
-*   `skills/`: The directory containing the canonical library of skills.
-*   `cloop/`: The directory containing documentation for the CLOOP methodology.
-*   `README.md`: The main README file for the project.
-*   `package.json`: The main `package.json` file for the project.
-*   `pnpm-workspace.yaml`: The file that defines the pnpm workspace.
+- `packages/`: The directory containing the individual packages of the monorepo.
+- `packages/skills-cli/`: The source code for the `skills-cli`.
+- `skills/`: The directory containing the canonical library of skills.
+- `cloop/`: The directory containing documentation for the CLOOP methodology.
+- `README.md`: The main README file for the project.
+- `package.json`: The main `package.json` file for the project.
+- `pnpm-workspace.yaml`: The file that defines the pnpm workspace.
+
+## 🛡️ Protocolo de Seguridad y Auditoría (2025)
+
+**Instrucciones Críticas para Agentes:**
+Se requiere realizar verificaciones periódicas de seguridad en este repositorio para mitigar amenazas de cadena de suministro y vulnerabilidades conocidas.
+
+### 1. Detección de Paquetes Maliciosos
+
+Buscar proactivamente dependencias conocidas por contener malware (robo de credenciales SSH, inyección de código):
+
+- `warbeast2000`
+- `kodiak2k`
+- `lottie-player` (versiones comprometidas)
+
+**Comando de verificación:**
+
+```bash
+npm list warbeast2000 kodiak2k || pnpm list warbeast2000 kodiak2k
+```
+
+### 2. Vulnerabilidades Críticas (React/Next.js)
+
+Verificar versiones vulnerables a RCE (Remote Code Execution):
+
+- **React:** Versiones 19.0, 19.1, 19.2 son vulnerables. Usar v18.3.1 o superior parcheada.
+- **Next.js:** Versiones 15.x, 16.x y canaries recientes pueden ser vulnerables.
+
+### 3. Mantenimiento Preventivo
+
+- **Lockfiles:** Asegurar que `package-lock.json` o `pnpm-lock.yaml` estén siempre versionados.
+- **Auditoría:** Ejecutar `npm audit` o `pnpm audit` regularmente.

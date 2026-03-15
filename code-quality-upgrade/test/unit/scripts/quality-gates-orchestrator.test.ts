@@ -17,6 +17,57 @@ import type {
 } from '../../../src/scripts/quality-gates-orchestrator';
 /* eslint-enable simple-import-sort/imports */
 
+async function delay(ms: number): Promise<void> {
+  await new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
+async function executeDelayedGate(
+  name: string,
+  delayMs: number
+): Promise<GateExecutionResult> {
+  const startTime = Date.now();
+  await delay(delayMs);
+  const executionTime = Date.now() - startTime;
+
+  return {
+    name,
+    success: true,
+    executionTime,
+    output: 'Test completed',
+  };
+}
+
+function createDelayedGate(
+  name: string,
+  critical: boolean,
+  delayMs: number
+): QualityGate {
+  return {
+    name,
+    critical,
+    timeout: 5000,
+    execute: jest
+      .fn()
+      .mockImplementation(() => executeDelayedGate(name, delayMs)),
+  };
+}
+
+function createTimeoutGate(): QualityGate {
+  return {
+    name: 'Timeout Gate',
+    critical: true,
+    timeout: 10,
+    execute: jest.fn().mockImplementation(
+      () =>
+        new Promise<GateExecutionResult>(() => {
+          // Intentionally never resolve to trigger orchestrator timeout
+        })
+    ),
+  };
+}
+
 // Mock dependencies
 jest.mock('../../../src/monitoring/quality-dashboard');
 jest.mock('../../../src/monitoring/quality-alerts');
@@ -65,51 +116,12 @@ describe('QualityGatesOrchestrator', () => {
     });
 
     // Mock the factory to return test gates instead of real ones
-    jest.spyOn(QualityGatesFactory, 'createDefaultGates').mockReturnValue([
-      {
-        name: 'Test Gate 1',
-        critical: true,
-        timeout: 5000,
-        execute: jest.fn().mockImplementation(() => {
-          // Add a small delay to ensure executionTime > 0
-          const startTime = Date.now();
-          return new Promise(resolve => {
-            setTimeout(() => {
-              const executionTime = Date.now() - startTime;
-              resolve({
-                name: 'Test Gate 1',
-                success: true,
-                executionTime: executionTime,
-                output: 'Test completed',
-              });
-            }, 1); // 1ms delay
-          });
-        }),
-      },
-      {
-        name: 'Test Gate 2',
-        critical: false,
-        timeout: 5000,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        execute: jest
-          .fn()
-          .mockImplementation((): Promise<GateExecutionResult> => {
-            // Add a small delay to ensure executionTime > 0
-            const startTime = Date.now();
-            return new Promise(resolve => {
-              setTimeout(() => {
-                const executionTime = Date.now() - startTime;
-                resolve({
-                  name: 'Test Gate 2',
-                  success: true,
-                  executionTime: executionTime,
-                  output: 'Test completed',
-                });
-              }, 2); // 2ms delay
-            });
-          }),
-      },
-    ]);
+    jest
+      .spyOn(QualityGatesFactory, 'createDefaultGates')
+      .mockReturnValue([
+        createDelayedGate('Test Gate 1', true, 1),
+        createDelayedGate('Test Gate 2', false, 2),
+      ]);
 
     // Create orchestrator with mocked dependencies
     orchestrator = new QualityGatesOrchestrator();
@@ -155,22 +167,20 @@ describe('QualityGatesOrchestrator', () => {
         ]);
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should execute all quality gates successfully', async () => {
-        const result = await orchestrator.executeAllGates();
+    it('should execute all quality gates successfully', async () => {
+      const result = await orchestrator.executeAllGates();
 
-        expect(result.success).toBe(true);
-        expect(result.results).toHaveLength(2);
-        expect(result.executionTime).toBeGreaterThanOrEqual(0);
-        expect(result.metrics).toBeDefined();
-        // Verify that dashboard and alerts were called by checking the result
-        expect(result.report).toBeDefined();
-        expect(result.alertResults).toBeDefined();
-      });
+      expect(result.success).toBe(true);
+      expect(result.results).toHaveLength(2);
+      expect(result.executionTime).toBeGreaterThanOrEqual(0);
+      expect(result.metrics).toBeDefined();
+      // Verify that dashboard and alerts were called by checking the result
+      expect(result.report).toBeDefined();
+      expect(result.alertResults).toBeDefined();
     });
   });
 
-  describe('given orchestrator with sequential execution', () => {
+  describe('given orchestrator with sequential execution when executeAllGates is called', () => {
     beforeEach(() => {
       orchestrator = new QualityGatesOrchestrator({
         parallel: false,
@@ -181,17 +191,15 @@ describe('QualityGatesOrchestrator', () => {
       });
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should execute gates sequentially', async () => {
-        const result = await orchestrator.executeAllGates();
+    it('should execute gates sequentially', async () => {
+      const result = await orchestrator.executeAllGates();
 
-        expect(result.success).toBe(true);
-        expect(result.results).toHaveLength(2);
-      });
+      expect(result.success).toBe(true);
+      expect(result.results).toHaveLength(2);
     });
   });
 
-  describe('given orchestrator with failFast enabled', () => {
+  describe('given orchestrator with failFast enabled when executeAllGates is called', () => {
     beforeEach(() => {
       orchestrator = new QualityGatesOrchestrator({
         parallel: false,
@@ -222,14 +230,12 @@ describe('QualityGatesOrchestrator', () => {
         ]);
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should stop after first failure', async () => {
-        const result = await orchestrator.executeAllGates();
+    it('should stop after first failure', async () => {
+      const result = await orchestrator.executeAllGates();
 
-        expect(result.success).toBe(false);
-        expect(result.results).toHaveLength(1);
-        expect(result.results[0].success).toBe(false);
-      });
+      expect(result.success).toBe(false);
+      expect(result.results).toHaveLength(1);
+      expect(result.results[0].success).toBe(false);
     });
   });
 
@@ -240,14 +246,12 @@ describe('QualityGatesOrchestrator', () => {
       });
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should handle dashboard errors gracefully', async () => {
-        const result = await orchestrator.executeAllGates();
+    it('should handle dashboard errors gracefully', async () => {
+      const result = await orchestrator.executeAllGates();
 
-        expect(result.success).toBe(false);
-        expect(result.error).toContain('Dashboard failed');
-        expect(result.report).toBeNull();
-      });
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Dashboard failed');
+      expect(result.report).toBeNull();
     });
   });
 
@@ -259,19 +263,17 @@ describe('QualityGatesOrchestrator', () => {
       });
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should handle alert errors gracefully', async () => {
-        const result = await orchestrator.executeAllGates();
+    it('should handle alert errors gracefully', async () => {
+      const result = await orchestrator.executeAllGates();
 
-        // When alerts fail, the orchestrator catches the error and returns success: false
-        expect(result.success).toBe(false);
-        expect(result.error).toContain('Alerts failed');
-        expect(result.report).toBeNull();
-        expect(result.alertResults).toEqual({
-          critical: [],
-          warnings: [],
-          info: [],
-        });
+      // When alerts fail, the orchestrator catches the error and returns success: false
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Alerts failed');
+      expect(result.report).toBeNull();
+      expect(result.alertResults).toEqual({
+        critical: [],
+        warnings: [],
+        info: [],
       });
     });
   });
@@ -308,20 +310,18 @@ describe('QualityGatesOrchestrator', () => {
         .mockReturnValue([]);
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should handle empty gates list gracefully', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const result = await orchestrator.executeAllGates();
+    it('should handle empty gates list gracefully', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const result = await orchestrator.executeAllGates();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.success).toBe(true);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results).toHaveLength(0);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.metrics.qualityScore).toBe(0);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.metrics.gates.totalGates).toBe(0);
-      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.success).toBe(true);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results).toHaveLength(0);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.metrics.qualityScore).toBe(0);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.metrics.gates.totalGates).toBe(0);
     });
   });
 
@@ -332,44 +332,21 @@ describe('QualityGatesOrchestrator', () => {
           orchestrator as unknown as { getQualityGates: () => QualityGate[] },
           'getQualityGates'
         )
-        .mockReturnValue([
-          {
-            name: 'Timeout Gate',
-            critical: true,
-            timeout: 10, // 10ms timeout
-            execute: jest.fn().mockImplementation(() => {
-              return new Promise(resolve => {
-                // Never resolve to trigger timeout
-                setTimeout(
-                  () =>
-                    resolve({
-                      name: 'Timeout Gate',
-                      success: true,
-                      executionTime: 1000,
-                      output: 'Should not reach here',
-                    }),
-                  100
-                ); // 100ms delay > 10ms timeout
-              });
-            }),
-          },
-        ]);
+        .mockReturnValue([createTimeoutGate()]);
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should handle gate timeout', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const result = await orchestrator.executeAllGates();
+    it('should handle gate timeout', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const result = await orchestrator.executeAllGates();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.success).toBe(false);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results).toHaveLength(1);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results[0].success).toBe(false);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results[0].error).toContain('timeout');
-      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.success).toBe(false);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results).toHaveLength(1);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results[0].success).toBe(false);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results[0].error).toContain('timeout');
     });
   });
 
@@ -414,18 +391,16 @@ describe('QualityGatesOrchestrator', () => {
         ]);
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should continue after failure when continueOnError is true', async () => {
-        const result = await continueOnErrorOrchestrator.executeAllGates();
+    it('should continue after failure when continueOnError is true', async () => {
+      const result = await continueOnErrorOrchestrator.executeAllGates();
 
-        expect(result.success).toBe(false);
-        expect(result.results).toHaveLength(1);
-        expect(result.results[0].success).toBe(false);
-      });
+      expect(result.success).toBe(false);
+      expect(result.results).toHaveLength(1);
+      expect(result.results[0].success).toBe(false);
     });
   });
 
-  describe('given orchestrator with parallel execution and rejected promises', () => {
+  describe('given orchestrator with parallel execution and rejected promises when executeAllGates is called', () => {
     beforeEach(() => {
       jest
         .spyOn(
@@ -442,20 +417,18 @@ describe('QualityGatesOrchestrator', () => {
         ]);
     });
 
-    describe('when executeAllGates is called', () => {
-      it('should handle rejected promises in parallel execution', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const result = await orchestrator.executeAllGates();
+    it('should handle rejected promises in parallel execution', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const result = await orchestrator.executeAllGates();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.success).toBe(false);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results).toHaveLength(1);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results[0].success).toBe(false);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(result.results[0].error).toBe('Promise rejected');
-      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.success).toBe(false);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results).toHaveLength(1);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results[0].success).toBe(false);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(result.results[0].error).toBe('Promise rejected');
     });
   });
 });

@@ -1,10 +1,26 @@
 # Contexto: Upgrade Code Quality - Zero Technical Debt
 
-**Fecha**: 2025-11-15  
-**Estado**: T2.2.3 COMPLETADAS - Integration Tests funcionando - PRODUCTION READY  
+**Fecha**: 2025-11-30  
+**Estado**: T3.3.1 COMPLETADO - Quality Gates Orchestrator funcionando - FASE 4 en curso (T4.1.1 completado)  
 **Responsable**: Code Quality Team  
 **Objetivo**: Eliminar deuda técnica mediante unificación de configuraciones  
-**Progreso**: ~95/120 horas completadas - V2.0.1 INTEGRATION TESTS STATUS
+**Progreso**: ~110/120 horas completadas - V2.2.0 QUALITY GATES ORCHESTRATOR STATUS
+
+### 📌 Snapshot actual del sistema (2025-11-30)
+
+- **Fases 0–2**: completadas (setup, fundamentos, quality gates core).
+- **Fase 3**: scripts avanzados en estado casi completo:
+  - `validate-evidence.ts` + `evidence-cli.ts` en producción con alta cobertura.
+  - `validate-metrics.ts` y `MetricsValidator` completados (T3.2.1).
+  - `quality-gates-orchestrator.ts` + `quality-gates-factory.ts` implementados (T3.3.1) con Zero Technical Debt en el alcance de la tarea.
+- **Fase 4**: validación E2E iniciada:
+  - `test/e2e/full-quality-gates.test.ts` implementado (T4.1.1) como happy path del orquestador.
+- **Estado de calidad global**:
+  - **Tests**: 208/208 pasando (18 suites).
+  - **Coverage global**: ~87.31% statements / 82.86% branches / 88.07% functions / 87.27% lines (≥80% gates cumplidos).
+  - **Lint**: 0 errores, 3 warnings pre-existentes en `test/unit/scripts/evidence-cli.test.ts`.
+  - **Build**: TypeScript compila sin errores (`npm run build`).
+  - **Quality Gates**: `npm run lint && npm test -- --coverage && npm run build` en verde.
 
 ### 🎯 ÚLTIMAS FASES COMPLETADAS
 
@@ -555,6 +571,8 @@ export class ESLintGate implements QualityGate {
 - Seguir configuraciones establecidas
 - Ejecutar quality gates localmente
 - Reportar problemas con configuraciones
+
+> **Regla crítica de documentación (2025Q4)**: Los ejecutores **no deben modificar directamente** los archivos bajo `dev-docs/` (`task.md`, `plan.md`, `context.md`, `test-index.md`, handoffs). Cualquier actualización de estado, métricas o decisiones debe reportarse en la conversación/handoff y el validador es quien integra esos cambios en la documentación oficial. Esto evita sobrescrituras accidentales del historial (como reemplazar `task.md` completo por una versión parcial).
 
 ### 4.4 QA Engineer
 
