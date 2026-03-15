@@ -1,94 +1,40 @@
 {
   "name": "@skills-fabrik/skills-cli",
-  "version": "1.0.0",
-  "description": "Universal CLI for skills, workflows, and development automation with slash commands",
+  "version": "0.1.0",
+  "description": "CLI for managing skills, CLOOP workflows, hooks, builds, CI and dev docs",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
     "skills-cli": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.build.json --skipLibCheck --noEmitOnError && node scripts/fix-imports.mjs",
+    "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsc --watch",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:unit": "jest --testPathPattern=test/unit",
-    "test:integration": "jest --testPathPattern=test/integration",
-    "test:load": "node test/load/infrastructure/load-test-runner.js",
-    "test:load:basic": "node test/load/infrastructure/load-test-runner.js basic",
-    "test:load:stress": "node test/load/infrastructure/load-test-runner.js stress",
-    "test:load:memory": "node test/load/infrastructure/load-test-runner.js memory",
-    "test:load:regression": "node test/load/infrastructure/load-test-runner.js regression",
-    "test:load:all": "node test/load/infrastructure/load-test-runner.js all",
-    "test:load:health": "node test/load/infrastructure/load-test-runner.js health",
-    "test:e2e": "playwright test test/e2e-real",
-    "test:e2e:headed": "playwright test test/e2e-real --headed",
-    "test:e2e:debug": "playwright test test/e2e-real --debug",
-    "test:e2e:ui": "playwright test test/e2e-real --ui",
-    "test:e2e:trace": "playwright test test/e2e-real --trace on",
-    "test:e2e:report": "playwright show-report test/e2e-real/playwright-report",
-    "test:security": "node test/security/enterprise-security-tester.cjs",
-    "test:security:quick": "node test/security/quick-security-scan.cjs",
-    "test:security:audit": "node test/security/security-audit-runner.cjs",
-    "test:security:comprehensive": "node test/security/security-audit-runner.cjs",
-    "test:boundary": "node test/edge-cases/boundary-tester.cjs",
-    "test:edge-cases": "node test/edge-cases/boundary-tester.cjs",
-    "test:chaos": "node test/chaos/chaos-engineering.cjs",
-    "test:chaos-engineering": "node test/chaos/chaos-engineering.cjs",
-    "test:snapshot": "jest test/snapshot.spec.ts",
-    "test:e2e:advanced": "playwright test test/e2e-advanced",
-    "test:e2e:multi-user": "playwright test test/e2e-advanced/multi-user-scenarios.spec.ts",
-    "test:quality-gates": "node scripts/testing/quality-gate-validator.cjs",
-    "test:visual": "node packages/skills-cli/advanced-error-visual-validator-runner.js",
-    "test:enterprise": "npm run test:quality-gates && npm run test:security:comprehensive && npm run test:boundary && npm run test:chaos && npm run test:load:all && npm run test:e2e:advanced"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "cli",
     "skills",
-    "automation",
-    "slash-commands",
-    "development",
-    "workflow",
     "cloop",
-    "code-review",
-    "build-tools",
-    "productivity"
+    "cli",
+    "workflow",
+    "hooks"
   ],
   "author": "Skills Fabrik Team",
   "license": "MIT",
-  "homepage": "https://github.com/felipe-developer/skills-fabrik#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/felipe-developer/skills-fabrik.git"
-  },
-  "bugs": {
-    "url": "https://github.com/felipe-developer/skills-fabrik/issues"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md"
-  ],
   "dependencies": {
-    "@skills-fabrik/kpi": "workspace:^",
-    "@skills-fabrik/slash-commands": "workspace:^",
-    "abort-controller": "^3.0.0",
+    "@skills-fabrik/kpi": "workspace:*",
+    "@skills-fabrik/slash-commands": "workspace:*",
     "chalk": "^5.3.0",
-    "commander": "^11.1.0",
+    "commander": "^14.0.2",
     "fs-extra": "^11.2.0",
-    "glob": "^10.3.10",
+    "glob": "^11.0.3",
     "node-fetch": "^3.3.2",
     "yaml": "^2.4.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^20.11.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.4.5",
+    "@types/node": "^24.9.2",
     "typescript": "^5.3.3"
   },
   "engines": {

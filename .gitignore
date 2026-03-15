@@ -1,13 +1,88 @@
 node_modules
+node-compile-cache
 .DS_Store
 *.log
 dist
 build
 coverage
 .nyc_output
+.husky/_
+
+# ============================================
+# Security: Environment and Credentials
+# ============================================
+# Environment files with actual credentials
+.env
 .env.local
 .env.*.local
-.husky/_
-.env
+.env.development
+.env.production
+.env.staging
+.env.test
+.env.testing
+.env.dashboard
+.env.check
+
+# Keep example files only
+!.env.example
+!.env.*.example
+
 # Claude local configs in any subdirectory
 **/.claude/
+
+# Credential files
+credentials.json
+secrets.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+.npmrc
+.yarnrc
+
+# AWS credentials
+.aws/credentials
+aws-credentials.json
+
+# GCP credentials
+gcp-credentials.json
+service-account.json
+
+# API keys
+api-keys.json
+.api-key
+
+# ============================================
+# Security: Cache and Temporary Files
+# ============================================
+# Node.js cache
+.cache/
+.next/cache/
+
+# Build artifacts that might contain secrets
+*.log
+
+# Editor and IDE configs that might contain paths
+.vscode/settings.json
+.idea/workspace.xml
+
+# ============================================
+# Skills Fabrik Specific
+# ============================================
+# SF cache directories
+.sf/cache/
+.sf/project-index.json
+packages/.sf/
+
+# PM2 runtime
+.pm2/
+pm2.log
+pm2-error.log
+
+# Development artifacts
+dev/active/
+*.backup
+*.swp
+*~
