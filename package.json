@@ -117,16 +117,16 @@
     "@commitlint/config-conventional": "^18.4.4",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
-    "@types/supertest": "^6.0.3",
+    "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "eslint": "^8.56.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
-    "supertest": "^7.1.4",
-    "ts-jest": "^29.4.5",
+    "prettier": "^3.8.1",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.3.3"
   },
   "engines": {
@@ -139,9 +139,9 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.5.0",
-    "@types/pg": "^8.15.6",
-    "pg": "^8.16.3",
-    "undici": "^7.16.0"
+    "@types/pg": "^8.18.0",
+    "pg": "^8.20.0",
+    "undici": "^7.24.4"
   },
   "pnpm": {
     "overrides": {
