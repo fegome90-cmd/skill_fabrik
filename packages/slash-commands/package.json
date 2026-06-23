@@ -30,7 +30,7 @@
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "inquirer": "^9.2.12",
-    "semver": "^7.5.4",
+    "semver": "^7.8.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
